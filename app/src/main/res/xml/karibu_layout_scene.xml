@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="2000"
+        motion:pathMotionArc="none"
+        motion:autoTransition="none"
+        motion:motionInterpolator="bounce">
+       <KeyFrameSet>
+           <KeyCycle
+               motion:motionTarget="@+id/karibu_txtv"
+               motion:framePosition="93"
+               motion:wavePeriod="1"
+               motion:waveShape="bounce"
+               android:elevation="3dp"
+               motion:waveOffset="3dp" />
+           <KeyPosition
+               motion:motionTarget="@+id/karibu_txtv"
+               motion:framePosition="40"
+               motion:keyPositionType="parentRelative" />
+       </KeyFrameSet>
+        <OnSwipe motion:maxAcceleration="0.1" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            motion:layout_constraintVertical_bias="0.614"
+            android:layout_height="100dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintHorizontal_bias="0.497"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:id="@+id/karibu_txtv" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/karibu_txtv"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.705"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintHorizontal_bias="0.497"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:transitionEasing="cubic(0.2,0.2,0.16,0.89)" />
+    </ConstraintSet>
+    <ConstraintSet android:id="@+id/constraint_motion" />
+</MotionScene>
