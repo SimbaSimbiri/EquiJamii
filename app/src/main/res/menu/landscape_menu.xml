@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <item
+        android:id="@+id/social_icon_menu"
+        android:icon="@drawable/icons8_news"
+        android:title="@string/social_icon"
+        app:showAsAction="always"
+
+
+
+        />
+
+    <item
+        android:id="@+id/growth_icon_menu"
+        android:icon="@drawable/icons8_personal_growth"
+        android:title="@string/growth_icon"
+        app:showAsAction="always"
+
+
+        />
+
+    <item
+        android:id="@+id/message"
+        android:icon="@drawable/icons8_paper_plane__1_"
+        android:title="Message"
+        app:showAsAction="always"
+        ></item>
+
+
+
+    <item
+        android:id="@+id/study_icon_menu"
+        android:icon="@drawable/icons8_education"
+        android:title="@string/studyabroad_icon"
+        app:showAsAction="always"
+        />
+
+    <item android:id="@+id/donate_icon_menu"
+        android:icon="@drawable/icons8_charity"
+        android:title="@string/donate_icon"
+        app:showAsAction="always"
+
+        />
+
+</menu>

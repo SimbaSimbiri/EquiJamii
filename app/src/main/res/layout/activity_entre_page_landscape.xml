@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
@@ -13,26 +11,26 @@
     app:layout_constraintEnd_toStartOf="parent"
     app:layout_constraintHeight="match_constraint">
 
-    <include
-        android:id="@+id/include"
+    <include   android:id="@+id/include"
         layout="@layout/appbar"></include>
 
 
-    <!--<androidx.cardview.widget.CardView
+   <!-- <androidx.cardview.widget.CardView
         android:id="@+id/card_View"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
+
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
 
         app:cardBackgroundColor="@color/primaryColor"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="8dp"
-        app:cardMaxElevation="20dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="16dp"
+        app:cardMaxElevation="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,8 +46,8 @@
             app:iss_period="4000"
             app:iss_text_align="CENTER" />
 
-    </androidx.cardview.widget.CardView>
--->
+    </androidx.cardview.widget.CardView>-->
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -57,13 +55,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_corner"
         android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-    <!-- app:fabAlignmentMode="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:fabAlignmentMode="center"
         app:fabAnimationMode="slide"
         app:fabCradleMargin="20dp"
         app:fabCradleRoundedCornerRadius="40dp"
-        app:fabCradleVerticalOffset="0dp"-->
+        app:fabCradleVerticalOffset="20dp">
+
+
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav_view"
@@ -83,26 +82,12 @@
 
 
             app:itemTextColor="@color/titleColor"
-            app:menu="@menu/bottom_menu">
+            app:menu="@menu/landscape_menu">
 
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
+</com.google.android.material.bottomappbar.BottomAppBar>
 
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/add_post"
-        android:src="@drawable/icons8_paper_plane__1_"
-        app:backgroundTint="@color/titleColor"
-        app:layout_anchor="@id/bottom_nav_view"
-        app:layout_anchorGravity="top|center"
-        >
-
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
