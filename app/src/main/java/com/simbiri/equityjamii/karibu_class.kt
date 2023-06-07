@@ -1,7 +1,6 @@
 package com.simbiri.equityjamii
 
 import android.content.Intent
-import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
+
 
 class karibu_class : AppCompatActivity() {
     lateinit var karibu_text : TextView
@@ -24,8 +21,6 @@ class karibu_class : AppCompatActivity() {
         setContentView(R.layout.karibu_layout)
         karibu_text =  findViewById(R.id.karibu_txtv)
         card_View =  findViewById(R.id.karibuCardView)
-
-        var message_welcome =  karibu_text.text.toString()
 
         card_View.setOnClickListener {
 

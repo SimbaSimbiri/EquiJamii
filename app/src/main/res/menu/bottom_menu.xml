@@ -20,16 +20,17 @@
 
             />
 
-        <item
-                android:id="@+id/place_holder_menu"
-                android:title=""
-            app:showAsAction="always"
-            />
 
         <item
             android:id="@+id/study_icon_menu"
-            android:icon="@drawable/icons8_education"
+            android:icon="@drawable/icons_scholar"
             android:title="@string/studyabroad_icon"
+            app:showAsAction="always"
+            />
+
+        <item android:id="@+id/EquityAfia"
+            android:title="@string/equityAfia_icon"
+            android:icon="@drawable/icons8_health"
             app:showAsAction="always"
             />
 
@@ -39,5 +40,6 @@
             app:showAsAction="always"
 
             />
+
 
 </menu>

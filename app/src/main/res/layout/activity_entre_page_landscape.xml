@@ -15,38 +15,6 @@
         layout="@layout/appbar"></include>
 
 
-   <!-- <androidx.cardview.widget.CardView
-        android:id="@+id/card_View"
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="20dp"
-
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-
-        app:cardBackgroundColor="@color/primaryColor"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="16dp"
-        app:cardMaxElevation="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/image_slider"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:iss_auto_cycle="true"
-            app:iss_corner_radius="20"
-            app:iss_delay="1000"
-            app:iss_period="4000"
-            app:iss_text_align="CENTER" />
-
-    </androidx.cardview.widget.CardView>-->
 
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -56,11 +24,7 @@
         android:background="@drawable/background_corner"
         android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:fabAlignmentMode="center"
-        app:fabAnimationMode="slide"
-        app:fabCradleMargin="20dp"
-        app:fabCradleRoundedCornerRadius="40dp"
-        app:fabCradleVerticalOffset="20dp">
+       >
 
 
 
@@ -73,16 +37,13 @@
             android:layout_marginStart="0dp"
             android:background="@drawable/background_corner"
 
-
-
             android:requiresFadingEdge="horizontal"
             app:elevation="40dp"
             app:itemIconTint="@color/titleColor"
             android:layout_marginBottom="5dp"
 
-
             app:itemTextColor="@color/titleColor"
-            app:menu="@menu/landscape_menu">
+            app:menu="@menu/bottom_menu">
 
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
