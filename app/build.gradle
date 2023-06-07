@@ -35,30 +35,66 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "monetization"
+
+    productFlavors {
+
+        free {
+            dimension "monetization"
+            applicationIdSuffix ".free"
+            versionNameSuffix "-free"
+        }
+
+        pro {
+            dimension "monetization"
+            applicationIdSuffix ".pro"
+            versionNameSuffix "-pro"
+        }
+
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources =  true
+    }
 }
+
 
 dependencies {
 
-     var fragment_version = "1.5.7"
-
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
 
     implementation 'androidx.core:core-ktx:1.7.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    debugImplementation("androidx.fragment:fragment-testing:$fragment_version")
-
-
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation  "com.google.android.material:material:1.2.0"
+    
+    var fragment_version = "1.5.7"
+
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'com.google.truth:truth:1.1.4'
+    testImplementation 'org.robolectric:robolectric:4.9.1'
+
+    androidTestImplementation 'androidx.test:core:1.4.1-alpha07'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.1-alpha07'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.5.0'
+
+
+    debugImplementation("androidx.fragment:fragment-testing:$fragment_version")
+
+
 
 
 
