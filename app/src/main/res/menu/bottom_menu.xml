@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <item
-            android:id="@+id/social_icon_menu"
+            android:id="@+id/newsFrag"
             android:icon="@drawable/icons8_news"
             android:title="@string/social_icon"
             app:showAsAction="always"
@@ -12,7 +12,7 @@
             />
 
         <item
-            android:id="@+id/growth_icon_menu"
+            android:id="@+id/growthFrag"
             android:icon="@drawable/icons8_personal_growth"
             android:title="@string/growth_icon"
             app:showAsAction="always"
@@ -20,21 +20,21 @@
 
             />
 
+        <item android:id="@+id/postFrag"
+            android:title="@string/add_post"
+            android:icon="@drawable/addp"
+            app:showAsAction="always"
+            />
 
         <item
-            android:id="@+id/study_icon_menu"
+            android:id="@+id/scholarsFrag"
             android:icon="@drawable/icons_scholar"
             android:title="@string/studyabroad_icon"
             app:showAsAction="always"
             />
 
-        <item android:id="@+id/EquityAfia"
-            android:title="@string/equityAfia_icon"
-            android:icon="@drawable/icons8_health"
-            app:showAsAction="always"
-            />
 
-        <item android:id="@+id/donate_icon_menu"
+        <item android:id="@+id/donateFrag"
             android:icon="@drawable/icons8_charity"
             android:title="@string/donate_icon"
             app:showAsAction="always"

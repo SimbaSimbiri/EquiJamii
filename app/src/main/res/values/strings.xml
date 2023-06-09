@@ -27,10 +27,19 @@
     <string name="bottom_app_bar">bottom_app_bar</string>
     <string name="action_menu_view">action_menu</string>
 
-    <string name="add_post">Add post</string>
+    <string name="add_post">Post</string>
     <string name="place_holder">Place_holder</string>
 
     <string name="equityAfia_icon">Equity Afia</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="newsFragLabel">News Page</string>
+    <string name="growthFragLabel">Growth Page</string>
+    <string name="scholarsFragLabel">Scholars Page</string>
+    <string name="postFragLabel">Post Page</string>
+    <string name="donateFragLabel">Donate Page</string>
+
 
 
 

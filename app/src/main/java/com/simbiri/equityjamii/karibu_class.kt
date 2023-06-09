@@ -41,7 +41,7 @@ class karibu_class : AppCompatActivity() {
 
 
     fun onClick(){
-        val intent =  Intent(this, entre_page::class.java)
+        val intent =  Intent(this, main_equi_activity::class.java)
         startActivity(intent)
 
         Karibu_Scr_TAG = "Karibu_Onclick"

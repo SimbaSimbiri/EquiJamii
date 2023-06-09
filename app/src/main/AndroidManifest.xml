@@ -14,8 +14,8 @@
         android:theme="@style/Theme.EquityJamii"
         tools:targetApi="32" >
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name=".entre_page"
+            android:screenOrientation="portrait"
+            android:name=".main_equi_activity"
             android:exported="true"
             android:label="@string/title_activity_entre_page"
             android:theme="@style/Theme.EquityJamii.NoActionBar" >
