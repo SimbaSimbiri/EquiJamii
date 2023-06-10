@@ -18,7 +18,8 @@
             android:name=".main_equi_activity"
             android:exported="true"
             android:label="@string/title_activity_entre_page"
-            android:theme="@style/Theme.EquityJamii.NoActionBar" >
+
+             >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

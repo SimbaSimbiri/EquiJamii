@@ -2,16 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/people_menu_icon"
-        android:title="@string/people_icon"
-        android:icon="@drawable/ic_baseline_person_search_24"
-        app:showAsAction="always"
-        />
+
 
     <item android:id="@+id/profile_menu_icon"
         android:title="@string/profile_icon"
         android:icon="@drawable/personal_icon"
         app:showAsAction="always"
         />
+
 
 </menu>

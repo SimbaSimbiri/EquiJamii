@@ -20,9 +20,9 @@
 
             />
 
-        <item android:id="@+id/postFrag"
-            android:title="@string/add_post"
-            android:icon="@drawable/addp"
+        <item android:id="@+id/peopleFrag"
+            android:title="@string/people_icon"
+            android:icon="@drawable/icons8_people"
             app:showAsAction="always"
             />
 

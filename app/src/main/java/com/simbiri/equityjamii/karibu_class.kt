@@ -30,11 +30,9 @@ class karibu_class : AppCompatActivity() {
     }
 
     override fun onRestart() {
-        karibu_text.isVisible = false
+        karibu_text.isVisible =false
 
-
-        Toast.makeText(this, "Press back again to exit\nTouch to return to news page", Toast.LENGTH_LONG).show()
-
+        Toast.makeText(this, "Press back again to exit\nTouch to return to news page", Toast.LENGTH_SHORT).show()
 
         super.onRestart()
     }

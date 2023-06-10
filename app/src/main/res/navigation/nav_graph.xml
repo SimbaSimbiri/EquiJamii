@@ -25,10 +25,10 @@
             tools:layout="@layout/fragment_scholars" />
 
         <fragment
-            android:id="@+id/postFrag"
-            android:name="com.simbiri.equityjamii.postFragment"
-            android:label="@string/postFragLabel"
-            tools:layout="@layout/fragment_post" />
+            android:id="@+id/peopleFrag"
+            android:name="com.simbiri.equityjamii.peopleFragment"
+            android:label="@string/people_icon"
+            tools:layout="@layout/fragment_people" />
 
         <fragment
         android:id="@+id/donateFrag"
