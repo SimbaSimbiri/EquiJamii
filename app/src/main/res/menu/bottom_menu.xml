@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
         <item
             android:id="@+id/newsFrag"
-            android:icon="@drawable/icons8_news"
+            android:icon="@drawable/newsiconcool"
             android:title="@string/social_icon"
             app:showAsAction="always"
-
-
-
-            />
-
-        <item
-            android:id="@+id/growthFrag"
-            android:icon="@drawable/icons8_personal_growth"
-            android:title="@string/growth_icon"
-            app:showAsAction="always"
-
-
             />
 
         <item android:id="@+id/peopleFrag"
             android:title="@string/people_icon"
             android:icon="@drawable/icons8_people"
+            app:showAsAction="always"
+            />
+
+        <item android:id="@+id/postFrag"
+            android:icon="@drawable/addp"
+            android:title="@string/add_post"
             app:showAsAction="always"
             />
 
@@ -33,13 +28,11 @@
             app:showAsAction="always"
             />
 
-
-        <item android:id="@+id/donateFrag"
-            android:icon="@drawable/icons8_charity"
-            android:title="@string/donate_icon"
+        <item
+            android:id="@+id/growthFrag"
+            android:icon="@drawable/icons8_personal_growth"
+            android:title="@string/growth_icon"
             app:showAsAction="always"
-
             />
-
 
 </menu>

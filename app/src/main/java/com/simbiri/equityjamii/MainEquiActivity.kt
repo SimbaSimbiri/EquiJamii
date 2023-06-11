@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 
-class main_equi_activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navDrawer : NavigationView
@@ -33,7 +33,7 @@ class main_equi_activity : AppCompatActivity(), NavigationView.OnNavigationItemS
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
         //its easier to link a toolbar when it is not an @include in the layout
-        toolbar =  findViewById(R.id.topappBar)
+        toolbar =  findViewById(R.id.topAppBar)
         navDrawer = findViewById(R.id.navigationView)
 
         //the navDrawer lines below allow items to be selected on the nav Drawer. We implement the interface onNavigation Item selected
@@ -55,7 +55,7 @@ class main_equi_activity : AppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.drawerArrowDrawable.color = Color.WHITE
         drawerLayoutMain.addDrawerListener(toggle)
         toggle.syncState()
-        //override call button so that exiting the nav drawer won't exit the main_equi_activity
+        //override call button so that exiting the nav drawer won't exit the MainEquiActivity
         callBack = object :OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 slideDrawerIn()

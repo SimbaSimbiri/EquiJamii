@@ -5,7 +5,7 @@
     <color name="titleColor">#FCFFFFFF</color>
     <color name="karbBackgrnd">#F3EEEE</color>
     <color name="karbBackgrndtint">#FC4C2C2C</color>
-    <color name="fragHostColor">#95FFFFFF</color>
+    <color name="darkGreyColor">#3BFFFFFF</color>
 
 
 
@@ -16,6 +16,6 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#FA020101</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

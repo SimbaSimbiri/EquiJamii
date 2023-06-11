@@ -10,10 +10,10 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 
 
-class karibu_class : AppCompatActivity() {
-    lateinit var karibu_text : TextView
-    lateinit var card_View: CardView
-    private lateinit var Karibu_Scr_TAG: String
+class KaribuActivity : AppCompatActivity() {
+    private lateinit var karibu_text : TextView
+    private lateinit var card_View: CardView
+    private  var Karibu_Scr_TAG: String = "Karibu_Onclick was perfomed"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +39,8 @@ class karibu_class : AppCompatActivity() {
 
 
     fun onClick(){
-        val intent =  Intent(this, main_equi_activity::class.java)
+        val intent =  Intent(this, MainEquiActivity::class.java)
         startActivity(intent)
-
-        Karibu_Scr_TAG = "Karibu_Onclick"
 
         Log.i(Karibu_Scr_TAG, " User pressed Card View")
 

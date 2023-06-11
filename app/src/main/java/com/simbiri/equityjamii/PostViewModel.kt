@@ -2,6 +2,6 @@ package com.simbiri.equityjamii
 
 import androidx.lifecycle.ViewModel
 
-class DonateViewModel : ViewModel() {
+class PostViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

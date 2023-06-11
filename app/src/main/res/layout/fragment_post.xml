@@ -3,19 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".donateFragment"
-    android:id="@+id/donateFrag"
+    tools:context=".postFragment"
+    android:id="@+id/postFrag"
     >
 
     <TextView
         android:layout_width="150dp"
         android:layout_height="100dp"
-        android:id="@+id/textDonate"
+        android:id="@+id/postText"
 
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="132dp"
         android:layout_marginBottom="301dp"
-        android:text="Donate Frag" />
+        android:text="Post Frag" />
 
 </RelativeLayout>

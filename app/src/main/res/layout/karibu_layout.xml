@@ -29,7 +29,6 @@
             android:fontFamily="cursive"
             android:text="@string/welcome_str"
             android:textAlignment="center"
-            android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textColor="@color/primaryColor"
             android:textStyle="bold"
@@ -39,8 +38,8 @@
             card_view:layout_constraintHorizontal_bias="0.497"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintVertical_bias="0.651"></TextView>
-
+            card_view:layout_constraintVertical_bias="0.651" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

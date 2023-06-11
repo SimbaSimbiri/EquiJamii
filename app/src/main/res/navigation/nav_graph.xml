@@ -12,11 +12,16 @@
             tools:layout="@layout/fragment_news" />
 
         <fragment
-            android:id="@+id/growthFrag"
-            android:name="com.simbiri.equityjamii.growthFragment"
-            android:label="@string/growthFragLabel"
-            tools:layout="@layout/fragment_growth" />
+            android:id="@+id/peopleFrag"
+            android:name="com.simbiri.equityjamii.peopleFragment"
+            android:label="@string/people_icon"
+            tools:layout="@layout/fragment_people" />
 
+        <fragment
+            android:id="@+id/postFrag"
+            android:name="com.simbiri.equityjamii.postFragment"
+            android:label="@string/postFragLabel"
+            tools:layout="@layout/fragment_post" />
 
         <fragment
             android:id="@+id/scholarsFrag"
@@ -25,15 +30,11 @@
             tools:layout="@layout/fragment_scholars" />
 
         <fragment
-            android:id="@+id/peopleFrag"
-            android:name="com.simbiri.equityjamii.peopleFragment"
-            android:label="@string/people_icon"
-            tools:layout="@layout/fragment_people" />
+            android:id="@+id/growthFrag"
+            android:name="com.simbiri.equityjamii.growthFragment"
+            android:label="@string/growthFragLabel"
+            tools:layout="@layout/fragment_growth" />
 
-        <fragment
-        android:id="@+id/donateFrag"
-        android:name="com.simbiri.equityjamii.donateFragment"
-        android:label="@string/donateFragLabel"
-        tools:layout="@layout/fragment_donate" />
+
 
 </navigation>

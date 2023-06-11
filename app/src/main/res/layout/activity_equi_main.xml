@@ -5,7 +5,8 @@
 
     android:id="@+id/drawerLayout"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    >
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
@@ -28,7 +29,8 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintHeight="match_constraint">
 
-        <com.google.android.material.appbar.MaterialToolbar  android:id="@+id/topappBar"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +40,7 @@
             app:layout_constraintHeight="match_constraint"
             app:title="@string/app_name"
             app:titleTextColor="@color/titleColor"
-            ></com.google.android.material.appbar.MaterialToolbar>
+            />
 
 
 
@@ -54,16 +56,15 @@
 
             android:background="@drawable/background_corner"
             android:requiresFadingEdge="horizontal"
-            app:elevation="40dp"
+            app:elevation="8dp"
 
 
-            app:itemIconTint="@color/titleColor"
-            app:itemTextColor="@color/titleColor"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_menu">
-
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -74,15 +75,15 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="70dp"
             android:layout_marginRight="20dp"
-            android:background="@color/fragHostColor"
-            android:backgroundTint="@color/fragHostColor"
+            android:background="@color/darkGreyColor"
+            android:backgroundTint="@color/darkGreyColor"
             app:defaultNavHost="true"
             app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/topappBar"
+            app:layout_constraintTop_toTopOf="@id/topAppBar"
 
-            app:navGraph="@navigation/nav_graph"></androidx.fragment.app.FragmentContainerView>
+            app:navGraph="@navigation/nav_graph"/>
 
 
 

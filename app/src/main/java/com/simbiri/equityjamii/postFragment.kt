@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class donateFragment : Fragment() {
+class postFragment : Fragment() {
 
     companion object {
-        fun newInstance() = donateFragment()
+        fun newInstance() = postFragment()
     }
 
-    private lateinit var viewModel: DonateViewModel
+    private lateinit var viewModel: PostViewModel
 
     lateinit var textField: TextView
 
@@ -22,15 +22,15 @@ class donateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_donate, container, false)
+        return inflater.inflate(R.layout.fragment_post, container, false)
 
-        textField = view?.findViewById(R.id.textDonate) as TextView
+        textField = view?.findViewById(R.id.postText) as TextView
 
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DonateViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(PostViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
