@@ -22,9 +22,9 @@ class growthFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_growth, container, false)
 
-        textField3= view?.findViewById(R.id.textGrowth) as TextView
 
     }
 

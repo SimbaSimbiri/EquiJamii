@@ -7,15 +7,36 @@
     android:id="@+id/peopleFrag">
 
     <TextView
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:id="@+id/textEquityAfia"
+        android:id="@+id/peopleFragText"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="811dp"
+        android:fontFamily="@font/baloo"
+        android:gravity="bottom"
+        android:paddingStart="0dp"
+        android:text="@string/peoplePageTitle"
+        android:textColor="@color/primaryColor"
+        android:textSize="16sp" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
 
 
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="132dp"
-        android:layout_marginBottom="301dp"
-        android:text="People Frag" />
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        >
 
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

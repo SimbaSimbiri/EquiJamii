@@ -19,12 +19,14 @@
         android:id="@+id/textProfileName"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/darkGreyColor"
-        android:text="@string/userRay"
-        android:textColor="@color/black"
-        android:textSize="24sp"
         android:layout_alignBottom="@id/imageProfile"
-         />
+        android:background="@color/darkGreyColor"
+        android:fontFamily="@font/baloo"
+        android:text="@string/userRay"
+        android:gravity="bottom"
+        android:textColor="@color/karbBackgrndtint"
+        android:textSize="20sp"
+        android:paddingStart="10dp"/>
 
 </RelativeLayout>
 

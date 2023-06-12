@@ -22,9 +22,10 @@ class scholarsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         return inflater.inflate(R.layout.fragment_scholars, container, false)
 
-        textField5 = view?.findViewById(R.id.textScholars) as TextView
 
     }
 

@@ -26,7 +26,8 @@
             android:backgroundTint="@color/karbBackgrndtint"
             android:breakStrategy="balanced"
 
-            android:fontFamily="cursive"
+            android:fontFamily="@font/baloo"
+            android:textSize="30sp"
             android:text="@string/welcome_str"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"

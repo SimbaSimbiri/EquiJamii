@@ -16,6 +16,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 
+
+//Understand -  ask the interviewer clarification, lowcase()
+//Match -  what data structure am i dealing with
+//Plan - plan your pseudocode, a high level overview of how you'll write code
+//Implement - come up with the soln, code it
+//Review -  review bugs, see if your code is clean, run a simple test. Try all  edge cases
+//Evaluate -  space complexity/time complexity -- how much space your code takes
+
+
 class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -24,13 +33,14 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var navControllerMain: NavController
     private lateinit var toolbar: MaterialToolbar
 
+
     private var callBack : OnBackPressedCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_equi_main)
 
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        bottomNavigationView = findViewById<BottomNavigationView?>(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
         //its easier to link a toolbar when it is not an @include in the layout
         toolbar =  findViewById(R.id.topAppBar)
@@ -55,27 +65,28 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         toggle.drawerArrowDrawable.color = Color.WHITE
         drawerLayoutMain.addDrawerListener(toggle)
         toggle.syncState()
+
         //override call button so that exiting the nav drawer won't exit the MainEquiActivity
         callBack = object :OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                slideDrawerIn()
-            }
+
+                if(drawerLayoutMain.isDrawerOpen(GravityCompat.START)){
+                    slideDrawerIn()}
+                 }
         }
-        onBackPressedDispatcher.addCallback(this, callBack!!)
-
-
-
+        onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
 
         }
-
-
 
     fun slideDrawerIn(){
-        if(drawerLayoutMain.isDrawerOpen(GravityCompat.START)){
-            drawerLayoutMain.closeDrawer(GravityCompat.START)
+
+         drawerLayoutMain.closeDrawer(GravityCompat.START)
+
         }
-    }
+
+
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
@@ -86,7 +97,9 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         }
 
+/*
         slideDrawerIn()
+*/
         return true   }
 
 }

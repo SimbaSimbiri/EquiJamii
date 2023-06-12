@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
@@ -24,6 +25,7 @@ class newsFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
 
         var view = inflater.inflate(R.layout.fragment_news, container, false)
+
 
         image_Slider = view?.findViewById<ImageSlider>(R.id.image_slider) as ImageSlider
 

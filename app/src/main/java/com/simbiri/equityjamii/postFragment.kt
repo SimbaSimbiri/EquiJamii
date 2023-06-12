@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class postFragment : Fragment() {
 
@@ -15,17 +16,19 @@ class postFragment : Fragment() {
     }
 
     private lateinit var viewModel: PostViewModel
-
-    lateinit var textField: TextView
+    private lateinit var fabAdd: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_post, container, false)
 
-        textField = view?.findViewById(R.id.postText) as TextView
+        val viewPost =  inflater.inflate(R.layout.fragment_post, container, false)
 
+        fabAdd = viewPost.findViewById(R.id.fabAddpost)
+
+
+        return viewPost
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

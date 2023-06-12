@@ -22,8 +22,9 @@ class peopleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         return inflater.inflate(R.layout.fragment_people, container, false)
-        textField2 = view?.findViewById(R.id.textEquityAfia) as TextView
 
 
     }
