@@ -50,14 +50,17 @@
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>
-    <string name="night">Night Mode</string>
-    <string name="notification">Notifications and Sounds</string>
+    <string name="night">Dark Mode</string>
+    <string name="notification">Notifications On</string>
+    <string name="notificationsOff">Notifications Off</string>
     <string name="rate">Rate Us</string>
     <string name="aboutUs">About Us</string>
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
     <string name="designation">Designation</string>
     <string name="branch">Branch</string>
+    <string name="more">More</string>
+    <string name="lightMode">Light Mode</string>
 
 
 

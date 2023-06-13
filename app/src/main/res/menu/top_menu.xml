@@ -2,64 +2,87 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <item android:title="@string/profile">
-
+    <item
+        android:id="@+id/profileMenu"
+        android:title="@string/profile"
+        app:showAsAction="always">
 
         <menu>
 
             <group android:checkableBehavior="single">
 
                 <item
-                    android:id="@+id/profile"
+                    android:id="@+id/editProfile"
                     android:icon="@drawable/icons8_edit_profile"
-                    android:title="@string/editProfile" />
+                    android:title="@string/editProfile"
+                    android:visible="true"
+                    />
                 <item
                     android:id="@+id/login"
                     android:icon="@drawable/icons8_login"
-                    android:title="@string/login" />
+                    android:title="@string/login"
+                    android:visible="false" />
                 <item
                     android:id="@+id/logout"
                     android:icon="@drawable/icons8_logout"
-                    android:title="@string/logout" />
-            </group>
+                    android:title="@string/logout"
+                    android:visible="true" />
 
-        </menu>
-
-
-    </item>
-
-
-    <item android:title="@string/settings">
-
-        <menu>
-            <group android:checkableBehavior="single">
-
-
-                <item
-                    android:id="@+id/notification"
-                    android:icon="@drawable/icons8_bell"
-                    android:title="@string/notification" />
-                <item
-                    android:id="@+id/nightMode"
-                    android:icon="@drawable/icons8_moon"
-                    android:title="@string/night" />
             </group>
 
         </menu>
 
     </item>
+
 
     <group android:checkableBehavior="single">
 
         <item
+            android:id="@+id/settingsMenu"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/settings"
+            android:visible="true"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/notification"
+            android:icon="@drawable/icons8_bell"
+            android:title="@string/notification"
+            android:visible="false" />
+        <item
+            android:id="@+id/nightMode"
+            android:icon="@drawable/icons8_moon"
+            android:title="@string/night"
+            android:visible="false" />
+
+    </group>
+
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/moreMenu"
+            android:icon="@drawable/ic_baseline_more_horiz_24"
+            android:title="@string/more"
+            android:visible="true"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/aboutUs"
+            android:icon="@drawable/ic_baseline_info_24"
+            android:title="@string/aboutUs"
+            android:visible="false" />
+        <item
             android:id="@+id/share"
             android:icon="@drawable/icons8_share"
-            android:title="@string/share" />
+            android:title="@string/share"
+            android:visible="false" />
         <item
             android:id="@+id/rate"
             android:icon="@drawable/icons8_rateus"
-            android:title="@string/rate" />
+            android:title="@string/rate"
+            android:visible="false" />
+
     </group>
 
 
