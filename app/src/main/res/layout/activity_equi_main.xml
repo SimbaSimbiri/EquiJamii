@@ -15,7 +15,7 @@
         app:headerLayout="@layout/nav_header_profile"
         app:itemIconTint="@color/karbBackgrndtint"
         app:itemTextColor="@color/karbBackgrndtint"
-        app:menu="@menu/top_menu">
+        app:menu="@menu/drawermenu">
 
     </com.google.android.material.navigation.NavigationView>
 
@@ -66,6 +66,7 @@
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -77,7 +78,7 @@
             android:background="@color/darkGreyColor"
             android:backgroundTint="@color/darkGreyColor"
             app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+            app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/topAppBar"

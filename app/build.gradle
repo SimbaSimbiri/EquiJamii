@@ -61,6 +61,9 @@ android {
 
 
 dependencies {
+    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.preference:preference:1.1.1'
+
 
 /*
              androidX jetpack library dependancies
@@ -75,6 +78,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+
 
 /*
                 material design component dependancy

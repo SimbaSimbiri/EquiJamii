@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,6 +33,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var navDrawer: NavigationView
     private lateinit var drawerLayoutMain: DrawerLayout
     private lateinit var navControllerMain: NavController
+
     private lateinit var toolbar: MaterialToolbar
 
 
@@ -60,6 +63,13 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         //link up of bottomNav view with your custom NavController and the naming of menu items and respective fragments with similar id's
         //allow for bottomNav View to take control of switching between the fragments
         bottomNavigationView.setupWithNavController(navControllerMain)
+/*
+        val navHostFragDrawer =  supportFragmentManager.findFragmentById(R.id.navHostFragCont2) as NavHostFragment
+        navControllerDrawer = navHostFragDrawer.navController
+
+        val appBarConfiguration = AppBarConfiguration(navControllerDrawer.graph, drawerLayoutMain)
+        toolbar.setupWithNavController(navControllerDrawer,appBarConfiguration)
+        navDrawer.setupWithNavController(navControllerDrawer)*/
 
         // create a toggle that will expand the navigation drawer
         val toggle = ActionBarDrawerToggle(
@@ -107,7 +117,43 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         when (item.itemId) {
 
-            R.id.settingsMenu -> {
+            R.id.profileSettings ->{
+
+                drawerMenu.findItem(R.id.communicate).isVisible = false
+                drawerMenu.findItem(R.id.aboutUs).isVisible = false
+
+                onClick(0)
+
+
+                return true
+            }
+            R.id.settingsMenu ->{
+                drawerMenu.findItem(R.id.communicate).isVisible = false
+                drawerMenu.findItem(R.id.aboutUs).isVisible = false
+
+                onClick(1)
+
+                return true
+            }
+            R.id.aboutUs ->{
+                onClick(2)
+
+                return true
+        }
+            R.id.moreMenu -> {
+                drawerMenu.findItem(R.id.communicate).isVisible = true
+                drawerMenu.findItem(R.id.aboutUs).isVisible = true
+
+                return true
+            }
+
+            R.id.communicate -> {
+                onClick(3)
+            }
+
+
+
+            /*R.id.settingsMenu -> {
                 drawerMenu.findItem(R.id.notification).isVisible = true
                 drawerMenu.findItem(R.id.nightMode).isVisible = true
 
@@ -119,9 +165,6 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
 
             R.id.moreMenu -> {
-                drawerMenu.findItem(R.id.share).isVisible = true
-                drawerMenu.findItem(R.id.aboutUs).isVisible = true
-                drawerMenu.findItem(R.id.rate).isVisible = true
 
                 drawerMenu.findItem(R.id.notification).isVisible = false
                 drawerMenu.findItem(R.id.nightMode).isVisible = false
@@ -133,6 +176,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 drawerMenu.findItem(R.id.logout).isVisible = true
                 drawerMenu.findItem(R.id.editProfile).isVisible = true
                 drawerMenu.findItem(R.id.login).isVisible = false
+
+                onClick()
 
                 return true
             }
@@ -165,11 +210,18 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     drawerMenu.findItem(R.id.nightMode).setIcon(R.drawable.icons8_moon)
                         .setTitle(R.string.night)
                     return true
-            }
+            }*/
         }
 
 
         return true
+    }
+
+    private fun onClick(numFrag : Int) {
+        val intent =  Intent(this, secondActivity::class.java)
+        intent.putExtra(EXTRA_POS, numFrag)
+        startActivity(intent)
+
     }
 
 }

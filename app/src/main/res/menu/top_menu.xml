@@ -37,12 +37,7 @@
 
     <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/settingsMenu"
-            android:icon="@drawable/ic_baseline_settings_24"
-            android:title="@string/settings"
-            android:visible="true"
-            app:showAsAction="always" />
+
 
         <item
             android:id="@+id/notification"
@@ -57,7 +52,7 @@
 
     </group>
 
-
+<!--
     <group android:checkableBehavior="single">
 
         <item
@@ -67,11 +62,6 @@
             android:visible="true"
             app:showAsAction="always" />
 
-        <item
-            android:id="@+id/aboutUs"
-            android:icon="@drawable/ic_baseline_info_24"
-            android:title="@string/aboutUs"
-            android:visible="false" />
         <item
             android:id="@+id/share"
             android:icon="@drawable/icons8_share"
@@ -83,7 +73,7 @@
             android:title="@string/rate"
             android:visible="false" />
 
-    </group>
+    </group>-->
 
 
 </menu>
