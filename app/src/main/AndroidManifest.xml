@@ -15,7 +15,7 @@
         <activity
             android:name=".secondActivity"
             android:exported="true"
-            android:label="@string/second_fragment_label"
+            android:label="@string/profile"
             android:theme="@style/Theme.EquityJamii.NoActionBar"
             android:screenOrientation="portrait">
             <meta-data

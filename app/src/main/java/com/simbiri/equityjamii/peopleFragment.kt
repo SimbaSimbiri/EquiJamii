@@ -16,7 +16,7 @@ class peopleFragment : Fragment() {
 
     private lateinit var viewModel: PeopleViewModel
 
-    lateinit var textField2 : TextView
+    lateinit var textField2: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

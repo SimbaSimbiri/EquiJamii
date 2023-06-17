@@ -117,7 +117,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         when (item.itemId) {
 
-            R.id.profileSettings ->{
+            R.id.profileSettings -> {
 
                 drawerMenu.findItem(R.id.communicate).isVisible = false
                 drawerMenu.findItem(R.id.aboutUs).isVisible = false
@@ -127,7 +127,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                 return true
             }
-            R.id.settingsMenu ->{
+            R.id.settingsMenu -> {
                 drawerMenu.findItem(R.id.communicate).isVisible = false
                 drawerMenu.findItem(R.id.aboutUs).isVisible = false
 
@@ -135,11 +135,11 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                 return true
             }
-            R.id.aboutUs ->{
+            R.id.aboutUs -> {
                 onClick(2)
 
                 return true
-        }
+            }
             R.id.moreMenu -> {
                 drawerMenu.findItem(R.id.communicate).isVisible = true
                 drawerMenu.findItem(R.id.aboutUs).isVisible = true
@@ -152,79 +152,19 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
 
 
-
-            /*R.id.settingsMenu -> {
-                drawerMenu.findItem(R.id.notification).isVisible = true
-                drawerMenu.findItem(R.id.nightMode).isVisible = true
-
-                drawerMenu.findItem(R.id.share).isVisible = false
-                drawerMenu.findItem(R.id.aboutUs).isVisible = false
-                drawerMenu.findItem(R.id.rate).isVisible = false
-
-                return true
-            }
-
-            R.id.moreMenu -> {
-
-                drawerMenu.findItem(R.id.notification).isVisible = false
-                drawerMenu.findItem(R.id.nightMode).isVisible = false
-
-                return true
-            }
-
-            R.id.login -> {
-                drawerMenu.findItem(R.id.logout).isVisible = true
-                drawerMenu.findItem(R.id.editProfile).isVisible = true
-                drawerMenu.findItem(R.id.login).isVisible = false
-
-                onClick()
-
-                return true
-            }
-            R.id.logout -> {
-                drawerMenu.findItem(R.id.login).isVisible = true
-                drawerMenu.findItem(R.id.logout).isVisible = false
-                drawerMenu.findItem(R.id.editProfile).isVisible = false
-
-                return true
-            }
-
-            R.id.notification -> {
-                if (drawerMenu.findItem(R.id.notification).title == "Notifications On") {
-
-                    drawerMenu.findItem(R.id.notification)
-                        .setIcon(R.drawable.icons8_notifications_cancel).setTitle(R.string.notificationsOff)
-                }
-                else
-                    drawerMenu.findItem(R.id.notification).setIcon(R.drawable.icons8_bell)
-                        .setTitle(R.string.notification)
-                return true
-            }
-
-            R.id.nightMode -> {
-                if (drawerMenu.findItem(R.id.nightMode).title == "Dark Mode") {
-                    drawerMenu.findItem(R.id.nightMode).setIcon(R.drawable.icons8_sun)
-                        .setTitle(R.string.lightMode)
-                }
-                else
-                    drawerMenu.findItem(R.id.nightMode).setIcon(R.drawable.icons8_moon)
-                        .setTitle(R.string.night)
-                    return true
-            }*/
         }
 
 
         return true
     }
 
-    private fun onClick(numFrag : Int) {
-        val intent =  Intent(this, secondActivity::class.java)
+    private fun onClick(numFrag: Int) {
+        val intent = Intent(this, secondActivity::class.java)
         intent.putExtra(EXTRA_POS, numFrag)
         startActivity(intent)
 
     }
 
 }
-
 
 

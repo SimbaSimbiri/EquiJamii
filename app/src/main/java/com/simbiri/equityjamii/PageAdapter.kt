@@ -11,19 +11,19 @@ class PageAdapter(
 ) : FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
-    return numFrag
-        }
+        return numFrag
+    }
 
     override fun getItem(position: Int): Fragment {
 
 
-        when(position){
-             0 ->{
-                val Profile= ProfileFrag()
+        when (position) {
+            0 -> {
+                val Profile = ProfileFrag()
                 return Profile
             }
 
-            1->{
+            1 -> {
                 val Settings = SettingsFrag()
                 return Settings
             }
@@ -33,7 +33,7 @@ class PageAdapter(
                 return aboutUS
             }
 
-            3 ->{
+            3 -> {
                 val shareRate = ShareRateFrag()
                 return shareRate
             }
@@ -42,7 +42,7 @@ class PageAdapter(
         return Fragment()
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): String {
 
         return titleList[position]
     }

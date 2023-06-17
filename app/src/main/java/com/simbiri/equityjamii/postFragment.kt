@@ -23,7 +23,7 @@ class postFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val viewPost =  inflater.inflate(R.layout.fragment_post, container, false)
+        val viewPost = inflater.inflate(R.layout.fragment_post, container, false)
 
         fabAdd = viewPost.findViewById(R.id.fabAddpost)
 

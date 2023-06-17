@@ -7,7 +7,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 
-class secondActivity: AppCompatActivity() {
+class secondActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
@@ -19,7 +19,7 @@ class secondActivity: AppCompatActivity() {
 
         toolbar = findViewById(R.id.topAppBar)
         viewPager = findViewById(R.id.viewPager)
-        tabLayout =  findViewById(R.id.tabLayout)
+        tabLayout = findViewById(R.id.tabLayout)
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.profileTab))
         tabLayout.addTab(tabLayout.newTab().setText(R.string.settingsTab))
@@ -27,13 +27,10 @@ class secondActivity: AppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.share))
 
 
-        val position =   intent.getIntExtra(EXTRA_POS, 0)
-
-        val listTitles :   MutableList<String> = mutableListOf("Profile", "Settings", "About US", "Communicate")
+        val position = intent.getIntExtra(EXTRA_POS, 0)
 
 
-
-        val pageAdapter =  PageAdapter(supportFragmentManager, tabLayout.tabCount, listTitles)
+        val pageAdapter = PageAdapter(supportFragmentManager, tabLayout.tabCount, TitleList.titles)
         pageAdapter.getPageTitle(tabLayout.selectedTabPosition)
 
         viewPager.adapter = pageAdapter
@@ -41,8 +38,6 @@ class secondActivity: AppCompatActivity() {
 
 
         tabLayout.setupWithViewPager(viewPager)
-
-
 
 
     }
