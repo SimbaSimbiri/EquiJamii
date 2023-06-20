@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -90,12 +91,15 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 if (drawerLayoutMain.isDrawerOpen(GravityCompat.START)) {
                     slideDrawerIn()
                 }
+                else
+                    finish()
             }
         }
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
 
     }
+
 
     fun slideDrawerIn() {
 

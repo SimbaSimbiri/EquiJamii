@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primaryColor">#3E1414</color>
+    <color name="primaryColor">#FA3A0707</color>
+    <color name="primareColor">#FA3A0707</color>
+
     <color name="titleColor">#FCFFFFFF</color>
     <color name="karbBackgrnd">#F3EEEE</color>
-    <color name="karbBackgrndtint">#FC4C2C2C</color>
+    <color name="karbBackgrndtint">#430300</color>
     <color name="darkGreyColor">#3BFFFFFF</color>
 
 

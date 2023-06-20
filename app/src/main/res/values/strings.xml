@@ -31,10 +31,10 @@
     <string name="nav_header_profile">Nav Header Picture</string>
 
 
-    <string name="userRay">Simba  Simbiri</string>
+    <string name="userRay">Ray  Simbiri</string>
 
     <string name="newsFragLabel">News Page</string>
-    <string name="newsFragTitle"> Get the latest news</string>
+    <string name="newsFragTitle"> Today\'s top stories</string>
 
     <string name="growthFragLabel">Growth Page</string>
     <string name="scholarsFragLabel">Scholars Page</string>

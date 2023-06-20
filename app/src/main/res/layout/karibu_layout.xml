@@ -5,13 +5,14 @@
     android:id="@+id/karibuCardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:contentDescription="@string/welcome_str"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/cardview_light_background"
     card_view:cardElevation="8dp"
     card_view:layout_constrainedHeight="true"
-    card_view:layout_constrainedWidth="true"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    card_view:layout_constrainedWidth="true">
 
 
     <!-- Main Content View -->
@@ -19,7 +20,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/circle"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.497"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.651" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="106dp"
+            android:layout_height="106dp"
+            android:src="@mipmap/equityjamiiilogo_round"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.498"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.64" />
+
+        <!--<TextView
             android:id="@+id/karibu_txtv"
             android:layout_width="200dp"
             android:layout_height="100dp"
@@ -27,11 +52,11 @@
             android:breakStrategy="balanced"
 
             android:fontFamily="@font/baloo"
-            android:textSize="30sp"
             android:text="@string/welcome_str"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-            android:textColor="@color/primaryColor"
+            android:textColor="#500808"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:typeface="serif"
             card_view:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +64,7 @@
             card_view:layout_constraintHorizontal_bias="0.497"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintVertical_bias="0.651" />
+            card_view:layout_constraintVertical_bias="0.797" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
