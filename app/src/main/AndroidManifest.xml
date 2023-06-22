@@ -25,6 +25,7 @@
         <activity
             android:name=".MainEquiActivity"
             android:exported="true"
+            android:theme="@style/Theme.EquityJamii.NoActionBar"
             android:label="@string/title_activity_entre_page"
             android:screenOrientation="portrait">
             <meta-data

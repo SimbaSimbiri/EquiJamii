@@ -27,4 +27,17 @@
 
     <style name="Theme.EquityJamii.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="titleToolBarFont">
+        <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title"> @font/baloo</item>
+        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">20sp</item>
+        <item name="android:textAlignment"  parent = "Widget.AppCompat.Toolbar.Title">textStart</item>
+    </style>
+
+    <style name="titleToolBarFont2">
+        <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title">@font/baloo</item>
+        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">27sp</item>
+        <item name="android:textAlignment"  parent = "Widget.AppCompat.Toolbar.Title">textStart</item>
+
+    </style>
+
 </resources>

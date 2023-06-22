@@ -5,14 +5,18 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/textView"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="292dp"
-        android:text="@string/share"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:title="Communicate"
+        app:titleTextAppearance="@style/titleToolBarFont"
+        app:titleTextColor="@color/titleColor" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

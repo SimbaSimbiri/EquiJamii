@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primaryColor"
-        app:title="@string/app_name"
-        app:titleTextColor="@color/titleColor" />
-
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -24,10 +16,9 @@
         android:contentDescription="@string/textTableLayout"
         app:tabBackground="@color/titleColor"
         app:tabGravity="center"
-        app:tabTextColor="@color/grey_font"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/primaryColor"
-        app:tabMode="scrollable"
-         />
+        app:tabTextColor="@color/grey_font" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
