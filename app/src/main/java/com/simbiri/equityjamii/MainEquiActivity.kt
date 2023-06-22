@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -15,6 +16,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -34,6 +37,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var navDrawer: NavigationView
     private lateinit var drawerLayoutMain: DrawerLayout
     private lateinit var navControllerMain: NavController
+    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
+    private lateinit var appBarLayout: AppBarLayout
 
     private lateinit var toolbar: MaterialToolbar
 
@@ -46,9 +51,13 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         bottomNavigationView = findViewById<BottomNavigationView?>(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
+        appBarLayout =  findViewById(R.id.appBarLayout)
+        collapsingToolbarLayout =  appBarLayout.findViewById(R.id.collapsingToolbar)
         //its easier to link a toolbar when it is not an @include in the layout
         toolbar = findViewById(R.id.topAppBar)
         navDrawer = findViewById(R.id.navigationView)
+
+        setSupportActionBar(toolbar)
 
         //the navDrawer lines below allow items to be selected on the nav Drawer. We implement the interface onNavigation Item selected
         //and add bringtoFront() to make the items that are clicked focusable
@@ -73,7 +82,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         navDrawer.setupWithNavController(navControllerDrawer)*/
 
         // create a toggle that will expand the navigation drawer
-        val toggle = ActionBarDrawerToggle(
+        /*val toggle = ActionBarDrawerToggle(
             this,
             drawerLayoutMain,
             toolbar,
@@ -82,7 +91,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         )
         toggle.drawerArrowDrawable.color = Color.WHITE
         drawerLayoutMain.addDrawerListener(toggle)
-        toggle.syncState()
+        toggle.syncState()*/
+
 
         //override call button so that exiting the nav drawer won't exit the MainEquiActivity
         callBack = object : OnBackPressedCallback(true) {
@@ -109,7 +119,14 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
-        menuInflater.inflate(R.menu.top_menu, menu)
+        menuInflater.inflate(R.menu.menutoolbar, menu)
+
+        val icon = menu?.findItem(R.id.profileAndSettings)
+
+        icon?.setOnMenuItemClickListener {
+            drawerLayoutMain.openDrawer(GravityCompat.START)
+             true
+        }
 
         return true
     }

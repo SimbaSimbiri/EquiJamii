@@ -71,5 +71,6 @@
     <string name="settingsTab">Settings</string>
     <string name="communicate">Lets hear from you</string>
     <string name="textTableLayout">This tab has Profile,  Settings, and About Pages</string>
+    <string name="proftoSet">Profile To Settings</string>
 
 </resources>
