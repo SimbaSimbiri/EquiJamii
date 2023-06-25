@@ -4,7 +4,7 @@
     <item
         android:id="@+id/profileAndSettings"
         android:title="@string/profile"
-        android:icon="@drawable/profiles"
+        android:icon="@drawable/ic_baseline_dehaze_24"
         app:showAsAction="always"
         />
 

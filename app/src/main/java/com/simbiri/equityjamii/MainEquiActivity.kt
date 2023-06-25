@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,11 +29,6 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var navDrawer: NavigationView
     private lateinit var drawerLayoutMain: DrawerLayout
     private lateinit var navControllerMain: NavController
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appBarLayout: AppBarLayout
-    private lateinit var profileToSettings: ImageView
-
-    private lateinit var toolbar: MaterialToolbar
 
 
     private var callBack: OnBackPressedCallback? = null
@@ -43,13 +39,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         bottomNavigationView = findViewById<BottomNavigationView?>(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
-        appBarLayout = findViewById(R.id.appBarLayout)
-        collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
-        profileToSettings = collapsingToolbarLayout.findViewById(R.id.profileAndSettings)
-        toolbar = findViewById(R.id.topAppBar)
-        navDrawer = findViewById(R.id.navigationView)
+       navDrawer = findViewById(R.id.navigationView)
 
-        setSupportActionBar(toolbar)
 
         navDrawer.setNavigationItemSelectedListener(this)
         navDrawer.bringToFront()
@@ -60,15 +51,14 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         bottomNavigationView.setupWithNavController(navControllerMain)
 
-        profileToSettings.setOnClickListener {
-            drawerLayoutMain.openDrawer(GravityCompat.START)
-        }
+
 
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
 
                 if (drawerLayoutMain.isDrawerOpen(GravityCompat.START)) {
                     slideDrawerIn()
+
                 } else
                     finish()
             }

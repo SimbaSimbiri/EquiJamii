@@ -1,81 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".newsFragment"
-    android:id="@+id/newsFrag">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/newsFragTitle"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarNews"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="811dp"
-        android:fontFamily="@font/baloo"
-        android:gravity="bottom"
-        android:paddingStart="0dp"
-        android:text="@string/newsFragTitle"
-        android:textColor="@color/primaryColor"
-        android:textSize="16sp" />
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="fill"
+            app:collapsedTitleGravity="start"
+
+            app:collapsedTitleTextAppearance="@style/titleToolBarFont"
+            app:collapsedTitleTextColor="@color/titleColor"
+            app:expandedTitleGravity="start"
+            app:expandedTitleMarginStart="10dp"
+            app:expandedTitleTextAppearance="@style/titleToolBarFont2"
+            app:expandedTitleTextColor="@color/titleColor"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBarNews"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom"
+                app:layout_collapseMode="pin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintHeight="match_constraint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/Theme.AppCompat.Light"
+                app:title="News"
+                app:titleTextColor="@color/titleColor">
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+            <ImageView
+                android:id="@+id/profileAndSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/profileAndSet"
+                android:focusable="true"
+                android:src="@drawable/ic_baseline_dehaze_24"
+                app:layout_collapseMode="pin"
+                tools:ignore="TouchTargetSizeCheck" />
 
 
-        android:id="@+id/coordinator_layout"
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedNewsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
+        android:contentDescription="@string/scrollnews"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintHeight="match_constraint">
 
-<!--
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_View"
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="top"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/primaryColor"
-            app:cardCornerRadius="15dp"
-            app:cardElevation="8dp"
-            app:cardMaxElevation="20dp"
+            android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/coordinator_layout"
-            tools:ignore="SpeakableTextPresentCheck">
+            app:layout_constraintEnd_toStartOf="parent">
 
-            <com.denzcoskun.imageslider.ImageSlider
-                android:id="@+id/image_slider"
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:iss_auto_cycle="true"
-                app:iss_corner_radius="20"
-                app:iss_delay="2000"
-                app:iss_period="4000"
-                app:iss_text_align="CENTER" />
-        </androidx.cardview.widget.CardView>-->
+                android:id="@+id/newsRecylerView"
+                tools:listitem="@layout/newsitemsample"
+                android:elevation="20dp"/>
 
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

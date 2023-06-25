@@ -1,6 +1,14 @@
 package com.simbiri.equityjamii
 
-data class NewsText(val imageId: Int, val textLine: String, val isBookmarked: Boolean)
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+
+data class NewsText(val imageId: Int, val textHeadLine: String, val isBookmarked: Boolean)
 
 object NewsToday {
 
@@ -15,13 +23,13 @@ object NewsToday {
     )
 
     private val textLineList =  arrayOf(
-        "EU officials grace Equity Group Holdings",
-        "Equity maintains outstanding financial perfomance",
-        "Wings to Fly Scholars fly abroad",
-        "Equity Group  registers  21% growth in total assets",
-        "Elimu Scholarship Program Day",
-        "Stanford MBA influential visit to the bank",
-        "Aspiring app developer creates a virtual home for Equity Bank"
+        "\tEU officials grace Equity Group Holdings",
+        "\tEquity maintains outstanding financial perfomance",
+        "\tWings to Fly Scholars fly abroad",
+        "\tEquity Group  registers  21% growth in total assets",
+        "\tElimu Scholarship Program Day",
+        "\tStanford MBA influential visit to the bank",
+        "\tBehind the  scenes of EquityJamii"
 
     )
 
@@ -46,4 +54,45 @@ object NewsToday {
     var isBookMarkedBool : MutableList<NewsText> = mutableListOf()
 
 
+}
+
+class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
+
+    inner class  NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+
+        fun setDatatoItem(newsText: NewsText, position: Int) {
+            this.positionItem = position
+            this.currentNewsTextItem = newsText
+
+            textNewsHeadline.text = newsText.textHeadLine
+            imageNewsHeadline.setImageResource(newsText.imageId)
+
+        }
+
+        private var positionItem:Int = 1
+        private var currentNewsTextItem : NewsText ? = null
+
+        private  var textNewsHeadline : TextView =  itemView.findViewById(R.id.textViewHeadline)
+        private  var imageNewsHeadline : ImageView = itemView.findViewById(R.id.imageViewNews)
+        private  var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.newsitemsample, parent, false)
+
+        return NewsViewHolder( view)
+    }
+
+    override fun onBindViewHolder(newsViewholder: NewsViewHolder, position: Int) {
+
+        val newsTextInstance =  newsTextList[position]
+
+        newsViewholder.setDatatoItem(newsTextInstance, position)
+    }
+
+    override fun getItemCount(): Int {
+        
+    return  newsTextList.size
+    }
 }

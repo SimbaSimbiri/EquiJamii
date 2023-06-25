@@ -13,7 +13,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/good_profile"
-        android:id="@+id/imageProfile"/>
+        android:id="@+id/imageProfile"
+        />
 
     <TextView
         android:id="@+id/textProfileName"

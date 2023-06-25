@@ -73,5 +73,8 @@
     <string name="textTableLayout">This tab has Profile,  Settings, and About Pages</string>
     <string name="proftoSet">Profile To Settings</string>
     <string name="profileAndSet">Profile and Settings</string>
+    <string name="newsImages">News Images</string>
+    <string name="savenews">Bookmark to read later</string>
+    <string name="scrollnews">Scroll down for more news</string>
 
 </resources>
