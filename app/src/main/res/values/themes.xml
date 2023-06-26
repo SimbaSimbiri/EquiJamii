@@ -40,4 +40,9 @@
 
     </style>
 
+    <style name="titleTab" parent="Widget.Design.TabLayout">
+        <item name="android:textSize"   >13sp</item>
+        <item name = "fontFamily">@font/baloo_paaji_2_semibold</item>
+    </style>
+
 </resources>

@@ -35,9 +35,7 @@ class newsFragment : Fragment(){
     private lateinit var toolbar: MaterialToolbar
     private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
-/*
     private lateinit var tabLayout: TabLayout
-*/
 
 
     lateinit var textField3: TextView
@@ -54,16 +52,13 @@ class newsFragment : Fragment(){
         profileToSettings = collapsingToolbarLayout.findViewById(R.id.profileAndSettings)
         toolbar = view.findViewById(R.id.topAppBarNews)
         viewPager2 = view.findViewById(R.id.viewPagerNews)
-/*
         tabLayout  = view.findViewById(R.id.tabLayout)
-*/
 
 
 
         viewPager2 = view.findViewById(R.id.viewPagerNews)
         stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
         viewPager2.adapter = stateAdapter
-/*
         TabLayoutMediator (tabLayout, viewPager2){ tab, position ->
 
             when (position){
@@ -71,7 +66,8 @@ class newsFragment : Fragment(){
                 1 -> {tab.text = "For You"}
             }
 
-        }.attach()*/
+
+        }.attach()
 
         val drawerLayout =  requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
 

@@ -3,11 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TopStoriesFragment">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/baloo_paaji_2_semibold"
+        android:text="@string/latest"
+        android:textColor="@color/primaryColor"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@id/newsRecylerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         android:id="@+id/newsRecylerView"
         tools:listitem="@layout/newsitemsample"
         android:elevation="20dp"/>

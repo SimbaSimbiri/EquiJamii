@@ -9,56 +9,53 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="24dp"
+        android:layout_width="18dp"
         android:layout_height="20dp"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/trending"
         android:src="@drawable/icons8_trending"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         app:tint="@color/primaryColor" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/baloo_paaji_2_semibold"
         android:text="@string/trending"
         android:textColor="@color/primaryColor"
         android:textSize="15sp"
+        android:layout_marginStart="10dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="175dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="10dp"
         android:backgroundTint="@color/karbBackgrndtint"
         android:clickable="true"
         android:contentDescription="@string/trending"
         android:focusable="true"
         app:cardCornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/forYouRecylerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.435"
         tools:ignore="DuplicateSpeakableTextCheck">
-
 
         <com.denzcoskun.imageslider.ImageSlider
             android:id="@+id/image_slider"
@@ -69,6 +66,7 @@
             app:iss_delay="1200"
             app:iss_period="4000"
             app:iss_text_align="CENTER" />
+
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -76,29 +74,28 @@
         android:layout_width="270dp"
         android:layout_height="20dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/baloo_paaji_2_semibold"
         android:text="@string/readLater"
         android:textColor="@color/karbBackgrndtint"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/forYouRecylerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forYouRecylerView"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/for_you_item_sample" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
