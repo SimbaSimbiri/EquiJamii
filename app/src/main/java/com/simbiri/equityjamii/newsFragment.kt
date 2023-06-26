@@ -8,21 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
-import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-class newsFragment : Fragment() {
+class newsFragment : Fragment(){
 
     companion object {
         fun newInstance() = newsFragment()
@@ -36,7 +33,11 @@ class newsFragment : Fragment() {
     private lateinit var appBarLayout: AppBarLayout
     private lateinit var profileToSettings: ImageView
     private lateinit var toolbar: MaterialToolbar
-    private lateinit var recyclerNews: RecyclerView
+    private lateinit var viewPager2: ViewPager2
+    private lateinit var stateAdapter: FragmentStateAdapter
+/*
+    private lateinit var tabLayout: TabLayout
+*/
 
 
     lateinit var textField3: TextView
@@ -52,9 +53,25 @@ class newsFragment : Fragment() {
         collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
         profileToSettings = collapsingToolbarLayout.findViewById(R.id.profileAndSettings)
         toolbar = view.findViewById(R.id.topAppBarNews)
-        recyclerNews = view.findViewById(R.id.newsRecylerView)
+        viewPager2 = view.findViewById(R.id.viewPagerNews)
+/*
+        tabLayout  = view.findViewById(R.id.tabLayout)
+*/
 
-        setUpRecyclerNews(view)
+
+
+        viewPager2 = view.findViewById(R.id.viewPagerNews)
+        stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
+        viewPager2.adapter = stateAdapter
+/*
+        TabLayoutMediator (tabLayout, viewPager2){ tab, position ->
+
+            when (position){
+                0 -> {tab.text = "Top Stories"}
+                1 -> {tab.text = "For You"}
+            }
+
+        }.attach()*/
 
         val drawerLayout =  requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
 
@@ -63,73 +80,30 @@ class newsFragment : Fragment() {
         }
 
 
-
-
-
         return view
-
-/*
-        image_Slider = view?.findViewById<ImageSlider>(R.id.image_slider) as ImageSlider
-
-        val image_list = ArrayList<SlideModel>()
-
-        image_list.add(
-            SlideModel(
-                R.drawable.europeanu_talks_image,
-                "EU officials grace Equity Group Holdings",
-                ScaleTypes.FIT
-            )
-        )
-        image_list.add(
-            SlideModel(
-                R.drawable.jamesshakinghands,
-                "Equity Group  registers  21% growth in total assets",
-                ScaleTypes.FIT
-            )
-        )
-        image_list.add(
-            SlideModel(
-                R.drawable.stanfordmba,
-                "Stanford MBA influential visit to the bank",
-                ScaleTypes.FIT
-            )
-        )
-        image_list.add(
-            SlideModel(
-                R.drawable.elimu_talk,
-                "Elimu Scholarship Program Day",
-                ScaleTypes.FIT
-            )
-        )
-        image_list.add(
-            SlideModel(
-                R.drawable.equity_assurance,
-                "Equity maintains outstanding financial perfomance",
-                ScaleTypes.FIT
-            )
-        )
-        image_list.add(
-            SlideModel(
-                R.drawable.wings_to_fly_girls,
-                "Wings to Fly Scholars fly abroad",
-                ScaleTypes.FIT
-            )
-        )
-
-
-        image_Slider.setImageList(image_list)*/
 
     }
 
-    private fun setUpRecyclerNews(view: View?) {
-        val context = requireContext()
-        val newsAdapter =  NewsAdapter(context, NewsToday.newsTextList!!)
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = RecyclerView.VERTICAL
+    inner class ScreenSlidePageAdapter(newsFragment: newsFragment) : FragmentStateAdapter (newsFragment){
 
-        recyclerNews.adapter = newsAdapter
-        recyclerNews.layoutManager = layoutManager
-        recyclerNews.hasFixedSize()
+        override fun getItemCount(): Int {
+            return  2   }
+
+        override fun createFragment(position: Int): Fragment {
+
+            when(position){
+                0 -> {
+                    return TopStoriesFragment()
+                }
+
+                1 -> {
+
+                    return ForYouFragment()
+
+                }
+            }
+            return  Fragment()
+        }
 
     }
 

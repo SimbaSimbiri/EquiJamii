@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class NewsText(val imageId: Int, val textHeadLine: String, val isBookmarked: Boolean)
+data class NewsText(val imageId: Int, val textHeadLine: String, var isBookmarked: Boolean)
 
 object NewsToday {
 
@@ -51,14 +51,23 @@ object NewsToday {
 
     }
 
-    var isBookMarkedBool : MutableList<NewsText> = mutableListOf()
-
+    var isBookMarkedNews  : MutableList<NewsText> ? = null
 
 }
 
+
+
 class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-    inner class  NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class  NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+
+        private var positionItem:Int = 1
+        private var currentNewsTextItem : NewsText ? = null
+
+        private  var textNewsHeadline : TextView =  itemView.findViewById(R.id.textViewHeadline)
+        private  var imageNewsHeadline : ImageView = itemView.findViewById(R.id.imageViewNews)
+        private  var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
 
         fun setDatatoItem(newsText: NewsText, position: Int) {
             this.positionItem = position
@@ -69,12 +78,31 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
 
         }
 
-        private var positionItem:Int = 1
-        private var currentNewsTextItem : NewsText ? = null
+        fun setOnclickListeners() {
 
-        private  var textNewsHeadline : TextView =  itemView.findViewById(R.id.textViewHeadline)
-        private  var imageNewsHeadline : ImageView = itemView.findViewById(R.id.imageViewNews)
-        private  var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
+            bookMark.setOnClickListener(this@NewsViewHolder)
+        }
+
+
+        override fun onClick(view: View?) {
+
+            when (view?.id){
+                R.id.imageViewbkMark -> addToWatchLater()
+
+            }
+        }
+
+        private fun addToWatchLater() {
+/*
+            currentNewsTextItem?.isBookmarked = !(currentNewsTextItem?.isBookmarked!!)
+
+            if (currentNewsTextItem?.isBookmarked!!){*/
+
+                NewsToday.isBookMarkedNews?.add(position, currentNewsTextItem!!)
+                notifyItemInserted(position)
+                notifyItemRangeChanged(position, NewsToday.isBookMarkedNews!!.size)
+
+        }
 
     }
 
@@ -89,6 +117,7 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
         val newsTextInstance =  newsTextList[position]
 
         newsViewholder.setDatatoItem(newsTextInstance, position)
+        newsViewholder.setOnclickListeners()
     }
 
     override fun getItemCount(): Int {
@@ -96,3 +125,11 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
     return  newsTextList.size
     }
 }
+
+
+
+
+
+
+
+

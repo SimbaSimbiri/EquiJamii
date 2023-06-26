@@ -62,6 +62,8 @@
     <string name="more">More</string>
     <string name="lightMode">Light Mode</string>
     <string name="profandSettings">    Profile and Settings</string>
+    <string name="readLater"> For You </string>
+    <string name="trending">Trending</string>
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -76,5 +78,6 @@
     <string name="newsImages">News Images</string>
     <string name="savenews">Bookmark to read later</string>
     <string name="scrollnews">Scroll down for more news</string>
+    <string name="readLaterNews">News you added to read later</string>
 
 </resources>
