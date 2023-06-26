@@ -63,7 +63,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedNewsView"
         android:layout_width="match_parent"
@@ -71,7 +70,6 @@
         android:layout_marginBottom="0dp"
         android:contentDescription="@string/scrollnews"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
--->
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +79,6 @@
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             >
 
             <com.google.android.material.tabs.TabLayout
@@ -94,6 +91,7 @@
                  android:layout_marginTop="10dp"
                 app:tabMode="scrollable"
                 app:tabIndicatorHeight="0dp"
+                android:layout_marginStart="10dp"
                 android:contentDescription="@string/tabNews"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +108,7 @@
                 android:id="@+id/viewPagerNews"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="@id/constraintLayout"
                 app:layout_constraintStart_toStartOf="@id/constraintLayout"
@@ -119,9 +117,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--
     </androidx.core.widget.NestedScrollView>
--->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
