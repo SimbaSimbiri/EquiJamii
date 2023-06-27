@@ -26,11 +26,17 @@ class TopStoriesFragment : Fragment() {
        val  view =  inflater.inflate(R.layout.top_stories_fragment, container, false)
 
 
+
         recyclerNews = view.findViewById(R.id.newsRecylerView)
+
+        return view
+    }
+
+    override fun onResume (){
 
         setUpRecyclerNews(view)
 
-        return view
+        super.onResume()
     }
 
     private fun setUpRecyclerNews(view: View?) {

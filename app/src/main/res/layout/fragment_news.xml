@@ -83,14 +83,12 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
                app:tabTextAppearance="@style/titleTab"
-                app:tabPaddingStart="20dp"
-                app:tabPaddingEnd="20dp"
                  android:layout_marginTop="20dp"
                 app:tabMode="scrollable"
-                app:tabIndicatorHeight="0dp"
+                app:tabIndicatorHeight="1dp"
                 android:layout_marginStart="10dp"
                 android:contentDescription="@string/tabNews"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -99,10 +97,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.005"
-                app:tabIconTint="@color/karbBackgrndtint"
-                app:tabBackground="@drawable/background_corner"
-                app:tabSelectedTextColor="@color/titleColor"
-                app:tabTextColor="@color/icon_selected_colors" />
+                app:tabSelectedTextColor="@color/primaryColor"
+                app:tabTextColor="@color/tabUnselected" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerNews"

@@ -2,6 +2,7 @@ package com.simbiri.equityjamii
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.text.Layout
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
@@ -55,17 +55,21 @@ class newsFragment : Fragment(){
         tabLayout  = view.findViewById(R.id.tabLayout)
 
 
-
         viewPager2 = view.findViewById(R.id.viewPagerNews)
         stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
         viewPager2.adapter = stateAdapter
         TabLayoutMediator (tabLayout, viewPager2){ tab, position ->
 
             when (position){
-                0 -> {tab.text = "Top Stories"}
-                1 -> {tab.text = "For You"}
-            }
+                0 -> {tab.text = "Top Stories"
 
+                }
+
+                1 -> {tab.text = "For You"
+
+                }
+
+            }
 
         }.attach()
 
@@ -74,7 +78,6 @@ class newsFragment : Fragment(){
         profileToSettings.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-
 
         return view
 
@@ -109,5 +112,6 @@ class newsFragment : Fragment(){
         viewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
 
 }

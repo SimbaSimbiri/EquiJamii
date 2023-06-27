@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
-data class NewsText(val imageId: Int, val textHeadLine: String, var isBookmarked: Boolean)
+data class NewsText(val imageId: Int, val textHeadLine: String)
 
 object NewsToday {
 
@@ -43,7 +45,7 @@ object NewsToday {
         for (imagePosition in imageList.indices){
             val imageId = imageList[imagePosition]
             val textLine =  textLineList[imagePosition]
-            val newsText =  NewsText(imageId, textLine, false)
+            val newsText =  NewsText(imageId, textLine)
             field!!.add(newsText)
         }
 
@@ -51,7 +53,9 @@ object NewsToday {
 
     }
 
-    var isBookMarkedNews  : MutableList<NewsText> ? = null
+    var isBookMarkedNews  : ArrayList<NewsText>  = arrayListOf()
+
+    var listImageIds :  MutableList<Int> = mutableListOf()
 
 }
 
@@ -62,20 +66,19 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
     inner class  NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private var positionItem:Int = 1
+        private var positionItem:Int = -1
         private var currentNewsTextItem : NewsText ? = null
 
-        private  var textNewsHeadline : TextView =  itemView.findViewById(R.id.textViewHeadline)
-        private  var imageNewsHeadline : ImageView = itemView.findViewById(R.id.imageViewNews)
+        private  var textNewsHeadlineView : TextView =  itemView.findViewById(R.id.textViewHeadline)
+        private  var imageNewsHeadlineView : ImageView = itemView.findViewById(R.id.imageViewNews)
         private  var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
 
         fun setDatatoItem(newsText: NewsText, position: Int) {
             this.positionItem = position
             this.currentNewsTextItem = newsText
 
-            textNewsHeadline.text = newsText.textHeadLine
-            imageNewsHeadline.setImageResource(newsText.imageId)
-
+            textNewsHeadlineView.text = newsText.textHeadLine
+            imageNewsHeadlineView.setImageResource(newsText.imageId)
         }
 
         fun setOnclickListeners() {
@@ -85,26 +88,21 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
 
 
         override fun onClick(view: View?) {
+            val newsImageId = currentNewsTextItem?.imageId
 
-            when (view?.id){
-                R.id.imageViewbkMark -> addToWatchLater()
+            if (!newsAddedList.contains(newsImageId)){
 
+                newsAddedList.add(newsImageId!!)
+
+                NewsToday.isBookMarkedNews.add(currentNewsTextItem!!)
+                Toast.makeText(context, "Added to personalized feed, deleted when session ends", Toast.LENGTH_LONG).show()
             }
-        }
-
-        private fun addToWatchLater() {
-/*
-            currentNewsTextItem?.isBookmarked = !(currentNewsTextItem?.isBookmarked!!)
-
-            if (currentNewsTextItem?.isBookmarked!!){*/
-
-                NewsToday.isBookMarkedNews?.add(position, currentNewsTextItem!!)
-                notifyItemInserted(position)
-                notifyItemRangeChanged(position, NewsToday.isBookMarkedNews!!.size)
-
+            /*else
+                Toast.makeText(context,"Already  saved to feed", Toast.LENGTH_SHORT).show()*/
         }
 
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.newsitemsample, parent, false)
@@ -118,13 +116,16 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
 
         newsViewholder.setDatatoItem(newsTextInstance, position)
         newsViewholder.setOnclickListeners()
+
     }
 
     override fun getItemCount(): Int {
-        
+
     return  newsTextList.size
     }
 }
+
+ var newsAddedList = NewsToday.listImageIds
 
 
 

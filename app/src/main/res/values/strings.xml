@@ -63,7 +63,9 @@
     <string name="lightMode">Light Mode</string>
     <string name="profandSettings">    Profile and Settings</string>
 
-    <string name="readLater">\tSaved by you </string>
+    <string name="readLater">\tSaved during current session </string>
+    <string name="laterDeleted">\tRemoved news from saved session </string>
+
     <string name="trending">\tTrending</string>
     <string name="latest">\tLatest News</string>
 

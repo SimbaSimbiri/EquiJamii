@@ -8,6 +8,7 @@
     <color name="karbBackgrnd">#F3EEEE</color>
     <color name="karbBackgrndtint">#5C2C2A</color>
     <color name="darkGreyColor">#3BFFFFFF</color>
+    <color name="tabUnselected">#905C2C2A</color>
 
 <color name="transparent">#40RRGGBB</color>
 

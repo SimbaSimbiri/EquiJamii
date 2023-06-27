@@ -59,6 +59,7 @@
             android:clickable="true"
             android:contentDescription="@string/savenews"
             android:focusable="true"
+
             android:src="@drawable/ic_baseline_watch_later_24"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewNews"
             app:layout_constraintEnd_toEndOf="parent"

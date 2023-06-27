@@ -8,14 +8,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class WatchLaterAdapter(var context: Context, var watchTextList : List<NewsText>): RecyclerView.Adapter<WatchLaterAdapter.WatchLaterViewHolder>() {
+class WatchLaterAdapter(var context: Context, var watchTextList: ArrayList<NewsText>): RecyclerView.Adapter<WatchLaterAdapter.WatchLaterViewHolder>(){
 
-    inner class WatchLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class WatchLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private var positionItem:Int = 1
         private var currentLaterItem : NewsText ? = null
 
         private  var textNewsForYou : TextView =  itemView.findViewById(R.id.textViewForYou)
         private  var imageViewForYou : ImageView = itemView.findViewById(R.id.imageViewForYou)
+        private var removeSaved: ImageView = itemView.findViewById(R.id.removeSaved)
 
 
         fun setDatatoItem(bookMarkedNewsInst: NewsText, position: Int) {
@@ -25,6 +27,19 @@ class WatchLaterAdapter(var context: Context, var watchTextList : List<NewsText>
 
             textNewsForYou.text = bookMarkedNewsInst.textHeadLine
             imageViewForYou.setImageResource(bookMarkedNewsInst.imageId)
+        }
+
+        fun setOnClicks() {
+            removeSaved.setOnClickListener(this@WatchLaterViewHolder)
+        }
+
+        override fun onClick(v: View?) {
+
+            watchTextList.remove(currentLaterItem)
+            newsAddedList.remove(currentLaterItem?.imageId)
+            notifyItemRemoved(positionItem)
+            notifyItemRangeChanged(positionItem, watchTextList.size)
+
         }
 
     }
@@ -39,9 +54,11 @@ class WatchLaterAdapter(var context: Context, var watchTextList : List<NewsText>
         val bookMarkedNewsInst: NewsText = watchTextList[position]
 
         watchLaterViewHolder.setDatatoItem(bookMarkedNewsInst, position)
+        watchLaterViewHolder.setOnClicks()
 
     }
 
     override fun getItemCount(): Int = watchTextList.size
+
 
 }
