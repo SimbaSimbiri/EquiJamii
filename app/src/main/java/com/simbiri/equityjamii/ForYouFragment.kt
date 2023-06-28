@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
@@ -44,7 +45,8 @@ class ForYouFragment : Fragment() {
 
         image_Slider.setImageList(imageList)
 
-        Toast.makeText(context, "Saved items appear here", Toast.LENGTH_SHORT).show()
+        if(newsAddedList.size == 0){ Toast.makeText(context, "Saved items appear here", Toast.LENGTH_SHORT).show()
+        }
 
         return view
     }

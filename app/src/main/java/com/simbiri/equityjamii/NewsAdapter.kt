@@ -24,7 +24,7 @@ object NewsToday {
         R.drawable.good_profile
     )
 
-    private val textLineList =  arrayOf(
+    private val textLineList = arrayOf(
         "\tEU officials grace Equity Group Holdings",
         "\tEquity maintains outstanding financial perfomance",
         "\tWings to Fly Scholars fly abroad",
@@ -35,43 +35,43 @@ object NewsToday {
 
     )
 
-    var newsTextList : ArrayList<NewsText>? =  null
-    get() {
-        if (field!= null)
+    var newsTextList: ArrayList<NewsText>? = null
+        get() {
+            if (field != null)
 
-            return  field
-        field =  ArrayList()
+                return field
+            field = ArrayList()
 
-        for (imagePosition in imageList.indices){
-            val imageId = imageList[imagePosition]
-            val textLine =  textLineList[imagePosition]
-            val newsText =  NewsText(imageId, textLine)
-            field!!.add(newsText)
+            for (imagePosition in imageList.indices) {
+                val imageId = imageList[imagePosition]
+                val textLine = textLineList[imagePosition]
+                val newsText = NewsText(imageId, textLine)
+                field!!.add(newsText)
+            }
+
+            return field
+
         }
 
-        return field
+    var isBookMarkedNews: ArrayList<NewsText> = arrayListOf()
 
-    }
-
-    var isBookMarkedNews  : ArrayList<NewsText>  = arrayListOf()
-
-    var listImageIds :  MutableList<Int> = mutableListOf()
+    var listImageIds: MutableList<Int> = mutableListOf()
 
 }
 
 
+class NewsAdapter(var context: Context, var newsTextList: List<NewsText>) :
+    RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
-
-    inner class  NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
+    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private var positionItem:Int = -1
-        private var currentNewsTextItem : NewsText ? = null
+        private var positionItem: Int = -1
+        private var currentNewsTextItem: NewsText? = null
 
-        private  var textNewsHeadlineView : TextView =  itemView.findViewById(R.id.textViewHeadline)
-        private  var imageNewsHeadlineView : ImageView = itemView.findViewById(R.id.imageViewNews)
-        private  var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
+        private var textNewsHeadlineView: TextView = itemView.findViewById(R.id.textViewHeadline)
+        private var imageNewsHeadlineView: ImageView = itemView.findViewById(R.id.imageViewNews)
+        private var bookMark: ImageView = itemView.findViewById(R.id.imageViewbkMark)
 
         fun setDatatoItem(newsText: NewsText, position: Int) {
             this.positionItem = position
@@ -90,15 +90,17 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
         override fun onClick(view: View?) {
             val newsImageId = currentNewsTextItem?.imageId
 
-            if (!newsAddedList.contains(newsImageId)){
+            if (!newsAddedList.contains(newsImageId)) {
 
                 newsAddedList.add(newsImageId!!)
 
                 NewsToday.isBookMarkedNews.add(currentNewsTextItem!!)
-                Toast.makeText(context, "Added to personalized feed, deleted when session ends", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Added to personalized feed, deleted when session ends",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            /*else
-                Toast.makeText(context,"Already  saved to feed", Toast.LENGTH_SHORT).show()*/
         }
 
     }
@@ -107,12 +109,12 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.newsitemsample, parent, false)
 
-        return NewsViewHolder( view)
+        return NewsViewHolder(view)
     }
 
     override fun onBindViewHolder(newsViewholder: NewsViewHolder, position: Int) {
 
-        val newsTextInstance =  newsTextList[position]
+        val newsTextInstance = newsTextList[position]
 
         newsViewholder.setDatatoItem(newsTextInstance, position)
         newsViewholder.setOnclickListeners()
@@ -121,11 +123,11 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>): Recyc
 
     override fun getItemCount(): Int {
 
-    return  newsTextList.size
+        return newsTextList.size
     }
 }
 
- var newsAddedList = NewsToday.listImageIds
+var newsAddedList = NewsToday.listImageIds
 
 
 
