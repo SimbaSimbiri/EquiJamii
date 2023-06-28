@@ -15,6 +15,7 @@ data class NewsText(val imageId: Int, val textHeadLine: String)
 object NewsToday {
 
     private val imageList = arrayOf(
+
         R.drawable.europeanu_talks_image,
         R.drawable.equity_assurance,
         R.drawable.wings_to_fly_girls,
