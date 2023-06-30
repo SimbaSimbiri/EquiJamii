@@ -6,13 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.size
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
+import com.google.android.material.snackbar.Snackbar
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ForYouFragment : Fragment() {
 
@@ -21,8 +27,13 @@ class ForYouFragment : Fragment() {
     }
 
     private lateinit var viewModel: ForYouViewModel
-    private lateinit var recyclerForYou: RecyclerView
+    private lateinit var recyclerSavedForYou: RecyclerView
+    private lateinit var recyclerRecForYou : RecyclerView
     private lateinit var image_Slider: ImageSlider
+    private lateinit var  newsLaterAdapter : WatchLaterAdapter
+    private lateinit var recommendAdapter: WatchLaterAdapter
+    private lateinit var imageLater : ImageView
+    private lateinit var textSaved : TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +41,11 @@ class ForYouFragment : Fragment() {
     ): View? {
         val view =  inflater.inflate(R.layout.for_you_fragment, container, false)
 
-         recyclerForYou = view.findViewById(R.id.forYouRecylerView)
+        recyclerSavedForYou = view.findViewById(R.id.forYouRecylerView)
+        recyclerRecForYou =  view.findViewById(R.id.recommendforYouRecylerView)
+        imageLater =  view.findViewById(R.id.imageViewLater)
+        textSaved = view.findViewById(R.id.textViewSaved)
+
 
 
         image_Slider = view?.findViewById<ImageSlider>(R.id.image_slider) as ImageSlider
@@ -45,28 +60,89 @@ class ForYouFragment : Fragment() {
 
         image_Slider.setImageList(imageList)
 
-        if(newsAddedList.size == 0){ Toast.makeText(context, "Saved items appear here", Toast.LENGTH_SHORT).show()
-        }
 
         return view
     }
 
+    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,ItemTouchHelper.LEFT){
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            targetViewHolder: RecyclerView.ViewHolder
+        ): Boolean {
+             val initPosition =  viewHolder.adapterPosition
+            val finalPosition = targetViewHolder.adapterPosition
+
+            Collections.swap(NewsToday.isBookMarkedNews, initPosition, finalPosition)
+
+            recyclerView.adapter?.notifyItemMoved(initPosition, finalPosition)
+
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            val positionOfSwiped = viewHolder.adapterPosition
+            val deletedSaved : NewsText = NewsToday.isBookMarkedNews[positionOfSwiped]
+
+            deleteSavedNews(positionOfSwiped)
+
+            Snackbar.make(recyclerSavedForYou, "Deleted from saved", Snackbar.LENGTH_LONG).setAction("Undo") {
+                undoDeleted(positionOfSwiped, deletedSaved)
+            }.show()
+
+        }
+
+    })
+
+    private fun undoDeleted(positionOfSwiped: Int, deletedSaved: NewsText) {
+
+        NewsToday.isBookMarkedNews.add(positionOfSwiped, deletedSaved)
+        newsLaterAdapter.notifyItemInserted(positionOfSwiped)
+        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, NewsToday.isBookMarkedNews.size)
+
+    }
+
+    private fun deleteSavedNews(positionOfSwiped: Int) {
+
+        val imageId =NewsToday.isBookMarkedNews[positionOfSwiped].imageId
+        newsAddedList.remove(imageId)
+        NewsToday.isBookMarkedNews.remove(NewsToday.isBookMarkedNews[positionOfSwiped])
+
+        newsLaterAdapter.notifyItemRemoved(positionOfSwiped)
+        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, NewsToday.isBookMarkedNews.size)
+    }
+
+
     override fun onResume() {
 
-         setUpRecyclerForYou(view)
+         setUpRecyclers(view)
 
         super.onResume()
     }
-    private fun setUpRecyclerForYou(view: View?) {
+
+
+    private fun setUpRecyclers(view: View?) {
 
         val context = requireContext()
-        val newsLaterAdapter =  WatchLaterAdapter(context, NewsToday.isBookMarkedNews)
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = RecyclerView.VERTICAL
+        newsLaterAdapter =  WatchLaterAdapter(context, NewsToday.isBookMarkedNews)
+        recommendAdapter = WatchLaterAdapter(context, NewsToday.newsTextList!!)
 
-        recyclerForYou.adapter = newsLaterAdapter
-        recyclerForYou.layoutManager = layoutManager
-        recyclerForYou.setHasFixedSize(true)
+         val layoutManagerSaved = LinearLayoutManager(context)
+        layoutManagerSaved.orientation = RecyclerView.VERTICAL
+
+        recyclerSavedForYou.adapter = newsLaterAdapter
+        recyclerSavedForYou.layoutManager = layoutManagerSaved
+        recyclerSavedForYou.setHasFixedSize(true)
+
+        val layoutManagerRec = LinearLayoutManager(context)
+        layoutManagerRec.orientation = RecyclerView.VERTICAL
+
+        recyclerRecForYou.adapter = recommendAdapter
+        recyclerRecForYou.layoutManager = layoutManagerRec
+        recyclerRecForYou.hasFixedSize()
+
+        itemTouchHelper.attachToRecyclerView(recyclerSavedForYou)
 
     }
 

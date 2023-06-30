@@ -61,7 +61,7 @@ class newsFragment : Fragment(){
         TabLayoutMediator (tabLayout, viewPager2){ tab, position ->
 
             when (position){
-                0 -> {tab.text = "Top Stories"
+                0 -> {tab.text = "Latest"
 
                 }
 

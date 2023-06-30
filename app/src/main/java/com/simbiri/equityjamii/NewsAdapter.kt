@@ -58,6 +58,7 @@ object NewsToday {
 
     var listImageIds: MutableList<Int> = mutableListOf()
 
+
 }
 
 

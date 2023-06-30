@@ -63,11 +63,12 @@
     <string name="lightMode">Light Mode</string>
     <string name="profandSettings">    Profile and Settings</string>
 
+    <string name="recommended">\tRecommended for you</string>
     <string name="readLater">\tSaved during current session </string>
     <string name="laterDeleted">\tRemoved news from saved session </string>
 
     <string name="trending">\tTrending</string>
-    <string name="latest">\tLatest News</string>
+    <string name="latest">\tTop Stories</string>
 
 
     <string name="next">Next</string>
