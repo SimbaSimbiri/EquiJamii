@@ -13,7 +13,7 @@
         <item name="windowNoTitle">true</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/karbBackgrndtint</item>
+        <item name="android:statusBarColor">@color/primaryColor</item>
         <!-- Customize your theme here. -->
 
     </style>
@@ -29,7 +29,7 @@
 
     <style name="titleToolBarFont">
         <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title"> @font/baloo</item>
-        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">20sp</item>
+        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">22sp</item>
         <item name="android:textAlignment"  parent = "Widget.AppCompat.Toolbar.Title">textStart</item>
     </style>
 

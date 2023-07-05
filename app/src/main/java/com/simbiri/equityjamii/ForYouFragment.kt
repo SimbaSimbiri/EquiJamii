@@ -2,14 +2,14 @@ package com.simbiri.equityjamii
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,6 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ForYouFragment : Fragment() {
 
@@ -26,7 +25,6 @@ class ForYouFragment : Fragment() {
         fun newInstance() = ForYouFragment()
     }
 
-    private lateinit var viewModel: ForYouViewModel
     private lateinit var recyclerSavedForYou: RecyclerView
     private lateinit var recyclerRecForYou : RecyclerView
     private lateinit var image_Slider: ImageSlider
@@ -34,6 +32,10 @@ class ForYouFragment : Fragment() {
     private lateinit var recommendAdapter: WatchLaterAdapter
     private lateinit var imageLater : ImageView
     private lateinit var textSaved : TextView
+
+    private val viewModel by lazy {  ViewModelProvider(this).get(ForYouViewModel::class.java)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,31 +51,25 @@ class ForYouFragment : Fragment() {
 
 
         image_Slider = view?.findViewById<ImageSlider>(R.id.image_slider) as ImageSlider
+        viewModel.addtoImageList()
+        image_Slider.setImageList(viewModel.imageList)
 
-        val imageList =  ArrayList<SlideModel>()
-
-        imageList.add(SlideModel(R.drawable.hackathonequity , "Meet the winners of Equity Hackathon 2nd Edition", ScaleTypes.FIT))
-        imageList.add(SlideModel( R.drawable.bankacquisition, "Equity Group  acquires 91% of COGEBANQUE  equity stake", ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.cewicequity , "Commonwealth Enterprise partners with Equity", ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.americanecommerce, "Why is Africa The Future of the world?", ScaleTypes.FIT))
-
-
-        image_Slider.setImageList(imageList)
-
+        setUpRecyclerRecommend(view)
 
         return view
     }
 
     private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,ItemTouchHelper.LEFT){
+
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             targetViewHolder: RecyclerView.ViewHolder
         ): Boolean {
-             val initPosition =  viewHolder.adapterPosition
+            val initPosition =  viewHolder.adapterPosition
             val finalPosition = targetViewHolder.adapterPosition
 
-            Collections.swap(NewsToday.isBookMarkedNews, initPosition, finalPosition)
+            Collections.swap(viewModel.newsListBkMarked, initPosition, finalPosition)
 
             recyclerView.adapter?.notifyItemMoved(initPosition, finalPosition)
 
@@ -83,7 +79,7 @@ class ForYouFragment : Fragment() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
             val positionOfSwiped = viewHolder.adapterPosition
-            val deletedSaved : NewsText = NewsToday.isBookMarkedNews[positionOfSwiped]
+            val deletedSaved : NewsText = viewModel.newsListBkMarked[positionOfSwiped]
 
             deleteSavedNews(positionOfSwiped)
 
@@ -97,38 +93,52 @@ class ForYouFragment : Fragment() {
 
     private fun undoDeleted(positionOfSwiped: Int, deletedSaved: NewsText) {
 
-        NewsToday.isBookMarkedNews.add(positionOfSwiped, deletedSaved)
+        viewModel.newsListBkMarked.add(positionOfSwiped, deletedSaved)
         newsLaterAdapter.notifyItemInserted(positionOfSwiped)
-        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, NewsToday.isBookMarkedNews.size)
+        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, viewModel.newsListBkMarked.size)
 
     }
 
     private fun deleteSavedNews(positionOfSwiped: Int) {
 
-        val imageId =NewsToday.isBookMarkedNews[positionOfSwiped].imageId
-        newsAddedList.remove(imageId)
-        NewsToday.isBookMarkedNews.remove(NewsToday.isBookMarkedNews[positionOfSwiped])
+        val imageId =viewModel.newsListBkMarked[positionOfSwiped].imageId
+        val deletedNews = viewModel.newsListBkMarked[positionOfSwiped]
+
+        viewModel.newsAddedList.remove(imageId)
+        viewModel.newsListBkMarked.remove(deletedNews)
 
         newsLaterAdapter.notifyItemRemoved(positionOfSwiped)
-        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, NewsToday.isBookMarkedNews.size)
+        newsLaterAdapter.notifyItemRangeChanged(positionOfSwiped, viewModel.newsListBkMarked.size)
     }
 
 
     override fun onResume() {
-
-         setUpRecyclers(view)
-
         super.onResume()
+
+        setUpRecyclerSaved(view)
     }
 
 
-    private fun setUpRecyclers(view: View?) {
+    private fun setUpRecyclerRecommend(view: View?) {
 
         val context = requireContext()
-        newsLaterAdapter =  WatchLaterAdapter(context, NewsToday.isBookMarkedNews)
-        recommendAdapter = WatchLaterAdapter(context, NewsToday.newsTextList!!)
+        recommendAdapter = WatchLaterAdapter(context, viewModel.newsListRecommended!!)
 
-         val layoutManagerSaved = LinearLayoutManager(context)
+        val layoutManagerRec = LinearLayoutManager(context)
+        layoutManagerRec.orientation = RecyclerView.VERTICAL
+
+        recyclerRecForYou.adapter = recommendAdapter
+        recyclerRecForYou.layoutManager = layoutManagerRec
+        recyclerRecForYou.hasFixedSize()
+
+    }
+
+    private fun setUpRecyclerSaved(view: View?) {
+
+        val context = requireContext()
+        newsLaterAdapter =  WatchLaterAdapter(context, viewModel.newsListBkMarked)
+
+        val layoutManagerSaved = LinearLayoutManager(context)
         layoutManagerSaved.orientation = RecyclerView.VERTICAL
 
         recyclerSavedForYou.adapter = newsLaterAdapter
@@ -138,19 +148,12 @@ class ForYouFragment : Fragment() {
         val layoutManagerRec = LinearLayoutManager(context)
         layoutManagerRec.orientation = RecyclerView.VERTICAL
 
-        recyclerRecForYou.adapter = recommendAdapter
-        recyclerRecForYou.layoutManager = layoutManagerRec
-        recyclerRecForYou.hasFixedSize()
-
         itemTouchHelper.attachToRecyclerView(recyclerSavedForYou)
 
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ForYouViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+
 
 }
+

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -26,19 +27,14 @@ class newsFragment : Fragment(){
     }
 
     private lateinit var viewModel: NewsViewModel
-/*
-    lateinit var image_Slider: ImageSlider
-*/
+
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appBarLayout: AppBarLayout
-    private lateinit var profileToSettings: ImageView
     private lateinit var toolbar: MaterialToolbar
     private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
     private lateinit var tabLayout: TabLayout
 
-
-    lateinit var textField3: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +45,16 @@ class newsFragment : Fragment(){
 
         appBarLayout = view.findViewById(R.id.appBarNews)
         collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
-        profileToSettings = collapsingToolbarLayout.findViewById(R.id.profileAndSettings)
-        toolbar = view.findViewById(R.id.topAppBarNews)
-        viewPager2 = view.findViewById(R.id.viewPagerNews)
+
+        toolbar = collapsingToolbarLayout.findViewById(R.id.topAppBarNews)
         tabLayout  = view.findViewById(R.id.tabLayout)
+
+        val drawerLayout =  requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
+
+
+        val toggle = ActionBarDrawerToggle(requireActivity(), drawerLayout,toolbar,R.string.openDrawer, R.string.closeDrawer)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
 
         viewPager2 = view.findViewById(R.id.viewPagerNews)
@@ -72,12 +74,6 @@ class newsFragment : Fragment(){
             }
 
         }.attach()
-
-        val drawerLayout =  requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
-
-        profileToSettings.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
 
         return view
 

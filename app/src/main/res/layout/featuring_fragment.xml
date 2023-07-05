@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FeaturingFragment">
+
+
+    <TextView
+        android:id="@+id/equiLeaderWeekText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="EquiLeader of the Week"
+        android:textAppearance="@style/titleTab"
+        android:textColor="@color/karbBackgrndtint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+
+        android:id="@+id/cardViewLeader"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/equiLeaderWeekText">
+
+        <ImageView
+            android:id="@+id/imageViewLeader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/good_profile" />
+
+        <TextView
+            android:id="@+id/textfeaturingEquiLeader"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@color/darkGreyColor"
+            android:fontFamily="@font/baloo_paaji_2_semibold"
+            android:gravity="center"
+            android:text="Featuring CEO James Njoroge"
+            android:textAppearance="@style/titleTab"
+            android:textColor="@color/karbBackgrndtint"
+            android:textSize="13sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/equiJamaaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="EquiJamaa of the Week"
+        android:textAppearance="@style/titleTab"
+        android:textColor="@color/karbBackgrndtint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewLeader" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewJamaa"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="15dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/equiJamaaText">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/good_profile" />
+
+        <TextView
+            android:id="@+id/textfeaturingEquiJamaa"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@color/darkGreyColor"
+            android:fontFamily="@font/baloo_paaji_2_semibold"
+            android:gravity="center"
+            android:text="A day in the life of  Bank Teller George Pile"
+            android:textAppearance="@style/titleTab"
+            android:textColor="@color/karbBackgrndtint"
+            android:textSize="13sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/branchWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Staff of the Week"
+        android:textAppearance="@style/titleTab"
+        android:textColor="@color/karbBackgrndtint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewJamaa" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewBranch"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/branchWeek">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/good_profile" />
+
+        <TextView
+            android:id="@+id/textfeaturingBranch"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@color/darkGreyColor"
+            android:fontFamily="@font/baloo_paaji_2_semibold"
+            android:gravity="center"
+            android:text="Meet Jairo, Ngara Branch's guard"
+            android:textAppearance="@style/titleTab"
+            android:textColor="@color/karbBackgrndtint"
+            android:textSize="13sp" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/scholarWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Branch of the Week"
+        android:textAppearance="@style/titleTab"
+        android:textColor="@color/karbBackgrndtint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewBranch" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewScholar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scholarWeek">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/good_profile" />
+
+        <TextView
+            android:id="@+id/textfeaturingScholar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@color/darkGreyColor"
+            android:fontFamily="@font/baloo_paaji_2_semibold"
+            android:gravity="center"
+            android:textAppearance="@style/titleTab"
+            android:textColor="@color/karbBackgrndtint"
+            android:text="A glance into  Ngara Branch"
+            android:textSize="13sp" />
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,32 +87,25 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         when (item.itemId) {
 
             R.id.profileSettings -> {
-
-                drawerMenu.findItem(R.id.communicate).isVisible = false
-                drawerMenu.findItem(R.id.aboutUs).isVisible = false
-
                 onClick(0)
-
-
                 return true
             }
             R.id.settingsMenu -> {
-                drawerMenu.findItem(R.id.communicate).isVisible = false
-                drawerMenu.findItem(R.id.aboutUs).isVisible = false
-
                 onClick(1)
-
                 return true
             }
             R.id.aboutUs -> {
                 onClick(2)
-
                 return true
             }
             R.id.moreMenu -> {
-                drawerMenu.findItem(R.id.communicate).isVisible = true
-                drawerMenu.findItem(R.id.aboutUs).isVisible = true
-
+                if (!drawerMenu.findItem(R.id.communicate).isVisible) {
+                    drawerMenu.findItem(R.id.communicate).isVisible = true
+                    drawerMenu.findItem(R.id.aboutUs).isVisible = true
+                }
+                else {
+                    drawerMenu.findItem(R.id.communicate).isVisible = false
+                    drawerMenu.findItem(R.id.aboutUs).isVisible = false}
                 return true
             }
 
@@ -120,8 +113,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 onClick(3)
             }
 
-
         }
+
 
         return true
     }
