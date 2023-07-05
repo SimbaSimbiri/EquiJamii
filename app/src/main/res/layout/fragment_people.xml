@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
@@ -16,16 +15,15 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_gravity="fill"
-            app:expandedTitleMarginStart="10dp"
 
             app:collapsedTitleGravity="start"
-            app:collapsedTitleTextAppearance="@style/titleToolBarFont"
+            app:collapsedTitleTextAppearance="@style/titleToolBarFont2"
             app:collapsedTitleTextColor="@color/titleColor"
-            app:expandedTitleGravity="start"
-            app:expandedTitleTextAppearance="@style/titleToolBarFont2"
+            app:expandedTitleGravity="center_horizontal"
+            app:expandedTitleTextAppearance="@style/titleToolBarFont"
             app:expandedTitleTextColor="@color/titleColor"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            app:layout_scrollFlags="scroll|enterAlways">
+
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
@@ -44,19 +42,6 @@
 
             </com.google.android.material.appbar.MaterialToolbar>
 
-            <ImageView
-                android:id="@+id/profileAndSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="10dp"
-                android:clickable="true"
-                android:contentDescription="@string/profileAndSet"
-                android:src="@drawable/ic_baseline_dehaze_24"
-                tools:ignore="TouchTargetSizeCheck"
-                android:focusable="true"
-                app:layout_collapseMode="pin"/>
-
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -65,7 +50,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="0dp"
         android:contentDescription="@string/scrollnews"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -77,6 +63,38 @@
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutPeople"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                app:tabTextAppearance="@style/titleTab"
+                android:layout_marginTop="10dp"
+                app:tabMode="scrollable"
+                app:tabIndicatorHeight="1dp"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/peoplePageTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.005"
+                app:tabSelectedTextColor="@color/primaryColor"
+                app:tabTextColor="@color/tabUnselected" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerPeople"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
+                app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+                app:layout_constraintStart_toStartOf="@id/constraintLayout"
+                app:layout_constraintTop_toBottomOf="@id/tabLayoutPeople" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

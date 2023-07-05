@@ -31,7 +31,8 @@
     <string name="nav_header_profile">Nav Header Picture</string>
 
 
-    <string name="userRay">Ray  Simbiri</string>
+    <string name="userName">Name</string>
+    <string name="experience">  Denomination\nCurrent branch working at</string>
 
     <string name="newsFragLabel">News Page</string>
     <string name="newsFragTitle"> Today\'s top stories</string>

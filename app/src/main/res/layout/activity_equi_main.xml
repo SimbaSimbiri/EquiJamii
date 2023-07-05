@@ -11,8 +11,8 @@
         android:layout_height="match_parent"
         app:headerLayout="@layout/nav_header_profile"
         android:layout_gravity="start"
-        app:itemIconTint="@color/icon_selected_colors"
-        app:itemTextColor="@color/icon_selected_colors"
+        app:itemIconTint="@color/titleColor"
+        app:itemTextColor="@color/titleColor"
         android:background="@color/karbBackgrndtint"
         app:menu="@menu/drawermenu">
 

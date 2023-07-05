@@ -17,22 +17,23 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_gravity="fill"
-            app:collapsedTitleGravity="start"
 
-            app:collapsedTitleTextAppearance="@style/titleToolBarFont"
+            app:collapsedTitleGravity="start"
+            app:collapsedTitleTextAppearance="@style/titleToolBarFont2"
             app:collapsedTitleTextColor="@color/titleColor"
-            app:expandedTitleGravity="start"
-            app:expandedTitleMarginStart="10dp"
-            app:expandedTitleTextAppearance="@style/titleToolBarFont2"
+            app:expandedTitleGravity="center_horizontal"
+            app:expandedTitleTextAppearance="@style/titleToolBarFont"
             app:expandedTitleTextColor="@color/titleColor"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBarNews"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintEnd_toStartOf="parent"
@@ -41,11 +42,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/Theme.AppCompat.Light"
                 app:title="News"
+                app:titleMarginStart="0dp"
                 app:titleTextColor="@color/titleColor">
 
             </com.google.android.material.appbar.MaterialToolbar>
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/profileAndSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -56,7 +58,7 @@
                 android:focusable="true"
                 android:src="@drawable/ic_baseline_dehaze_24"
                 app:layout_collapseMode="pin"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck" />-->
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -83,7 +85,7 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="25dp"
                app:tabTextAppearance="@style/titleTab"
                  android:layout_marginTop="20dp"

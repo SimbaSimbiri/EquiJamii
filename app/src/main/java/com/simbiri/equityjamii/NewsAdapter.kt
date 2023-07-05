@@ -9,6 +9,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.simbiri.equityjamii.NewsToday.listImageIds
 
 data class NewsText(val imageId: Int, val textHeadLine: String)
 
@@ -56,7 +58,8 @@ object NewsToday {
 
     var isBookMarkedNews: ArrayList<NewsText> = arrayListOf()
 
-    var listImageIds: MutableList<Int> = mutableListOf()
+    var listImageIds: ArrayList<Int> = arrayListOf()
+
 
 
 }
@@ -92,17 +95,19 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>) :
         override fun onClick(view: View?) {
             val newsImageId = currentNewsTextItem?.imageId
 
-            if (!newsAddedList.contains(newsImageId)) {
+            if (!listImageIds.contains(newsImageId)) {
 
-                newsAddedList.add(newsImageId!!)
+                listImageIds.add(newsImageId!!)
 
                 NewsToday.isBookMarkedNews.add(currentNewsTextItem!!)
                 Toast.makeText(
                     context,
-                    "Added to personalized feed, deleted when session ends",
+                    "Added to  For You page",
                     Toast.LENGTH_SHORT
                 ).show()
+
             }
+
         }
 
     }
@@ -129,7 +134,6 @@ class NewsAdapter(var context: Context, var newsTextList: List<NewsText>) :
     }
 }
 
-var newsAddedList = NewsToday.listImageIds
 
 
 
