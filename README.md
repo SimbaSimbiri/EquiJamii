@@ -34,7 +34,7 @@ My chosen API for this project is **YouTube Data API V3**.
 
 Here's a video / GIF that demos all of the app's implemented features:
 
-<img src='https://i.imgur.com/3y0udKk.gif' title='Youtube Data API' width='' alt='Video Demo' />
+<img src='https://i.imgur.com/GRk31ee.gif' title='Youtube Data APIv3' width='' alt='Video Demo of my app' />
 
 GIF created with **ScreenToGif**
 
