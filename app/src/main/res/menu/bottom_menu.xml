@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
         <item
             android:id="@+id/newsFrag"
             android:icon="@drawable/newsiconcool"
@@ -9,15 +10,22 @@
             app:showAsAction="always"
             />
 
-        <item android:id="@+id/peopleFrag"
-            android:title="@string/people_icon"
-            android:icon="@drawable/icons8_people"
+        <item
+            android:id="@+id/myWorkspace"
+            android:icon="@drawable/icons8_workspace__1_"
+            android:title="My Workspace"
             app:showAsAction="always"
             />
 
         <item android:id="@+id/postFrag"
             android:icon="@drawable/icons8_group_task"
-            android:title="@string/add_post"
+            android:title="Jamii"
+            app:showAsAction="always"
+            />
+
+        <item android:id="@+id/peopleFrag"
+            android:title= "EquiAfya"
+            android:icon="@drawable/equity_afya_icon"
             app:showAsAction="always"
             />
 
@@ -25,13 +33,6 @@
             android:id="@+id/scholarsFrag"
             android:icon="@drawable/icons_scholar"
             android:title="@string/studyabroad_icon"
-            app:showAsAction="always"
-            />
-
-        <item
-            android:id="@+id/growthFrag"
-            android:icon="@drawable/icons8_personal_growth"
-            android:title="@string/growth_icon"
             app:showAsAction="always"
             />
 

@@ -2,19 +2,16 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginStart="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
     android:layout_marginTop="7dp"
-    android:layout_marginEnd="10dp"
     android:layout_marginBottom="7dp"
     android:backgroundTint="@color/karbBackgrndtint"
     android:clickable="true"
     android:focusable="true"
-    android:elevation="20dp"
-    app:cardCornerRadius="15dp"
-    android:outlineAmbientShadowColor="@color/karbBackgrndtint"
-
+    android:elevation="8dp"
+    app:cardCornerRadius="8dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +35,7 @@
             android:id="@+id/textViewHeadline"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:background="@color/karbBackgrndtint"
+            android:background="@color/navColor"
             android:fontFamily="@font/baloo_paaji_2_semibold"
             android:gravity="center"
             android:textColor="@color/white"
@@ -50,22 +47,6 @@
             app:layout_constraintTop_toTopOf="@+id/imageViewNews"
             app:layout_constraintVertical_bias="1.0" />
 
-        <ImageView
-            android:id="@+id/imageViewbkMark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="160dp"
-            android:clickable="true"
-            android:contentDescription="@string/savenews"
-            android:focusable="true"
-
-            android:src="@drawable/ic_baseline_watch_later_24"
-            app:layout_constraintBottom_toBottomOf="@+id/imageViewNews"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

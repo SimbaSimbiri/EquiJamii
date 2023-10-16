@@ -9,11 +9,12 @@
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:headerLayout="@layout/nav_header_profile"
         android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header_profile"
         app:itemIconTint="@color/titleColor"
         app:itemTextColor="@color/titleColor"
-        android:background="@color/karbBackgrndtint"
+        app:itemTextAppearance="@style/titleTab"
+        android:background="@color/navColor"
         app:menu="@menu/drawermenu">
 
     </com.google.android.material.navigation.NavigationView>
@@ -35,24 +36,22 @@
                 app:layout_constraintEnd_toStartOf="parent">
 
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/nav_host_fragment"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="67dp"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
-                    app:defaultNavHost="true"
-                    app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
-                    app:layout_constraintLeft_toLeftOf="parent"
-
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:navGraph="@navigation/nav_graph" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/nav_graph" />
+
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -60,22 +59,24 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/background_corner"
+            app:itemIconSize="25dp"
 
             android:requiresFadingEdge="horizontal"
             app:elevation="8dp"
-            app:itemIconTint="@color/icon_selected_colors"
+            app:itemIconTint="@color/bottomnavselect"
+            app:itemTextColor="@color/bottomnavselect"
+            app:itemTextAppearanceActive="@style/titleTab"
+            app:itemTextAppearanceInactive="@style/titleTab"
 
-
-            app:itemTextColor="@color/icon_selected_colors"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_menu" />
+
+
+
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

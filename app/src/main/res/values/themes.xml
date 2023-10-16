@@ -26,23 +26,45 @@
     <style name="Theme.EquityJamii.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.EquityJamii.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:background">@drawable/rounded_corners_bottom_sheet</item>
+    </style>
 
     <style name="titleToolBarFont">
-        <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title"> @font/baloo</item>
-        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">22sp</item>
-        <item name="android:textAlignment"  parent = "Widget.AppCompat.Toolbar.Title">textStart</item>
+        <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title">@font/baloo</item>
+        <item name="android:textSize" parent="Widget.AppCompat.Toolbar.Title">22sp</item>
+        <item name="android:textAlignment" parent="Widget.AppCompat.Toolbar.Title">textStart</item>
     </style>
 
     <style name="titleToolBarFont2">
         <item name="android:fontFamily" parent="Widget.AppCompat.Toolbar.Title">@font/baloo</item>
-        <item name="android:textSize" parent = "Widget.AppCompat.Toolbar.Title">18sp</item>
-        <item name="android:textAlignment"  parent = "Widget.AppCompat.Toolbar.Title">textStart</item>
+        <item name="android:textSize" parent="Widget.AppCompat.Toolbar.Title">18sp</item>
+        <item name="android:textAlignment" parent="Widget.AppCompat.Toolbar.Title">textStart</item>
 
     </style>
 
     <style name="titleTab" parent="Widget.Design.TabLayout">
-        <item name="android:textSize"   >13sp</item>
-        <item name = "fontFamily">@font/baloo_paaji_2_semibold</item>
+        <item name="android:textSize">10sp</item>
+        <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
     </style>
+
+    <style name="ThemeOverlay.EquityJamii.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
+
+    <style name="MyDatePickerStyle" >
+        <item name="colorAccent">@color/karbBackgrndtint</item>
+        <item name="android:dateTextAppearance">@style/titleTab</item>
+        <item name="android:textAppearance">@style/titleTab</item>
+        <item name="itemTextAppearance">@style/titleTab</item>
+        <item name="android:textSize">19sp</item>
+        <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="selectorSize">0dp</item>
+  </style>
+
+
 
 </resources>

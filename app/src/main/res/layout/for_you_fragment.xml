@@ -1,158 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ForYouFragment"
-    >
-<!--
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="18dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@string/trending"
-        android:src="@drawable/icons8_fire"
-        app:layout_constraintBottom_toTopOf="@+id/cardView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        />-->
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginTop="7dp"
-        android:fontFamily="@font/baloo_paaji_2_semibold"
-        android:text="@string/trending"
-        android:textColor="@color/karbBackgrndtint"
-        android:textAppearance="@style/titleTab"
-        android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="10dp"
-        android:backgroundTint="@color/karbBackgrndtint"
-        android:clickable="true"
-        android:contentDescription="@string/trending"
-        android:focusable="true"
-        app:cardCornerRadius="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateSpeakableTextCheck">
+        android:layout_height="wrap_content"
+        tools:context=".ui.ForYouFragment">
 
-        <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/image_slider"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewELP"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:iss_auto_cycle="true"
-            app:iss_corner_radius="20"
-            app:iss_delay="1200"
-            app:iss_period="4000"
-            app:iss_text_align="CENTER" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            android:elevation="15dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.cardview.widget.CardView>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textViewRecommend"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/baloo_paaji_2_semibold"
-        android:text="@string/recommended"
-        android:textColor="@color/karbBackgrndtint"
-        android:textAppearance="@style/titleTab"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2"
-        app:layout_constraintBottom_toTopOf="@id/recommendforYouRecylerView"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recommendforYouRecylerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="0dp"
-        android:elevation="20dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewRecommend"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="275dp"
-        tools:listitem="@layout/for_you_item_sample" />
+                <TextView
+                    android:id="@+id/elpTextViewSaved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/baloo"
+                    android:text="Equity Leadership Program"
+                    android:textAppearance="@style/titleTab"
+                    android:textColor="@color/karbBackgrndtint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/textViewSaved"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/baloo_paaji_2_semibold"
-        android:text="@string/readLater"
-        android:textColor="@color/karbBackgrndtint"
-        android:textAppearance="@style/titleTab"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendforYouRecylerView" />
-    <ImageView
-        android:id="@+id/imageViewLater"
-        android:layout_width="18dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@string/trending"
-        android:src="@drawable/ic_baseline_watch_later_24"
-        app:layout_constraintBottom_toTopOf="@id/forYouRecylerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginStart="2dp"
-        app:layout_constraintStart_toEndOf="@+id/textViewSaved"
-        app:layout_constraintTop_toBottomOf="@+id/recommendforYouRecylerView"
-        app:layout_constraintVertical_bias="0.4"
-        app:tint="@color/karbBackgrndtint" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/elpRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/elpTextViewSaved"
+                    tools:listitem="@layout/for_you_item_sample" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/forYouRecylerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="12dp"
-        android:elevation="20dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewSaved"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="275dp"
-        tools:listitem="@layout/for_you_item_sample" />
+        </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewKenya"
+            android:layout_width="match_parent"
+            app:cardCornerRadius="5dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="5dp"
+            android:elevation="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/cardViewELP">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/inKenyatextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/baloo"
+                    android:text="In Kenya"
+                    android:textAppearance="@style/titleTab"
+                    android:textColor="@color/karbBackgrndtint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inKenyaRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:elevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/inKenyatextView"
+                    tools:listitem="@layout/for_you_item_sample" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewUganda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            android:elevation="15dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintTop_toBottomOf="@id/cardViewKenya">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/inUgandaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/baloo"
+                    android:text="In Uganda"
+                    android:textAppearance="@style/titleTab"
+                    android:textColor="@color/karbBackgrndtint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inUgandaRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/inUgandaTextView"
+                    tools:listitem="@layout/for_you_item_sample" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDRC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="5dp"
+            android:elevation="15dp"
+            app:layout_constraintTop_toBottomOf="@id/cardViewUganda">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/inDRCTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/baloo"
+                    android:text="In DRC"
+                    android:textAppearance="@style/titleTab"
+                    android:textColor="@color/karbBackgrndtint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inDRCRecylerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/inDRCTextView"
+                    tools:listitem="@layout/for_you_item_sample" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewEquiAfya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="5dp"
+            android:elevation="15dp"
+            app:cardCornerRadius="5dp"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintTop_toBottomOf="@id/cardViewDRC">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <TextView
+                    android:id="@+id/inEquityAfyaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/baloo"
+                    android:text="In Equity Afya"
+                    android:textAppearance="@style/titleTab"
+                    android:textColor="@color/karbBackgrndtint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/equityAfyaRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:elevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/inEquityAfyaTextView"
+                    tools:listitem="@layout/for_you_item_sample" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

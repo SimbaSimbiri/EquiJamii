@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:backgroundTint="@color/navColor"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
 
     <ImageView
         android:layout_width="match_parent"
@@ -26,13 +28,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignBottom="@id/imageProfile"
-        android:background="@color/darkGreyColor"
+        android:background="@color/navColor"
         android:fontFamily="@font/baloo"
         android:gravity="bottom"
         android:paddingStart="10dp"
         android:text="@string/userName"
-        android:textColor="@color/karbBackgrndtint"
-        android:textSize="20sp" />
+        android:textColor="@color/titleColor"
+        android:textSize="18sp" />
 
 </RelativeLayout>
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    android:layout_marginBottom="2dp"
+    android:backgroundTint="@color/white"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+
+            android:id="@+id/taskCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/karbBackgrndtint"
+            android:checked="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/taskText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:textSize="13sp"
+            android:textColor="@color/primaryColor"
+            android:text="@string/task_title"
+            android:textAppearance="@style/titleTab"
+            app:layout_constraintBottom_toTopOf="@id/descriptionTaskText"
+            android:layout_marginBottom="3dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/assignedToText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:text="@string/assigned_to_onyango"
+            android:textAppearance="@style/titleTab"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/karbBackgrndtint"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTaskText"
+            />
+
+        <TextView
+            android:id="@+id/descriptionTaskText"
+            android:gravity="start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/titleTab"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/taskText"
+            app:layout_constraintEnd_toStartOf="@id/assignedToText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/description_of_task_in_detail"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.NewsDetailFragment"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/karbBackgrndtint"
+         >
+
+        <ImageView
+            android:id="@+id/newsDetailImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/newsImage" />
+
+        <TextView
+            android:textColor="@color/white"
+            android:id="@+id/newsDetailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:background="@color/navColor"
+            android:justificationMode="inter_word"
+            android:textStyle="bold"
+            android:text="@string/dummy_content"
+            android:textSize="15sp"
+            android:fontFamily="@font/baloo_paaji_2_semibold"
+            app:layout_constraintBottom_toBottomOf="@id/newsDetailImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/newsDetailAllnews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="6dp"
+            android:justificationMode="inter_word"
+            android:textSize="14sp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="@string/loremIpsum"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newsDetailImage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -10,7 +10,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TopStoriesFragment"
+    tools:context=".ui.TopStoriesFragment"
     >
 <!--
     <TextView
@@ -47,12 +47,15 @@
         android:id="@+id/newsRecylerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="3dp"
-        android:elevation="20dp"
+        android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/newsitemsample" />
+        tools:listitem="@layout/newsitemsample"
+        android:layout_marginBottom="2dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

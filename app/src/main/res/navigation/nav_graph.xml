@@ -7,33 +7,33 @@
 
         <fragment
             android:id="@+id/newsFrag"
-            android:name="com.simbiri.equityjamii.newsFragment"
+            android:name="com.simbiri.equityjamii.ui.newsFragment"
             android:label="@string/newsFragLabel"
             tools:layout="@layout/fragment_news" />
 
         <fragment
             android:id="@+id/peopleFrag"
-            android:name="com.simbiri.equityjamii.peopleFragment"
+            android:name="com.simbiri.equityjamii.ui.peopleFragment"
             android:label="@string/people_icon"
             tools:layout="@layout/fragment_people" />
 
         <fragment
             android:id="@+id/postFrag"
-            android:name="com.simbiri.equityjamii.postFragment"
+            android:name="com.simbiri.equityjamii.ui.postFragment"
             android:label="@string/postFragLabel"
             tools:layout="@layout/fragment_post" />
 
         <fragment
             android:id="@+id/scholarsFrag"
-            android:name="com.simbiri.equityjamii.scholarsFragment"
+            android:name="com.simbiri.equityjamii.ui.scholarsFragment"
             android:label="@string/scholarsFragLabel"
             tools:layout="@layout/fragment_scholars" />
 
         <fragment
-            android:id="@+id/growthFrag"
-            android:name="com.simbiri.equityjamii.growthFragment"
-            android:label="@string/growthFragLabel"
-            tools:layout="@layout/fragment_growth" />
+            android:id="@+id/myWorkspace"
+            android:name="com.simbiri.equityjamii.ui.myWorkspace"
+            android:label="My Workspace"
+            tools:layout="@layout/fragment_myworkspace" />
 
 
 

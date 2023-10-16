@@ -3,15 +3,17 @@
 
     <color name="primaryColor">#FA3A0707</color>
     <color name="primareColor">#FA3A0707</color>
+    <color name="logoColour">#490907</color>
 
     <color name="titleColor">#FCFFFFFF</color>
     <color name="karbBackgrnd">#F3EEEE</color>
     <color name="karbBackgrndtint">#5C2C2A</color>
+    <color name="titleNews">#592825</color>
     <color name="darkGreyColor">#3BFFFFFF</color>
     <color name="tabUnselected">#905C2C2A</color>
+    <color name="navColor">#605C2C2A</color>
 
-<color name="transparent">#40RRGGBB</color>
-
+    <color name="transparent">#80FFFFFF</color>
 
 
     <color name="purple_200">#FFBB86FC</color>
@@ -21,4 +23,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FA020101</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

@@ -29,9 +29,15 @@
     <string name="place_holder">Place_holder</string>
 
     <string name="nav_header_profile">Nav Header Picture</string>
+    <string name="loremIpsum">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu. Mauris cursus, velit ac dapibus porttitor, velit elit sodales nunc, vitae euismod justo nisi at mauris. Nunc sit amet odio nec metus consectetur hendrerit.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet euismod purus. Suspendisse potenti. Integer nec aliquet ipsum. Proin eu nisl vitae dui rutrum interdum. Suspendisse potenti. Ut scelerisque, odio ac facilisis feugiat, purus tellus placerat mauris, eget facilisis urna mauris id purus. Phasellus scelerisque odio eu ligula dapibus, vitae feugiat tellus facilisis. Aenean a venenatis lorem. Etiam vehicula, nisi a blandit fringilla, turpis nulla auctor odio, sit amet accumsan ex mi sit amet nulla. Aenean at eros luctus, feugiat lectus eu, tincidunt odio. Mauris semper elit at odio eleifend, at convallis lacus posuere. Suspendisse eu diam dui.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec elit vulputate, vel ultrices dolor iaculis. Sed et ex in purus dignissim consequat. Nam id arcu eget erat elementum pulvinar. Maecenas id tortor et dui posuere mollis non eu justo. Donec rutrum nunc vel quam suscipit pellentesque. Cras ullamcorper feugiat fringilla. Suspendisse maximus justo ligula, id bibendum mauris ultrices vel. Sed malesuada auctor dui, id aliquet tellus pellentesque quis.</string>
 
 
-    <string name="userName">Name</string>
+    <string name="userName">Simbiri Ray </string>
     <string name="experience">  Denomination\nCurrent branch working at</string>
 
     <string name="newsFragLabel">News Page</string>
@@ -87,5 +93,27 @@
     <string name="scrollnews">Scroll down for more news</string>
     <string name="readLaterNews">News you added to read later</string>
     <string name="tabNews">Slide right or  left  to find more news</string>
+    <string name="newsOfficialHeadline">News Headline</string>
+    <string name="newsOfficialText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu.</string>
+    <string name="addTask">Add task</string>
+    <string name="description_of_task">Description of Task</string>
+    <string name="title_of_task">Title of Task</string>
+    <string name="assigned_to">Assigned To</string>
+    <string name="done">DONE</string>
+    <string name="add_branch_task">Add Branch Task</string>
+    <string name="add_personal_task">Add Personal Task</string>
+    <string name="task_title">Task Title</string>
+    <string name="assigned_to_onyango">Assigned to Onyango</string>
+    <string name="description_of_task_in_detail">Description of Task in detail</string>
+    <string name="branch_tasks">Branch Tasks</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="newsImage">News Preview Image</string>
+    <string name="schedule_a_call_with_hr">Schedule a call with HR</string>
+    <string name="available_time_slots">Available time slots on selected date</string>
+    <string name="YOU_TUBE_KEY">AIzaSyAvUHY8zrNXKjptyFZmFhXOPcv0iu0nfDM</string>
+    <string name="load_data">Load Data</string>
+
 
 </resources>

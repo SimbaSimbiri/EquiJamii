@@ -5,71 +5,99 @@ plugins {
 
 android {
     namespace 'com.simbiri.equityjamii'
+    //namespace declaration should be the package name of this specific app, comes first by default in the android block
     compileSdk 33
+    //the highest software development kit that you can use to build your app, target sdk and min sdk cant be above this level
 
     defaultConfig {
         applicationId "com.simbiri.equityjamii"
-        minSdk 28
+        minSdk 27
         targetSdk 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+// what we wil use to perform automated instrumented UI tests
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\hp\\OneDrive\\Documents\\myKeystore\\my-apps-release-key.jks')
+            storePassword 'simba19'
+            keyAlias 'keystore-equityjamii'
+            keyPassword 'simba19'
+        }
+
+        //below is our signing key of my app, you will use this and the SHA key related to gain access to Google Console APIs
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file('C:\\Users\\hp\\OneDrive\\Documents\\myKeystore\\my-apps-release-key.jks')
+            storePassword 'simba19'
+            keyAlias 'keystore-equityjamii'
+            keyPassword 'simba19'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildToolsVersion '33.0.0'
 
-    buildFeatures {
-        viewBinding true
-    }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
 
-    flavorDimensions "monetization"
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
 
-    productFlavors {
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
+        buildToolsVersion '33.0.0'
+//tools can only be found in the sdk, hence the 33.o.o version from our compileSdk
 
-        free {
-            dimension "monetization"
-            applicationIdSuffix ".free"
-            versionNameSuffix "-free"
+        buildFeatures {
+            viewBinding true// you should consider using root binding if you indicate this as true
         }
 
-        pro {
-            dimension "monetization"
-            applicationIdSuffix ".pro"
-            versionNameSuffix "-pro"
+        flavorDimensions "monetization"
+        //what will be the metric for the  different versions of my buildtype? If it is a release type, will it have a paid or unpaid version?
+
+        productFlavors { //the flavors are the exact versions of this current buildtype
+
+            free {
+                dimension "monetization"
+                applicationIdSuffix ".free"
+                versionNameSuffix "-free"
+            }
+
+            pro {
+                dimension "monetization"
+                applicationIdSuffix ".pro"
+                versionNameSuffix "-pro"
+            }
+
         }
 
-    }
+        testOptions {
+            unitTests.includeAndroidResources = true
+        }
 
-    testOptions {
-        unitTests.includeAndroidResources =  true
-    }
 }
 
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.5'
 
 
 /*
              androidX jetpack library dependancies
 */
     var fragment_version = "1.5.7"
-
+    var ktor_version = "1.6.7"
+    implementation 'com.codepath.libraries:asynchttpclient:2.2.0'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.cardview:cardview:1.0.0"
@@ -97,10 +125,15 @@ dependencies {
             exported respos for imageslider feature
 */
 
+    implementation 'io.ktor:ktor-client-core:1.6.7'
+    implementation 'io.ktor:ktor-client-json:1.6.7'
+    implementation 'io.ktor:ktor-client-serialization:1.6.7'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2'
+
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
-
-
-
+    implementation 'com.squareup.picasso:picasso:2.8'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.3.1'
     testImplementation 'com.google.truth:truth:1.1.4'
@@ -114,9 +147,6 @@ dependencies {
 
 
     debugImplementation("androidx.fragment:fragment-testing:$fragment_version")
-
-
-
 
 
 }
