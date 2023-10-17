@@ -52,6 +52,7 @@ class LiveVideosFragment : Fragment() {
             override fun onClick(v: View?) {
                 YoutubeVideos.videoList
 
+
                 val adapter = LiveVideoAdapter(requireContext(), YoutubeVideos.videoList!!)
 
                 recyclerVideos.adapter = adapter

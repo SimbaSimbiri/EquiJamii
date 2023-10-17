@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.simbiri.equityjamii.BuildConfig
 import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
 import kotlinx.serialization.json.JsonArray
@@ -29,14 +30,13 @@ data class Video(
 
 object YoutubeVideos {
 
-    private val API_KEY = "AIzaSyAvUHY8zrNXKjptyFZmFhXOPcv0iu0nfDM"
+    private val API_KEY = ""
     private val channelD = "UCbwz4BgzWMDY6KP09GIVuuw"
 
     var videoList: ArrayList<Video>? = null
         get() {
 
             if (field != null)
-
                 return field
 
             field = ArrayList()
@@ -45,7 +45,7 @@ object YoutubeVideos {
 
             val params = RequestParams()
             params["limit"] = "20"
-            params["page"] = "0"
+            params["page"] = "1"
 
             client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
                 JsonHttpResponseHandler() {

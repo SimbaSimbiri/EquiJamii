@@ -9,6 +9,7 @@ android {
     compileSdk 33
     //the highest software development kit that you can use to build your app, target sdk and min sdk cant be above this level
 
+
     defaultConfig {
         applicationId "com.simbiri.equityjamii"
         minSdk 27
@@ -37,7 +38,8 @@ android {
         }
     }
 
-        buildTypes {
+        buildTypes{
+
             release {
                 signingConfig signingConfigs.release
 
@@ -46,7 +48,9 @@ android {
             }
 
         }
-        compileOptions {
+
+
+    compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
         }
