@@ -13,4 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+LiveVideoAdapter.kt
+build.gradle
+
+
 

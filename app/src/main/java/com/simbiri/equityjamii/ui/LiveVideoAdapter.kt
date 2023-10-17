@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.simbiri.equityjamii.BuildConfig
 import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
 import kotlinx.serialization.json.JsonArray
@@ -30,8 +29,8 @@ data class Video(
 
 object YoutubeVideos {
 
-    private val API_KEY = ""
-    private val channelD = "UCbwz4BgzWMDY6KP09GIVuuw"
+    private val API_KEY = "GIMMICK API KEY"//previous one was immediately revoked
+    private val channelD = "GIMMICK CHANNEL ID"
 
     var videoList: ArrayList<Video>? = null
         get() {
