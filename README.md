@@ -17,7 +17,7 @@ The app will allow users to:
 
 Here's a demos of the app's landing page:
 
-![Record_2023-10-19-02-35-08_d50eac1e6cec11336327b1b031cd2806](https://github.com/SimbaSimbiri/EquiJamii/assets/105386979/72aa3a9b-3a63-4efc-b5f5-52c2cf143f6f)
+![Record_2023-10-19-02-35-08_d50eac1e6cec11336327b1b031cd2806 (1)](https://github.com/SimbaSimbiri/EquiJamii/assets/105386979/35db0a0d-e158-48a3-8eb1-9a4402b8a31f)
 
 
 ## License
