@@ -15,9 +15,9 @@ The app will allow users to:
 
 ## App Demo
 
-Here's a demos of the app's landing page:
+Here's a screenshot of the app's landing page:
 
-![Gif of app so far](https://i.imgur.com/bVIYBsQ.gifv)
+![EQUILIVEPAGE](https://github.com/SimbaSimbiri/EquiJamii/assets/105386979/2b8dc07e-17a2-4ac6-b1af-1e18b919c84a)
 
 
 
