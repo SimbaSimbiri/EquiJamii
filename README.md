@@ -17,7 +17,7 @@ The app will allow users to:
 
 Here's a demos of the app's landing page:
 
-![Gif of app so far](https://i.imgur.com/bVIYBsQ.gif)
+![Gif of app so far](https://i.imgur.com/bVIYBsQ.gifv)
 
 
 
