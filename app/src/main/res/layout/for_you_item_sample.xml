@@ -43,19 +43,24 @@
 
         </androidx.cardview.widget.CardView>
 
+
         <TextView
             android:id="@+id/textViewForYou"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center_horizontal"
+
+            app:layout_constraintStart_toEndOf="@id/cardView"
+            app:layout_constraintTop_toTopOf="@id/cardView"
+            app:layout_constraintBottom_toBottomOf="@id/cardView"
             android:fontFamily="@font/baloo_paaji_2_semibold"
-            android:justificationMode="inter_word"
+            android:gravity="center_horizontal"
             android:textColor="@color/karbBackgrndtint"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cardView"
-            app:layout_constraintTop_toTopOf="@id/cardView" />
+             />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

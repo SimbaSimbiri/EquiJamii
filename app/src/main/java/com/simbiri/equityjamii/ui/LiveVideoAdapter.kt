@@ -15,10 +15,7 @@ import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
-import kotlinx.serialization.json.JsonArray
 import okhttp3.Headers
-import org.json.JSONArray
-
 
 data class Video(
     val title: String,
@@ -27,60 +24,16 @@ data class Video(
 )
 
 
-object YoutubeVideos {
+object YoutubeKeyProvider {
 
-    private val API_KEY = "GIMMICK API KEY"//previous one was immediately revoked
-    private val channelD = "GIMMICK CHANNEL ID"
+    fun keyProvider(context: Context, intKey: Int): String {
+        return (if (intKey == 0) {
+            context.resources.getString(R.string.apikey)
+        } else {
+            context.resources.getString(R.string.channelID)
+        }).toString()
 
-    var videoList: ArrayList<Video>? = null
-        get() {
-
-            if (field != null)
-                return field
-
-            field = ArrayList()
-
-            val client = AsyncHttpClient()
-
-            val params = RequestParams()
-            params["limit"] = "20"
-            params["page"] = "1"
-
-            client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
-                JsonHttpResponseHandler() {
-                override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
-                    // Access the JSON object response to get your list of titles and videoIds which are picasso urls
-
-                    val items = json.jsonObject.getJSONArray("items")
-
-                    for (jsonElementPos in 0 until items.length()) {
-                        val snippet = items.getJSONObject(jsonElementPos).getJSONObject("snippet")
-                        val title = snippet.getString("title")
-                        val thumbnails = snippet.getJSONObject("thumbnails")
-                        val defaultThumbnail = thumbnails.getJSONObject("high")
-                        val imageUrl = defaultThumbnail.getString("url")
-                        val video = Video(title, imageUrl)
-
-                        field!!.add(video)
-                    }
-
-                }
-
-                override fun onFailure(
-                    statusCode: Int,
-                    headers: Headers?,
-                    response: String,
-                    throwable: Throwable?
-                ) {
-                    Log.d("API FAILURE", response)
-                }
-            }]
-
-            return field
-
-        }
-
-
+    }
 }
 
 

@@ -38,7 +38,6 @@ class KaribuActivity : AppCompatActivity() {
 
         super.onRestart()
 
-
     }
 
 

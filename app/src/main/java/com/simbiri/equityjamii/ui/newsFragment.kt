@@ -94,7 +94,6 @@ class newsFragment : Fragment() {
 
         }.attach()
 
-
         return view
 
     }

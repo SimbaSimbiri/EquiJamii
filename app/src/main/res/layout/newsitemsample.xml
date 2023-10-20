@@ -38,6 +38,7 @@
             android:background="@color/navColor"
             android:fontFamily="@font/baloo_paaji_2_semibold"
             android:gravity="center"
+            android:layout_marginStart="10dp"
             android:textColor="@color/white"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewNews"

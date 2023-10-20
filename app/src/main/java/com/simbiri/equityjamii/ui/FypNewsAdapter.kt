@@ -77,8 +77,10 @@ class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsTex
 
             this.positionItem = position
             this.currentNewsTextItem = forYouNewsInst
+            textNewsForYou.text = forYouNewsInst.textHeadLine
+            imageViewForYou.setImageResource(forYouNewsInst.imageId)
 
-            var layoutParams = imageViewForYou.layoutParams
+            val layoutParams = imageViewForYou.layoutParams
 
             val displayMetrics = DisplayMetrics()
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -88,11 +90,10 @@ class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsTex
             layoutParams.width = screenWidth/3
             layoutParams.height = screenWidth * 5/16
 
+
             imageViewForYou.layoutParams = layoutParams
 
-            textNewsForYou.text = forYouNewsInst.textHeadLine
-            imageViewForYou.setImageResource(forYouNewsInst.imageId)
-        }
+           }
 
         fun setOnClickListernerstosmall() {
 

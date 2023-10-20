@@ -13,8 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-LiveVideoAdapter.kt
-build.gradle
-
-
-
+build/
+.gradle/
+app/src/main/res/values/MYKEY.xml
