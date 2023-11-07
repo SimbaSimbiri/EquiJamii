@@ -113,6 +113,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="schedule_a_call_with_hr">Schedule a call with HR</string>
     <string name="available_time_slots">Available time slots on selected date</string>
 ]    <string name="load_data">Load Data</string>
+    <string name="play_video">Play Video</string>
 
 
 </resources>

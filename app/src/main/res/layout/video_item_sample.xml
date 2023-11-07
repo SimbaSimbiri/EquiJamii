@@ -2,25 +2,24 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginStart="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
     android:layout_marginTop="7dp"
-    android:layout_marginEnd="10dp"
     android:layout_marginBottom="7dp"
     android:backgroundTint="@color/karbBackgrndtint"
     android:clickable="true"
+    android:elevation="8dp"
     android:focusable="true"
-    android:elevation="20dp"
     app:cardCornerRadius="8dp"
-    >
+    tools:ignore="TouchTargetSizeCheck">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <WebView
-            android:id="@+id/webViewYouTube"
+        <ImageView
+            android:id="@+id/imageViewThumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/newsImages"
@@ -32,20 +31,31 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.023" />
 
+        <ImageView
+            android:layout_width="65dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_smart_display_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/play_video" />
+
         <TextView
-            android:id="@+id/textTitleVideo"
+            android:id="@+id/YouTubeViewHeadline"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginStart="10dp"
             android:background="@color/navColor"
             android:fontFamily="@font/baloo_paaji_2_semibold"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/webViewYouTube"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewThumbnail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/webViewYouTube"
-            app:layout_constraintTop_toTopOf="@+id/webViewYouTube"
+            app:layout_constraintStart_toStartOf="@+id/imageViewThumbnail"
+            app:layout_constraintTop_toTopOf="@+id/imageViewThumbnail"
             app:layout_constraintVertical_bias="1.0" />
 
 
