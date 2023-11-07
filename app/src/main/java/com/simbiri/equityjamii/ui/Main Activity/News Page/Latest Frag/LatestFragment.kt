@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
 
-class TopStoriesFragment : Fragment() {
+class LatestFragment : Fragment() {
 
     companion object {
-        fun newInstance() = TopStoriesFragment()
+        fun newInstance() = LatestFragment()
     }
 
-    private lateinit var viewModel: TopStoriesViewModel
+    private lateinit var viewModel: LatestViewModel
     private lateinit var recyclerNews: RecyclerView
 
 
@@ -51,7 +51,7 @@ class TopStoriesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(TopStoriesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(LatestViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

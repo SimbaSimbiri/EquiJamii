@@ -110,7 +110,7 @@ class newsFragment : Fragment() {
             when (position) {
 
                 0 -> {
-                    return TopStoriesFragment()
+                    return LatestFragment()
                 }
 
                 1 -> {

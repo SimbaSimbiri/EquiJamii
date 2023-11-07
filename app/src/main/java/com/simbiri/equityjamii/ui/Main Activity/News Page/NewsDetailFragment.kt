@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.ui
 
 import android.app.Dialog
+import android.content.pm.ActivityInfo
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -52,6 +53,16 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
+/*    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }*/
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +87,8 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
             newsDetailText.text = it.textHeadLine
             newsDetailAllNews.text = it.textNewsAll
         }
+
+
     }
 
 

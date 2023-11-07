@@ -85,6 +85,8 @@ class LiveVideosFragment : Fragment() {
                     val imageUrl = defaultThumbnail.getString("url")
                     val video = Video(title, imageUrl, videoId)
 
+                    Log.d("videoId", videoId)
+
                     videoList.add(video)
                 }
 

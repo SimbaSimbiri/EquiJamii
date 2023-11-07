@@ -1,28 +1,51 @@
 package com.simbiri.equityjamii.ui
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.codepath.asynchttpclient.AsyncHttpClient
-import com.codepath.asynchttpclient.RequestParams
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
-import okhttp3.Headers
+
 
 data class Video(
     val title: String,
     val videoUrl: String,
     val videoId : String
+): Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString()?: "",
+        parcel.readString()?: ""
+    ) {
+    }
 
-)
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(videoId)
+    }
+
+    companion object CREATOR : Parcelable.Creator<Video> {
+        override fun createFromParcel(parcel: Parcel): Video {
+            return Video(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Video?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 
 object YoutubeKeyProvider {
@@ -62,7 +85,7 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
 
             val screenWidth = displayMetrics.widthPixels
             layoutParams.width = screenWidth
-            layoutParams.height = screenWidth * 9/16
+            layoutParams.height = screenWidth * 9 / 16
 
             videoThumbnailImage.layoutParams = layoutParams
 
@@ -79,6 +102,11 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
         }
 
         override fun onClick(view: View?) {
+
+            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(currentVideoItem!!)
+            val transaction =
+                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+            youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
 
         }
 
