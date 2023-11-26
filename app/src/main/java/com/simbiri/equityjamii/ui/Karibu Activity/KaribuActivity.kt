@@ -24,7 +24,7 @@ class KaribuActivity : AppCompatActivity() {
         imageView2 =  findViewById(R.id.imageView2)
 
 
-        val delayedTime : Long = 2000
+        val delayedTime : Long = 3400
         val intent = Intent(this@KaribuActivity, MainEquiActivity::class.java)
 
         val rootView = window.decorView.rootView
@@ -33,10 +33,8 @@ class KaribuActivity : AppCompatActivity() {
     }
 
     override fun onRestart() {
-
-        finish()
-
         super.onRestart()
+        finish()
 
     }
 

@@ -15,12 +15,21 @@
         android:theme="@style/Theme.EquityJamii"
         tools:targetApi="32">
         <activity
+            android:name=".ui.KaribuActivity"
+            android:exported="true"
+            android:label="@string/title_activity_sign_up"
+            android:theme="@style/Theme.EquityJamii" />
+        <activity
+            android:name=".ui.SignUpActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.secondActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
             android:label="@string/profile"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.EquityJamii.NoActionBar"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -28,16 +37,16 @@
         <activity
             android:name=".ui.MainEquiActivity"
             android:exported="true"
-            android:theme="@style/Theme.EquityJamii.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_entre_page"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EquityJamii.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.KaribuActivity"
+            android:name=".ui.SignInActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

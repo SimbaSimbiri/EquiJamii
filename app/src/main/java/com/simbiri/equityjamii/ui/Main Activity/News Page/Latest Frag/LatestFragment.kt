@@ -30,7 +30,7 @@ class LatestFragment : Fragment() {
         recyclerNews = view.findViewById(R.id.newsRecylerView)
         setUpRecyclerNews(view)
 
-
+        YouTubeVids.YoutubeVideos(requireContext())
 
         return view
     }

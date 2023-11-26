@@ -1,9 +1,11 @@
 package com.simbiri.equityjamii.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +14,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.codepath.asynchttpclient.AsyncHttpClient
+import com.codepath.asynchttpclient.RequestParams
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
+import okhttp3.Headers
 
+val VIDEO_CONSTANT = "video"
 
 data class Video(
     val title: String,
@@ -60,6 +67,64 @@ object YoutubeKeyProvider {
     }
 }
 
+object YouTubeVids {
+
+    var listVids =  ArrayList<Video>()
+
+
+    fun YoutubeVideos(context: Context): ArrayList<Video> {
+
+        val API_KEY = YoutubeKeyProvider.keyProvider(context,0)
+        val channelD = YoutubeKeyProvider.keyProvider(context,1)
+
+        var videoList: ArrayList<Video>  =  ArrayList()
+
+        val client = AsyncHttpClient()
+
+        val params = RequestParams()
+        params["limit"] = "20"
+        params["page"] = "1"
+
+        client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
+            JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
+                // Access the JSON object response to get your list of titles and videoIds which are picasso urls
+
+                val items = json.jsonObject.getJSONArray("items")
+
+                for (jsonElementPos in 0 until items.length()) {
+                    val snippet = items.getJSONObject(jsonElementPos).getJSONObject("snippet")
+                    val title = snippet.getString("title")
+                    val videoId = items.getJSONObject(jsonElementPos).optJSONObject("id")?.optString("videoId").toString()
+                    val thumbnails = snippet.getJSONObject("thumbnails")
+                    val defaultThumbnail = thumbnails.getJSONObject("high")
+                    val imageUrl = defaultThumbnail.getString("url")
+                    val video = Video(title, imageUrl, videoId)
+
+                    Log.d("videoId", videoId)
+
+                    videoList.add(video)
+                }
+
+            }
+
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                response: String,
+                throwable: Throwable?
+            ) {
+                Log.d("API FAILURE", response)
+            }
+        }]
+
+        listVids = videoList
+
+        return videoList
+
+    }
+
+}
 
 class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
     RecyclerView.Adapter<LiveVideoAdapter.LiveVideoViewHolder>() {
@@ -103,10 +168,16 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
 
         override fun onClick(view: View?) {
 
-            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(currentVideoItem!!)
+            /*val youTubeDialogFrag = YouTubeDialogFrag.newInstance(currentVideoItem!!)
             val transaction =
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
             youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
+*/
+
+            val intent = Intent(context, secondActivity::class.java)
+            intent.putExtra(VIDEO_CONSTANT, currentVideoItem?.videoId)
+            context.startActivity(intent)
+            Log.d("Our video id", currentVideoItem!!.videoId)
 
         }
 

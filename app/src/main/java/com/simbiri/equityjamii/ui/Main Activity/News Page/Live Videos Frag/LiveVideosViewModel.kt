@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class LiveVideosViewModel : ViewModel() {
-    val videosLiveData: MutableLiveData<ArrayList<Video>> = MutableLiveData()
 
 }
 

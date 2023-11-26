@@ -16,3 +16,4 @@ local.properties
 build/
 .gradle/
 app/src/main/res/values/MYKEY.xml
+app/google-services.json

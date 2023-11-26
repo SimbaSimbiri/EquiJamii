@@ -34,7 +34,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_equi_main)
 
-        bottomNavigationView = findViewById<BottomNavigationView?>(R.id.bottom_nav_view)
+        bottomNavigationView = findViewById(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
        navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
