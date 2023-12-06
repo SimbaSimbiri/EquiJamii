@@ -83,7 +83,10 @@ object YouTubeVids {
 
         val params = RequestParams()
         params["limit"] = "20"
+        params["eventType"] = "completed"
+        params["type"] = "video"
         params["page"] = "1"
+
 
         client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
             JsonHttpResponseHandler() {

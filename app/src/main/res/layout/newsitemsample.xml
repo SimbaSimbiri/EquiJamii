@@ -2,8 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
     android:layout_marginStart="2dp"
     android:layout_marginTop="7dp"
     android:layout_marginBottom="7dp"
@@ -19,7 +19,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageViewNews"
+            android:id="@+id/imageViewHeadNews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/newsImages"
@@ -41,11 +41,11 @@
             android:layout_marginStart="10dp"
             android:textColor="@color/white"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageViewNews"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewHeadNews"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/imageViewNews"
-            app:layout_constraintTop_toTopOf="@+id/imageViewNews"
+            app:layout_constraintStart_toStartOf="@id/imageViewHeadNews"
+            app:layout_constraintTop_toTopOf="@id/imageViewHeadNews"
             app:layout_constraintVertical_bias="1.0" />
 
 

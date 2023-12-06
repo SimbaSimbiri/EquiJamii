@@ -10,10 +10,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.simbiri.equityjamii.R
 
-class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsText>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<NewsText>) :
+    FirebaseRecyclerAdapter<NewsText, RecyclerView.ViewHolder>(options) {
 
     companion object {
         private const val VIEW_TYPE_BIG_NEWS = 0
@@ -29,24 +32,35 @@ class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsTex
         private var imageViewBigNews: ImageView = itemView.findViewById(R.id.imageViewBigNews)
 
 
-        fun setDataToBigItem(forYouNewsInst: NewsText) {
+        /*   fun setDataToBigItem(forYouNewsInst: NewsText) {
 
-            this.positionItem = position
-            this.currentNewsTextItem = forYouNewsInst
+               this.positionItem = position
+               this.currentNewsTextItem = forYouNewsInst
 
-            var layoutParams = imageViewBigNews.layoutParams
+               var layoutParams = imageViewBigNews.layoutParams
 
-            val displayMetrics = DisplayMetrics()
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
+               val displayMetrics = DisplayMetrics()
+               val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+               windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-            val screenWidth = displayMetrics.widthPixels
-            layoutParams.width = screenWidth
-            layoutParams.height = screenWidth * 9/16
-            imageViewBigNews.layoutParams = layoutParams
+               val screenWidth = displayMetrics.widthPixels
+               layoutParams.width = screenWidth
+               layoutParams.height = screenWidth * 9/16
+               imageViewBigNews.layoutParams = layoutParams
 
-            textViewBigNews.text = forYouNewsInst.textHeadLine
-            imageViewBigNews.setImageResource(forYouNewsInst.imageId)
+               textViewBigNews.text = forYouNewsInst.textHeadLine
+               imageViewBigNews.setImageResource(forYouNewsInst.imageId)
+           }*/
+
+        fun setDetailsToBigItem(image: String, title: String, allNews: String) {
+            textViewBigNews.text = title
+            this.currentNewsTextItem = NewsText(image, title, allNews)
+
+
+            Glide.with(itemView.context as AppCompatActivity)
+                .load(image)
+                .into(imageViewBigNews)
+
         }
 
         fun onClickListernersToBig() {
@@ -73,27 +87,30 @@ class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsTex
         private var imageViewForYou: ImageView = itemView.findViewById(R.id.imageViewForYou)
 
 
-        fun setDatatoSmallItem(forYouNewsInst: NewsText) {
+        /*     fun setDatatoSmallItem(forYouNewsInst: NewsText) {
 
-            this.positionItem = position
-            this.currentNewsTextItem = forYouNewsInst
-            textNewsForYou.text = forYouNewsInst.textHeadLine
-            imageViewForYou.setImageResource(forYouNewsInst.imageId)
+                 this.positionItem = position
+                 this.currentNewsTextItem = forYouNewsInst
 
-            val layoutParams = imageViewForYou.layoutParams
-
-            val displayMetrics = DisplayMetrics()
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-            val screenWidth = displayMetrics.widthPixels
-            layoutParams.width = screenWidth/3
-            layoutParams.height = screenWidth * 5/16
+                 textNewsForYou.text = forYouNewsInst.textHeadLine
+                 imageViewForYou.setImageResource(forYouNewsInst.imageId)
 
 
-            imageViewForYou.layoutParams = layoutParams
+                }*/
 
-           }
+        fun setDetailsToSmall(image: String, title: String, allNews: String) {
+
+            textNewsForYou.text = title
+            this.currentNewsTextItem = NewsText(image, title, allNews)
+
+
+            Glide.with(itemView.context as AppCompatActivity)
+                .load(image)
+                .into(imageViewForYou)
+
+
+        }
+
 
         fun setOnClickListernerstosmall() {
 
@@ -130,32 +147,49 @@ class FypNewsAdapter(var context: Context, var ForYouNewsList: ArrayList<NewsTex
             VIEW_TYPE_BIG_NEWS -> {
                 BigNewsViewHolder(view1)
             }
+
             VIEW_TYPE_SMALL_NEWS -> {
                 SmallNewsViewHolder(view2)
             }
+
             else -> {
                 throw IllegalArgumentException("Invalid view Type")
             }
         }
     }
 
-
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val bookMarkedNewsInst: NewsText = ForYouNewsList[position]
-
+    override fun onBindViewHolder(
+        viewHolder: RecyclerView.ViewHolder,
+        position: Int,
+        model: NewsText
+    ) {
         if (viewHolder is BigNewsViewHolder) {
-            viewHolder.setDataToBigItem(bookMarkedNewsInst)
+            viewHolder.setDetailsToBigItem(model.image, model.title, model.allNews)
             viewHolder.onClickListernersToBig()
 
-
         } else if (viewHolder is SmallNewsViewHolder) {
-            viewHolder.setDatatoSmallItem(bookMarkedNewsInst)
+            viewHolder.setDetailsToSmall(model.image, model.title, model.allNews)
             viewHolder.setOnClickListernerstosmall()
         }
-
     }
 
-    override fun getItemCount(): Int = ForYouNewsList.size
+
+    /*   override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+           val bookMarkedNewsInst: NewsText = ForYouNewsList[position]
+
+           if (viewHolder is BigNewsViewHolder) {
+               viewHolder.setDataToBigItem(bookMarkedNewsInst)
+               viewHolder.onClickListernersToBig()
+
+
+           } else if (viewHolder is SmallNewsViewHolder) {
+               viewHolder.setDatatoSmallItem(bookMarkedNewsInst)
+               viewHolder.setOnClickListernerstosmall()
+           }
+
+       }*/
+
+    /*    override fun getItemCount(): Int = ForYouNewsList.size*/
 
 
 }

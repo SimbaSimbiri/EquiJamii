@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
+import com.squareup.picasso.Picasso
 
 class NewsDetailFragment : BottomSheetDialogFragment() {
 
@@ -83,9 +86,12 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
         val newsItem = arguments?.getParcelable<NewsText>(ARG_NEWS_ITEM)
         newsItem?.let {
-            newsDetailImage.setImageResource(it.imageId)
-            newsDetailText.text = it.textHeadLine
-            newsDetailAllNews.text = it.textNewsAll
+            Glide.with(this)
+                .load(it.image)
+                .into(newsDetailImage)
+
+            newsDetailText.text = it.title
+            newsDetailAllNews.text = it.allNews
         }
 
 

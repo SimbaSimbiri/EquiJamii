@@ -7,9 +7,9 @@ import com.simbiri.equityjamii.R
 
 class ForYouViewModel : ViewModel() {
 
-        val newsListRecommended = NewsToday.newsTextList
+     /*   val newsListRecommended = NewsToday.newsTextList
         val newsListBkMarked = NewsToday.isBookMarkedNews
-        val newsAddedList = NewsToday.listImageIds
+        val newsAddedList = NewsToday.listImageIds*/
 
         val imageList  = ArrayList<SlideModel>()
 

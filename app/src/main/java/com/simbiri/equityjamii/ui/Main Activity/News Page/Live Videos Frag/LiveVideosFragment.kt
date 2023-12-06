@@ -56,8 +56,12 @@ class LiveVideosFragment : Fragment() {
 */
         return view
     }
+    /*
+    "https://youtube.googleapis.com/youtube/v3/search?channelId=${channelD}&eventType=live&key=${API_KEY}"
 
-
+    //working
+    "https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20"
+*/
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.simbiri.equityjamii.R
 
 class ForYouFragment : Fragment() {
@@ -16,18 +19,31 @@ class ForYouFragment : Fragment() {
         fun newInstance() = ForYouFragment()
     }
 
-/*
-    private lateinit var image_Slider: ImageSlider
-*/
 
     private lateinit var elpRecyclerView: RecyclerView
     private lateinit var inKenyaRecyclerView: RecyclerView
-    private lateinit var inDRCRecyclerView: RecyclerView
-    private lateinit var inUgandaRecyclerView: RecyclerView
-    private lateinit var inEquityAfyaRecyclerView: RecyclerView
+    private lateinit var inRwandaRecyclerView: RecyclerView
+    /*
+        private lateinit var inDRCRecyclerView: RecyclerView
+        private lateinit var inEquityAfyaRecyclerView: RecyclerView
+    */
+
+    private var firebaseDatabase = FirebaseDatabase.getInstance()
+    private lateinit var databaseReferenceKenya: DatabaseReference
+    private lateinit var databaseReferenceRwanda: DatabaseReference
+    private lateinit var databaseReferenceScholars: DatabaseReference
+
+    private lateinit var firebaseRecyclerAdapterKenya: FypNewsAdapter
+    private lateinit var firebaseRecyclerAdapterRwanda: FypNewsAdapter
+    private lateinit var firebaseRecyclerAdapterScholars: FypNewsAdapter
+
+    private lateinit var optionsKenya: FirebaseRecyclerOptions<NewsText>
+    private lateinit var optionsRwanda: FirebaseRecyclerOptions<NewsText>
+    private lateinit var optionsScholars: FirebaseRecyclerOptions<NewsText>
 
 
-    private val viewModel by lazy {  ViewModelProvider(this).get(ForYouViewModel::class.java)
+    private val viewModel by lazy {
+        ViewModelProvider(this).get(ForYouViewModel::class.java)
     }
 
 
@@ -35,53 +51,100 @@ class ForYouFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.for_you_fragment, container, false)
+        val view = inflater.inflate(R.layout.for_you_fragment, container, false)
 
-        elpRecyclerView =view.findViewById(R.id.elpRecyclerView)
+        elpRecyclerView = view.findViewById(R.id.elpRecyclerView)
         inKenyaRecyclerView = view.findViewById(R.id.inKenyaRecyclerView)
-        inUgandaRecyclerView =view.findViewById(R.id.inUgandaRecyclerView)
-        inDRCRecyclerView = view.findViewById(R.id.inDRCRecylerView)
-        inEquityAfyaRecyclerView = view.findViewById(R.id.equityAfyaRecyclerView)
+        inRwandaRecyclerView = view.findViewById(R.id.inRwandaRecyclerView)
+        /*  inDRCRecyclerView = view.findViewById(R.id.inDRCRecylerView)
+          inEquityAfyaRecyclerView = view.findViewById(R.id.equityAfyaRecyclerView)*/
+
+        databaseReferenceKenya = firebaseDatabase.getReference("For You/Kenya")
+        databaseReferenceScholars = firebaseDatabase.getReference("For You/Scholars")
+        databaseReferenceRwanda = firebaseDatabase.getReference("For You/Rwanda")
 
 
-        setUpRecyclerNews(view)
+        setUpKenyaRecyclerNews(view)
+        setUpRwandaRecyclers(view)
+        setUpScholarsRecyclers(view)
 
         return view
 
     }
 
 
+    private fun setUpKenyaRecyclerNews(view: View?) {
 
-    private fun setUpRecyclerNews(view: View?) {
         val context = requireContext()
-        val newsForYouAdapter =  FypNewsAdapter(context, NewsToday.newsTextList!!)
-
-        val layoutManagerELP = LinearLayoutManager(context)
-        layoutManagerELP.orientation = RecyclerView.VERTICAL
         val layoutManagerKenya = LinearLayoutManager(context)
         layoutManagerKenya.orientation = RecyclerView.VERTICAL
-        val layoutManagerUganda = LinearLayoutManager(context)
-        layoutManagerUganda.orientation = RecyclerView.VERTICAL
-        val layoutManagerDRC = LinearLayoutManager(context)
-        layoutManagerDRC.orientation = RecyclerView.VERTICAL
-        val layoutManagerEquityAfya = LinearLayoutManager(context)
-        layoutManagerEquityAfya.orientation = RecyclerView.VERTICAL
-
-        elpRecyclerView.adapter = newsForYouAdapter
-        inKenyaRecyclerView.adapter = newsForYouAdapter
-        inUgandaRecyclerView.adapter = newsForYouAdapter
-        inDRCRecyclerView.adapter = newsForYouAdapter
-        inEquityAfyaRecyclerView.adapter = newsForYouAdapter
+        layoutManagerKenya.stackFromEnd = true
 
 
-        elpRecyclerView.layoutManager = layoutManagerELP
+        optionsKenya = FirebaseRecyclerOptions.Builder<NewsText>()
+            .setQuery(databaseReferenceKenya, NewsText::class.java).build()
+        firebaseRecyclerAdapterKenya = FypNewsAdapter(context, optionsKenya)
+
+        inKenyaRecyclerView.adapter = firebaseRecyclerAdapterKenya
         inKenyaRecyclerView.layoutManager = layoutManagerKenya
-        inUgandaRecyclerView.layoutManager = layoutManagerUganda
-        inDRCRecyclerView.layoutManager = layoutManagerDRC
-        inEquityAfyaRecyclerView.layoutManager = layoutManagerEquityAfya
+        inKenyaRecyclerView.hasFixedSize()
+
 
     }
 
+    fun setUpScholarsRecyclers(view: View) {
+        val context = requireContext()
+
+        val layoutManagerScholars = LinearLayoutManager(context)
+        layoutManagerScholars.orientation = RecyclerView.VERTICAL
+        layoutManagerScholars.stackFromEnd = true
+
+        optionsScholars = FirebaseRecyclerOptions.Builder<NewsText>()
+            .setQuery(databaseReferenceScholars, NewsText::class.java).build()
+        firebaseRecyclerAdapterScholars = FypNewsAdapter(context, optionsScholars)
+
+
+        elpRecyclerView.adapter = firebaseRecyclerAdapterScholars
+        elpRecyclerView.layoutManager = layoutManagerScholars
+        elpRecyclerView.hasFixedSize()
+
+    }
+
+    fun setUpRwandaRecyclers(view: View) {
+
+        val context = requireContext()
+
+        val layoutManagerRwanda = LinearLayoutManager(context)
+        layoutManagerRwanda.orientation = RecyclerView.VERTICAL
+        layoutManagerRwanda.stackFromEnd = true
+
+        optionsRwanda = FirebaseRecyclerOptions.Builder<NewsText>()
+            .setQuery(databaseReferenceRwanda, NewsText::class.java).build()
+        firebaseRecyclerAdapterRwanda = FypNewsAdapter(context, optionsRwanda)
+
+
+
+        inRwandaRecyclerView.adapter = firebaseRecyclerAdapterRwanda
+        inRwandaRecyclerView.layoutManager = layoutManagerRwanda
+        inRwandaRecyclerView.hasFixedSize()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        firebaseRecyclerAdapterKenya.startListening()
+        firebaseRecyclerAdapterRwanda.startListening()
+        firebaseRecyclerAdapterScholars.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        firebaseRecyclerAdapterKenya.stopListening()
+        firebaseRecyclerAdapterRwanda.stopListening()
+        firebaseRecyclerAdapterScholars.stopListening()
+    }
 
 
 }

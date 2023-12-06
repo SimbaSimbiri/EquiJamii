@@ -21,6 +21,7 @@
             android:theme="@style/Theme.EquityJamii" />
         <activity
             android:name=".ui.SignUpActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity

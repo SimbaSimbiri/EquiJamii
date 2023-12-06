@@ -6,28 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".ui.SignInActivity">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="290dp"
-        android:src="@drawable/background_signup"
+        android:layout_height="400dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/sit_chair_backg"
         android:id="@+id/imageBackGround"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
     </ImageView>
 
     <TextView
         android:layout_width="match_parent"
-        android:text="@string/karibu_to_equityjamii"
+        android:text="Welcome back"
         style="@style/titleTab"
-        android:textColor="@color/white"
+        android:textColor="@color/primaryColor"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="35sp"
+        android:id="@+id/welcomeText"
+        android:textSize="25sp"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/imageBackGround"
+        app:layout_constraintTop_toBottomOf="@id/imageBackGround"
         app:layout_constraintStart_toStartOf="parent"/>
 
 
@@ -37,13 +47,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="30dp"
         app:boxStrokeColor="@color/primaryColor"
         app:hintTextColor="@color/karbBackgrndtint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageBackGround">
+        app:layout_constraintTop_toBottomOf="@id/welcomeText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailEt"
@@ -59,12 +67,11 @@
         style="@style/LoginTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="24dp"
         app:boxStrokeColor="@color/primaryColor"
         app:hintTextColor="@color/karbBackgrndtint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailLayout"
         app:passwordToggleEnabled="true">
@@ -79,30 +86,31 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/signInButton"
         android:layout_width="0dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:background="@color/primareColor"
+        android:background="@color/primaryColor"
         android:text="Sign In"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/toSignUpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textColor="@color/black"
         android:text="Not Registered Yet , Sign Up !"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/signInButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
