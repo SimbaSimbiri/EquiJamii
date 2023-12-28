@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
@@ -157,7 +158,7 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
 
             videoThumbnailImage.layoutParams = layoutParams
 
-            Picasso.get()
+            Glide.with(context)
                 .load(video.videoUrl)
                 .into(videoThumbnailImage)
 
@@ -171,16 +172,15 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
 
         override fun onClick(view: View?) {
 
-            /*val youTubeDialogFrag = YouTubeDialogFrag.newInstance(currentVideoItem!!)
+            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(currentVideoItem!!)
             val transaction =
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
             youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
-*/
 
-            val intent = Intent(context, secondActivity::class.java)
+          /*  val intent = Intent(context, SecondActivity::class.java)
             intent.putExtra(VIDEO_CONSTANT, currentVideoItem?.videoId)
             context.startActivity(intent)
-            Log.d("Our video id", currentVideoItem!!.videoId)
+            Log.d("Our video id", currentVideoItem!!.videoId)*/
 
         }
 

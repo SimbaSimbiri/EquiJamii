@@ -11,8 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.get
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -105,7 +103,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun onClick() {
-        val intent = Intent(this, secondActivity::class.java)
+        val intent = Intent(this, SecondActivity::class.java)
         startActivity(intent)
         slideDrawerIn()
 

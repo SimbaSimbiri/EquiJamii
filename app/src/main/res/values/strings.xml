@@ -157,6 +157,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="karibu_to_equityjamii">Karibu to EquityJamii</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

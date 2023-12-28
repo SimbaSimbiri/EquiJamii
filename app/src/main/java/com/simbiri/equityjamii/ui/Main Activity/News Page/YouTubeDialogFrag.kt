@@ -1,10 +1,12 @@
 package com.simbiri.equityjamii.ui
 
+import android.app.ActionBar.LayoutParams
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.ActivityInfo
+import android.graphics.Point
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -17,10 +19,15 @@ import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.simbiri.equityjamii.R
 
 class YouTubeDialogFrag : DialogFragment() {
@@ -40,106 +47,63 @@ class YouTubeDialogFrag : DialogFragment() {
 
 
     private lateinit var viewModel: YouTubeDialogViewModel
-    private lateinit var webViewTube: WebView
-    private var webChromeClient = WebChromeClient()
+    private lateinit var youTubePlayerView: YouTubePlayerView
+    private var displayMetrics =  DisplayMetrics()
+    private val width=  displayMetrics.widthPixels
     private var isFullscreen = false
     private var originalScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.you_tube_dialog_frag, container, false)
 
-        webViewTube = view.findViewById(R.id.YouTubeWebView)
+        youTubePlayerView = view.findViewById(R.id.youtube_player_view)
 
+        lifecycle.addObserver(youTubePlayerView)
 
         val videoItem = arguments?.getParcelable<Video>(YOU_TUBE_VID_ARGS)
+        val VIDEO_ID = videoItem!!.videoId
 
-        val html =
-            "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${videoItem!!.videoId}\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+        youTubePlayerView.addYouTubePlayerListener(object  : AbstractYouTubePlayerListener(){
 
-        webViewTube.loadData(html, "text/html", "utf-8")
-        webViewTube.webChromeClient = webChromeClient
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                // Set the video ID here
+                youTubePlayer.loadVideo(VIDEO_ID,0.0F)
+            }
 
-        webViewTube.settings.javaScriptEnabled = true
+        })
+
+
 
         return view
 
     }
-
-
-    private fun ifRamestr(video: Video) : String {
-
-        val iframeAPIJsString =  "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "  <body>\n" +
-                "    <div id=\"player\"></div>\n" +
-                "\n" +
-                "    <script>\n" +
-                "      var tag = document.createElement('script');\n" +
-                "\n" +
-                "      tag.src = \"https://www.youtube.com/iframe_api\";\n" +
-                "      var firstScriptTag = document.getElementsByTagName('script')[0];\n" +
-                "      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n" +
-                "\n" +
-                "      var player;\n" +
-                "      function onYouTubeIframeAPIReady() {\n" +
-                "        player = new YT.Player('player', {\n" +
-                "          height: '200',\n" +
-                "          width: '320',\n" +
-                "          videoId: '${video.videoId}',\n" +
-                "          playerVars: {\n" +
-                "            'playsinline': 1\n" +
-                "          },\n" +
-                "          events: {\n" +
-                "            'onReady': onPlayerReady,\n" +
-                "            'onStateChange': onPlayerStateChange\n" +
-                "          }\n" +
-                "        });\n" +
-                "      }\n" +
-                "\n" +
-                "      function onPlayerReady(event) {\n" +
-                "        event.target.playVideo();\n" +
-                "      }\n" +
-                "\n" +
-                "      var done = false;\n" +
-                "      function onPlayerStateChange(event) {\n" +
-                "        if (event.data == YT.PlayerState.PLAYING && !done) {\n" +
-                "          setTimeout(stopVideo, 6000);\n" +
-                "          done = true;\n" +
-                "        }\n" +
-                "      }\n" +
-                "      function stopVideo() {\n" +
-                "        player.stopVideo();\n" +
-                "      }\n" +
-                "    </script>\n" +
-                "  </body>\n" +
-                "</html>"
-
-        Log.d("Our iframe string", iframeAPIJsString)
-
-        return iframeAPIJsString
-        }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.you_tube_dialog_frag)
-        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCanceledOnTouchOutside(true)
 
-        /*dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.peekHeight = resources.getDimensionPixelSize(R.dimen.peek_height)
-                behavior.isDraggable = true
-                behavior.isHideable = true
-            }
-        }*/
+        val windowManager = requireActivity().windowManager
+        val display = windowManager.defaultDisplay
+        val point = Point()
+        display.getRealSize(point)
+        val screenWidth = point.x
+        val dialogHeight = screenWidth * 18 / 16
+        dialog.window?.setLayout(screenWidth, dialogHeight)
+
+
 
         return dialog
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        youTubePlayerView.release()
     }
 
 

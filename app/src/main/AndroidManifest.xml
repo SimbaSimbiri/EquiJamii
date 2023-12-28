@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,8 +26,9 @@
             android:screenOrientation="portrait"
             android:exported="false" />
 
+
         <activity
-            android:name=".ui.secondActivity"
+            android:name=".ui.SecondActivity"
             android:exported="true"
             android:label="@string/profile"
             android:screenOrientation="fullSensor"
@@ -64,6 +67,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"
+            />
+
     </application>
 
 </manifest>

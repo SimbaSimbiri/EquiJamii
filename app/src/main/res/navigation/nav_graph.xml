@@ -18,15 +18,15 @@
             tools:layout="@layout/fragment_people" />
 
         <fragment
-            android:id="@+id/postFrag"
+            android:id="@+id/jamiiFrag"
             android:name="com.simbiri.equityjamii.ui.postFragment"
-            android:label="@string/postFragLabel"
+            android:label="Jamii"
             tools:layout="@layout/fragment_post" />
 
         <fragment
-            android:id="@+id/scholarsFrag"
+            android:id="@+id/equityAfya"
             android:name="com.simbiri.equityjamii.ui.scholarsFragment"
-            android:label="@string/scholarsFragLabel"
+            android:label="Equity Afya"
             tools:layout="@layout/fragment_scholars" />
 
         <fragment

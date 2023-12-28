@@ -25,9 +25,9 @@ class postFragment : Fragment() {
     private lateinit var viewModel: PostViewModel
 /*
     private lateinit var fabAdd: FloatingActionButton
-*/
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appBarLayout: AppBarLayout
+    private lateinit var appBarLayout: AppBarLayout*/
+
     private lateinit var toolbar: MaterialToolbar
 
 
@@ -38,12 +38,12 @@ class postFragment : Fragment() {
 
         val view =  inflater.inflate(R.layout.fragment_post, container, false)
 
-        appBarLayout = view.findViewById(R.id.appBarLayout)
+   /*     appBarLayout = view.findViewById(R.id.appBarLayout)
         collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
         toolbar = view.findViewById(R.id.topAppBar)
-/*
+
         fabAdd = view.findViewById(R.id.fabAddpost)
-*/
+
 
         val drawerLayout =  requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout) //for you to instantiate  a drawer layout you have to use the activity's context since
 
@@ -53,7 +53,7 @@ class postFragment : Fragment() {
             R.string.closeDrawer
         )
         drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        toggle.syncState()*/
 
 
 

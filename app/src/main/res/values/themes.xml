@@ -12,6 +12,7 @@
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="android:dialogTheme">@style/customDialog</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/primaryColor</item>
         <!-- Customize your theme here. -->
@@ -46,6 +47,7 @@
     </style>
 
 
+
     <style name="Theme.EquityJamii.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -70,6 +72,11 @@
         <item name="android:textSize" parent="Widget.AppCompat.Toolbar.Title">18sp</item>
         <item name="android:textAlignment" parent="Widget.AppCompat.Toolbar.Title">textStart</item>
 
+    </style>
+
+    <style name="customDialog" parent="Theme.AppCompat.Dialog">
+        <item name="dialogCornerRadius">12dp</item>
+        <item name="android:layout_marginHorizontal">0dp</item>
     </style>
 
     <style name="titleTab" parent="Widget.Design.TabLayout">
