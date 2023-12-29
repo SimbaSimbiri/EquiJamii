@@ -31,7 +31,7 @@
             android:name=".ui.SecondActivity"
             android:exported="true"
             android:label="@string/profile"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.EquityJamii.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <meta-data

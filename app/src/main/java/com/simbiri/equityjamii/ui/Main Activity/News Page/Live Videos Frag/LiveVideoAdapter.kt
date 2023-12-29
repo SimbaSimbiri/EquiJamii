@@ -22,7 +22,6 @@ import com.simbiri.equityjamii.R
 import com.squareup.picasso.Picasso
 import okhttp3.Headers
 
-val VIDEO_CONSTANT = "video"
 
 data class Video(
     val title: String,
@@ -177,10 +176,6 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
             youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
 
-          /*  val intent = Intent(context, SecondActivity::class.java)
-            intent.putExtra(VIDEO_CONSTANT, currentVideoItem?.videoId)
-            context.startActivity(intent)
-            Log.d("Our video id", currentVideoItem!!.videoId)*/
 
         }
 

@@ -2,6 +2,7 @@ package com.simbiri.equityjamii.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +38,7 @@ class SignUpActivity : AppCompatActivity() {
                             val intent = Intent(this, SignInActivity::class.java)
                             startActivity(intent)
                         } else {
+                            Log.i("Error authentication", it.exception.toString())
                             Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
 
                         }

@@ -1,7 +1,6 @@
 package com.simbiri.equityjamii.ui
 
 import android.content.Context
-import android.content.Context.WINDOW_SERVICE
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.DisplayMetrics
@@ -13,14 +12,12 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.simbiri.equityjamii.R
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 
 data class NewsText(val image: String, val title: String, val allNews : String) : Parcelable {
 
@@ -66,12 +63,25 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
 
          var textNewsHeadlineView: TextView = itemView.findViewById(R.id.textViewHeadline)
          var imageNewsHeadlineView: ImageView = itemView.findViewById(R.id.imageViewHeadNews)
+        var cardViewHolder : CardView = itemView.findViewById(R.id.cardItemSample)
 
 
 
         fun setDetails( image: String, title:String, allNews: String){
             textNewsHeadlineView.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
+
+            var layoutParams = cardViewHolder.layoutParams
+
+            val displayMetrics = DisplayMetrics()
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenWidth = displayMetrics.widthPixels
+            layoutParams.width = screenWidth
+            layoutParams.height = screenWidth * 9 / 16
+
+            cardViewHolder.layoutParams = layoutParams
 
 
             Glide.with(itemView.context as AppCompatActivity)
@@ -99,6 +109,7 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
             val view = LayoutInflater.from(context).inflate(R.layout.newsitemsample, parent, false)
+
 
             return NewsViewHolder(view)
     }

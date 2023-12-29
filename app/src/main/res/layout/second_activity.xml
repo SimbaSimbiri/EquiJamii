@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/karbBackgrndtint"
     android:layout_height="match_parent">
 
     <!--data class User(val  profileImage: String, val backGroundImage : String, val name : String, val designation : String, val branch : String)
 -->
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragContainerSecondActivity"
@@ -15,20 +17,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <com.canhub.cropper.CropImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
 
-        android:id="@+id/myProfileCanCropper"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+
 
     <ImageView
         android:id="@+id/imageBackGround"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:clickable="true"
+        android:contentDescription="Background Image"
         android:scaleType="centerCrop"
         android:src="@drawable/equity_bank_new_logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,80 +45,213 @@
         android:id="@+id/materialCardView"
         android:layout_width="170dp"
         android:layout_height="170dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="-50dp"
         android:backgroundTint="@color/white"
         android:padding="10dp"
-        app:cardCornerRadius="85dp"
+        app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageBackGround"
         app:layout_constraintVertical_bias="0.315">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="164dp"
             android:layout_height="164dp"
+            android:id="@+id/materialCardViewIn"
             android:layout_gravity="center"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
-            app:cardCornerRadius="80dp"
+            app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/profileImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:src="@drawable/icons8_edit_profile"
                 android:clickable="true"
-                android:scaleType="centerCrop" />
+                android:contentDescription="Profile Image"
+                android:backgroundTint="@color/darkGreyColor"
+                android:scaleType="centerCrop"
+                android:src="@drawable/account_box" />
 
         </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <EditText
-        android:id="@+id/nameProfile"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/baloo_paaji_2_semibold"
-        android:hint="Name"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@id/designationProfile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:layout_constraintVertical_bias="0.236" />
-
-    <EditText
-        android:id="@+id/designationProfile"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="3dp"
-        android:fontFamily="sans-serif-medium"
-        android:hint="Designation"
-        android:textSize="11sp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameProfile"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/materialCardView">
 
-    <EditText
-        android:id="@+id/branchProfile"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileInfoCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textPersonalInfo"
+                        style="@style/titleTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="bottom"
+                        android:text="Personal Info"
+                        android:textColor="@color/karbBackgrndtint"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/name_layout"
+                        style="@style/FirebaseUI.TextInputLayout.NameField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="0dp"
+                        app:boxCornerRadiusBottomEnd="10dp"
+                        app:boxCornerRadiusBottomStart="10dp"
+                        app:boxCornerRadiusTopEnd="10dp"
+                        app:boxCornerRadiusTopStart="10dp"
+                        app:boxStrokeColor="@color/primaryColor"
+                        app:boxStrokeWidth="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textPersonalInfo">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nameProfileEdit"
+                            style="@style/FirebaseUI.TextInputEditText.NameField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            android:inputType="textPersonName"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/designationLayout"
+                        style="@style/FirebaseUI.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="5dp"
+                        app:boxCornerRadiusBottomEnd="10dp"
+                        app:boxCornerRadiusBottomStart="10dp"
+                        app:boxCornerRadiusTopEnd="10dp"
+                        app:boxCornerRadiusTopStart="10dp"
+                        app:boxStrokeColor="@color/primaryColor"
+                        app:boxStrokeWidth="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/name_layout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/designationProfileEdit"
+                            style="@style/FirebaseUI.TextInputEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            android:hint="Designation"
+                            android:maxEms="30"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/branchLayout"
+                        style="@style/FirebaseUI.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="5dp"
+                        app:boxCornerRadiusBottomEnd="10dp"
+                        app:boxCornerRadiusBottomStart="10dp"
+                        app:boxCornerRadiusTopEnd="10dp"
+                        app:boxCornerRadiusTopStart="10dp"
+                        app:boxStrokeColor="@color/primaryColor"
+                        app:boxStrokeWidth="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/designationLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/branchProfileEdit"
+                            style="@style/FirebaseUI.TextInputEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            android:hint="Branch"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/designationLayout" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/saveProfileButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="3dp"
-        android:fontFamily="sans-serif-medium"
-        android:hint="Branch"
-        android:textSize="11sp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:text="Save Profile Info"
+        android:textColor="@color/karbBackgrndtint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/designationProfile"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toTopOf="@id/signOutProfileBtn"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/signOutProfileBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:text="Sign Out"
+        android:textColor="@color/karbBackgrndtint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

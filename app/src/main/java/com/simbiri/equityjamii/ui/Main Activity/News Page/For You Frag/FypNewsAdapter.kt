@@ -9,6 +9,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -25,36 +26,28 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
 
     inner class BigNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        private var positionItem: Int = 0
         private var currentNewsTextItem: NewsText? = null
 
         private var textViewBigNews: TextView = itemView.findViewById(R.id.textViewBigNewsHeadline)
         private var imageViewBigNews: ImageView = itemView.findViewById(R.id.imageViewBigNews)
+        private var cardViewHolderBig: CardView = itemView.findViewById(R.id.cardViewFirstFyp)
 
-
-        /*   fun setDataToBigItem(forYouNewsInst: NewsText) {
-
-               this.positionItem = position
-               this.currentNewsTextItem = forYouNewsInst
-
-               var layoutParams = imageViewBigNews.layoutParams
-
-               val displayMetrics = DisplayMetrics()
-               val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-               windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-               val screenWidth = displayMetrics.widthPixels
-               layoutParams.width = screenWidth
-               layoutParams.height = screenWidth * 9/16
-               imageViewBigNews.layoutParams = layoutParams
-
-               textViewBigNews.text = forYouNewsInst.textHeadLine
-               imageViewBigNews.setImageResource(forYouNewsInst.imageId)
-           }*/
 
         fun setDetailsToBigItem(image: String, title: String, allNews: String) {
             textViewBigNews.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
+
+            var layoutParams = cardViewHolderBig.layoutParams
+
+            val displayMetrics = DisplayMetrics()
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenWidth = displayMetrics.widthPixels
+            layoutParams.width = screenWidth
+            layoutParams.height = screenWidth * 9 / 16
+
+            cardViewHolderBig.layoutParams = layoutParams
 
 
             Glide.with(itemView.context as AppCompatActivity)
@@ -85,23 +78,37 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
 
         private var textNewsForYou: TextView = itemView.findViewById(R.id.textViewForYou)
         private var imageViewForYou: ImageView = itemView.findViewById(R.id.imageViewForYou)
+        private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewSmallFyp)
+        private var cardViewImage: CardView = itemView.findViewById(R.id.cardViewImage)
 
-
-        /*     fun setDatatoSmallItem(forYouNewsInst: NewsText) {
-
-                 this.positionItem = position
-                 this.currentNewsTextItem = forYouNewsInst
-
-                 textNewsForYou.text = forYouNewsInst.textHeadLine
-                 imageViewForYou.setImageResource(forYouNewsInst.imageId)
-
-
-                }*/
 
         fun setDetailsToSmall(image: String, title: String, allNews: String) {
 
             textNewsForYou.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
+
+            var layoutParamsCardView = cardViewHolder.layoutParams
+            var layoutParamsCardViewImage = cardViewImage.layoutParams
+            var layoutParamsTextView = textNewsForYou.layoutParams
+
+
+            val displayMetrics = DisplayMetrics()
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenWidth = displayMetrics.widthPixels
+            layoutParamsCardView.width = screenWidth
+            layoutParamsCardView.height = screenWidth * 1 / 3
+            layoutParamsCardViewImage.width = screenWidth * 1 / 3 - 10
+            layoutParamsCardViewImage.height = screenWidth * 1 / 3 - 10
+            layoutParamsTextView.width = screenWidth - layoutParamsCardViewImage.width - 100
+            layoutParamsTextView.height = layoutParamsCardView.height
+
+            cardViewHolder.layoutParams = layoutParamsCardView
+            cardViewImage.layoutParams = layoutParamsCardViewImage
+            textNewsForYou.layoutParams = layoutParamsTextView
+
+
 
 
             Glide.with(itemView.context as AppCompatActivity)
@@ -172,25 +179,6 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
             viewHolder.setOnClickListernerstosmall()
         }
     }
-
-
-    /*   override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-           val bookMarkedNewsInst: NewsText = ForYouNewsList[position]
-
-           if (viewHolder is BigNewsViewHolder) {
-               viewHolder.setDataToBigItem(bookMarkedNewsInst)
-               viewHolder.onClickListernersToBig()
-
-
-           } else if (viewHolder is SmallNewsViewHolder) {
-               viewHolder.setDatatoSmallItem(bookMarkedNewsInst)
-               viewHolder.setOnClickListernerstosmall()
-           }
-
-       }*/
-
-    /*    override fun getItemCount(): Int = ForYouNewsList.size*/
-
 
 }
 

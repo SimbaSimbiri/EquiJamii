@@ -1,21 +1,21 @@
 package com.simbiri.equityjamii.ui
 
 import android.app.Dialog
-import android.content.pm.ActivityInfo
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
-import com.squareup.picasso.Picasso
 
 class NewsDetailFragment : BottomSheetDialogFragment() {
 
@@ -36,6 +36,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
     private lateinit var newsDetailImage: ImageView
     private lateinit var newsDetailText: TextView
     private lateinit var newsDetailAllNews : TextView
+    private  var detailFragHeight : Int = DisplayMetrics().heightPixels - 50
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog =  super.onCreateDialog(savedInstanceState)
@@ -47,24 +48,14 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
             val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.peekHeight = resources.getDimensionPixelSize(R.dimen.peek_height)
                 behavior.isDraggable = true
                 behavior.isHideable = true
+
             }
         }
 
         return dialog
     }
-
-/*    override fun onResume() {
-        super.onResume()
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,6 +67,18 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         newsDetailImage = view.findViewById(R.id.newsDetailImage)
         newsDetailText = view.findViewById(R.id.newsDetailText)
         newsDetailAllNews =view.findViewById(R.id.newsDetailAllnews)
+
+        var layoutParams = newsDetailImage.layoutParams
+
+        val displayMetrics = DisplayMetrics()
+        val windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenWidth = displayMetrics.widthPixels
+        layoutParams.width = screenWidth
+        layoutParams.height = screenWidth * 9 / 16
+
+        newsDetailImage.layoutParams = layoutParams
 
 
         return view
