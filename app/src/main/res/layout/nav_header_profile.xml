@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/good_profile"
+        android:src="@drawable/equityjamiibackgrounf"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -30,11 +30,11 @@
         android:layout_alignBottom="@id/imageProfile"
         android:background="@color/navColor"
         android:fontFamily="@font/baloo"
-        android:gravity="bottom"
+        android:gravity="center"
         android:paddingStart="10dp"
-        android:text="@string/userName"
+        android:text="@string/karibu_to_equityjamii"
         android:textColor="@color/titleColor"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
 </RelativeLayout>
 

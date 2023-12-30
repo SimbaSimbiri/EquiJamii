@@ -3,30 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:background="@color/karbBackgrndtint"
+    android:layout_marginBottom="56dp"
     android:layout_height="match_parent">
 
-    <!--data class User(val  profileImage: String, val backGroundImage : String, val name : String, val designation : String, val branch : String)
--->
-
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragContainerSecondActivity"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:background="@color/karbBackgrndtint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+        app:layout_constraintTop_toTopOf="@id/materialCardView" />
 
 
     <ImageView
@@ -91,7 +80,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
 
             <androidx.cardview.widget.CardView
@@ -222,36 +211,24 @@
 
             </androidx.cardview.widget.CardView>
 
+            <Button
+                android:id="@+id/saveProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/white"
+                android:text="Save Profile Info"
+                android:textColor="@color/karbBackgrndtint"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="500dp"
+                app:layout_constraintTop_toBottomOf="@id/profileInfoCard"
+
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <Button
-        android:id="@+id/saveProfileButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/white"
-        android:text="Save Profile Info"
-        android:textColor="@color/karbBackgrndtint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/signOutProfileBtn"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/signOutProfileBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/white"
-        android:text="Sign Out"
-        android:textColor="@color/karbBackgrndtint"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,13 +9,50 @@
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         app:headerLayout="@layout/nav_header_profile"
         app:itemIconTint="@color/titleColor"
         app:itemTextColor="@color/titleColor"
         app:itemTextAppearance="@style/titleTab"
+        android:layout_gravity="start"
         android:background="@color/navColor"
-        app:menu="@menu/drawermenu">
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageViewSignOut"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icons8_logout"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/signOut"
+                app:layout_constraintBottom_toBottomOf="@id/signOut"
+                app:layout_constraintTop_toTopOf="@id/signOut" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginHorizontal="5dp"
+                style="@style/titleTab"
+                android:clickable="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:text="Sign Out"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="40dp"
+                android:id="@+id/signOut"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </com.google.android.material.navigation.NavigationView>
 

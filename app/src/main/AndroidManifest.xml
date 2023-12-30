@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -23,21 +23,13 @@
             android:theme="@style/Theme.EquityJamii" />
         <activity
             android:name=".ui.SignUpActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
 
-        <activity
-            android:name=".ui.SecondActivity"
-            android:exported="true"
-            android:label="@string/profile"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.EquityJamii.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
         <activity
             android:name=".ui.MainEquiActivity"
             android:exported="true"
@@ -69,8 +61,7 @@
             android:resource="@array/preloaded_fonts" />
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"
-            />
+            android:theme="@style/Base.Theme.AppCompat" />
 
     </application>
 

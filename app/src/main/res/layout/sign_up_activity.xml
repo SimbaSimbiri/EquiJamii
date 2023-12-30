@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.SignUpActivity">
 
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,10 +19,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@color/karbBackgrndtint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <ImageView
                 android:id="@+id/imageBackGround"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="300dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/proper_signup"
                 app:layout_constraintEnd_toEndOf="parent"

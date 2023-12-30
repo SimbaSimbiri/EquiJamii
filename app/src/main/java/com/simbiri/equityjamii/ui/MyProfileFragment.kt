@@ -1,20 +1,19 @@
 package com.simbiri.equityjamii.ui
 
-
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.simbiri.equityjamii.databinding.SecondActivityBinding
-import android.view.Window
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -27,18 +26,28 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.databinding.MyProfileFragBinding
+import androidx.core.view.isVisible
 
-class SecondActivity : AppCompatActivity() {
 
 
-    private lateinit var binding: SecondActivityBinding
+
+class MyProfileFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = MyProfileFragment()
+    }
+
+    private  var _binding : MyProfileFragBinding? = null
+    private val binding get() = _binding
+
     private var imageProfileUri: Uri? = null
     private var imageBackgUri: Uri? = null
     var storagePerms: Array<String>? = null
     var clickedProfile = false
     var clickedBackG = false
-    var userId = FirebaseAuth.getInstance().currentUser!!.uid
-    var firebaseAuth =FirebaseAuth.getInstance()
+    var firebaseAuth = FirebaseAuth.getInstance()
+    var userId = firebaseAuth.currentUser!!.uid
     private lateinit var cropProfileContractOptions: CropImageContractOptions
     private lateinit var cropBackGContractOptions: CropImageContractOptions
     private lateinit var storageReference: StorageReference
@@ -49,33 +58,38 @@ class SecondActivity : AppCompatActivity() {
         if (result.isSuccessful) {
             if (clickedProfile) {
                 imageProfileUri = result.uriContent
-                Glide.with(this).load(imageProfileUri).into(binding.profileImage)
+                Glide.with(this).load(imageProfileUri).into(binding!!.profileImage)
             } else if (clickedBackG) {
                 imageBackgUri = result.uriContent
-                Glide.with(this).load(imageBackgUri).into(binding.imageBackGround)
+                Glide.with(this).load(imageBackgUri).into(binding!!.imageBackGround)
             }
         }
 
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var viewModel: MyProfileViewModel
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        binding = SecondActivityBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        _binding =  MyProfileFragBinding.inflate(layoutInflater, container, false)
+        val view = binding!!.root
+
+
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
-        binding.progressBar.isVisible =  true
+        binding!!.progressBar.isVisible =  true
 
-        var layoutParamsProfileCardOut = binding.materialCardView.layoutParams
-        var layoutParamsProfileCardIn = binding.materialCardViewIn.layoutParams
-        var layoutParamsBackG = binding.imageBackGround.layoutParams
+        var layoutParamsProfileCardOut = binding!!.materialCardView.layoutParams
+        var layoutParamsProfileCardIn = binding!!.materialCardViewIn.layoutParams
+        var layoutParamsBackG = binding!!.imageBackGround.layoutParams
 
         val displayMetrics = DisplayMetrics()
-        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val screenWidth = displayMetrics.widthPixels
@@ -88,14 +102,10 @@ class SecondActivity : AppCompatActivity() {
         layoutParamsBackG.width =  screenWidth
 
 
-        binding.materialCardView.layoutParams = layoutParamsProfileCardOut
-        binding.materialCardViewIn.layoutParams = layoutParamsProfileCardIn
-        binding.imageBackGround.layoutParams = layoutParamsBackG
-
-
-
+        binding!!.materialCardView.layoutParams = layoutParamsProfileCardOut
+        binding!!.materialCardViewIn.layoutParams = layoutParamsProfileCardIn
+        binding!!.imageBackGround.layoutParams = layoutParamsBackG
         storagePerms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        binding.profileImage.setImageURI(imageProfileUri)
 
         firestore.collection("Users").document(userId).get().addOnCompleteListener { taskDocSnapShot ->
             if (taskDocSnapShot.isSuccessful){
@@ -108,60 +118,56 @@ class SecondActivity : AppCompatActivity() {
                     imageProfileUri = Uri.parse(profileRetrieved)
                     imageBackgUri =  Uri.parse(backGRetrieved)
 
-                    binding.nameProfileEdit.setText(nameRetrieved)
-                    binding.designationProfileEdit.setText(designRetrieved)
-                    binding.branchProfileEdit.setText(branchRetrieved)
+                    binding!!.nameProfileEdit.setText(nameRetrieved)
+                    binding!!.designationProfileEdit.setText(designRetrieved)
+                    binding!!.branchProfileEdit.setText(branchRetrieved)
                     if (profileRetrieved != "null") {
-                        Glide.with(this).load(Uri.parse(profileRetrieved)).into(binding.profileImage)
+                        Glide.with(this).load(Uri.parse(profileRetrieved)).into(binding!!.profileImage)
                     }
                     if (backGRetrieved != "null"){
-                    Glide.with(this).load(Uri.parse(backGRetrieved)).into(binding.imageBackGround)}
+                        Glide.with(this).load(Uri.parse(backGRetrieved)).into(binding!!.imageBackGround)}
 
-                    Toast.makeText(this, "Profile updated with most recent info", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Profile updated with most recent info", Toast.LENGTH_LONG).show()
                 }
             }else{
-                Toast.makeText(this, "Profile data unchanged from app restart", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Profile data unchanged from app restart", Toast.LENGTH_LONG).show()
             }
 
-            binding.progressBar.isVisible =  false
+            binding!!.progressBar.isVisible =  false
 
         }
 
 
 
-        binding.profileImage.setOnClickListener {
+        binding!!.profileImage.setOnClickListener {
             clickedProfile = true
             clickedBackG = false
             showImagePicker()
 
         }
 
-        binding.imageBackGround.setOnClickListener {
+        binding!!.imageBackGround.setOnClickListener {
             clickedBackG = true
             clickedProfile = false
             showImagePicker()
 
         }
 
-        binding.saveProfileButton.setOnClickListener {
+        binding!!.saveProfileButton.setOnClickListener {
             saveProfileInfo()
         }
-        binding.signOutProfileBtn.setOnClickListener {
-            firebaseAuth.signOut()
-            val intent = Intent(this@SecondActivity,SignInActivity::class.java )
-            startActivity(intent)
-            finish()
-        }
 
 
+
+
+        return view
     }
-
     private fun saveProfileInfo() {
-        binding.progressBar.isVisible = true
+        binding!!.progressBar.isVisible = true
 
-        val name = binding.nameProfileEdit.text!!.toString()
-        val designation = binding.designationProfileEdit.text!!.toString()
-        val branch = binding.branchProfileEdit.text!!.toString()
+        val name = binding!!.nameProfileEdit.text!!.toString()
+        val designation = binding!!.designationProfileEdit.text!!.toString()
+        val branch = binding!!.branchProfileEdit.text!!.toString()
         val imageProfileReference = storageReference.child("Profile_pics").child("$userId.jpg")
         val backGReference = storageReference.child("BackG_pics").child("$userId.jpg")
 
@@ -171,22 +177,15 @@ class SecondActivity : AppCompatActivity() {
                 imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         imageProfileReference.downloadUrl.addOnSuccessListener { profileUri ->
-                            saveToFireStore(
-                                task,
-                                name,
-                                designation,
-                                branch,
-                                profileUri,
-                                imageBackgUri
-                            )
+                            saveToFireStore( task, name, designation, branch, profileUri, imageBackgUri)
                         }
                     } else {
-                        Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
             } else {
-                binding.progressBar.isVisible = false
+                binding!!.progressBar.isVisible = false
 
             }
         } else if (clickedBackG && !clickedProfile) {
@@ -195,23 +194,16 @@ class SecondActivity : AppCompatActivity() {
                 backGReference.putFile(imageBackgUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         backGReference.downloadUrl.addOnSuccessListener { backGUri ->
-                            saveToFireStore(
-                                task,
-                                name,
-                                designation,
-                                branch,
-                                imageProfileUri,
-                                backGUri
-                            )
+                            saveToFireStore(task, name, designation, branch, imageProfileUri, backGUri)
 
                         }
                     } else {
-                        Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
             } else {
-                binding.progressBar.isVisible = false
+                binding!!.progressBar.isVisible = false
 
             }
         }
@@ -239,11 +231,11 @@ class SecondActivity : AppCompatActivity() {
         firestore.collection("Users").document(userId).set(mapToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
-                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                    binding.progressBar.isVisible = false
+                    Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                    binding!!.progressBar.isVisible = false
 
                 } else {
-                    Toast.makeText(this, taskUpload.exception.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), taskUpload.exception.toString(), Toast.LENGTH_SHORT).show()
                     Log.i("Error saving to firestore", taskUpload.exception.toString())
                 }
             }
@@ -253,41 +245,21 @@ class SecondActivity : AppCompatActivity() {
 
     fun showImagePicker() {
 
-        val profileHeight = windowManager.defaultDisplay.height
-        val backGroundHeight = binding.imageBackGround.height
+        val profileHeight = requireActivity().windowManager.defaultDisplay.height
+        val backGroundHeight = binding!!.imageBackGround.height
 
         if (clickedProfile){
 
-        cropProfileContractOptions = CropImageContractOptions(
-            null, CropImageOptions(
-                true,
-                true,
-                CropImageView.CropShape.OVAL,
-                cropCornerRadius = 8.0F,
-                cropMenuCropButtonTitle = "Done",
-                showCropLabel = true,
-                activityTitle = "CROP IMAGE",
-                activityBackgroundColor = this.resources.getColor(R.color.black),
-                toolbarColor = this.resources.getColor(R.color.black),
-                progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
-                guidelines = CropImageView.Guidelines.OFF, aspectRatioX = 1, aspectRatioY = 1,
-            )
-        )}
+            cropProfileContractOptions = CropImageContractOptions(
+                null, CropImageOptions(true, true, CropImageView.CropShape.OVAL, cropCornerRadius = 8.0F, cropMenuCropButtonTitle = "Done", showCropLabel = true,
+                    activityTitle = "CROP IMAGE", activityBackgroundColor = this.resources.getColor(R.color.black), toolbarColor = this.resources.getColor(R.color.black),
+                    progressBarColor = this.resources.getColor(R.color.karbBackgrndtint), guidelines = CropImageView.Guidelines.OFF, aspectRatioX = 1, aspectRatioY = 1,)
+            )}
 
         cropBackGContractOptions = CropImageContractOptions(
-            null, CropImageOptions(
-                true,
-                true,
-                CropImageView.CropShape.RECTANGLE,
-                cropCornerRadius = 8.0F,
-                cropMenuCropButtonTitle = "Done",
-                showCropLabel = true,
-                activityTitle = "CROP IMAGE",
-                activityBackgroundColor = this.resources.getColor(R.color.black),
-                toolbarColor = this.resources.getColor(R.color.black),
-                progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
-                guidelines = CropImageView.Guidelines.OFF, aspectRatioX = 16, aspectRatioY = 9
-            )
+            null, CropImageOptions(true, true, CropImageView.CropShape.RECTANGLE, cropCornerRadius = 8.0F,
+                cropMenuCropButtonTitle = "Done", showCropLabel = true, activityTitle = "CROP IMAGE", activityBackgroundColor = this.resources.getColor(R.color.black),
+                toolbarColor = this.resources.getColor(R.color.black), progressBarColor = this.resources.getColor(R.color.karbBackgrndtint), guidelines = CropImageView.Guidelines.OFF, aspectRatioX = 16, aspectRatioY = 9)
         )
 
         if (!checkStoragePermission()) {
@@ -308,10 +280,7 @@ class SecondActivity : AppCompatActivity() {
 
 
     private fun requestStoragePermission() {
-
-
         requestPermissions(storagePerms!!, 200)
-
     }
 
     override fun onRequestPermissionsResult(
@@ -320,18 +289,20 @@ class SecondActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == 200) {
             if (grantResults.size > 0) {
                 val writeStorageIsAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (writeStorageIsAccepted) {
-                    if (clickedProfile) {
+                    /*if (clickedProfile) {
                         openLastPicker.launch(cropProfileContractOptions)
                     } else if (clickedBackG) {
                         openLastPicker.launch(cropBackGContractOptions)
-                    }
+                    }*/
+                    openLastPicker.launch(cropBackGContractOptions)
                 }
             } else {
-                Toast.makeText(this, "Please enable access to Gallery", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "Please enable access to Gallery", Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -339,12 +310,20 @@ class SecondActivity : AppCompatActivity() {
 
 
     private fun checkStoragePermission(): Boolean {
-
-        return ContextCompat.checkSelfPermission(
-            this,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
+        // TODO: Use the ViewModel
+    }
 
 }

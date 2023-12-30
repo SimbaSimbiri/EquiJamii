@@ -1,24 +1,35 @@
 package com.simbiri.equityjamii.ui
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 
-class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/,
     DrawerLayout.DrawerListener {
 
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+
+    var firebaseAuth = FirebaseAuth.getInstance()
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navDrawer: NavigationView
     private lateinit var drawerLayoutMain: DrawerLayout
@@ -32,13 +43,37 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_equi_main)
 
+
+        if (firebaseAuth.currentUser == null) {
+            val intent = Intent(this, SignInActivity::class.java)
+            Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG).show()
+            startActivity(intent)
+        }
+
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
        navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
 
+        val signOutTextView = findViewById<TextView>(R.id.signOut)
+        val imageSignOut =  findViewById<ImageView>(R.id.imageViewSignOut)
+        signOutTextView.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this,SignInActivity::class.java)
+            startActivity(intent)
+            finish() }
 
+        imageSignOut.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this,SignInActivity::class.java)
+            startActivity(intent)
+            finish() }
+
+
+
+/*
         navDrawer.setNavigationItemSelectedListener(this)
+*/
         navDrawer.bringToFront()
 
         val navHostFrag =
@@ -50,6 +85,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         bottomNavigationView.setupWithNavController(navControllerMain)
 
         drawerLayoutMain.addDrawerListener(this)
+        YouTubeVids.YoutubeVideos(this)
 
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -67,6 +103,8 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
 
+
+
     }
 
 
@@ -75,7 +113,7 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val drawerMenu = navDrawer.menu
 
         when (item.itemId) {
@@ -100,14 +138,12 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         }
         return true
-    }
+    }*/
 
-    private fun onClick() {
-        val intent = Intent(this, SecondActivity::class.java)
-        startActivity(intent)
-        slideDrawerIn()
+    /*private fun onClick() {
 
-    }
+
+    }*/
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
@@ -128,5 +164,6 @@ class MainEquiActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
 
 }
+
 
 

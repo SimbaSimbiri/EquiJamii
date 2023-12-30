@@ -12,7 +12,7 @@
 
         <item
             android:id="@+id/myWorkspace"
-            android:icon="@drawable/icons8_workspace__1_"
+            android:icon="@drawable/work_24"
             android:title="My Workspace"
             app:showAsAction="always"
             />
@@ -30,9 +30,9 @@
             />
 
         <item
-            android:id="@+id/equityAfya"
-            android:icon="@drawable/equity_afya_icon"
-            android:title="EquiAfya"
+            android:id="@+id/myProfile"
+            android:icon="@drawable/icons8_admin_settings_male"
+            android:title="Me"
             app:showAsAction="always"
             />
 

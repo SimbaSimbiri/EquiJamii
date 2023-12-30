@@ -24,10 +24,10 @@
             tools:layout="@layout/fragment_post" />
 
         <fragment
-            android:id="@+id/equityAfya"
-            android:name="com.simbiri.equityjamii.ui.scholarsFragment"
-            android:label="Equity Afya"
-            tools:layout="@layout/fragment_scholars" />
+            android:id="@+id/myProfile"
+            android:name="com.simbiri.equityjamii.ui.MyProfileFragment"
+            android:label="My Profile"
+            tools:layout="@layout/my_profile_frag" />
 
         <fragment
             android:id="@+id/myWorkspace"
