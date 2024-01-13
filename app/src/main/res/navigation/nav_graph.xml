@@ -3,37 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/newsFrag">
+    app:startDestination="@id/peopleFrag">
 
         <fragment
             android:id="@+id/newsFrag"
-            android:name="com.simbiri.equityjamii.ui.newsFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.news_page.newsFragment"
             android:label="@string/newsFragLabel"
-            tools:layout="@layout/fragment_news" />
+            tools:layout="@layout/news_page" />
 
         <fragment
             android:id="@+id/peopleFrag"
-            android:name="com.simbiri.equityjamii.ui.peopleFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
             android:label="@string/people_icon"
-            tools:layout="@layout/fragment_people" />
+            tools:layout="@layout/people_page" />
 
         <fragment
             android:id="@+id/jamiiFrag"
-            android:name="com.simbiri.equityjamii.ui.postFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.postFragment"
             android:label="Jamii"
-            tools:layout="@layout/fragment_post" />
+            tools:layout="@layout/jamii_page" />
 
         <fragment
             android:id="@+id/myProfile"
-            android:name="com.simbiri.equityjamii.ui.MyProfileFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.MyProfileFragment"
             android:label="My Profile"
-            tools:layout="@layout/my_profile_frag" />
+            tools:layout="@layout/profile_page" />
 
         <fragment
             android:id="@+id/myWorkspace"
-            android:name="com.simbiri.equityjamii.ui.myWorkspace"
+            android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.myWorkspace"
             android:label="My Workspace"
-            tools:layout="@layout/fragment_myworkspace" />
+            tools:layout="@layout/my_workspace_page" />
 
 
 

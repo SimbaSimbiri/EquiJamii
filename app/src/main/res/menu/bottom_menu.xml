@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
         <item
             android:id="@+id/newsFrag"
-            android:icon="@drawable/newsiconcool"
+            android:icon="@drawable/news_page_icon"
             android:title="@string/social_icon"
+            app:showAsAction="always"
+            />
+
+        <item android:id="@+id/jamiiFrag"
+            android:icon="@drawable/jamii_icon"
+            android:title="Jamii"
             app:showAsAction="always"
             />
 
         <item
             android:id="@+id/myWorkspace"
-            android:icon="@drawable/work_24"
+            android:icon="@drawable/workspace_page_icon"
             android:title="My Workspace"
             app:showAsAction="always"
             />
 
-        <item android:id="@+id/jamiiFrag"
-            android:icon="@drawable/icons8_group_task"
-            android:title="Jamii"
-            app:showAsAction="always"
-            />
+
 
         <item android:id="@+id/peopleFrag"
             android:title= "People"
-            android:icon="@drawable/icons8_people"
+            android:icon="@drawable/people_page_icon"
             app:showAsAction="always"
             />
-
         <item
             android:id="@+id/myProfile"
-            android:icon="@drawable/icons8_admin_settings_male"
+            android:icon="@drawable/profile_page_icon"
             android:title="Me"
             app:showAsAction="always"
             />

@@ -17,12 +17,12 @@
         android:theme="@style/Theme.EquityJamii"
         tools:targetApi="32">
         <activity
-            android:name=".ui.KaribuActivity"
+            android:name=".ui.karibu_splash.KaribuActivity"
             android:exported="true"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/Theme.EquityJamii" />
         <activity
-            android:name=".ui.SignUpActivity"
+            android:name=".ui.authentications.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
@@ -31,7 +31,7 @@
             android:value="" />
 
         <activity
-            android:name=".ui.MainEquiActivity"
+            android:name=".ui.main_activity.MainEquiActivity"
             android:exported="true"
             android:label="@string/title_activity_entre_page"
             android:screenOrientation="portrait"
@@ -42,7 +42,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.SignInActivity"
+            android:name=".ui.authentications.SignInActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -43,7 +43,7 @@
 
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/rounded_corners_bottom_sheet</item>
+        <item name="android:background">@drawable/shape_dialog_bottom</item>
     </style>
 
 
@@ -58,7 +58,7 @@
     <style name="Theme.EquityJamii.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
-        <item name="android:background">@drawable/rounded_corners_bottom_sheet</item>
+        <item name="android:background">@drawable/shape_dialog_bottom</item>
     </style>
 
     <style name="titleToolBarFont">
@@ -81,6 +81,11 @@
 
     <style name="titleTab" parent="Widget.Design.TabLayout">
         <item name="android:textSize">10sp</item>
+        <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
+    </style>
+
+    <style name="titleTab2" parent="Widget.Design.TabLayout">
+        <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
     </style>
 

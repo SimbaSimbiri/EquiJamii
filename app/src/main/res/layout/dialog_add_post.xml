@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottomsheetshape"
+    tools:context=".ui.main_activity.jamii_page.AddPostFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/postButton"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:height="30dp"
+                android:backgroundTint="@color/primaryColor"
+                android:text="Post"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/dismissFrag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:clickable="true"
+                android:src="@drawable/cancel"
+                app:layout_constraintBottom_toBottomOf="@id/postButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/postButton" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/captionInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="15dp"
+                android:hint="Tell us what's on your mind"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="300"
+                app:cursorColor="@color/black"
+                app:hintTextColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/addPicturePost"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/postButton">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/captionEditTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cursorVisible="true"
+                    android:focusedByDefault="true"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/addPicturePost"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:clickable="true"
+                android:contentDescription="@string/add_post"
+                android:scaleType="centerCrop"
+                android:src="@drawable/gallery_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/captionInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/postButton" />
+
+
+            <ImageView
+                android:id="@+id/imagePostUpload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_stroke_rectangle"
+                android:contentDescription="Picture Post"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="@id/captionInputLayout"
+                app:layout_constraintStart_toStartOf="@id/captionInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/captionInputLayout" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

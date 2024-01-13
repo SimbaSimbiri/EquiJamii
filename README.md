@@ -1,25 +1,12 @@
 ## App description
 
-**EquityJamii** is a one-stop shop for the number one Bank in Kenya, and East Africa, which houses the Equity community. 
+**EquityJamii** is an in progress one-stop shop for the number one Bank in Kenya, and East Africa, which houses the Equity community. 
 
-The app will allow users to:
-  1. Have an official interaction with other employees. With a Jamii page with all Equity Employee profiles and a messaging feature to contact them
-  2. Have a growth space where professional/educational resources are posted
-  3. A news space where major events concerning the growth of the Bank, e.g annual  achievements are posted/ 
-  where dedicated "employee of the week" news is posted weekly
-  4. Scholars page that allows one to access Equity Global Scholars board monthly newsletter, weekly spotlight on global scholars, and application resources
-  5. A donation page where contributions are made to Wings to Fly scholars who are the less privileged/FLI students that the Equity Leadership Program
-  caters to their education until high school graduation
-  6. EquityAfya page that will allow patients visiting EquityAfya hospitals to avoid the wait of triage, help them book appointments online, and access
-  information such as the availability of doctors
-
-## App Demo
-
-Here's a screenshot of the app's landing page:
-
-![EQUILIVEPAGE](https://github.com/SimbaSimbiri/EquiJamii/assets/105386979/2b8dc07e-17a2-4ac6-b1af-1e18b919c84a)
-
-
+The app will have:
+  1. A social page for the official interaction with other employees.
+  2. A slack like workspace that enables teamwork within the banks branches. Users will  also access HR resources smoothly.
+  3. A news space where major events concerning the growth of the Bank, e.g annual achievements are posted, broadcast live events etc.
+  4. A people section with  Equileaders and EquiJamaa. 
 
 ## License
 
