@@ -41,7 +41,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog =  super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.news_detail_fragment)
+        dialog.setContentView(R.layout.dialog_news_detail)
         dialog.setCanceledOnTouchOutside(true)
 
         dialog.setOnShowListener { dialogInterface ->
@@ -63,7 +63,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.news_detail_fragment, container, false)
+        val view = inflater.inflate(R.layout.dialog_news_detail, container, false)
 
         newsDetailImage = view.findViewById(R.id.newsDetailImage)
         newsDetailText = view.findViewById(R.id.newsDetailText)

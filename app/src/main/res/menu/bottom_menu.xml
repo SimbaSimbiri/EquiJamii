@@ -8,12 +8,6 @@
             app:showAsAction="always"
             />
 
-        <item android:id="@+id/jamiiFrag"
-            android:icon="@drawable/jamii_icon"
-            android:title="Jamii"
-            app:showAsAction="always"
-            />
-
         <item
             android:id="@+id/myWorkspace"
             android:icon="@drawable/workspace_page_icon"
@@ -21,13 +15,17 @@
             app:showAsAction="always"
             />
 
-
+        <item android:id="@+id/jamiiFrag"
+            android:title=""
+            app:showAsAction="always"
+            />
 
         <item android:id="@+id/peopleFrag"
             android:title= "People"
             android:icon="@drawable/people_page_icon"
             app:showAsAction="always"
             />
+
         <item
             android:id="@+id/myProfile"
             android:icon="@drawable/profile_page_icon"

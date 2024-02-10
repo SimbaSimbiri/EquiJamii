@@ -3,6 +3,9 @@ package com.simbiri.equityjamii.ui.main_activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Display
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,11 +13,13 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -27,6 +32,7 @@ import com.simbiri.equityjamii.ui.authentications.SignInActivity
 class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/,
     DrawerLayout.DrawerListener {
 
+    private  lateinit var fabWorkspace: FloatingActionButton
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
@@ -44,8 +50,7 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        firestore.firestoreSettings  = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
+        firestore.firestoreSettings  = FirebaseFirestoreSettings.Builder().build()
 
 
         if (firebaseAuth.currentUser == null) {
@@ -58,6 +63,10 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         drawerLayoutMain = findViewById(R.id.drawerLayout)
        navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
+        fabWorkspace = findViewById(R.id.workspaceFab)
+
+        bottomNavigationView.background = null
+
 
         val signOutTextView = findViewById<TextView>(R.id.signOut)
         val imageSignOut =  findViewById<ImageView>(R.id.imageViewSignOut)
@@ -74,17 +83,12 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
             finish() }
 
 
-
-/*
-        navDrawer.setNavigationItemSelectedListener(this)
-*/
         navDrawer.bringToFront()
 
         val navHostFrag =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navControllerMain = navHostFrag.navController
         navControllerMain.enableOnBackPressed(true)
-
 
         bottomNavigationView.setupWithNavController(navControllerMain)
 
@@ -106,6 +110,10 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         }
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
+        fabWorkspace.setOnClickListener {
+            val workspaceMenuItem = bottomNavigationView.menu.getItem(2)
+            bottomNavigationView.selectedItemId = workspaceMenuItem.itemId
+        }
 
 
 
@@ -116,38 +124,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         drawerLayoutMain.closeDrawer(GravityCompat.START)
     }
 
-
-    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val drawerMenu = navDrawer.menu
-
-        when (item.itemId) {
-
-            R.id.profileSettings -> {
-                onClick()
-                return true
-            }
-            R.id.settingsMenu -> {
-                onClick()
-                return true
-            }
-
-            R.id.communicate -> {
-                onClick()
-                return true
-            }
-            R.id.aboutUs -> {
-                onClick()
-                return true
-            }
-
-        }
-        return true
-    }*/
-
-    /*private fun onClick() {
-
-
-    }*/
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 

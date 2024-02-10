@@ -47,9 +47,9 @@ class LatestFragment : Fragment() {
     }
 
 
-    private fun setUpRecyclerNews(view: View?) {
+    private fun setUpRecyclerNews(view: View) {
         val context = requireContext()
-        val layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(view.context)
         layoutManager.orientation = RecyclerView.VERTICAL
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
@@ -59,7 +59,6 @@ class LatestFragment : Fragment() {
 
         recyclerNews.adapter = firebaseRecyclerAdapter
         recyclerNews.layoutManager = layoutManager
-        recyclerNews.hasFixedSize()
 
     }
 

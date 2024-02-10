@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/karbBackgrndtint">
+        android:background="@color/logoColour">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -23,8 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/equity_bank_new_logo"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
@@ -74,6 +74,7 @@
             android:layout_marginTop="5dp"
             android:textSize="13sp"
             android:textStyle="bold"
+            app:emojiCompatEnabled="false"
             android:gravity="center_horizontal|bottom"
             app:layout_constraintBottom_toTopOf="@id/designationOnPeople"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,6 +88,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:textSize="11sp"
+            app:emojiCompatEnabled="false"
             android:layout_marginTop="0dp"
             android:textColor="@color/white"
             android:gravity="center|top"

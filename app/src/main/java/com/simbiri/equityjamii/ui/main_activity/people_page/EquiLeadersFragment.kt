@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PeopleDataAdapter
-import com.simbiri.equityjamii.data.model.PeopleData
 import com.simbiri.equityjamii.data.model.Person
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,9 +34,10 @@ class EquiLeadersFragment : Fragment() {
 
         recyclerLeaders = view.findViewById(R.id.equiLeadersRecycler)
         searchLeaders = view.findViewById(R.id.searchViewEquiLeaders)
-        searchList = PeopleData.peopleList!!
 
+/*
         setUpLeaderRecycler(view)
+*/
 
 
         /*searchLeaders.apply {
@@ -71,6 +71,7 @@ class EquiLeadersFragment : Fragment() {
         return view
     }
 
+/*
     private fun searchForLeader(searchText: String) {
 
         PeopleData.peopleList?.forEach {
@@ -80,13 +81,14 @@ class EquiLeadersFragment : Fragment() {
         }
         recyclerLeaders.adapter!!.notifyDataSetChanged()
     }
+*/
 
     override fun onResume() {
         super.onResume()
 
     }
 
-    private fun setUpLeaderRecycler(view: View?) {
+   /* private fun setUpLeaderRecycler(view: View?) {
         val context = requireContext()
         val peopleAdapter = PeopleDataAdapter(context, searchList)
 
@@ -97,7 +99,7 @@ class EquiLeadersFragment : Fragment() {
         recyclerLeaders.adapter = peopleAdapter
         recyclerLeaders.layoutManager = layoutManager
         recyclerLeaders.hasFixedSize()
-    }
+    }*/
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

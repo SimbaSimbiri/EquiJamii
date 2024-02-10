@@ -90,11 +90,6 @@ class newsFragment : Fragment() {
 
                 }
 
-                4 -> {
-                    tab.text = "Featuring"
-
-                }
-
             }
 
         }.attach()
@@ -107,7 +102,7 @@ class newsFragment : Fragment() {
         FragmentStateAdapter(newsFragment) {
 
         override fun getItemCount(): Int {
-            return 5
+            return 4
         }
 
         override fun createFragment(position: Int): Fragment {
@@ -128,10 +123,6 @@ class newsFragment : Fragment() {
 
                 3 -> {
                     return OfficialFragment()
-                }
-
-                4 -> {
-                    return FeaturingFragment()
                 }
 
             }

@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.ui.main_activity.news_page.featuring.FeaturingFragment
 
 class peopleFragment : Fragment() {
 
@@ -54,6 +55,7 @@ class peopleFragment : Fragment() {
 
                 0 -> {tab.text = "EquiJamaa"}
                 1 -> {tab.text = "EquiLeaders" }
+                2 -> { tab.text = "Featuring" }
             }
 
         }.attach()
@@ -65,7 +67,7 @@ class peopleFragment : Fragment() {
         inner class ScreenPeopleAdapter(peopleFragment: peopleFragment) : FragmentStateAdapter(peopleFragment) {
 
             override fun getItemCount(): Int {
-                return 2
+                return 3
             }
 
             override fun createFragment(position: Int): Fragment {
@@ -75,6 +77,8 @@ class peopleFragment : Fragment() {
 
                     0 -> {return AllPeople()
                     }
+
+                    2 -> {return  FeaturingFragment()}
 
                 }
                 return Fragment()

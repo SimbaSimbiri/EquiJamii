@@ -52,7 +52,7 @@
                 android:textColorHint="@color/black"
                 app:boxStrokeWidth="0dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="300"
+                app:counterMaxLength="150"
                 app:cursorColor="@color/black"
                 app:hintTextColor="@color/black"
                 app:layout_constraintEnd_toStartOf="@id/addPicturePost"

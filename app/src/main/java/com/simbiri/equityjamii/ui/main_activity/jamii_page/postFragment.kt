@@ -45,7 +45,7 @@ class postFragment : Fragment() {
                 if (taskDocSnapShot.result.exists()){
                     val profilePicUrl = taskDocSnapShot.result.getString("profileUri")
 
-                    Glide.with(requireContext()).load(profilePicUrl).into(currentUserImageView)
+                    Glide.with(view.context).load(profilePicUrl).into(currentUserImageView)
                 }
             }
         }

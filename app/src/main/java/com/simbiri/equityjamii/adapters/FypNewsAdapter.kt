@@ -29,13 +29,15 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
     inner class BigNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         private var currentNewsTextItem: NewsText? = null
+        private var  positionItem :  Int= 0
 
         private var textViewBigNews: TextView = itemView.findViewById(R.id.textViewBigNewsHeadline)
         private var imageViewBigNews: ImageView = itemView.findViewById(R.id.imageViewBigNews)
         private var cardViewHolderBig: CardView = itemView.findViewById(R.id.cardViewFirstFyp)
 
 
-        fun setDetailsToBigItem(image: String, title: String, allNews: String) {
+        fun setDetailsToBigItem(image: String, title: String, allNews: String,position: Int) {
+            this.positionItem =  position
             textViewBigNews.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
 
@@ -75,7 +77,7 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
     inner class SmallNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private var positionItem: Int = 1
+        private var positionItem: Int = 0
         private var currentNewsTextItem: NewsText? = null
 
         private var textNewsForYou: TextView = itemView.findViewById(R.id.textViewForYou)
@@ -84,7 +86,8 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
         private var cardViewImage: CardView = itemView.findViewById(R.id.cardViewImage)
 
 
-        fun setDetailsToSmall(image: String, title: String, allNews: String) {
+        fun setDetailsToSmall(image: String, title: String, allNews: String,position: Int) {
+            this.positionItem =  position
 
             textNewsForYou.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
@@ -173,11 +176,11 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
         model: NewsText
     ) {
         if (viewHolder is BigNewsViewHolder) {
-            viewHolder.setDetailsToBigItem(model.image, model.title, model.allNews)
+            viewHolder.setDetailsToBigItem(model.image, model.title, model.allNews,position)
             viewHolder.onClickListernersToBig()
 
         } else if (viewHolder is SmallNewsViewHolder) {
-            viewHolder.setDetailsToSmall(model.image, model.title, model.allNews)
+            viewHolder.setDetailsToSmall(model.image, model.title, model.allNews,position)
             viewHolder.setOnClickListernerstosmall()
         }
     }

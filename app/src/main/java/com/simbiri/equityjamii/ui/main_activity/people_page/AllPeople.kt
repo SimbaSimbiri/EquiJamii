@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PeopleDataAdapter
-import com.simbiri.equityjamii.data.model.PeopleData
 import com.simbiri.equityjamii.data.model.Person
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 class AllPeople : Fragment() {
 
@@ -22,11 +24,17 @@ class AllPeople : Fragment() {
         fun newInstance() = AllPeople()
     }
 
+    private lateinit var allAdapter: PeopleDataAdapter
     private lateinit var viewModel: AllPeopleViewModel
     private lateinit var recyclerRecFollow: RecyclerView
     private lateinit var recyclerAll: RecyclerView
     private lateinit var searchAll: SearchView
-    private lateinit var searchList: ArrayList<Person>
+    private lateinit var searchList: MutableList<Person>
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
+    private val query = firestore.collection("Users")
+    private lateinit var listenerRegistration: ListenerRegistration
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,58 +42,79 @@ class AllPeople : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.people_page_all_people, container, false)
         recyclerAll = view.findViewById(R.id.allPeopleRecycler)
-/*
-        recyclerRecFollow = view.findViewById(R.id.peopleFollowRecycler)
-*/
-        searchAll = view.findViewById(R.id.searchViewAll)
-        searchList = PeopleData.peopleList!!
-
+        searchList = mutableListOf()
         setUpRecyclers(view)
+        searchAll = view.findViewById(R.id.searchViewAll)
+
+        if (firebaseAuth.currentUser != null) {
+            genListPersonFireStore()
+        }
 
 
-/*
 
-        searchAll.apply {
-            clearFocus()
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        listenerRegisterForUsers()
 
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchAll.clearFocus()
-                    return true
-                }
+        /*
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    val searchText = newText!!.lowercase(Locale.getDefault())
+                searchAll.apply {
+                    clearFocus()
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-                    if (searchText.isNotEmpty()) {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            searchAll.clearFocus()
+                            return true
+                        }
 
-                        searchForAll(searchText)
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            val searchText = newText!!.lowercase(Locale.getDefault())
 
-                    } else {
-                        searchList.clear()
-                        searchList.addAll(PeopleData.peopleList!!)
-                        recyclerAll.adapter!!.notifyDataSetChanged()
-                    }
+                            if (searchText.isNotEmpty()) {
+
+                                searchForAll(searchText)
+
+                            } else {
+                                searchList.clear()
+                                searchList.addAll(PeopleData.peopleList!!)
+                                recyclerAll.adapter!!.notifyDataSetChanged()
+                            }
 
 
-                    return false
-                }
+                            return false
+                        }
 
 
-            })
-        }*/
+                    })
+                }*/
 
         return view
     }
 
-    private fun searchForAll(searchText: String) {
-        PeopleData.peopleList?.forEach {
+    private fun listenerRegisterForUsers() {
+        listenerRegistration = query.addSnapshotListener { snapShots, error ->
 
-            if (it.name.lowercase(Locale.getDefault()).contains(searchText)) {
-                searchList.add(it)
+            for (doc in snapShots!!.documentChanges) {
+                if (doc.type == DocumentChange.Type.ADDED) {
+                    val newPerson = doc.document.toObject(Person::class.java)
+                    searchList.add(newPerson)
+                    recyclerAll.adapter!!.notifyDataSetChanged()
+
+
+                }
+                recyclerAll.adapter!!.notifyDataSetChanged()
 
             }
-            recyclerAll.adapter!!.notifyDataSetChanged()
+        }
+    }
+
+    private fun genListPersonFireStore() {
+
+        query.get().addOnCompleteListener {
+
+            if (it.isSuccessful) {
+                searchList = it.result.toObjects(Person::class.java)
+
+                recyclerAll.adapter!!.notifyDataSetChanged()
+            }
         }
 
     }
@@ -97,37 +126,27 @@ class AllPeople : Fragment() {
     private fun setUpRecyclers(view: View?) {
         val context = requireContext()
 
-        val allAdapter = PeopleDataAdapter(context, searchList)
-/*
-        val recommendFollowAdapter = PeopleDataAdapter(context, PeopleData.peopleList!!)
-*/
-
-        val layoutManagerAll = GridLayoutManager(context,2)
-/*
-        val layoutManagerRecommend = LinearLayoutManager(context)
-*/
-
+        allAdapter = PeopleDataAdapter(context, searchList)
+        val layoutManagerAll = GridLayoutManager(context, 2)
         layoutManagerAll.orientation = RecyclerView.VERTICAL
-/*
-        layoutManagerRecommend.orientation = RecyclerView.HORIZONTAL
-*/
-
-
         recyclerAll.adapter = allAdapter
-/*
-        recyclerRecFollow.adapter = recommendFollowAdapter
-*/
-
         recyclerAll.layoutManager = layoutManagerAll
-/*
-        recyclerRecFollow.layoutManager = layoutManagerRecommend
-*/
-
         recyclerAll.hasFixedSize()
-/*
-        recyclerRecFollow.hasFixedSize()
-*/
+        /*
+                val recommendFollowAdapter = PeopleDataAdapter(context, PeopleData.peopleList!!)
+                val layoutManagerRecommend = LinearLayoutManager(context)
+                layoutManagerRecommend.orientation = RecyclerView.HORIZONTAL
+                recyclerRecFollow.adapter = recommendFollowAdapter
+                recyclerRecFollow.layoutManager = layoutManagerRecommend
+                recyclerRecFollow.hasFixedSize()
+        */
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        listenerRegistration.remove()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

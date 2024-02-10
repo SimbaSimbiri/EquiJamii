@@ -24,7 +24,7 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
     inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private var positionItem: Int = 1
+        private var positionItem: Int = 0
         private var currentNewsTextItem: NewsText? = null
 
          var textNewsHeadlineView: TextView = itemView.findViewById(R.id.textViewHeadline)
@@ -33,7 +33,8 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
 
 
 
-        fun setDetails( image: String, title:String, allNews: String){
+        fun setDetails( image: String, title:String, allNews: String,position: Int){
+            this.positionItem = position
             textNewsHeadlineView.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
 
@@ -44,17 +45,14 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenWidth = displayMetrics.widthPixels
-            layoutParams.width = screenWidth
+            layoutParams.width = screenWidth - 20
             layoutParams.height = screenWidth * 9 / 16
 
             cardViewHolder.layoutParams = layoutParams
 
-
             Glide.with(itemView.context as AppCompatActivity)
                 .load(image)
                 .into(imageNewsHeadlineView)
-
-            Log.d("IMAGE URL", image)
         }
 
 
@@ -81,17 +79,8 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int, model: NewsText) {
-        holder.setDetails(model.image, model.title,model.allNews)
+        holder.setDetails(model.image, model.title,model.allNews,position)
         holder.setOnclickListeners()
     }
 
 }
-
-
-
-
-
-
-
-
-

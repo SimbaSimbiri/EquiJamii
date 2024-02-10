@@ -31,6 +31,18 @@ object AvailableSlots{
         }
 }
 
+object SocialMedia {
+
+    val instaGPic = R.drawable.insta
+
+    val faceBPic = R.drawable.facebook
+
+    val linkedIPic = R.drawable.linkedin
+
+    val webSPic =  R.drawable.web_iconsvg
+
+}
+
 object OfficialNewsTexts {
 
     private val headlineList = arrayOf(
@@ -74,72 +86,6 @@ object OfficialNewsTexts {
         }
 }
 
-object PeopleData {
-
-    private val imageList = arrayOf(
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile,
-        R.drawable.good_profile
-    )
-
-    private val nameList = arrayOf(
-        "Ray Simbiri",
-        "Ron George",
-        "Jerry Onyango",
-        "Peter Otieno",
-        "Daniel Ouma",
-        "Peter Kirika",
-        "Felix Onyango",
-        "Charles Mauti",
-        "Alloyce Lugoma",
-        "Josiah Muriuki"
-    )
-
-    private val designationList = arrayOf(
-
-        "Teller at Ngara Branch",
-        "Operations Officer at Ngara Branch",
-        "Communications officer at Kitui Branch",
-        "Human Resource Official at Nairobi Main",
-        "ELP lead mentor",
-        "EGS Board Member",
-        "ELP Mentee class of  '25",
-        "EGS Board Member",
-        "Teller at Mombasa Branch",
-        "ELP Group Leader"
-
-    )
-
-    var peopleList: ArrayList<Person>? = null
-        get() {
-
-            if (field != null)
-                return field
-
-            field = ArrayList()
-
-            for (imagePosition in imageList.indices) {
-                val imageId = imageList[imagePosition]
-                val nameofPerson = nameList[imagePosition]
-                val designation = designationList[imagePosition]
-                val person = Person(imageId, nameofPerson, designation)
-
-                field!!.add(person)
-            }
-
-            return field
-
-        }
-
-
-}
 
 object YoutubeKeyProvider {
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/peopleFrag">
+    app:startDestination="@id/newsFrag">
 
         <fragment
             android:id="@+id/newsFrag"
@@ -12,16 +12,16 @@
             tools:layout="@layout/news_page" />
 
         <fragment
-            android:id="@+id/peopleFrag"
-            android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
-            android:label="@string/people_icon"
-            tools:layout="@layout/people_page" />
-
-        <fragment
             android:id="@+id/jamiiFrag"
             android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.postFragment"
             android:label="Jamii"
             tools:layout="@layout/jamii_page" />
+
+        <fragment
+            android:id="@+id/peopleFrag"
+            android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
+            android:label="@string/people_icon"
+            tools:layout="@layout/people_page" />
 
         <fragment
             android:id="@+id/myProfile"
@@ -35,6 +35,9 @@
             android:label="My Workspace"
             tools:layout="@layout/my_workspace_page" />
 
+        <action
+            android:id="@+id/action_open_Jamii"
+            app:destination="@id/jamiiFrag" />
 
 
 </navigation>
