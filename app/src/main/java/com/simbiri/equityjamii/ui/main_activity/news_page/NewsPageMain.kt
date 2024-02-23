@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -65,6 +66,7 @@ class newsFragment : Fragment() {
 
 
         viewPager2 = view.findViewById(R.id.viewPagerNews)
+        viewPager2.isUserInputEnabled = false
         stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
         viewPager2.adapter = stateAdapter
         TabLayoutMediator(tabLayout, viewPager2, true, true) { tab, position->
@@ -90,9 +92,13 @@ class newsFragment : Fragment() {
 
                 }
 
+                4 -> { tab.text = "Featuring" }
+
+
             }
 
         }.attach()
+
 
         return view
 
@@ -102,7 +108,7 @@ class newsFragment : Fragment() {
         FragmentStateAdapter(newsFragment) {
 
         override fun getItemCount(): Int {
-            return 4
+            return 5
         }
 
         override fun createFragment(position: Int): Fragment {
@@ -125,10 +131,13 @@ class newsFragment : Fragment() {
                     return OfficialFragment()
                 }
 
+                4 -> {
+                    return FeaturingFragment()
+                }
+
             }
             return Fragment()
         }
-
 
 
     }

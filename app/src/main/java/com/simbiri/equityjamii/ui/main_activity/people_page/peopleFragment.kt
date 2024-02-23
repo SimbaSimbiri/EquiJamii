@@ -48,6 +48,7 @@ class peopleFragment : Fragment() {
 
         stateAdapter = ScreenPeopleAdapter(this@peopleFragment)
         viewPagerPeople.adapter = stateAdapter
+        viewPagerPeople.isUserInputEnabled = false
 
         TabLayoutMediator(tabLayout, viewPagerPeople){ tab, position ->
 
@@ -55,7 +56,6 @@ class peopleFragment : Fragment() {
 
                 0 -> {tab.text = "EquiJamaa"}
                 1 -> {tab.text = "EquiLeaders" }
-                2 -> { tab.text = "Featuring" }
             }
 
         }.attach()
@@ -67,7 +67,7 @@ class peopleFragment : Fragment() {
         inner class ScreenPeopleAdapter(peopleFragment: peopleFragment) : FragmentStateAdapter(peopleFragment) {
 
             override fun getItemCount(): Int {
-                return 3
+                return 2
             }
 
             override fun createFragment(position: Int): Fragment {
@@ -77,8 +77,6 @@ class peopleFragment : Fragment() {
 
                     0 -> {return AllPeople()
                     }
-
-                    2 -> {return  FeaturingFragment()}
 
                 }
                 return Fragment()

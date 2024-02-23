@@ -38,7 +38,7 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
             textNewsHeadlineView.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
 
-            val layoutParams = cardViewHolder.layoutParams
+            val layoutParams = imageNewsHeadlineView.layoutParams
 
             val displayMetrics = DisplayMetrics()
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -48,7 +48,7 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
             layoutParams.width = screenWidth - 20
             layoutParams.height = screenWidth * 9 / 16
 
-            cardViewHolder.layoutParams = layoutParams
+            imageNewsHeadlineView.layoutParams = layoutParams
 
             Glide.with(itemView.context as AppCompatActivity)
                 .load(image)

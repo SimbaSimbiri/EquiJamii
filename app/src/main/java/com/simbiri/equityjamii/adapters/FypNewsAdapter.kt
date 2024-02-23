@@ -41,7 +41,7 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
             textViewBigNews.text = title
             this.currentNewsTextItem = NewsText(image, title, allNews)
 
-            var layoutParams = cardViewHolderBig.layoutParams
+            var layoutParams = imageViewBigNews.layoutParams
 
             val displayMetrics = DisplayMetrics()
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -51,7 +51,7 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
             layoutParams.width = screenWidth
             layoutParams.height = screenWidth * 9 / 16
 
-            cardViewHolderBig.layoutParams = layoutParams
+            imageViewBigNews.layoutParams = layoutParams
 
 
             Glide.with(itemView.context as AppCompatActivity)

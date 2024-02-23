@@ -3,7 +3,9 @@ package com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -73,6 +75,8 @@ class YouTubeDialogFrag : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_you_tube_player)
         dialog.setCanceledOnTouchOutside(true)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setDimAmount(0.5f)
 
         val windowManager = requireActivity().windowManager
         val display = windowManager.defaultDisplay

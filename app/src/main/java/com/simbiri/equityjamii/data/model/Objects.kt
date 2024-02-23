@@ -110,6 +110,7 @@ object YouTubeVids {
         val channelD = YoutubeKeyProvider.keyProvider(context,1)
 
         var videoList: ArrayList<Video>  =  ArrayList()
+        var currentAiringList : ArrayList<Video>  = ArrayList()
 
         val client = AsyncHttpClient()
 
@@ -119,11 +120,9 @@ object YouTubeVids {
         params["type"] = "video"
         params["page"] = "1"
 
-
         client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
             JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
-                // Access the JSON object response to get your list of titles and videoIds which are picasso urls
 
                 val items = json.jsonObject.getJSONArray("items")
 
@@ -152,6 +151,7 @@ object YouTubeVids {
                 Log.d("API FAILURE", response)
             }
         }]
+
 
         listVids = videoList
 
