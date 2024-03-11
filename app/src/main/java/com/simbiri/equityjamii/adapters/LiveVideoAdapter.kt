@@ -45,7 +45,7 @@ class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
             videoThumbnailImage.layoutParams = layoutParams
 
             Glide.with(context)
-                .load(video.videoUrl)
+                .load(video.thumbnailUrl)
                 .into(videoThumbnailImage)
 
             videoTitleTextView.text = video.title

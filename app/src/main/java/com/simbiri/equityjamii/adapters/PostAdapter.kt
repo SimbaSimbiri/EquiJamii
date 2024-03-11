@@ -34,8 +34,8 @@ class PostAdapter (var context: Context, var userList: List<Person>, var  postLi
             this.currentPost = postInstance
             this.person = postInstance.person
 
-            setImages(postInstance.image, person!!.profileUri, postInstance.liked)
-            setTexts(postInstance.caption, postInstance.date, postInstance.likes)
+            setImages(postInstance.image!!, person!!.profileUri, postInstance.liked)
+            setTexts(postInstance.caption, postInstance.time, postInstance.likes)
 
         }
 

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.Person
 
 class postFragment : Fragment() {
 
@@ -25,13 +26,7 @@ class postFragment : Fragment() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser!!.uid
     private val firestore = FirebaseFirestore.getInstance()
-
-
-    /*
-        private lateinit var fabAdd: FloatingActionButton
-        private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-        private lateinit var appBarLayout: AppBarLayout*/
-
+    private lateinit var personPost : Person
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +39,7 @@ class postFragment : Fragment() {
             if (taskDocSnapShot.isSuccessful){
                 if (taskDocSnapShot.result.exists()){
                     val profilePicUrl = taskDocSnapShot.result.getString("profileUri")
-
+                    personPost = taskDocSnapShot.result.toObject(Person::class.java)!!
                     Glide.with(view.context).load(profilePicUrl).into(currentUserImageView)
                 }
             }
@@ -55,13 +50,13 @@ class postFragment : Fragment() {
 
 
         currentUserImageView.setOnClickListener {
-            val addPostFragment = AddPostFragment()
+            val addPostFragment = AddPostFragment.newInstance(personPost)
             val transaction =  requireActivity().supportFragmentManager.beginTransaction()
             addPostFragment.show(transaction, addPostFragment.tag)
         }
 
         yourThoughtsTv.setOnClickListener {
-            val addPostFragment = AddPostFragment()
+            val addPostFragment = AddPostFragment.newInstance(personPost)
             val transaction =  requireActivity().supportFragmentManager.beginTransaction()
             addPostFragment.show(transaction, addPostFragment.tag)
         }

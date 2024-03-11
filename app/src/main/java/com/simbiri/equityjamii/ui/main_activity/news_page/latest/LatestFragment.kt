@@ -41,7 +41,6 @@ class LatestFragment : Fragment() {
         databaseReference = firebaseDatabase.getReference("Latest")
         setUpRecyclerNews(view)
 
-        YouTubeVids.YoutubeVideos(requireContext())
 
         return view
     }

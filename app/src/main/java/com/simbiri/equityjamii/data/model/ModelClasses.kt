@@ -38,11 +38,7 @@ data class NewsText(val image: String, val title: String, val allNews : String) 
 
 data class OfficialNews (val headline : String, val officialPreviewText: String)
 
-/*data class Person(val name: String,  val designation: String, val branch: String,  val profileUri: String, val backGUri: String){
-    constructor() :this ("","","","","")
-}*/
-
-data class Post (val image : String, val caption : String, val date : String, val likes : Int, val person: Person, val postId : String , var liked : Boolean)
+data class Post(val caption : String, val image : String?, val time : String, val userId: String, val person: Person, val likes : Int, var liked : Boolean)
 
 data class TimeSlot(val time : String)
 
@@ -128,12 +124,9 @@ data class Person(val name: String,  val designation: String, val branch: String
 }
 
 
-
-
-
 data class Video(
     val title: String,
-    val videoUrl: String,
+    val thumbnailUrl: String,
     val videoId : String
 ): Parcelable {
     constructor(parcel: Parcel) : this(

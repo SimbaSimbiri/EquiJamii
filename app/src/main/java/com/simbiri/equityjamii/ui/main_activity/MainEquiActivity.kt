@@ -93,7 +93,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         bottomNavigationView.setupWithNavController(navControllerMain)
 
         drawerLayoutMain.addDrawerListener(this)
-        YouTubeVids.YoutubeVideos(this)
 
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

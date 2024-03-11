@@ -37,10 +37,6 @@ class YouTubeDialogFrag : DialogFragment() {
 
     private lateinit var viewModel: YouTubeDialogViewModel
     private lateinit var youTubePlayerView: YouTubePlayerView
-    private var displayMetrics =  DisplayMetrics()
-    private val width=  displayMetrics.widthPixels
-    private var isFullscreen = false
-    private var originalScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
 
     override fun onCreateView(
@@ -55,13 +51,12 @@ class YouTubeDialogFrag : DialogFragment() {
         lifecycle.addObserver(youTubePlayerView)
 
         val videoItem = arguments?.getParcelable<Video>(YOU_TUBE_VID_ARGS)
-        val VIDEO_ID = videoItem!!.videoId
+        val videoId = videoItem!!.videoId
 
         youTubePlayerView.addYouTubePlayerListener(object  : AbstractYouTubePlayerListener(){
 
             override fun onReady(youTubePlayer: YouTubePlayer) {
-                // Set the video ID here
-                youTubePlayer.loadVideo(VIDEO_ID,0.0F)
+                youTubePlayer.loadVideo(videoId,0.0F)
             }
 
         })
@@ -75,8 +70,7 @@ class YouTubeDialogFrag : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_you_tube_player)
         dialog.setCanceledOnTouchOutside(true)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setDimAmount(0.5f)
+        dialog.window?.setDimAmount(0.7f)
 
         val windowManager = requireActivity().windowManager
         val display = windowManager.defaultDisplay

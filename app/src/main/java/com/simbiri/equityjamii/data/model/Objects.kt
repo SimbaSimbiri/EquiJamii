@@ -5,7 +5,10 @@ import android.util.Log
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.google.android.gms.common.api.internal.ApiKey
 import com.simbiri.equityjamii.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Headers
 
 object AvailableSlots{
@@ -93,6 +96,7 @@ object YoutubeKeyProvider {
         return (if (intKey == 0) {
             context.resources.getString(R.string.apikey)
         } else {
+
             context.resources.getString(R.string.channelID)
         }).toString()
 
@@ -101,22 +105,19 @@ object YoutubeKeyProvider {
 
 object YouTubeVids {
 
-    var listVids =  ArrayList<Video>()
-
-
-    fun YoutubeVideos(context: Context): ArrayList<Video> {
+    suspend fun YoutubeVideos(context: Context, eventType : String): ArrayList<Video> = withContext(
+        Dispatchers.IO) {
 
         val API_KEY = YoutubeKeyProvider.keyProvider(context,0)
         val channelD = YoutubeKeyProvider.keyProvider(context,1)
 
         var videoList: ArrayList<Video>  =  ArrayList()
-        var currentAiringList : ArrayList<Video>  = ArrayList()
 
         val client = AsyncHttpClient()
 
         val params = RequestParams()
         params["limit"] = "20"
-        params["eventType"] = "completed"
+        params["eventType"] = eventType
         params["type"] = "video"
         params["page"] = "1"
 
@@ -135,7 +136,7 @@ object YouTubeVids {
                     val imageUrl = defaultThumbnail.getString("url")
                     val video = Video(title, imageUrl, videoId)
 
-                    Log.d("videoId", videoId)
+                    Log.d("videoId$eventType", videoId)
 
                     videoList.add(video)
                 }
@@ -152,10 +153,7 @@ object YouTubeVids {
             }
         }]
 
-
-        listVids = videoList
-
-        return videoList
+        return@withContext videoList
 
     }
 
