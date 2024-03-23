@@ -33,6 +33,8 @@ class SignInActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
+	
+	//added comment line via vim
 
         binding.signInButton.setOnClickListener {
             val email = binding.emailEt.text.toString()
