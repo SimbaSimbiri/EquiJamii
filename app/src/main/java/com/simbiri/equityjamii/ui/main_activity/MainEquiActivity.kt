@@ -88,7 +88,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         val navHostFrag =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navControllerMain = navHostFrag.navController
-        navControllerMain.enableOnBackPressed(true)
 
         bottomNavigationView.setupWithNavController(navControllerMain)
 

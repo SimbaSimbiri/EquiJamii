@@ -35,27 +35,27 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARGS_PERSON_POST = "Poster"
-         fun newInstance(person: Person) : AddPostFragment{
+        fun newInstance(person: Person): AddPostFragment {
             val fragment = AddPostFragment()
-             val bundle =  Bundle()
-             bundle.putParcelable(ARGS_PERSON_POST, person)
-             fragment.arguments = bundle
+            val bundle = Bundle()
+            bundle.putParcelable(ARGS_PERSON_POST, person)
+            fragment.arguments = bundle
 
-             return fragment
+            return fragment
         }
     }
 
     private lateinit var viewModel: AddPostViewModel
-    private  var  _binding  :DialogAddPostBinding? = null
+    private var _binding: DialogAddPostBinding? = null
     private val binding get() = _binding
-    private lateinit var  openPostPicker: ActivityResultLauncher<CropImageContractOptions>
-    private val firestoreInst : FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var imageUri : Uri? =  null
-    private val postStorageRef  = FirebaseStorage.getInstance().getReference()
+    private lateinit var openPostPicker: ActivityResultLauncher<CropImageContractOptions>
+    private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var imageUri: Uri? = null
+    private val postStorageRef = FirebaseStorage.getInstance().getReference()
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        openPostPicker = registerForActivityResult(CropImageContract()){ result ->
-            if (result.isSuccessful){
+        openPostPicker = registerForActivityResult(CropImageContract()) { result ->
+            if (result.isSuccessful) {
                 Glide.with(requireContext()).load(result.uriContent).into(binding!!.imagePostUpload)
                 imageUri = result.uriContent
             }
@@ -66,15 +66,25 @@ class AddPostFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =  DialogAddPostBinding.inflate(layoutInflater, container, false)
+        _binding = DialogAddPostBinding.inflate(layoutInflater, container, false)
         val view = binding!!.root
 
 
         val cropPostContractOptions = CropImageContractOptions(
-            null, CropImageOptions(true, true, CropImageView.CropShape.RECTANGLE, cropCornerRadius = 8.0F,
-                cropMenuCropButtonTitle = "Done", showCropLabel = true, activityTitle = "CROP IMAGE", activityBackgroundColor = requireContext().resources.getColor(R.color.black),
-                toolbarColor = requireContext().resources.getColor(R.color.black), progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
-                guidelines = CropImageView.Guidelines.OFF, fixAspectRatio = true)
+            null, CropImageOptions(
+                true,
+                true,
+                CropImageView.CropShape.RECTANGLE,
+                cropCornerRadius = 8.0F,
+                cropMenuCropButtonTitle = "Done",
+                showCropLabel = true,
+                activityTitle = "CROP IMAGE",
+                activityBackgroundColor = requireContext().resources.getColor(R.color.black),
+                toolbarColor = requireContext().resources.getColor(R.color.black),
+                progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
+                guidelines = CropImageView.Guidelines.OFF,
+                fixAspectRatio = true
+            )
         )
 
         binding!!.dismissFrag.setOnClickListener {
@@ -86,18 +96,21 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
-        binding!!.postButton.setOnClickListener{
-            val captionPost =  binding!!.captionEditTv.text.toString()
+        binding!!.postButton.setOnClickListener {
+            val captionPost = binding!!.captionEditTv.text.toString()
 
-            if (captionPost.isEmpty()){
-                Toast.makeText(requireContext(), " Caption must be added before posting to Jamii Feed", Toast.LENGTH_SHORT).show()
+            if (captionPost.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    " Caption must be added before posting to Jamii Feed",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
-            if (imageUri!=null && captionPost.isNotEmpty()){
-                savePostToFirestore(captionPost, imageUri.toString() )
-            }
-            else{
-                    savePostToFirestore(captionPost)
+            if (imageUri != null && captionPost.isNotEmpty()) {
+                savePostToFirestore(captionPost, imageUri.toString())
+            } else {
+                savePostToFirestore(captionPost)
             }
         }
 
@@ -105,53 +118,52 @@ class AddPostFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun savePostToFirestore( captionPost: String, imageUri : String? = null ) {
-         val personPost = arguments?.getParcelable<Person>(ARGS_PERSON_POST)
+    private fun savePostToFirestore(captionPost: String, imageUri: String? = null) {
+        val personPost = arguments?.getParcelable<Person>(ARGS_PERSON_POST)
 
         val postItemRef = postStorageRef.child("PostStorage_Images")
-                .child(FieldValue.serverTimestamp().toString() + ".jpg")
-            postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
+            .child(FieldValue.serverTimestamp().toString() + ".jpg")
+        postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
 
-                if (taskUpload.isSuccessful) {
-                    postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
-                        val postHashMap = hashMapOf(
-                            "caption" to captionPost,
-                            "image" to postImageUri,
-                            "time" to FieldValue.serverTimestamp(),
-                            "userId" to FIREBASE_USER_ID,
-                            "person" to personPost,
-                            "likes" to 0,
-                            "liked" to false
-                        )
+            if (taskUpload.isSuccessful) {
+                postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
+                    val postHashMap = hashMapOf(
+                        "caption" to captionPost,
+                        "image" to postImageUri,
+                        "time" to FieldValue.serverTimestamp(),
+                        "userId" to FIREBASE_USER_ID,
+                        "person" to personPost,
+                        "likes" to 0,
+                        "liked" to false
+                    )
 
 
-                        firestoreInst.collection("Post_Galleria").add(postHashMap)
-                            .addOnCompleteListener { taskDocref ->
-                                if (taskDocref.isSuccessful) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Successfully posted to feed",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    dismiss()
-                                } else {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Error posting, try again later",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                    firestoreInst.collection("Post_Galleria").add(postHashMap)
+                        .addOnCompleteListener { taskDocref ->
+                            if (taskDocref.isSuccessful) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Successfully posted to feed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dismiss()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error posting, try again later",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
+                        }
 
-                    }
                 }
             }
+        }
     }
 
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog =  super.onCreateDialog(savedInstanceState)
+        val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_add_post)
         dialog.setCanceledOnTouchOutside(false)
 
@@ -161,7 +173,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet!!.layoutParams.height = metrics.heightPixels
             bottomSheet.requestLayout()
 
@@ -169,18 +182,20 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-                behavior.peekHeight =  metrics.heightPixels
+                behavior.peekHeight = metrics.heightPixels
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
 
-        return dialog    }
+        return dialog
+    }
 
     override fun onDestroy() {
         super.onDestroy()
 
         _binding = null
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(AddPostViewModel::class.java)
