@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PeopleDataAdapter
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
-
 
 class AllPeople : Fragment() {
 
@@ -26,7 +27,6 @@ class AllPeople : Fragment() {
 
     private lateinit var allAdapter: PeopleDataAdapter
     private lateinit var viewModel: AllPeopleViewModel
-    private lateinit var recyclerRecFollow: RecyclerView
     private lateinit var recyclerAll: RecyclerView
     private lateinit var searchAll: SearchView
     private lateinit var searchList: MutableList<Person>
@@ -50,41 +50,7 @@ class AllPeople : Fragment() {
             genListPersonFireStore()
         }
 
-
-
         listenerRegisterForUsers()
-
-        /*
-
-                searchAll.apply {
-                    clearFocus()
-                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            searchAll.clearFocus()
-                            return true
-                        }
-
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            val searchText = newText!!.lowercase(Locale.getDefault())
-
-                            if (searchText.isNotEmpty()) {
-
-                                searchForAll(searchText)
-
-                            } else {
-                                searchList.clear()
-                                searchList.addAll(PeopleData.peopleList!!)
-                                recyclerAll.adapter!!.notifyDataSetChanged()
-                            }
-
-
-                            return false
-                        }
-
-
-                    })
-                }*/
 
         return view
     }
@@ -98,48 +64,32 @@ class AllPeople : Fragment() {
                     searchList.add(newPerson)
                     recyclerAll.adapter!!.notifyDataSetChanged()
 
-
                 }
                 recyclerAll.adapter!!.notifyDataSetChanged()
 
             }
+            Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
+
         }
     }
 
     private fun genListPersonFireStore() {
-
         query.get().addOnCompleteListener {
-
             if (it.isSuccessful) {
                 searchList = it.result.toObjects(Person::class.java)
-
                 recyclerAll.adapter!!.notifyDataSetChanged()
             }
         }
 
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun setUpRecyclers(view: View?) {
         val context = requireContext()
-
         allAdapter = PeopleDataAdapter(context, searchList)
         val layoutManagerAll = GridLayoutManager(context, 2)
         layoutManagerAll.orientation = RecyclerView.VERTICAL
         recyclerAll.adapter = allAdapter
         recyclerAll.layoutManager = layoutManagerAll
-        recyclerAll.hasFixedSize()
-        /*
-                val recommendFollowAdapter = PeopleDataAdapter(context, PeopleData.peopleList!!)
-                val layoutManagerRecommend = LinearLayoutManager(context)
-                layoutManagerRecommend.orientation = RecyclerView.HORIZONTAL
-                recyclerRecFollow.adapter = recommendFollowAdapter
-                recyclerRecFollow.layoutManager = layoutManagerRecommend
-                recyclerRecFollow.hasFixedSize()
-        */
 
     }
 

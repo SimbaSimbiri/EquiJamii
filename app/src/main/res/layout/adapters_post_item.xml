@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginHorizontal="10dp"
-    android:backgroundTint="@color/logoColour"
+    android:backgroundTint="@color/lighterMaroon"
     app:cardCornerRadius="13dp"
     android:layout_height="wrap_content"
     android:layout_marginVertical="10dp">
@@ -47,21 +47,29 @@
             app:layout_constraintStart_toEndOf="@id/imageUserPost"
             app:layout_constraintTop_toBottomOf="@id/textNamePost" />
 
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageUserPost" />
         <TextView
             android:id="@+id/captionExpandable"
             style="@style/titleTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="10dp"
             android:text="Amazing talks today with the European Union representatives. Equity Bank is definitely growing as a brand ... read more"
             android:textColor="@color/white"
             android:textSize="13sp"
             app:layout_constraintBottom_toTopOf="@id/imagePosted"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/imageUserPost"
-            app:layout_constraintTop_toBottomOf="@id/imageUserPost" />
-
+            app:layout_constraintTop_toBottomOf="@id/viewDivider" />
 
         <ImageView
             android:id="@+id/imagePosted"
@@ -74,13 +82,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/captionExpandable" />
+        <View
+            android:id="@+id/viewDivider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagePosted" />
 
         <ImageView
             android:id="@+id/likesImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="30dp"
             android:layout_margin="10dp"
             android:src="@drawable/not_liked_yet"
+            app:layout_constraintTop_toBottomOf="@id/imagePosted"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -96,7 +115,6 @@
             app:layout_constraintBottom_toBottomOf="@id/likesImage"
             app:layout_constraintStart_toEndOf="@id/likesImage"
             app:layout_constraintTop_toTopOf="@id/likesImage" />
-
 
         <TextView
             android:id="@+id/likesCharText"

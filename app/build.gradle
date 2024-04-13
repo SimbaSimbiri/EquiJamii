@@ -24,7 +24,7 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\simbi\\Downloads\\my-apps-release-key.jks')
+            storeFile file('C:\\Users\\simbi\\Downloads\\EqJamii_important\\my-apps-release-key.jks')
             storePassword 'simba19'
             keyAlias 'keystore-equityjamii'
             keyPassword 'simba19'

@@ -19,7 +19,8 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsDetailFragment
 
-class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsText>) : FirebaseRecyclerAdapter<NewsText, NewsAdapter.NewsViewHolder>(options) {
+class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsText>) :
+    FirebaseRecyclerAdapter<NewsText, NewsAdapter.NewsViewHolder>(options) {
 
     inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {

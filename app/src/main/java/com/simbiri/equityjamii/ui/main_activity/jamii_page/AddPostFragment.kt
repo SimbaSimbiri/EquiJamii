@@ -20,16 +20,15 @@ import com.canhub.cropper.CropImageView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.DialogAddPostBinding
-import com.simbiri.equityjamii.ui.FIREBASE_USER_ID
-import java.lang.reflect.Field
-import java.util.Objects
+import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
+import com.simbiri.equityjamii.constants.POST_COLLECTION
+import com.simbiri.equityjamii.constants.POST_STORAGE_REF
 
 class AddPostFragment : BottomSheetDialogFragment() {
 
@@ -105,12 +104,13 @@ class AddPostFragment : BottomSheetDialogFragment() {
                     " Caption must be added before posting to Jamii Feed",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
+            }else {
 
-            if (imageUri != null && captionPost.isNotEmpty()) {
-                savePostToFirestore(captionPost, imageUri.toString())
-            } else {
-                savePostToFirestore(captionPost)
+                if (imageUri != null) {
+                    savePostToFirestore(captionPost, imageUri.toString())
+                } else {
+                    savePostToFirestore(captionPost)
+                }
             }
         }
 
@@ -120,45 +120,57 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
     private fun savePostToFirestore(captionPost: String, imageUri: String? = null) {
         val personPost = arguments?.getParcelable<Person>(ARGS_PERSON_POST)
+        var postHashMap: HashMap<String, Any?> = HashMap()
 
-        val postItemRef = postStorageRef.child("PostStorage_Images")
+        val postItemRef = postStorageRef.child(POST_STORAGE_REF)
             .child(FieldValue.serverTimestamp().toString() + ".jpg")
-        postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
 
-            if (taskUpload.isSuccessful) {
-                postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
-                    val postHashMap = hashMapOf(
-                        "caption" to captionPost,
-                        "image" to postImageUri,
-                        "time" to FieldValue.serverTimestamp(),
-                        "userId" to FIREBASE_USER_ID,
-                        "person" to personPost,
-                        "likes" to 0,
-                        "liked" to false
-                    )
+        if (imageUri != null) {
+            postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
+                if (taskUpload.isSuccessful) {
+                    postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
+                        postHashMap = hashMapOf(
+                            "caption" to captionPost,
+                            "image" to postImageUri,
+                            "time" to FieldValue.serverTimestamp(),
+                            "userId" to FIREBASE_USER_ID,
+                            "likes" to 0,
+                            "liked" to false,
+                            "person" to personPost
+                        )
 
-
-                    firestoreInst.collection("Post_Galleria").add(postHashMap)
-                        .addOnCompleteListener { taskDocref ->
-                            if (taskDocref.isSuccessful) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Successfully posted to feed",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                dismiss()
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Error posting, try again later",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-
+                    }
                 }
             }
+        } else {
+            postHashMap = hashMapOf(
+                "caption" to captionPost,
+                "image" to "",
+                "time" to FieldValue.serverTimestamp(),
+                "userId" to FIREBASE_USER_ID,
+                "likes" to 0,
+                "liked" to false,
+                "person" to personPost
+            )
         }
+        firestoreInst.collection(POST_COLLECTION).add(postHashMap)
+            .addOnCompleteListener { taskDocref ->
+                if (taskDocref.isSuccessful) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Successfully posted to feed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    dismiss()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error posting, try again later",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
     }
 
 

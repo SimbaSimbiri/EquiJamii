@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.R
 import androidx.core.view.isVisible
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
 import com.simbiri.equityjamii.databinding.ProfilePageBinding
@@ -112,7 +113,7 @@ class MyProfileFragment : Fragment() {
 
 
     private fun retreiveAllInfo() {
-        firestore.collection("Users").document(userId).get()
+        firestore.collection(USERS_COLLECTION).document(userId).get()
             .addOnCompleteListener { taskDocSnapShot ->
                 if (taskDocSnapShot.isSuccessful) {
                     if (taskDocSnapShot.result.exists()) {
@@ -306,7 +307,7 @@ class MyProfileFragment : Fragment() {
         mapToFirestore["social"] = hashMapOf( "about" to social.about, "insta" to  social.insta, "linkedin" to social.linkedin, "faceb" to social.faceb,"webs" to social.webs )
 
 
-        firestore.collection("Users").document(userId).set(mapToFirestore)
+        firestore.collection(USERS_COLLECTION).document(userId).set(mapToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
                     Toast.makeText(
@@ -344,7 +345,7 @@ class MyProfileFragment : Fragment() {
         mapSocialToFirestore["webS"] = webS
 
 
-        firestore.collection("Users").document(userId).set(mapSocialToFirestore)
+        firestore.collection(USER_COLLECTION).document(userId).set(mapSocialToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
                     Toast.makeText(
