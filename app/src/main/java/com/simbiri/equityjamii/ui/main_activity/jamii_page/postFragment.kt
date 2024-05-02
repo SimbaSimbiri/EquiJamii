@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
@@ -107,12 +108,12 @@ class postFragment : Fragment() {
                 recyclerPosts.adapter!!.notifyDataSetChanged()
             }
             !changesDetected
-           Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun genListPosts(){
-        query.get().addOnCompleteListener {
+        query.orderBy("time", Query.Direction.DESCENDING)
+            .get().addOnCompleteListener {
             if(it.isSuccessful){
                 val posts = it.result.toObjects(Post::class.java)
                 postList.clear()

@@ -105,8 +105,7 @@ object YoutubeKeyProvider {
 
 object YouTubeVids {
 
-    suspend fun YoutubeVideos(context: Context, eventType : String): ArrayList<Video> = withContext(
-        Dispatchers.IO) {
+     fun YoutubeVideos(context: Context, eventType : String): ArrayList<Video> {
 
         val API_KEY = YoutubeKeyProvider.keyProvider(context,0)
         val channelD = YoutubeKeyProvider.keyProvider(context,1)
@@ -153,7 +152,7 @@ object YouTubeVids {
             }
         }]
 
-        return@withContext videoList
+        return videoList
 
     }
 

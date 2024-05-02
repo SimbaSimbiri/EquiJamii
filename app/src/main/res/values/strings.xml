@@ -159,6 +159,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="karibu_to_equityjamii">Karibu EquityJamii</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="currently_airing">Currently Airing</string>
+    <string name="previous_virtual_events">Previous virtual events</string>
+    <string name="on_your_mind">Tell us what\'s on your mind</string>
 
 
 </resources>

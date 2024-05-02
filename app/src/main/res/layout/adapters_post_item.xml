@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -50,7 +50,7 @@
         <View
             android:id="@+id/viewDivider"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_marginTop="4dp"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +66,6 @@
             android:text="Amazing talks today with the European Union representatives. Equity Bank is definitely growing as a brand ... read more"
             android:textColor="@color/white"
             android:textSize="13sp"
-            app:layout_constraintBottom_toTopOf="@id/imagePosted"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/imageUserPost"
             app:layout_constraintTop_toBottomOf="@id/viewDivider" />
@@ -78,14 +77,13 @@
             android:layout_marginVertical="5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/equityjamiibackground"
-            app:layout_constraintBottom_toTopOf="@id/likesImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/captionExpandable" />
         <View
             android:id="@+id/viewDivider2"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_marginTop="0dp"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +97,7 @@
             android:layout_marginVertical="30dp"
             android:layout_margin="10dp"
             android:src="@drawable/not_liked_yet"
-            app:layout_constraintTop_toBottomOf="@id/imagePosted"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

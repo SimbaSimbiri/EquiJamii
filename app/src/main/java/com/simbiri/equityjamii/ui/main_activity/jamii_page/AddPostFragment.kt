@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,7 +105,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                     " Caption must be added before posting to Jamii Feed",
                     Toast.LENGTH_SHORT
                 ).show()
-            }else {
+            } else {
 
                 if (imageUri != null) {
                     savePostToFirestore(captionPost, imageUri.toString())
@@ -139,6 +140,29 @@ class AddPostFragment : BottomSheetDialogFragment() {
                             "person" to personPost
                         )
 
+
+                        firestoreInst.collection(POST_COLLECTION).add(postHashMap)
+                            .addOnCompleteListener { taskDocref ->
+                                if (taskDocref.isSuccessful) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Successfully posted to feed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.i("PostHashMap", postHashMap.toString())
+
+                                    dismiss()
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Error posting, try again later",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.i("PostHashMap Failed", postHashMap.toString())
+
+                                }
+                            }
+
                     }
                 }
             }
@@ -152,24 +176,29 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 "liked" to false,
                 "person" to personPost
             )
-        }
-        firestoreInst.collection(POST_COLLECTION).add(postHashMap)
-            .addOnCompleteListener { taskDocref ->
-                if (taskDocref.isSuccessful) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Successfully posted to feed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    dismiss()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error posting, try again later",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+            firestoreInst.collection(POST_COLLECTION).add(postHashMap)
+                .addOnCompleteListener { taskDocref ->
+                    if (taskDocref.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully posted to feed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.i("PostHashMap", postHashMap.toString())
+
+                        dismiss()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error posting, try again later",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.i("PostHashMap Failed", postHashMap.toString())
+
+                    }
                 }
-            }
+        }
 
     }
 
