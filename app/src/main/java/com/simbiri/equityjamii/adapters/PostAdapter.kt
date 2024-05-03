@@ -6,81 +6,122 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.DisplayMetrics
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
+import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class PostAdapter(var context: Context, var postList: MutableList<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>(){
+class PostAdapter(var context: Context, var postList: MutableList<Post>) :
+    RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    inner class PostViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    private val firestoreCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+
+    inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imagePostUser: ImageView = itemView.findViewById(R.id.imageUserPost)
-        var imagePosted :ImageView =  itemView.findViewById(R.id.imagePosted)
+        var imagePosted: ImageView = itemView.findViewById(R.id.imagePosted)
         var nameText: TextView = itemView.findViewById(R.id.textNamePost)
-        var captionText : TextView =  itemView.findViewById(R.id.captionExpandable)
-        var dateText : TextView = itemView.findViewById(R.id.textDatePost)
-        var thumbsLikePost :ImageView =  itemView.findViewById(R.id.likesImage)
-        var numLikes: TextView  =  itemView.findViewById(R.id.numLikesText)
-        private val MAX_CHAR_COLLAPSED = 100
+        var captionText: TextView = itemView.findViewById(R.id.captionExpandable)
+        var dateText: TextView = itemView.findViewById(R.id.textDatePost)
+        var thumbsLikePost: ImageView = itemView.findViewById(R.id.likesImage)
+        var numLikes: TextView = itemView.findViewById(R.id.numLikesText)
+        private val MAX_CHAR_COLLAPSED = 90
         private var isExpanded = false
 
-        var currentPost : Post? =  null
-        var person : Person?  = null
+        var currentPost: Post? = null
+        var person: Person? = null
         var currentPosition = 0
 
         private fun toggleCaptionExpansion() {
             isExpanded = !isExpanded
             setTextsToggled(currentPost?.caption, isExpanded)
         }
+
         private fun setTextsToggled(caption: String?, isExpanded: Boolean) {
             val spannable = SpannableStringBuilder(caption)
             if (caption != null) {
-                if (isExpanded) {
-                    spannable.append(" ...read less")
-                } else if (caption.length > MAX_CHAR_COLLAPSED) {
-                    spannable.delete(MAX_CHAR_COLLAPSED, caption.length)
-                    spannable.append(" ...read more")
+                if (caption.length > MAX_CHAR_COLLAPSED) {
+                    if (isExpanded) {
+                        spannable.append(" ...read less")
+                    } else {
+                        spannable.delete(MAX_CHAR_COLLAPSED, caption.length)
+                        spannable.append(" ...read more")
+                    }
+
+                    spannable.setSpan(object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            toggleCaptionExpansion()
+                        }
+                    }, spannable.length - 9, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                    captionText.text = spannable
+                    captionText.movementMethod = LinkMovementMethod.getInstance()
                 }
             }
 
-            spannable.setSpan(object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    toggleCaptionExpansion()
-                }
-            }, spannable.length - 9, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            captionText.text = spannable
-            captionText.movementMethod = LinkMovementMethod.getInstance()
         }
 
-        fun setDataToPost(postInstance : Post, position: Int){
+        fun setDataToPost(postInstance: Post, position: Int) {
             this.currentPosition = position
-
             this.currentPost = postInstance
-            this.person = postInstance.person
-
-            setImages(postInstance.image, person!!.profileUri, postInstance.liked)
-            setTexts(postInstance.caption, postInstance.time, postInstance.likes, person!!.name)
-            toggleCaptionExpansion()
+            setOnClicks()
+            findPerson(postInstance.userId)
 
         }
+
+        private fun findPerson(userId: String) {
+            firestoreCollection.document(userId).get()
+                .addOnCompleteListener { taskDocSnapShot ->
+                    if (taskDocSnapShot.isSuccessful) {
+                        if (taskDocSnapShot.result.exists()) {
+                            this.person = taskDocSnapShot.result.toObject(Person::class.java)
+
+                            setImages(
+                                this.currentPost!!.image, this.person!!.profileUri,
+                                this.currentPost!!.liked
+                            )
+                            setTexts(
+                                this.currentPost!!.caption, this.currentPost!!.time,
+                                this.currentPost!!.likes, this.person!!.name
+                            )
+                            setTextsToggled(currentPost?.caption, false)
+
+                        } else {
+                            Toast.makeText(
+                                itemView.context,
+                                "Unable to retrieve person",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+
 
         private fun setTexts(caption: String, time: Timestamp?, likes: Int, name: String) {
 
-            this.captionText.text =  caption
+            this.captionText.text = caption
             this.numLikes.text = likes.toString()
             this.nameText.text = name
 
@@ -98,14 +139,79 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) : Recyc
             val screenHeight = displayMetrics.heightPixels
             val screenWidth = displayMetrics.widthPixels
 
-            Glide.with(context).load(imagePosted).
-            apply(RequestOptions().override(screenWidth - 20, screenHeight*3/5 ))
-                .centerCrop()
-                .into(this.imagePosted)
+            Glide.with(context).load(imagePosted)
+                .apply(RequestOptions().override(screenWidth - 20, screenHeight * 3 / 5))
+                .centerCrop().into(this.imagePosted)
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
-            if(liked){this.thumbsLikePost.setImageResource(R.drawable.liked)}
-            else{this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)}
+            if (liked) {
+                this.thumbsLikePost.setImageResource(R.drawable.liked)
+            } else {
+                this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
+            }
+
+        }
+
+        private fun setOnClicks() {
+
+            this.thumbsLikePost.setOnClickListener {
+                likeUnlikePost()
+            }
+
+            val gestureDetector = GestureDetectorCompat(
+                itemView.context,
+                object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onDoubleTap(e: MotionEvent): Boolean {
+                        likeUnlikePost()
+                        return true
+                    }
+                })
+
+            this.imagePosted.setOnClickListener {
+                it.setOnTouchListener { _, event ->
+                    it.performClick()
+                    gestureDetector.onTouchEvent(event)
+                }
+            }
+
+
+            this.imagePostUser.setOnClickListener {
+                showPerson(this.person)
+            }
+
+            this.nameText.setOnClickListener {
+                showPerson(this.person)
+            }
+
+        }
+
+        private fun likeUnlikePost() {
+            this.currentPost!!.liked = !this.currentPost!!.liked
+
+            var numFanLikes = this.currentPost!!.likes
+
+            if (this.currentPost!!.liked) {
+
+                this.thumbsLikePost.setImageResource(R.drawable.liked)
+                numFanLikes += 1
+                this.currentPost!!.likes = numFanLikes
+                this.numLikes.text =
+                    itemView.resources.getString(R.string.num_likes, numFanLikes)
+            } else {
+                this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
+                numFanLikes -= 1
+                this.currentPost!!.likes = numFanLikes
+                this.numLikes.text =
+                    itemView.resources.getString(R.string.num_likes, numFanLikes)
+            }
+        }
+
+        private fun showPerson(person: Person?) {
+
+            val personDialogFrag = PersonInfoFragment.newInstance(person!!)
+            val transaction =
+                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+            personDialogFrag.show(transaction, personDialogFrag.tag)
 
         }
 
@@ -114,18 +220,15 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) : Recyc
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
 
         val view = LayoutInflater.from(context).inflate(R.layout.adapters_post_item, parent, false)
-
         return PostViewHolder(view)
 
     }
 
-    override fun getItemCount(): Int  = postList.size
+    override fun getItemCount(): Int = postList.size
 
     override fun onBindViewHolder(postViewHolder: PostViewHolder, position: Int) {
-        val post =  postList[position]
-
+        val post = postList[position]
         postViewHolder.setDataToPost(post, position)
-
 
     }
 

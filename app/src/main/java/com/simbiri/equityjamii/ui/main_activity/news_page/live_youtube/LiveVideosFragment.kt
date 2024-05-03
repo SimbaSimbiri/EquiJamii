@@ -77,9 +77,7 @@ class LiveVideosFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Handler().postDelayed({recyclerVideos.adapter!!.notifyDataSetChanged()}, 3000)
-
-
+        Handler().postDelayed({recyclerVideos.adapter!!.notifyDataSetChanged()}, 2500)
     }
 
 

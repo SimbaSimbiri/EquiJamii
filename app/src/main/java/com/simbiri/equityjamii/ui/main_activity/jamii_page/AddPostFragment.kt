@@ -120,7 +120,6 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
 
     private fun savePostToFirestore(captionPost: String, imageUri: String? = null) {
-        val personPost = arguments?.getParcelable<Person>(ARGS_PERSON_POST)
         var postHashMap: HashMap<String, Any?> = HashMap()
 
         val postItemRef = postStorageRef.child(POST_STORAGE_REF)
@@ -137,7 +136,6 @@ class AddPostFragment : BottomSheetDialogFragment() {
                             "userId" to FIREBASE_USER_ID,
                             "likes" to 0,
                             "liked" to false,
-                            "person" to personPost
                         )
 
 
@@ -174,7 +172,6 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 "userId" to FIREBASE_USER_ID,
                 "likes" to 0,
                 "liked" to false,
-                "person" to personPost
             )
 
             firestoreInst.collection(POST_COLLECTION).add(postHashMap)
