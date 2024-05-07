@@ -11,6 +11,7 @@ import android.widget.EditText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textfield.TextInputEditText
 import com.simbiri.equityjamii.R
 
 
@@ -22,15 +23,14 @@ class AddTaskDialogFragment : BottomSheetDialogFragment() {
     }
 
     private lateinit var viewModel: AddTaskDialogViewModel
-    private lateinit var addTitleText: EditText
-    private lateinit var addDescriptionText: EditText
-    private lateinit var addNameText: EditText
+    private lateinit var addTitleText: TextInputEditText
+    private lateinit var addDescriptionText: TextInputEditText
+    private lateinit var addNameText: TextInputEditText
     private lateinit var buttonBranchDone: Button
     private lateinit var buttonPersonalDone: Button
     private lateinit var titleTask: String
     private lateinit var descriptionTask: String
     private lateinit var nameAssign: String
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -61,7 +61,6 @@ class AddTaskDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.dialog_add_task, container, false)
-
 
 
         addTitleText = view.findViewById(R.id.editTextTitle)

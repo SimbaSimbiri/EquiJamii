@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.R
 import androidx.core.view.isVisible
+import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
@@ -297,6 +298,7 @@ class MyProfileFragment : Fragment() {
     ) {
 
         val mapToFirestore = HashMap<String, Any>()
+        mapToFirestore["userId"] = FIREBASE_USER_ID
         mapToFirestore["name"] = name
         mapToFirestore["designation"] = designation
         mapToFirestore["branch"] = branch

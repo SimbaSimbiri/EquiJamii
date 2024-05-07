@@ -27,6 +27,7 @@ import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
+import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -124,11 +125,31 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
             this.captionText.text = caption
             this.numLikes.text = likes.toString()
             this.nameText.text = name
+            this.dateText.text = displayDate(time)
+        }
 
-            val date_raw = time?.toDate()
-            val date_format = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-            val date_str = date_format.format(date_raw!!)
-            this.dateText.text = date_str
+        private fun displayDate(timestamp: Timestamp?): String? {
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+
+            return try {
+                val date = timestamp?.toDate()
+                val currentDate = java.util.Date()
+
+                val timeDifference = currentDate.time - date!!.time
+                val daysDifference = timeDifference / (1000 * 60 * 60 * 24)
+
+                when {
+                    daysDifference >= 7 -> dateFormat.format(date)
+                    daysDifference == 1.0.toLong() -> "1 day ago"
+                    daysDifference > 1 -> "$daysDifference days ago"
+                    timeDifference >= 60 * 60 * 1000 -> "${timeDifference / (60 * 60 * 1000)} hours ago"
+                    timeDifference >= 60 * 1000 -> "${timeDifference / (60 * 1000)} minutes ago"
+                    else -> "Just now"
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ""
+            }
         }
 
         private fun setImages(imagePosted: String?, imageUser: String?, liked: Boolean) {
@@ -140,8 +161,8 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
             val screenWidth = displayMetrics.widthPixels
 
             Glide.with(context).load(imagePosted)
-                .apply(RequestOptions().override(screenWidth - 20, screenHeight * 3 / 5))
-                .centerCrop().into(this.imagePosted)
+                .apply(RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5))
+                .fitCenter().into(this.imagePosted)
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
             if (liked) {
@@ -167,12 +188,17 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
                     }
                 })
 
-            this.imagePosted.setOnClickListener {
-                it.setOnTouchListener { _, event ->
-                    it.performClick()
-                    gestureDetector.onTouchEvent(event)
-                }
+            this.imagePosted.setOnTouchListener { view, event ->
+
+                view.performClick()
+                gestureDetector.onTouchEvent(event)
             }
+
+            this.captionText.setOnTouchListener { v, event ->
+                v.performClick()
+                gestureDetector.onTouchEvent(event)
+            }
+
 
 
             this.imagePostUser.setOnClickListener {

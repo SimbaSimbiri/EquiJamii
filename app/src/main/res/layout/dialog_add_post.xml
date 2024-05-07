@@ -63,6 +63,7 @@
                     android:id="@+id/captionEditTv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColorHighlight="@color/lighterMaroon"
                     android:cursorVisible="true"
                     android:focusedByDefault="true"
                     android:fontFamily="sans-serif"

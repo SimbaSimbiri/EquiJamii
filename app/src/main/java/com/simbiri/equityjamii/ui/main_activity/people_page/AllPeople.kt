@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PeopleDataAdapter
+import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 
@@ -61,22 +62,24 @@ class AllPeople : Fragment() {
             for (doc in snapShots!!.documentChanges) {
                 if (doc.type == DocumentChange.Type.ADDED) {
                     val newPerson = doc.document.toObject(Person::class.java)
-                    searchList.add(newPerson)
+                    if (!newPerson.userId.contentEquals(FIREBASE_USER_ID)){
+                    searchList.add(newPerson)}
                     recyclerAll.adapter!!.notifyDataSetChanged()
 
                 }
                 recyclerAll.adapter!!.notifyDataSetChanged()
 
             }
-            Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
 
         }
     }
 
     private fun genListPersonFireStore() {
-        query.get().addOnCompleteListener {
+        query.get().addOnCompleteListener { it ->
             if (it.isSuccessful) {
-                searchList = it.result.toObjects(Person::class.java)
+                searchList = it.result.toObjects(Person::class.java).filter{person -> person.userId.contentEquals(FIREBASE_USER_ID) }
+                    .toMutableList()
+
                 recyclerAll.adapter!!.notifyDataSetChanged()
             }
         }

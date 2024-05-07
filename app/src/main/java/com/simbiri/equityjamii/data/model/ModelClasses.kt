@@ -120,8 +120,9 @@ data class  Social (val about : String, val linkedin : String, val insta : Strin
 }
 
 
-data class Person(val name: String,  val designation: String, val branch: String,  val profileUri: String, val backGUri: String, val city : String, val country: String, val social: Social) : Parcelable {
+data class Person(val userId: String, val name: String,  val designation: String, val branch: String,  val profileUri: String, val backGUri: String, val city : String, val country: String, val social: Social) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString()?: "",
@@ -133,9 +134,10 @@ data class Person(val name: String,  val designation: String, val branch: String
     ) {
     }
 
-    constructor() : this("", "", "","","","","", Social("","","","",""))
+    constructor() : this("","", "", "","","","","", Social("","","","",""))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(userId)
         parcel.writeString(name)
         parcel.writeString(designation)
         parcel.writeString(branch)

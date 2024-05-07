@@ -86,7 +86,7 @@
             android:id="@+id/designationOnPeople"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-light"
             android:textSize="11sp"
             app:emojiCompatEnabled="false"
             android:layout_marginTop="0dp"

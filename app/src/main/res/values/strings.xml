@@ -164,6 +164,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="on_your_mind">Tell us what\'s on your mind</string>
     <string name="num_likes">%d</string>
     <string name="likes">likes</string>
+    <string name="posted_image">Posted Image</string>
 
 
 </resources>
