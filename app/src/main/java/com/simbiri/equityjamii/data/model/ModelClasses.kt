@@ -3,7 +3,6 @@ package com.simbiri.equityjamii.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
-import java.sql.Time
 
 data class NewsText(val image: String, val title: String, val allNews : String) : Parcelable {
 
@@ -81,17 +80,19 @@ data class Post(val caption : String, val image : String?, val time : Timestamp?
 
 data class TimeSlot(val time : String)
 
-data class  Social (val about : String, val linkedin : String, val insta : String, val faceb : String, val webs: String) : Parcelable{
+data class  Social (val about : String, val linkedin : String, val insta : String, val faceb : String, val webs: String, val xAcc :String) : Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readString()?:"",
-    ) {
+        parcel.readString()?:""
+
+        ) {
     }
 
-    constructor() : this("","","","","")
+    constructor() : this("","","","","","")
 
 
     override fun describeContents(): Int {
@@ -104,6 +105,7 @@ data class  Social (val about : String, val linkedin : String, val insta : Strin
         parcel.writeString(insta)
         parcel.writeString(faceb)
         parcel.writeString(webs)
+        parcel.writeString(xAcc)
     }
 
     companion object CREATOR : Parcelable.Creator<Social> {
@@ -120,7 +122,7 @@ data class  Social (val about : String, val linkedin : String, val insta : Strin
 }
 
 
-data class Person(val userId: String, val name: String,  val designation: String, val branch: String,  val profileUri: String, val backGUri: String, val city : String, val country: String, val social: Social) : Parcelable {
+data class Person(val userId: String, val name: String, val designation: String, val branch: String, var profileUri: String, var backGUri: String, val city : String, val country: String, val social: Social) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -130,11 +132,11 @@ data class Person(val userId: String, val name: String,  val designation: String
         parcel.readString()?: "",
         parcel.readString()?: "",
         parcel.readString()?: "",
-        parcel.readParcelable(Social::class.java.classLoader) ?: Social("", "","","","")
+        parcel.readParcelable(Social::class.java.classLoader) ?: Social("","", "","","","")
     ) {
     }
 
-    constructor() : this("","", "", "","","","","", Social("","","","",""))
+    constructor() : this("","", "", "","","","","", Social("","","","","",""))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userId)

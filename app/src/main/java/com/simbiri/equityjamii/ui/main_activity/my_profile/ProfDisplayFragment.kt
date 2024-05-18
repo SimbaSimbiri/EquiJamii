@@ -1,0 +1,136 @@
+package com.simbiri.equityjamii.ui.main_activity.my_profile
+
+import android.content.Context
+import android.net.Uri
+import androidx.fragment.app.viewModels
+import android.os.Bundle
+import android.os.Handler
+import android.util.DisplayMetrics
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.simbiri.equityjamii.adapters.SocialAdapter
+import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
+
+class ProfDisplayFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = ProfDisplayFragment()
+    }
+
+    private val viewModel: ProfDisplayViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    private lateinit var binding : ProfilePageDisplayBinding
+    private  lateinit var storageReference: StorageReference
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var listsSocials: ArrayList<String>
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = ProfilePageDisplayBinding.inflate(layoutInflater)
+        val view =  binding.root
+
+        storageReference = FirebaseStorage.getInstance().reference
+        firestore = FirebaseFirestore.getInstance()
+        adjustSize()
+        retreiveDisplayInfo(FIREBASE_USER_ID)
+
+        return view
+    }
+
+    private fun retreiveDisplayInfo(firebaseUserId: String) {
+        firestore.collection(USERS_COLLECTION).document(firebaseUserId).get()
+            .addOnCompleteListener { snapShotRetreiveTask ->
+
+                if (snapShotRetreiveTask.isSuccessful){
+                    if(snapShotRetreiveTask.result.exists()){
+                        val myProfile = snapShotRetreiveTask.result.toObject(Person::class.java)!!
+
+                        myProfile.let {myProf->
+                            binding.let {
+                                Glide.with(this).load(Uri.parse(myProf.backGUri)).into(it.backImageView)
+                                Glide.with(this).load(Uri.parse(myProf.profileUri)).into(it.profileImageView)
+                                it.nameOnPeople.text = myProf.name
+                                it.designationOnPeople.text = myProf.designation + " at " + myProf.branch
+                                it.aboutTextContent.text = myProf.social.about
+                                it.textCounty.text = myProf.city
+                                it.countryEmojiText.text = myProf.country
+                                listsSocials =
+                                    arrayListOf(myProf.social.linkedin, myProf.social.insta, myProf.social.webs, myProf.social.faceb, myProf.social.xAcc)
+                                listsSocials.shuffle()
+                                setRecyclerViewSocials()
+
+                                binding.editProfileTv.setOnClickListener {
+                                    val editProfileFragment = EditProfileFragment.newInstance(myProf)
+                                    val transaction =
+                                        requireActivity().supportFragmentManager.beginTransaction()
+                                    editProfileFragment.show(transaction, editProfileFragment.tag)
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+    }
+
+    private fun setRecyclerViewSocials() {
+        val context = requireContext()
+        val filtered = listsSocials.filter { it != "" }
+        val socialAdapter = SocialAdapter(context, filtered)
+
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        binding.recyclerSocials.adapter = socialAdapter
+        binding.recyclerSocials.layoutManager = layoutManager
+        binding.recyclerSocials.hasFixedSize()
+
+    }
+
+    private fun adjustSize() {
+
+
+        val layoutParamsProfileCardOut = binding.materialCardView.layoutParams
+        val layoutParamsBackG = binding.backImageView.layoutParams
+
+        val displayMetrics = DisplayMetrics()
+        val windowManager =
+            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenWidth = displayMetrics.widthPixels
+        layoutParamsProfileCardOut.width = screenWidth / 3
+        layoutParamsProfileCardOut.height = screenWidth / 3
+
+        layoutParamsBackG.height = screenWidth / 3 + 100
+        layoutParamsBackG.width = screenWidth
+
+
+        binding.materialCardView.layoutParams = layoutParamsProfileCardOut
+        binding.backImageView.layoutParams = layoutParamsBackG
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Handler().postDelayed({ retreiveDisplayInfo(FIREBASE_USER_ID) }, 4000)
+    }
+}

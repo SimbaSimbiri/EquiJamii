@@ -165,6 +165,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="num_likes">%d</string>
     <string name="likes">likes</string>
     <string name="posted_image">Posted Image</string>
+    <string name="edit_profile_fab">Edit Profile Info</string>
+    <string name="backround_image">Backround image</string>
+    <string name="list_of_social_profiles">List of social profiles</string>
+    <string name="save_profile_changes">Save profile changes</string>
+    <string name="background_image">Background Image</string>
+    <string name="card_edit_profile_photo">Card edit profile photo</string>
+    <string name="card_edit_background_photo">Card edit background photo</string>
+    <string name="my_workspaces">My workspaces</string>
+    <string name="my_jamii">My Jamii</string>
+    <string name="my_settings">My settings</string>
 
 
 </resources>

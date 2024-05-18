@@ -30,6 +30,7 @@ class SocialAdapter(var context: Context, private var mediaLinkList: List<String
             val linkedInBool = url.contains("linkedin")
             val instaBool = url.contains("instagram")
             val faceBool = url.contains("facebook")
+            val xbool = url.contains("x.com")
 
             if (linkedInBool){
                 socialImageView.setImageResource(SocialMedia.linkedIPic)
@@ -37,7 +38,10 @@ class SocialAdapter(var context: Context, private var mediaLinkList: List<String
                 socialImageView.setImageResource(SocialMedia.instaGPic)
             }else if (faceBool){
                 socialImageView.setImageResource(SocialMedia.faceBPic)
-            }else{
+            }else if (xbool){
+                socialImageView.setImageResource(SocialMedia.x_pic)
+            }
+            else{
                 socialImageView.setImageResource(SocialMedia.webSPic)
             }
 

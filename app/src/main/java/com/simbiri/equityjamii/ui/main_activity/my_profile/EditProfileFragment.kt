@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.my_profile
 
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -7,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,26 +19,35 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.R
 import androidx.core.view.isVisible
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
-import com.simbiri.equityjamii.databinding.ProfilePageBinding
+import com.simbiri.equityjamii.databinding.ProfilePageEditBinding
 
 
-class MyProfileFragment : Fragment() {
+class EditProfileFragment : BottomSheetDialogFragment() {
 
     companion object {
-        fun newInstance() = MyProfileFragment()
+        private const val ARGS_PERSON_INFO = "person"
+        fun newInstance(person: Person): EditProfileFragment {
+            val fragment = EditProfileFragment()
+            val argumentBundle = Bundle()
+            argumentBundle.putParcelable(ARGS_PERSON_INFO, person)
+            fragment.arguments = argumentBundle
+            return fragment
+        }
     }
 
-    private var _binding: ProfilePageBinding? = null
+    private var _binding: ProfilePageEditBinding? = null
     private val binding get() = _binding
 
     private var imageProfileUri: Uri? = null
@@ -46,22 +55,21 @@ class MyProfileFragment : Fragment() {
     var storagePerms: Array<String>? = null
     var clickedProfile = false
     var clickedBackG = false
-    var firebaseAuth = FirebaseAuth.getInstance()
-    var userId = firebaseAuth.currentUser!!.uid
     private lateinit var cropProfileContractOptions: CropImageContractOptions
     private lateinit var cropBackGContractOptions: CropImageContractOptions
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
+    private  lateinit var person: Person
 
     val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
 
         if (result.isSuccessful) {
             if (clickedProfile) {
-                imageProfileUri = result.uriContent
-                Glide.with(this).load(imageProfileUri).into(binding!!.profileImage)
+                imageProfileUri = Uri.parse(result.uriContent.toString())
+                savePersonalProfileInfo()
             } else if (clickedBackG) {
                 imageBackgUri = result.uriContent
-                Glide.with(this).load(imageBackgUri).into(binding!!.imageBackGround)
+                savePersonalProfileInfo()
             }
         }
 
@@ -76,28 +84,25 @@ class MyProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = ProfilePageBinding.inflate(layoutInflater, container, false)
+        _binding = ProfilePageEditBinding.inflate(layoutInflater, container, false)
         val view = binding!!.root
-
-
-        storageReference = FirebaseStorage.getInstance().reference
-        firestore = FirebaseFirestore.getInstance()
+        person = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
 
         adjustSize()
-
-        binding!!.progressBar.isVisible = true
+        storageReference = FirebaseStorage.getInstance().reference
+        firestore = FirebaseFirestore.getInstance()
         storagePerms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         retreiveAllInfo()
 
-        binding!!.profileImage.setOnClickListener {
+        binding!!.profileEditCard.setOnClickListener {
             clickedProfile = true
             clickedBackG = false
             showImagePicker()
 
         }
 
-        binding!!.imageBackGround.setOnClickListener {
+        binding!!.backGEditCard.setOnClickListener {
             clickedBackG = true
             clickedProfile = false
             showImagePicker()
@@ -105,7 +110,12 @@ class MyProfileFragment : Fragment() {
         }
 
         binding!!.saveProfileButton.setOnClickListener {
+            binding!!.progressBar.isVisible = true
             savePersonalProfileInfo()
+        }
+
+        binding!!.exitButton.setOnClickListener {
+            dismiss()
         }
 
 
@@ -114,57 +124,36 @@ class MyProfileFragment : Fragment() {
 
 
     private fun retreiveAllInfo() {
-        firestore.collection(USERS_COLLECTION).document(userId).get()
-            .addOnCompleteListener { taskDocSnapShot ->
-                if (taskDocSnapShot.isSuccessful) {
-                    if (taskDocSnapShot.result.exists()) {
 
+        person.let {
 
+            imageProfileUri = Uri.parse(person.profileUri)
+            imageBackgUri = Uri.parse(person.backGUri)
 
-                        val person =  taskDocSnapShot.result.toObject(Person::class.java)
+            binding!!.nameProfileEdit.setText(person.name)
+            binding!!.designationProfileEdit.setText(person.designation)
+            binding!!.branchProfileEdit.setText(person.branch)
+            binding!!.cityProfileEditText.setText(person.city)
+            binding!!.countryEmojiEditText.setText(person.country)
 
+            binding!!.aboutMeEdit.setText(person.social.about)
+            binding!!.linkedInEdit.setText(person.social.linkedin)
+            binding!!.instaEdit.setText(person.social.insta)
+            binding!!.facebookEdit.setText(person.social.faceb)
+            binding!!.websiteEdit.setText(person.social.webs)
+            binding!!.xEdit.setText(person.social.xAcc)
 
-                        person.let {
-
-                            imageProfileUri = Uri.parse(person!!.profileUri)
-                            imageBackgUri = Uri.parse(person.backGUri)
-                            binding!!.nameProfileEdit.setText(person.name)
-                            binding!!.designationProfileEdit.setText(person.designation)
-                            binding!!.branchProfileEdit.setText(person.branch)
-                            binding!!.cityProfileEditText.setText(person.city)
-                            binding!!.countryEmojiEditText.setText(person.country)
-
-                            binding!!.aboutMeEdit.setText(person.social.about)
-                            binding!!.linkedInEdit.setText(person.social.linkedin)
-                            binding!!.instaEdit.setText(person.social.insta)
-                            binding!!.facebookEdit.setText(person.social.faceb)
-                            binding!!.websiteEdit.setText(person.social.webs)
-
-                            if (person.profileUri != "null") {
-                                Glide.with(this).load(Uri.parse(person.profileUri))
-                                    .into(binding!!.profileImage)
-                            }
-                            if (person.backGUri != "null") {
-                                Glide.with(this).load(Uri.parse(person.backGUri))
-                                    .into(binding!!.imageBackGround)
-                            }
-
-                        }
-
-                        }
-
-
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Profile data unchanged from app restart",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                binding!!.progressBar.isVisible = false
-
+            if (person.profileUri != "null") {
+                Glide.with(this).load(Uri.parse(person.profileUri))
+                    .into(binding!!.profileImage)
             }
+            if (person.backGUri != "null") {
+                Glide.with(this).load(Uri.parse(person.backGUri))
+                    .into(binding!!.imageBackGround)
+            }
+
+        }
+
     }
 
     private fun adjustSize() {
@@ -195,25 +184,26 @@ class MyProfileFragment : Fragment() {
     }
 
     private fun savePersonalProfileInfo() {
-        binding!!.progressBar.isVisible = true
 
         val name = binding!!.nameProfileEdit.text!!.toString()
         val designation = binding!!.designationProfileEdit.text!!.toString()
         val branch = binding!!.branchProfileEdit.text!!.toString()
         val city = binding!!.cityProfileEditText.text!!.toString()
         val country = binding!!.countryEmojiEditText.text.toString()
-        val imageProfileReference = storageReference.child("Profile_pics").child("$userId.jpg")
-        val backGReference = storageReference.child("BackG_pics").child("$userId.jpg")
+        val imageProfileReference =
+            storageReference.child("Profile_pics").child("$FIREBASE_USER_ID.jpg")
+        val backGReference = storageReference.child("BackG_pics").child("$FIREBASE_USER_ID.jpg")
 
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
         val insta = binding!!.instaEdit.text!!.toString()
         val faceb = binding!!.facebookEdit.text!!.toString()
         val linkedIn = binding!!.linkedInEdit.text!!.toString()
-        val webS =  binding!!.websiteEdit.text!!.toString()
+        val webS = binding!!.websiteEdit.text!!.toString()
+        val xAcc = binding!!.xEdit.text!!.toString()
 
-        val social =  Social(aboutMe, linkedIn,insta,faceb, webS)
+        val social = Social(aboutMe, linkedIn, insta, faceb, webS, xAcc)
 
-        if (clickedProfile && !clickedBackG) {
+        if (clickedProfile) {
             if (imageProfileUri != null || !name.isNotEmpty() || !designation.isNotEmpty() || !branch.isNotEmpty()) {
                 //upload image profile uri only
                 imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
@@ -223,12 +213,23 @@ class MyProfileFragment : Fragment() {
                                 name,
                                 designation,
                                 branch,
-                                profileUri,
-                                imageBackgUri,
+                                profileUri.toString(),
+                                person.backGUri,
                                 city,
-                                country,social
+                                country, social
                             )
+
+                            person.profileUri = profileUri.toString()
+                            Glide.with(this).load(person.profileUri).into(binding!!.profileImage)
                         }
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Image uri uploaded to database",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -242,7 +243,10 @@ class MyProfileFragment : Fragment() {
                 binding!!.progressBar.isVisible = false
 
             }
-        } else if (clickedBackG && !clickedProfile) {
+
+            clickedProfile =  false
+
+        } else if (clickedBackG) {
             if (imageBackgUri != null || !name.isNotEmpty() || !designation.isNotEmpty() || !branch.isNotEmpty()) {
                 //upload image profile uri only
                 backGReference.putFile(imageBackgUri!!).addOnCompleteListener { task ->
@@ -252,13 +256,22 @@ class MyProfileFragment : Fragment() {
                                 name,
                                 designation,
                                 branch,
-                                imageProfileUri,
-                                backGUri,
+                                person.profileUri,
+                                backGUri.toString(),
                                 city,
-                                country,social
+                                country, social
                             )
 
+                            person.backGUri = backGUri.toString()
+                            Glide.with(this).load(person.backGUri).into(binding!!.imageBackGround)
                         }
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Background uri uploaded to database",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -272,20 +285,22 @@ class MyProfileFragment : Fragment() {
                 binding!!.progressBar.isVisible = false
 
             }
+            clickedBackG = false
         } else {
             savePersonalToFireStore(
                 name,
                 designation,
                 branch,
-                imageProfileUri,
-                imageBackgUri,
+                person.profileUri,
+                person.backGUri,
                 city,
-                country,social
+                country, social
             )
 
         }
 
-
+        clickedProfile = false
+        clickedBackG = false
 
     }
 
@@ -293,8 +308,8 @@ class MyProfileFragment : Fragment() {
         name: String,
         designation: String,
         branch: String,
-        profileUri: Uri?,
-        imageBackgUri: Uri?, city: String, country: String, social: Social
+        profileUri: String,
+        imageBackgUri: String, city: String, country: String, social: Social
     ) {
 
         val mapToFirestore = HashMap<String, Any>()
@@ -302,22 +317,30 @@ class MyProfileFragment : Fragment() {
         mapToFirestore["name"] = name
         mapToFirestore["designation"] = designation
         mapToFirestore["branch"] = branch
-        mapToFirestore["profileUri"] = profileUri.toString()
-        mapToFirestore["backGUri"] = imageBackgUri.toString()
+        mapToFirestore["profileUri"] = profileUri
+        mapToFirestore["backGUri"] = imageBackgUri
         mapToFirestore["city"] = city
         mapToFirestore["country"] = country
-        mapToFirestore["social"] = hashMapOf( "about" to social.about, "insta" to  social.insta, "linkedin" to social.linkedin, "faceb" to social.faceb,"webs" to social.webs )
+        mapToFirestore["social"] = hashMapOf(
+            "about" to social.about,
+            "insta" to social.insta,
+            "linkedin" to social.linkedin,
+            "faceb" to social.faceb,
+            "webs" to social.webs,
+            "xAcc" to social.xAcc
+        )
 
 
-        firestore.collection(USERS_COLLECTION).document(userId).set(mapToFirestore)
+        firestore.collection(USERS_COLLECTION).document(FIREBASE_USER_ID).set(mapToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
+                    binding!!.progressBar.isVisible = false
+
                     Toast.makeText(
                         requireContext(),
-                        "Profile updated successfully",
-                        Toast.LENGTH_SHORT
+                        "Profile information updated",
+                        Toast.LENGTH_LONG
                     ).show()
-                    binding!!.progressBar.isVisible = false
 
                 } else {
                     Toast.makeText(
@@ -332,66 +355,49 @@ class MyProfileFragment : Fragment() {
 
     }
 
-/*    private fun saveSocialToFireStore(
-        about: String,
-        linkedIn: String,
-        insta: String,
-        faceb: String,
-        webS: String
-    ) {
-        val mapSocialToFirestore = HashMap<String, Any>()
-        mapSocialToFirestore["about"] = about
-        mapSocialToFirestore["linkedIn"] = linkedIn
-        mapSocialToFirestore["insta"] = insta
-        mapSocialToFirestore["faceb"] = faceb
-        mapSocialToFirestore["webS"] = webS
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setContentView(R.layout.profile_page_display)
+        dialog.setCanceledOnTouchOutside(true)
 
+        dialog.setOnShowListener { dialogInterface ->
+            val bottomSheetDialog = dialogInterface as BottomSheetDialog
+            val bottomSheet =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.isDraggable = true
+                behavior.isHideable = true
+                behavior.peekHeight = 1000
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-        firestore.collection(USER_COLLECTION).document(userId).set(mapSocialToFirestore)
-            .addOnCompleteListener { taskUpload ->
-                if (taskUpload.isSuccessful) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Social  Info updated successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding!!.progressBar.isVisible = false
-
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        taskUpload.exception.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i("Error saving to firestore", taskUpload.exception.toString())
-                }
             }
+        }
 
+        return dialog
+    }
 
-    }*/
-
-    fun showImagePicker() {
-
-        val profileHeight = requireActivity().windowManager.defaultDisplay.height
-        val backGroundHeight = binding!!.imageBackGround.height
+    private fun showImagePicker() {
 
         if (clickedProfile) {
 
             cropProfileContractOptions = CropImageContractOptions(
                 null, CropImageOptions(
                     true,
-                    true,
-                    CropImageView.CropShape.OVAL,
+                    false,
+                    CropImageView.CropShape.RECTANGLE,
                     cropCornerRadius = 8.0F,
                     cropMenuCropButtonTitle = "Done",
                     showCropLabel = true,
-                    activityTitle = "CROP IMAGE",
+                    activityTitle = "Profile crop",
                     activityBackgroundColor = this.resources.getColor(R.color.black),
                     toolbarColor = this.resources.getColor(R.color.black),
                     progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
                     guidelines = CropImageView.Guidelines.OFF,
                     aspectRatioX = 1,
                     aspectRatioY = 1,
+                    fixAspectRatio = true
+
                 )
             )
         }
@@ -399,16 +405,18 @@ class MyProfileFragment : Fragment() {
         cropBackGContractOptions = CropImageContractOptions(
             null, CropImageOptions(
                 true,
-                true,
+                false,
                 CropImageView.CropShape.RECTANGLE,
                 cropCornerRadius = 8.0F,
                 cropMenuCropButtonTitle = "Done",
                 showCropLabel = true,
-                activityTitle = "CROP IMAGE",
+                activityTitle = "Background crop",
                 activityBackgroundColor = this.resources.getColor(R.color.black),
                 toolbarColor = this.resources.getColor(R.color.black),
                 progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
                 guidelines = CropImageView.Guidelines.OFF,
+                aspectRatioX = 16,
+                aspectRatioY = 9,
                 fixAspectRatio = true
             )
         )
@@ -418,7 +426,7 @@ class MyProfileFragment : Fragment() {
 
         } else {
             if (clickedProfile) {
-                openLastPicker.launch(cropBackGContractOptions)
+                openLastPicker.launch(cropProfileContractOptions)
 
             } else if (clickedBackG) {
                 openLastPicker.launch(cropBackGContractOptions)

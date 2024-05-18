@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,6 +20,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/socialInfoCard"
         android:background="@color/karbBackgrndtint"
@@ -28,13 +30,53 @@
         android:layout_marginBottom="10dp"
        />
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="35dp"
+                android:contentDescription="@string/card_edit_profile_photo"
+                app:cardCornerRadius="7dp"
+                android:clickable="true"
+                android:layout_marginStart="-20dp"
+                android:layout_marginTop="-25dp"
+                android:layout_height="30dp"
+                android:id="@+id/profileEditCard"
+                android:backgroundTint="@color/logoColour"
+                app:layout_constraintStart_toEndOf="@id/materialCardView"
+                app:layout_constraintTop_toBottomOf="@id/materialCardView"
+
+                >
+                <ImageView
+                    android:src="@drawable/edit_photo_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:contentDescription="@string/card_edit_background_photo"
+                android:layout_width="35dp"
+                app:cardCornerRadius="7dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginTop="-15dp"
+                android:clickable="true"
+                android:layout_height="30dp"
+                android:id="@+id/backGEditCard"
+                android:backgroundTint="@color/logoColour"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageBackGround"
+
+                >
+                <ImageView
+                    android:src="@drawable/edit_photo_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+
 
     <ImageView
         android:id="@+id/imageBackGround"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:clickable="true"
-        android:contentDescription="Background Image"
+        android:contentDescription="@string/background_image"
         android:scaleType="centerCrop"
         android:src="@drawable/equity_bank_new_logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +112,6 @@
                 android:id="@+id/profileImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true"
                 android:contentDescription="Profile Image"
                 android:backgroundTint="@color/darkGreyColor"
                 android:scaleType="centerCrop"
@@ -221,6 +262,7 @@
                         app:boxCornerRadiusTopStart="10dp"
                         app:boxStrokeColor="@color/primaryColor"
                         app:boxStrokeWidth="2dp"
+                        app:hintTextColor="@color/logoColour"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/countryEmojiLayout"
                         app:layout_constraintStart_toStartOf="parent"
@@ -427,6 +469,7 @@
                         app:boxCornerRadiusBottomEnd="10dp"
                         app:boxCornerRadiusBottomStart="10dp"
                         app:boxCornerRadiusTopEnd="10dp"
+                        app:hintTextColor="@color/logoColour"
                         app:boxCornerRadiusTopStart="10dp"
                         app:boxStrokeColor="@color/primaryColor"
                         app:boxStrokeWidth="2dp"
@@ -451,6 +494,39 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/xLayout"
+                        style="@style/FirebaseUI.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="4dp"
+                        app:boxCornerRadiusBottomEnd="10dp"
+                        app:boxCornerRadiusBottomStart="10dp"
+                        app:boxCornerRadiusTopEnd="10dp"
+                        app:boxCornerRadiusTopStart="10dp"
+                        app:boxStrokeColor="@color/primaryColor"
+                        app:boxStrokeWidth="2dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/facebookLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/xEdit"
+                            style="@style/FirebaseUI.TextInputEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            android:hint="X account"
+                            android:textColorHighlight="@color/lighterMaroon"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/WebsiteLayout"
                         style="@style/FirebaseUI.TextInputLayout"
                         android:layout_width="match_parent"
@@ -464,7 +540,7 @@
                         app:boxStrokeColor="@color/primaryColor"
                         app:boxStrokeWidth="2dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/facebookLayout">
+                        app:layout_constraintTop_toBottomOf="@id/xLayout">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/websiteEdit"
@@ -473,7 +549,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:fontFamily="@font/baloo_paaji_2_semibold"
-                            android:hint="Personal Website e.g business/passion related"
+                            android:hint="Personal Website e.g business/Medium/You Tube"
                             android:textSize="12sp"
                             android:textColorHighlight="@color/lighterMaroon"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -489,23 +565,39 @@
 
             <Button
                 android:id="@+id/saveProfileButton"
-                android:layout_width="match_parent"
+                android:textAllCaps="false"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="@color/logoColour"
+                android:text="@string/save_profile_changes"
+                android:textColor="@color/white"
+                android:layout_marginTop="50dp"
+                app:layout_constraintTop_toBottomOf="@id/socialInfoCard"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <Button
+                android:id="@+id/exitButton"
+                android:textAllCaps="false"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/karbBackgrndtint"
-                android:text="Save Profile Info"
+                android:backgroundTint="@color/logoColour"
+                android:text="Back to profile"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="50dp"
                 app:layout_constraintTop_toBottomOf="@id/socialInfoCard"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toEndOf="@id/saveProfileButton" />
 
             <View
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toBottomOf="@id/saveProfileButton"
                 android:layout_margin="10dp"
-                android:layout_height="50dp"/>
+                android:layout_height="30dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

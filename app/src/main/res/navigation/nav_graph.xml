@@ -25,9 +25,9 @@
 
         <fragment
             android:id="@+id/myProfile"
-            android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.MyProfileFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfDisplayFragment"
             android:label="My Profile"
-            tools:layout="@layout/profile_page" />
+            tools:layout="@layout/profile_page_display" />
 
         <fragment
             android:id="@+id/myWorkspace"

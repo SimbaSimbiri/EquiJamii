@@ -24,6 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="centerCrop"
+            android:src="@drawable/equityjamiibackground"
             />
 
         <com.google.android.material.card.MaterialCardView
@@ -60,7 +61,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:background="@color/grey_font"/>
+                    android:src="@drawable/account_box"
+                    android:background="@color/white"/>
 
             </com.google.android.material.card.MaterialCardView>
 

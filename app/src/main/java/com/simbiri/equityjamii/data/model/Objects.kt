@@ -44,6 +44,8 @@ object SocialMedia {
 
     val webSPic =  R.drawable.web_iconsvg
 
+    val x_pic = R.drawable.x_social_media_black_icon
+
 }
 
 object OfficialNewsTexts {
