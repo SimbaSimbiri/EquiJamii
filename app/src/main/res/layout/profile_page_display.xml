@@ -7,9 +7,9 @@
     tools:context=".ui.main_activity.people_page.PersonInfoFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="0dp">
-
 
             <ImageView
                 android:id="@+id/backImageView"
@@ -287,7 +286,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="25dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="My essentials"
                 android:textColor="@color/primaryColor"
@@ -321,7 +320,7 @@
                         android:layout_marginStart="7dp"
                         android:clickable="true"
                         android:gravity="center_vertical"
-                        android:text="My Assistant"
+                        android:text="My EquiAI"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="@id/assistantDivider"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -331,10 +330,10 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/equi_ai"
                         app:layout_constraintBottom_toBottomOf="@id/myAssistant"
                         app:layout_constraintEnd_toEndOf="@id/myAssistant"
                         app:layout_constraintTop_toTopOf="@id/myAssistant" />
@@ -365,10 +364,10 @@
 
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/jamii_activity_icon"
                         app:layout_constraintBottom_toBottomOf="@id/myJamiiTv"
                         app:layout_constraintEnd_toEndOf="@id/myJamiiTv"
                         app:layout_constraintTop_toTopOf="@id/myJamiiTv" />
@@ -401,10 +400,10 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/wksp_front_desk"
                         app:layout_constraintBottom_toBottomOf="@id/myWorkspaces"
                         app:layout_constraintEnd_toEndOf="@id/myWorkspaces"
                         app:layout_constraintTop_toTopOf="@id/myWorkspaces" />
@@ -420,9 +419,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="25dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="My configurations"
+                android:text="My customizations"
                 android:textColor="@color/primaryColor"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -446,6 +445,18 @@
                     android:layout_height="match_parent">
 
 
+                    <ProgressBar
+                        android:id="@+id/contentLoadingProgressBar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:visibility="invisible"
+                        android:background="@color/logoColour"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
                     <TextView
                         android:id="@+id/editProfileTv"
                         style="@style/titleTab2"
@@ -464,10 +475,10 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/edit_person_icon"
                         app:layout_constraintBottom_toBottomOf="@id/editProfileTv"
                         app:layout_constraintEnd_toEndOf="@id/editProfileTv"
                         app:layout_constraintTop_toTopOf="@id/editProfileTv" />
@@ -487,7 +498,7 @@
                         android:layout_marginStart="7dp"
                         android:clickable="true"
                         android:gravity="center_vertical"
-                        android:text="EquiJamii and account settings"
+                        android:text="Settings and privacy"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toTopOf="@id/settingsDivider"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -498,10 +509,10 @@
 
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/settings_icon"
                         app:layout_constraintBottom_toBottomOf="@id/mySettingsTv"
                         app:layout_constraintEnd_toEndOf="@id/mySettingsTv"
                         app:layout_constraintTop_toTopOf="@id/mySettingsTv" />
@@ -534,10 +545,10 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
-                        android:layout_marginEnd="7dp"
-                        android:src="@drawable/foward_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/theme_edit"
                         app:layout_constraintBottom_toBottomOf="@id/themesTv"
                         app:layout_constraintEnd_toEndOf="@id/themesTv"
                         app:layout_constraintTop_toTopOf="@id/themesTv" />
@@ -547,8 +558,56 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mysettingsCard">
 
-            <TextView
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom">
+
+                    <ImageView
+                        android:id="@+id/imageViewSignOut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logout"
+                        app:layout_constraintBottom_toBottomOf="@id/signOut"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/signOut" />
+
+
+                    <TextView
+                        android:id="@+id/signOut"
+                        style="@style/titleTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="7dp"
+                        android:layout_marginVertical="2dp"
+                        android:gravity="center_vertical"
+                        android:text="Log Out"
+                        android:textColor="@color/logoColour"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <!--<TextView
                 android:id="@+id/otherSettingsTextHead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -714,15 +773,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
-
+-->
             <View
+                android:id="@+id/view"
                 android:layout_width="match_parent"
+                android:layout_height="10dp"
                 android:layout_margin="10dp"
-                android:layout_height="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/myOthersettingsCard" />
+                app:layout_constraintTop_toBottomOf="@id/logout" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

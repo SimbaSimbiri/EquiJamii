@@ -1,18 +1,24 @@
 package com.simbiri.equityjamii.ui.main_activity.my_profile
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import androidx.fragment.app.Fragment
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -21,8 +27,9 @@ import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
+import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
-class ProfDisplayFragment : Fragment() {
+class ProfDisplayFragment : Fragment(){
 
     companion object {
         fun newInstance() = ProfDisplayFragment()
@@ -35,8 +42,8 @@ class ProfDisplayFragment : Fragment() {
 
     }
 
-    private lateinit var binding : ProfilePageDisplayBinding
-    private  lateinit var storageReference: StorageReference
+    private lateinit var binding: ProfilePageDisplayBinding
+    private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
 
@@ -45,43 +52,94 @@ class ProfDisplayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ProfilePageDisplayBinding.inflate(layoutInflater)
-        val view =  binding.root
+        val view = binding.root
 
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
         adjustSize()
         retreiveDisplayInfo(FIREBASE_USER_ID)
 
+        val gestureDetectorCompat = GestureDetectorCompat(
+            requireContext(),
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    Toast.makeText(
+                        requireContext(),
+                        "${binding.nameOnPeople.text} signed out\nCome back soon!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    signOutApp()
+                    return true
+                }
+
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    Toast.makeText(
+                        requireContext(),
+                        "Double tap to confirm sign out",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return true
+                }
+            })
+
+        binding.logout.setOnTouchListener { view, event ->
+            view.performClick()
+            gestureDetectorCompat.onTouchEvent(event)
+        }
+
+
         return view
+    }
+
+    private fun signOutApp() {
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(requireActivity(), SignInActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun retreiveDisplayInfo(firebaseUserId: String) {
         firestore.collection(USERS_COLLECTION).document(firebaseUserId).get()
             .addOnCompleteListener { snapShotRetreiveTask ->
 
-                if (snapShotRetreiveTask.isSuccessful){
-                    if(snapShotRetreiveTask.result.exists()){
+                if (snapShotRetreiveTask.isSuccessful) {
+                    if (snapShotRetreiveTask.result.exists()) {
                         val myProfile = snapShotRetreiveTask.result.toObject(Person::class.java)!!
 
-                        myProfile.let {myProf->
+                        myProfile.let { myProf ->
                             binding.let {
-                                Glide.with(this).load(Uri.parse(myProf.backGUri)).into(it.backImageView)
-                                Glide.with(this).load(Uri.parse(myProf.profileUri)).into(it.profileImageView)
+                                Glide.with(this).load(Uri.parse(myProf.backGUri))
+                                    .into(it.backImageView)
+                                Glide.with(this).load(Uri.parse(myProf.profileUri))
+                                    .into(it.profileImageView)
                                 it.nameOnPeople.text = myProf.name
-                                it.designationOnPeople.text = myProf.designation + " at " + myProf.branch
+                                it.designationOnPeople.text =
+                                    myProf.designation + " at " + myProf.branch
                                 it.aboutTextContent.text = myProf.social.about
                                 it.textCounty.text = myProf.city
                                 it.countryEmojiText.text = myProf.country
                                 listsSocials =
-                                    arrayListOf(myProf.social.linkedin, myProf.social.insta, myProf.social.webs, myProf.social.faceb, myProf.social.xAcc)
+                                    arrayListOf(
+                                        myProf.social.linkedin,
+                                        myProf.social.insta,
+                                        myProf.social.webs,
+                                        myProf.social.faceb,
+                                        myProf.social.xAcc
+                                    )
                                 listsSocials.shuffle()
                                 setRecyclerViewSocials()
 
                                 binding.editProfileTv.setOnClickListener {
-                                    val editProfileFragment = EditProfileFragment.newInstance(myProf)
+                                    binding.contentLoadingProgressBar.visibility = View.VISIBLE
+                                    val editProfileFragment =
+                                        EditProfileFragment.newInstance(myProf)
                                     val transaction =
                                         requireActivity().supportFragmentManager.beginTransaction()
                                     editProfileFragment.show(transaction, editProfileFragment.tag)
+                                    Handler().postDelayed({
+                                        binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+                                    }, 4000)
+
                                 }
 
                             }
@@ -91,6 +149,7 @@ class ProfDisplayFragment : Fragment() {
             }
 
     }
+
 
     private fun setRecyclerViewSocials() {
         val context = requireContext()

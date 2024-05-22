@@ -2,9 +2,9 @@ package com.simbiri.equityjamii.ui.main_activity.my_profile
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -14,19 +14,20 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.R
-import androidx.core.view.isVisible
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
@@ -59,7 +60,8 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     private lateinit var cropBackGContractOptions: CropImageContractOptions
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
-    private  lateinit var person: Person
+    private lateinit var person: Person
+
 
     val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
 
@@ -76,8 +78,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     }
 
 
-    private lateinit var viewModel: MyProfileViewModel
-
+    private lateinit var viewModel: EditProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -244,7 +245,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
             }
 
-            clickedProfile =  false
+            clickedProfile = false
 
         } else if (clickedBackG) {
             if (imageBackgUri != null || !name.isNotEmpty() || !designation.isNotEmpty() || !branch.isNotEmpty()) {
@@ -488,7 +489,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

@@ -32,7 +32,7 @@ import com.simbiri.equityjamii.ui.authentications.SignInActivity
 class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/,
     DrawerLayout.DrawerListener {
 
-    private  lateinit var fabWorkspace: FloatingActionButton
+    private lateinit var fabWorkspace: FloatingActionButton
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
@@ -50,37 +50,23 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        firestore.firestoreSettings  = FirebaseFirestoreSettings.Builder().build()
+        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
 
 
         if (firebaseAuth.currentUser == null) {
             val intent = Intent(this, SignInActivity::class.java)
-            Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG)
+                .show()
             startActivity(intent)
         }
 
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
         drawerLayoutMain = findViewById(R.id.drawerLayout)
-       navDrawer = findViewById(R.id.navigationView)
+        navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
         fabWorkspace = findViewById(R.id.workspaceFab)
 
         bottomNavigationView.background = null
-
-
-        val signOutTextView = findViewById<TextView>(R.id.signOut)
-        val imageSignOut =  findViewById<ImageView>(R.id.imageViewSignOut)
-        signOutTextView.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish() }
-
-        imageSignOut.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish() }
 
 
         navDrawer.bringToFront()
@@ -98,11 +84,9 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
 
                 if (drawerLayoutMain.isDrawerOpen(GravityCompat.START)) {
                     slideDrawerIn()
-                }
-                else if (navControllerMain.currentDestination!!.id == R.id.newsFrag){
+                } else if (navControllerMain.currentDestination!!.id == R.id.newsFrag) {
                     finish()
-                }
-                else
+                } else
                     navControllerMain.navigateUp()
             }
         }
@@ -112,7 +96,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
             val workspaceMenuItem = bottomNavigationView.menu.getItem(2)
             bottomNavigationView.selectedItemId = workspaceMenuItem.itemId
         }
-
 
 
     }
@@ -125,7 +108,7 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
-       //coordLayMain.translationX = slideOffset * drawerLayoutMain.width/1.3f
+        //coordLayMain.translationX = slideOffset * drawerLayoutMain.width/1.3f
 
     }
 
@@ -137,8 +120,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
 
     override fun onDrawerStateChanged(newState: Int) {
     }
-
-
 
 
 }
