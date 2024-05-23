@@ -13,9 +13,9 @@
 
         <fragment
             android:id="@+id/jamiiFrag"
-            android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.postFragment"
+            android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiPageFragment"
             android:label="Jamii"
-            tools:layout="@layout/jamii_page" />
+            tools:layout="@layout/discover_tab" />
 
         <fragment
             android:id="@+id/peopleFrag"

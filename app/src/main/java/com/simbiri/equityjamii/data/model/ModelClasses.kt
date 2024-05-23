@@ -40,17 +40,18 @@ data class NewsText(val image: String, val title: String, val allNews : String) 
 data class OfficialNews (val headline : String, val officialPreviewText: String)
 
 data class Post(val caption : String, val image : String?, val time : Timestamp?, val userId: String,
-                var likes : Int, var liked : Boolean):Parcelable{
+                var likes : Int, var liked : Boolean, val documentId : String? = null):Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readParcelable(Timestamp::class.java.classLoader)!!,
         parcel.readString()?:"",
         parcel.readInt(),
-        parcel.readByte() != 0.toByte()) {
+        parcel.readByte() != 0.toByte(),
+        parcel.readString()?:"") {
     }
 
-    constructor():this("","",null,"",0,false)
+    constructor():this("","",null,"",0,false,"")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(caption)
@@ -59,6 +60,7 @@ data class Post(val caption : String, val image : String?, val time : Timestamp?
         parcel.writeString(userId)
         parcel.writeInt(likes)
         parcel.writeByte(if (liked) 1 else 0)
+        parcel.writeString(documentId)
     }
 
     override fun describeContents(): Int {

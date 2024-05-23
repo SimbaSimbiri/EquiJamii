@@ -3,7 +3,6 @@ package com.simbiri.equityjamii.ui.main_activity.jamii_page
 import android.app.Dialog
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -25,11 +25,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.data.model.Person
-import com.simbiri.equityjamii.databinding.DialogAddPostBinding
 import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.POST_STORAGE_REF
+import com.simbiri.equityjamii.data.model.Jamii
+import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.databinding.DialogAddPostBinding
 
 class AddPostFragment : BottomSheetDialogFragment() {
 
@@ -73,7 +74,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
         val cropPostContractOptions = CropImageContractOptions(
             null, CropImageOptions(
                 true,
-                true,
+                false,
                 CropImageView.CropShape.RECTANGLE,
                 cropCornerRadius = 8.0F,
                 cropMenuCropButtonTitle = "Done",
@@ -83,6 +84,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 toolbarColor = requireContext().resources.getColor(R.color.black),
                 progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                 guidelines = CropImageView.Guidelines.OFF,
+                aspectRatioX = 3,
+                aspectRatioY = 4,
                 fixAspectRatio = true
             )
         )
@@ -120,7 +123,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
 
     private fun savePostToFirestore(captionPost: String, imageUri: String? = null) {
-        var postHashMap: HashMap<String, Any?> = HashMap()
+        val postHashMap: HashMap<String, Any?> = HashMap()
 
         val postItemRef = postStorageRef.child(POST_STORAGE_REF)
             .child(FieldValue.serverTimestamp().toString() + ".jpg")
@@ -129,15 +132,13 @@ class AddPostFragment : BottomSheetDialogFragment() {
             postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
                     postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
-                        postHashMap = hashMapOf(
-                            "caption" to captionPost,
-                            "image" to postImageUri,
-                            "time" to FieldValue.serverTimestamp(),
-                            "userId" to FIREBASE_USER_ID,
-                            "likes" to 0,
-                            "liked" to false,
-                        )
-
+                        postHashMap["caption"] = captionPost
+                        postHashMap["image"] = postImageUri.toString()
+                        postHashMap["time"] = FieldValue.serverTimestamp()
+                        postHashMap["userId"] = FIREBASE_USER_ID
+                        postHashMap["likes"] = 0
+                        postHashMap["liked"] = false
+                        postHashMap["documentId"] = null
 
                         firestoreInst.collection(POST_COLLECTION).add(postHashMap)
                             .addOnCompleteListener { taskDocref ->
@@ -147,9 +148,9 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                         "Successfully posted to feed",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    Log.i("PostHashMap", postHashMap.toString())
-
                                     dismiss()
+                                    val documentId = taskDocref.result.id
+                                    updateDocWithId(documentId)
                                 } else {
                                     Toast.makeText(
                                         requireContext(),
@@ -157,34 +158,34 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     Log.i("PostHashMap Failed", postHashMap.toString())
-
                                 }
                             }
-
                     }
                 }
             }
         } else {
-            postHashMap = hashMapOf(
-                "caption" to captionPost,
-                "image" to "",
-                "time" to FieldValue.serverTimestamp(),
-                "userId" to FIREBASE_USER_ID,
-                "likes" to 0,
-                "liked" to false,
-            )
+            postHashMap["caption"] = captionPost
+            postHashMap["image"] = ""
+            postHashMap["time"] = FieldValue.serverTimestamp()
+            postHashMap["userId"] = FIREBASE_USER_ID
+            postHashMap["likes"] = 0
+            postHashMap["liked"] = false
+            postHashMap["documentId"] = null
+
 
             firestoreInst.collection(POST_COLLECTION).add(postHashMap)
                 .addOnCompleteListener { taskDocref ->
                     if (taskDocref.isSuccessful) {
+
                         Toast.makeText(
                             requireContext(),
                             "Successfully posted to feed",
                             Toast.LENGTH_SHORT
                         ).show()
-                        Log.i("PostHashMap", postHashMap.toString())
-
                         dismiss()
+
+                        val documentId = taskDocref.result.id
+                        updateDocWithId(documentId)
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -192,11 +193,23 @@ class AddPostFragment : BottomSheetDialogFragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                         Log.i("PostHashMap Failed", postHashMap.toString())
-
                     }
                 }
         }
+        Jamii.listenerRegisterForPosts()
+        Jamii.genListPosts()
+    }
 
+    private fun updateDocWithId(documentId: String) {
+        firestoreInst.collection(POST_COLLECTION).document(documentId)
+            .update("documentId", documentId)
+            .addOnCompleteListener { taskUpdate ->
+                if (taskUpdate.isSuccessful) {
+                    Log.i("DocumentID", "Document ID: $documentId")
+                } else {
+                    Log.e("DocumentUpdate", "Error updating document ID")
+                }
+            }
     }
 
 

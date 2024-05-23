@@ -2,6 +2,6 @@ package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
 import androidx.lifecycle.ViewModel
 
-class PostViewModel : ViewModel() {
+class JamiiPageViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

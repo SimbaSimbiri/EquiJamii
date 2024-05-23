@@ -2,7 +2,6 @@ package com.simbiri.equityjamii.ui.main_activity.my_profile
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -422,16 +421,11 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             )
         )
 
-        if (!checkStoragePermission()) {
-            requestStoragePermission()
+        if (clickedProfile) {
+            openLastPicker.launch(cropProfileContractOptions)
 
-        } else {
-            if (clickedProfile) {
-                openLastPicker.launch(cropProfileContractOptions)
-
-            } else if (clickedBackG) {
-                openLastPicker.launch(cropBackGContractOptions)
-            }
+        } else if (clickedBackG) {
+            openLastPicker.launch(cropBackGContractOptions)
 
         }
 
@@ -439,7 +433,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun requestStoragePermission() {
+    /*private fun requestStoragePermission() {
         requestPermissions(storagePerms!!, 200)
     }
 
@@ -454,11 +448,11 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             if (grantResults.isNotEmpty()) {
                 val writeStorageIsAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (writeStorageIsAccepted) {
-                    /*if (clickedProfile) {
+                    *//*if (clickedProfile) {
                         openLastPicker.launch(cropProfileContractOptions)
                     } else if (clickedBackG) {
                         openLastPicker.launch(cropBackGContractOptions)
-                    }*/
+                    }*//*
                     openLastPicker.launch(cropBackGContractOptions)
                 }
             } else {
@@ -479,7 +473,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
-
+*/
 
     override fun onDestroy() {
         super.onDestroy()

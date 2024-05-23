@@ -93,6 +93,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="scrollnews">Scroll down for more news</string>
     <string name="readLaterNews">News you added to read later</string>
     <string name="tabNews">Slide right or  left  to find more news</string>
+    <string name="tabPosts">Slide right or  left  to find more posts</string>
     <string name="newsOfficialHeadline">News Headline</string>
     <string name="newsOfficialText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu.</string>
     <string name="addTask">Add task</string>
@@ -168,13 +169,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="edit_profile_fab">Edit Profile Info</string>
     <string name="backround_image">Backround image</string>
     <string name="list_of_social_profiles">List of social profiles</string>
-    <string name="save_profile_changes">Save profile changes</string>
+    <string name="save_profile_changes">Save changes</string>
     <string name="background_image">Background Image</string>
     <string name="card_edit_profile_photo">Card edit profile photo</string>
     <string name="card_edit_background_photo">Card edit background photo</string>
     <string name="my_workspaces">My workspaces</string>
     <string name="my_jamii">My Jamii activity</string>
     <string name="my_settings">My settings</string>
+    <string name="back_to_profile">Back to profile</string>
+    <string name="personal_website_e_g_business_medium_you_tube">Personal Website e.g business/Medium/You Tube</string>
 
 
 </resources>

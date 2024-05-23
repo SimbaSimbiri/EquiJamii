@@ -53,8 +53,8 @@
                 app:boxStrokeWidth="0dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="800"
-                app:cursorColor="@color/black"
-                app:hintTextColor="@color/black"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toStartOf="@id/addPicturePost"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/postButton">
@@ -64,7 +64,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:cursorVisible="true"
                     android:focusedByDefault="true"
                     android:fontFamily="sans-serif"
                     android:textStyle="normal" />

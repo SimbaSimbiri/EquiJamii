@@ -29,12 +29,13 @@ import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
-class ProfDisplayFragment : Fragment(){
+class ProfDisplayFragment : Fragment() {
 
     companion object {
         fun newInstance() = ProfDisplayFragment()
     }
 
+    private var currentPerson: Person = Person()
     private val viewModel: ProfDisplayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,20 +48,24 @@ class ProfDisplayFragment : Fragment(){
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        storageReference = FirebaseStorage.getInstance().reference
+        firestore = FirebaseFirestore.getInstance()
+        retreiveDisplayInfo(FIREBASE_USER_ID)
+
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = ProfilePageDisplayBinding.inflate(layoutInflater)
         val view = binding.root
 
-        storageReference = FirebaseStorage.getInstance().reference
-        firestore = FirebaseFirestore.getInstance()
         adjustSize()
-        retreiveDisplayInfo(FIREBASE_USER_ID)
 
-        val gestureDetectorCompat = GestureDetectorCompat(
-            requireContext(),
+        val gestureDetectorCompat = GestureDetectorCompat(requireContext(),
             object : GestureDetector.SimpleOnGestureListener() {
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     Toast.makeText(
@@ -74,9 +79,7 @@ class ProfDisplayFragment : Fragment(){
 
                 override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     Toast.makeText(
-                        requireContext(),
-                        "Double tap to confirm sign out",
-                        Toast.LENGTH_LONG
+                        requireContext(), "Double tap to confirm sign out", Toast.LENGTH_LONG
                     ).show()
                     return true
                 }
@@ -87,6 +90,16 @@ class ProfDisplayFragment : Fragment(){
             gestureDetectorCompat.onTouchEvent(event)
         }
 
+        binding.editProfileTv.setOnClickListener {
+            binding.contentLoadingProgressBar.visibility = View.VISIBLE
+            val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            editProfileFragment.show(transaction, editProfileFragment.tag)
+            Handler().postDelayed({
+                binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+            }, 2500)
+
+        }
 
         return view
     }
@@ -108,9 +121,9 @@ class ProfDisplayFragment : Fragment(){
 
                         myProfile.let { myProf ->
                             binding.let {
-                                Glide.with(this).load(Uri.parse(myProf.backGUri))
+                                Glide.with(requireContext()).load(Uri.parse(myProf.backGUri))
                                     .into(it.backImageView)
-                                Glide.with(this).load(Uri.parse(myProf.profileUri))
+                                Glide.with(requireContext()).load(Uri.parse(myProf.profileUri))
                                     .into(it.profileImageView)
                                 it.nameOnPeople.text = myProf.name
                                 it.designationOnPeople.text =
@@ -118,30 +131,16 @@ class ProfDisplayFragment : Fragment(){
                                 it.aboutTextContent.text = myProf.social.about
                                 it.textCounty.text = myProf.city
                                 it.countryEmojiText.text = myProf.country
-                                listsSocials =
-                                    arrayListOf(
-                                        myProf.social.linkedin,
-                                        myProf.social.insta,
-                                        myProf.social.webs,
-                                        myProf.social.faceb,
-                                        myProf.social.xAcc
-                                    )
+                                listsSocials = arrayListOf(
+                                    myProf.social.linkedin,
+                                    myProf.social.insta,
+                                    myProf.social.webs,
+                                    myProf.social.faceb,
+                                    myProf.social.xAcc
+                                )
                                 listsSocials.shuffle()
                                 setRecyclerViewSocials()
-
-                                binding.editProfileTv.setOnClickListener {
-                                    binding.contentLoadingProgressBar.visibility = View.VISIBLE
-                                    val editProfileFragment =
-                                        EditProfileFragment.newInstance(myProf)
-                                    val transaction =
-                                        requireActivity().supportFragmentManager.beginTransaction()
-                                    editProfileFragment.show(transaction, editProfileFragment.tag)
-                                    Handler().postDelayed({
-                                        binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-                                    }, 4000)
-
-                                }
-
+                                currentPerson = myProf
                             }
                         }
                     }
@@ -188,8 +187,4 @@ class ProfDisplayFragment : Fragment(){
         binding.backImageView.layoutParams = layoutParamsBackG
     }
 
-    override fun onResume() {
-        super.onResume()
-        Handler().postDelayed({ retreiveDisplayInfo(FIREBASE_USER_ID) }, 4000)
-    }
 }

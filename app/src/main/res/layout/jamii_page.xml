@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+    android:layout_height="match_parent"
+    tools:context=".ui.main_activity.jamii_page.JamiiPageFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/addPostCard"
@@ -41,15 +37,15 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        style="@style/titleTab"
         android:id="@+id/yourThoughtsTv"
+        style="@style/titleTab"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:clickable="true"
+        android:layout_marginStart="7dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_stroke_rectangle"
-        android:layout_marginStart="7dp"
+        android:clickable="true"
+        android:gravity="center"
         android:text="Tell us what's on your mind"
         android:textColor="@color/karbBackgrndtint"
         android:textSize="15sp"
@@ -58,20 +54,49 @@
         app:layout_constraintStart_toEndOf="@id/addPostCard"
         app:layout_constraintTop_toTopOf="@id/addPostCard" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsRecyclerView"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
         android:layout_marginBottom="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addPostCard"
-        tools:listitem="@layout/adapters_post_item" />
+        app:layout_constraintTop_toBottomOf="@id/addPostCard">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.core.widget.NestedScrollView>
-
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutposts"
+                app:tabGravity="center"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/tabPosts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/primaryColor"
+                app:tabTextAppearance="@style/titleTab2"
+                app:tabTextColor="@color/tabUnselected" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerPosts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="80dp"
+                app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
+                app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+                app:layout_constraintStart_toStartOf="@id/constraintLayout"
+                app:layout_constraintTop_toBottomOf="@id/tabLayoutposts" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

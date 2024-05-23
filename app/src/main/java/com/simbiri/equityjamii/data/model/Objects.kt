@@ -6,24 +6,41 @@ import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.google.android.gms.common.api.internal.ApiKey
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
 
-object AvailableSlots{
+object AvailableSlots {
 
     private val availableTimeList = arrayOf(
-        "9:00am", "9:30am", "10:00am", "10:30am", "11:00am", "11:30am", "12:00pm", "2:00pm", "2:30pm", "3:00pm", "3:30pm", "4:00pm", "4:30am"
+        "9:00am",
+        "9:30am",
+        "10:00am",
+        "10:30am",
+        "11:00am",
+        "11:30am",
+        "12:00pm",
+        "2:00pm",
+        "2:30pm",
+        "3:00pm",
+        "3:30pm",
+        "4:00pm",
+        "4:30am"
 
     )
-    var timeSlotToday : ArrayList<TimeSlot>? =null
+    var timeSlotToday: ArrayList<TimeSlot>? = null
         get() {
             if (field != null)
                 return field
-            field =  ArrayList()
+            field = ArrayList()
 
-            for (timeslot in availableTimeList){
+            for (timeslot in availableTimeList) {
                 val timeAvailable = TimeSlot(timeslot)
 
                 field!!.add(timeAvailable)
@@ -42,7 +59,7 @@ object SocialMedia {
 
     val linkedIPic = R.drawable.linkedin
 
-    val webSPic =  R.drawable.web_iconsvg
+    val webSPic = R.drawable.web_iconsvg
 
     val x_pic = R.drawable.x_social_media_black_icon
 
@@ -73,17 +90,17 @@ object OfficialNewsTexts {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu."
     )
 
-    var officialNewsList : ArrayList<OfficialNews>? = null
+    var officialNewsList: ArrayList<OfficialNews>? = null
         get() {
 
-            if (field!=null)
+            if (field != null)
                 return field
             field = ArrayList()
 
-            for (headlinePos in headlineList.indices){
+            for (headlinePos in headlineList.indices) {
                 val headline = headlineList[headlinePos]
                 val previewText = officialPreviewTextList[headlinePos]
-                val officialNews = OfficialNews(headline,previewText)
+                val officialNews = OfficialNews(headline, previewText)
 
                 field!!.add(officialNews)
             }
@@ -107,12 +124,12 @@ object YoutubeKeyProvider {
 
 object YouTubeVids {
 
-     fun YoutubeVideos(context: Context, eventType : String): ArrayList<Video> {
+    fun YoutubeVideos(context: Context, eventType: String): ArrayList<Video> {
 
-        val API_KEY = YoutubeKeyProvider.keyProvider(context,0)
-        val channelD = YoutubeKeyProvider.keyProvider(context,1)
+        val API_KEY = YoutubeKeyProvider.keyProvider(context, 0)
+        val channelD = YoutubeKeyProvider.keyProvider(context, 1)
 
-        var videoList: ArrayList<Video>  =  ArrayList()
+        var videoList: ArrayList<Video> = ArrayList()
 
         val client = AsyncHttpClient()
 
@@ -131,7 +148,8 @@ object YouTubeVids {
                 for (jsonElementPos in 0 until items.length()) {
                     val snippet = items.getJSONObject(jsonElementPos).getJSONObject("snippet")
                     val title = snippet.getString("title")
-                    val videoId = items.getJSONObject(jsonElementPos).optJSONObject("id")?.optString("videoId").toString()
+                    val videoId = items.getJSONObject(jsonElementPos).optJSONObject("id")
+                        ?.optString("videoId").toString()
                     val thumbnails = snippet.getJSONObject("thumbnails")
                     val defaultThumbnail = thumbnails.getJSONObject("high")
                     val imageUrl = defaultThumbnail.getString("url")
@@ -158,5 +176,65 @@ object YouTubeVids {
 
     }
 
+}
+
+object Jamii {
+
+    var postList: MutableList<Post> = mutableListOf()
+    val firestore: FirebaseFirestore
+    val queryReference: CollectionReference
+    lateinit var listenerRegistration: ListenerRegistration
+
+    init {
+        firestore = FirebaseFirestore.getInstance()
+        queryReference = firestore.collection("Post_Gallery")
+    }
+
+    fun listenerRegisterForPosts() {
+
+        listenerRegistration = queryReference.addSnapshotListener { snapshots, error ->
+            var changesDetected = false
+            for (doc in snapshots!!.documentChanges) {
+                if (doc.type == DocumentChange.Type.ADDED) {
+                    val newPost = doc.document.toObject(Post::class.java)
+                    postList.add(newPost)
+                    changesDetected = true
+                }
+            }
+
+            !changesDetected
+        }
+    }
+
+    fun genListPosts() {
+        queryReference.orderBy("time", Query.Direction.DESCENDING)
+            .get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val posts = it.result.toObjects(Post::class.java)
+                    postList.clear()
+                    postList.addAll(posts)
+                    Log.i("list size", postList.size.toString())
+                }
+            }
+    }
+
+    fun removeListener(){
+        listenerRegistration.remove()
+    }
+
+
+    fun discoverPosts(): MutableList<Post> {
+        return postList
+    }
+
+    fun feedPosts(): MutableList<Post> {
+        return postList.reversed().toMutableList()
+    }
+
+    fun myposts(userId: String): MutableList<Post> {
+        val myposts = postList.filter { post -> post.userId.contentEquals(userId) }
+
+        return myposts.toMutableList()
+    }
 }
 

@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.Jamii
 import com.simbiri.equityjamii.data.model.YouTubeVids
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
@@ -65,6 +66,9 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
         fabWorkspace = findViewById(R.id.workspaceFab)
+
+        Jamii.listenerRegisterForPosts()
+        Jamii.genListPosts()
 
         bottomNavigationView.background = null
 
