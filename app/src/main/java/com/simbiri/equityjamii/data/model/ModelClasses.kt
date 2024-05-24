@@ -3,15 +3,17 @@ package com.simbiri.equityjamii.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 
-data class NewsText(val image: String, val title: String, val allNews : String) : Parcelable {
+data class NewsText(val image: String, val title: String, val allNews: String) : Parcelable {
 
     constructor() : this("", "", "")
 
     constructor(parcel: Parcel) : this(
-        parcel.readString()?:"",
         parcel.readString() ?: "",
-        parcel.readString()?:""
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
 
     ) {
     }
@@ -37,26 +39,29 @@ data class NewsText(val image: String, val title: String, val allNews : String) 
     }
 }
 
-data class OfficialNews (val headline : String, val officialPreviewText: String)
+data class OfficialNews(val headline: String, val officialPreviewText: String)
 
-data class Post(val caption : String, val image : String?, val time : Timestamp?, val userId: String,
-                var likes : Int, var liked : Boolean, val documentId : String? = null):Parcelable{
+data class Post(
+    val caption: String, val image: String?, val time: Timestamp?, val userId: String,
+    var likes: Int, var liked: Boolean, val documentId: String? = null
+) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()?:"",
-        parcel.readString()?:"",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readParcelable(Timestamp::class.java.classLoader)!!,
-        parcel.readString()?:"",
+        parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readByte() != 0.toByte(),
-        parcel.readString()?:"") {
+        parcel.readString() ?: ""
+    ) {
     }
 
-    constructor():this("","",null,"",0,false,"")
+    constructor() : this("", "", null, "", 0, false, "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(caption)
         parcel.writeString(image)
-        parcel.writeParcelable(time,flags)
+        parcel.writeParcelable(time, flags)
         parcel.writeString(userId)
         parcel.writeInt(likes)
         parcel.writeByte(if (liked) 1 else 0)
@@ -80,21 +85,26 @@ data class Post(val caption : String, val image : String?, val time : Timestamp?
 
 }
 
-data class TimeSlot(val time : String)
-
-data class  Social (val about : String, val linkedin : String, val insta : String, val faceb : String, val webs: String, val xAcc :String) : Parcelable{
+data class Social(
+    val about: String,
+    val linkedin: String,
+    val insta: String,
+    val faceb: String,
+    val webs: String,
+    val xAcc: String
+) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:""
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
 
-        ) {
+    ) {
     }
 
-    constructor() : this("","","","","","")
+    constructor() : this("", "", "", "", "", "")
 
 
     override fun describeContents(): Int {
@@ -120,25 +130,114 @@ data class  Social (val about : String, val linkedin : String, val insta : Strin
         }
     }
 
-
 }
 
+data class Network(
+    val followingList: MutableList<String>,
+    val followerList: MutableList<String>,
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.createStringArrayList()!!.toMutableList(),
+        parcel.createStringArrayList()!!.toMutableList()) {
+    }
 
-data class Person(val userId: String, val name: String, val designation: String, val branch: String, var profileUri: String, var backGUri: String, val city : String, val country: String, val social: Social) : Parcelable {
+    constructor() : this(mutableListOf(), mutableListOf())
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeList(followingList)
+        dest.writeList(followerList)
+    }
+
+    companion object CREATOR : Parcelable.Creator<Network> {
+        override fun createFromParcel(parcel: Parcel): Network {
+            return Network(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Network?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class Person(
+    val userId: String,
+    val name: String,
+    val designation: String,
+    val branch: String,
+    var profileUri: String,
+    var backGUri: String,
+    val city: String,
+    val country: String,
+    val social: Social,
+    val network: Network
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: "",
-        parcel.readParcelable(Social::class.java.classLoader) ?: Social("","", "","","","")
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readParcelable(Social::class.java.classLoader) ?: Social("", "", "", "", "", ""),
+        parcel.readParcelable(Network::class.java.classLoader) ?: Network(
+            mutableListOf(),
+            mutableListOf())
     ) {
     }
 
-    constructor() : this("","", "", "","","","","", Social("","","","","",""))
+    constructor() : this(
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        Social("", "", "", "", "", ""),
+        Network(mutableListOf(), mutableListOf())
+    )
+
+    fun narrowDownUsers(existingIds : MutableList<String>) : List<Person>{
+        var narrowedUsers :MutableList<Person> = mutableListOf()
+        val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+        collection.get().addOnSuccessListener { result ->
+            result.forEach { doc ->
+                val userResult = doc.toObject(Person::class.java)
+                if (existingIds.contains(userResult.userId)){
+                    narrowedUsers.add(userResult)
+                }
+            }
+        }
+
+        return narrowedUsers.toList()
+    }
+
+    fun following(followingList: MutableList<String>) : List<Person>{
+
+        return narrowDownUsers(followingList)
+    }
+    fun followers(followerList: MutableList<String>) : List<Person>{
+        return narrowDownUsers(followerList)
+    }
+    fun followingFollowers(followingList: MutableList<String>) : List<Person>{
+        var followerFollowingList: MutableList<Person> = mutableListOf()
+        val followingUsers = narrowDownUsers(followingList)
+
+        followingUsers.forEach{user ->
+            val userFollowerList: List<Person> = narrowDownUsers(user.network.followerList)
+            followerFollowingList.addAll(userFollowerList)
+        }
+
+        return followerFollowingList
+    }
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userId)
@@ -150,6 +249,7 @@ data class Person(val userId: String, val name: String, val designation: String,
         parcel.writeString(city)
         parcel.writeString(country)
         parcel.writeParcelable(social, flags)
+        parcel.writeParcelable(network, flags)
 
     }
 
@@ -166,18 +266,20 @@ data class Person(val userId: String, val name: String, val designation: String,
             return arrayOfNulls(size)
         }
     }
+
 }
 
+data class TimeSlot(val time : String)
 
 data class Video(
     val title: String,
     val thumbnailUrl: String,
-    val videoId : String
-): Parcelable {
+    val videoId: String
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-        parcel.readString()?: "",
-        parcel.readString()?: ""
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
     ) {
     }
 

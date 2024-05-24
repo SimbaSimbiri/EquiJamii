@@ -1,19 +1,21 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
-import com.simbiri.equityjamii.data.model.Jamii
+import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.databinding.MyPostsTabBinding
 
 class MyPostsFragment : Fragment() {
@@ -24,8 +26,11 @@ class MyPostsFragment : Fragment() {
 
     private val viewModel: MyPostsViewModel by viewModels()
     private lateinit var binding: MyPostsTabBinding
-    private lateinit var feedAdapter: PostAdapter
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var myActivityAdapter: PostAdapter
+    val firestore = FirebaseFirestore.getInstance()
+    lateinit var listenerRegistration: ListenerRegistration
+    val queryReference = firestore.collection("Post_Gallery")
+    private var postList: MutableList<Post> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +45,13 @@ class MyPostsFragment : Fragment() {
 
         binding = MyPostsTabBinding.inflate(layoutInflater)
         val view = binding.root
-        feedAdapter = PostAdapter(requireContext(), Jamii.myposts(FIREBASE_USER_ID))
-        binding.myPostsRecyclerView.adapter = feedAdapter
+
+        genListPosts()
+
+        myActivityAdapter = PostAdapter(requireContext(), postList)
+        binding.myPostsRecyclerView.adapter = myActivityAdapter
 
         setUpPostRecycler()
-
         return view
     }
 
@@ -53,9 +60,43 @@ class MyPostsFragment : Fragment() {
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
-        binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
         binding.myPostsRecyclerView.layoutManager = layoutManager
 
+    }
+
+    fun listenerRegisterForPosts() {
+
+        listenerRegistration = queryReference.addSnapshotListener { snapshots, error ->
+            var changesDetected = false
+            for (doc in snapshots!!.documentChanges) {
+                if (doc.type == DocumentChange.Type.ADDED) {
+                    val newPost = doc.document.toObject(Post::class.java)
+                    postList.add(newPost)
+                    changesDetected = true
+                }
+            }
+
+            !changesDetected
+        }
+    }
+
+    fun genListPosts() {
+        queryReference.orderBy("time", Query.Direction.DESCENDING)
+            .get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val posts = it.result.toObjects(Post::class.java)
+                    postList.clear()
+                    postList.addAll(posts.filter { p-> p.userId.contentEquals(AuthUtils.getCurrentUserId()!!) })
+
+                    Log.i("Feed in myposts", "${postList}")
+                    binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
+
+                }
+            }
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
 

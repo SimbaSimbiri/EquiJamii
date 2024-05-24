@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PeopleDataAdapter
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
-import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 
 class AllPeople : Fragment() {
@@ -62,7 +60,7 @@ class AllPeople : Fragment() {
             for (doc in snapShots!!.documentChanges) {
                 if (doc.type == DocumentChange.Type.ADDED) {
                     val newPerson = doc.document.toObject(Person::class.java)
-                    if (!newPerson.userId.contentEquals(FIREBASE_USER_ID)){
+                    if (!newPerson.userId.contentEquals(AuthUtils.getCurrentUserId()!!)){
                     searchList.add(newPerson)}
                     recyclerAll.adapter!!.notifyDataSetChanged()
 
@@ -77,7 +75,8 @@ class AllPeople : Fragment() {
     private fun genListPersonFireStore() {
         query.get().addOnCompleteListener { it ->
             if (it.isSuccessful) {
-                searchList = it.result.toObjects(Person::class.java).filter{person -> person.userId.contentEquals(FIREBASE_USER_ID) }
+                searchList = it.result.toObjects(Person::class.java).filter{person -> person.userId.contentEquals(
+                    AuthUtils.getCurrentUserId()!!) }
                     .toMutableList()
 
                 recyclerAll.adapter!!.notifyDataSetChanged()

@@ -10,10 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.data.model.Jamii
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.JamiiPageBinding
 
@@ -37,7 +37,7 @@ class JamiiPageFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         firestore = FirebaseFirestore.getInstance()
-        firestore.collection(USERS_COLLECTION).document(FIREBASE_USER_ID).get()
+        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).get()
             .addOnCompleteListener { taskDocSnapShot ->
                 if (taskDocSnapShot.isSuccessful) {
                     if (taskDocSnapShot.result.exists()) {
@@ -46,7 +46,9 @@ class JamiiPageFragment : Fragment() {
                         Glide.with(context).load(profilePicUrl).into(binding.currentUserImage)
                     }
                 }
+
             }
+
     }
 
     override fun onCreateView(
@@ -59,13 +61,13 @@ class JamiiPageFragment : Fragment() {
 
         binding.currentUserImage.setOnClickListener {
             val addPostFragment = AddPostFragment.newInstance(personPost)
-            val transaction =  requireActivity().supportFragmentManager.beginTransaction()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
             addPostFragment.show(transaction, addPostFragment.tag)
         }
 
         binding.yourThoughtsTv.setOnClickListener {
             val addPostFragment = AddPostFragment.newInstance(personPost)
-            val transaction =  requireActivity().supportFragmentManager.beginTransaction()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
             addPostFragment.show(transaction, addPostFragment.tag)
         }
 
@@ -128,8 +130,4 @@ class JamiiPageFragment : Fragment() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        Jamii.removeListener()
-    }
 }

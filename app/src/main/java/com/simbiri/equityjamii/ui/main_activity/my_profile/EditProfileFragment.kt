@@ -2,7 +2,6 @@ package com.simbiri.equityjamii.ui.main_activity.my_profile
 
 import android.app.Dialog
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -27,8 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
 import com.simbiri.equityjamii.databinding.ProfilePageEditBinding
@@ -191,8 +189,8 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         val city = binding!!.cityProfileEditText.text!!.toString()
         val country = binding!!.countryEmojiEditText.text.toString()
         val imageProfileReference =
-            storageReference.child("Profile_pics").child("$FIREBASE_USER_ID.jpg")
-        val backGReference = storageReference.child("BackG_pics").child("$FIREBASE_USER_ID.jpg")
+            storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+        val backGReference = storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
 
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
         val insta = binding!!.instaEdit.text!!.toString()
@@ -313,7 +311,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     ) {
 
         val mapToFirestore = HashMap<String, Any>()
-        mapToFirestore["userId"] = FIREBASE_USER_ID
+        mapToFirestore["userId"] = AuthUtils.getCurrentUserId()!!
         mapToFirestore["name"] = name
         mapToFirestore["designation"] = designation
         mapToFirestore["branch"] = branch
@@ -329,9 +327,13 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             "webs" to social.webs,
             "xAcc" to social.xAcc
         )
+        mapToFirestore["network"] = hashMapOf(
+            "followingList" to person.network.followingList,
+            "followerList" to person.network.followerList
+        )
 
 
-        firestore.collection(USERS_COLLECTION).document(FIREBASE_USER_ID).set(mapToFirestore)
+        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).set(mapToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
                     binding!!.progressBar.isVisible = false

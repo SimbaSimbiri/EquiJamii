@@ -148,7 +148,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                ""
+                "Couldn't display date"
             }
         }
 
@@ -162,7 +162,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
 
             Glide.with(context).load(imagePosted)
                 .apply(RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5))
-                .fitCenter().into(this.imagePosted)
+                .centerCrop().into(this.imagePosted)
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
             if (liked) {

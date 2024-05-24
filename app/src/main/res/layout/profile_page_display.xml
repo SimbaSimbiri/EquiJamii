@@ -110,11 +110,13 @@
 
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardTufuatane"
+                android:id="@+id/cardPeople"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/cardTubonge"
+                android:layout_marginStart="-60dp"
+                app:layout_constraintEnd_toEndOf="@id/materialCardView"
                 app:layout_constraintStart_toStartOf="@id/materialCardView"
                 app:layout_constraintTop_toBottomOf="@id/designationOnPeople">
 
@@ -134,9 +136,9 @@
                 android:id="@+id/cardTubonge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@id/materialCardView"
-                app:layout_constraintStart_toEndOf="@id/cardTufuatane"
+                app:layout_constraintStart_toEndOf="@id/cardPeople"
                 app:layout_constraintTop_toBottomOf="@id/designationOnPeople">
 
 

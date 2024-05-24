@@ -25,10 +25,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.POST_STORAGE_REF
-import com.simbiri.equityjamii.data.model.Jamii
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.DialogAddPostBinding
 
@@ -53,6 +52,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
     private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var imageUri: Uri? = null
     private val postStorageRef = FirebaseStorage.getInstance().getReference()
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         openPostPicker = registerForActivityResult(CropImageContract()) { result ->
@@ -81,11 +81,11 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 showCropLabel = true,
                 activityTitle = "CROP IMAGE",
                 activityBackgroundColor = requireContext().resources.getColor(R.color.black),
-                toolbarColor = requireContext().resources.getColor(R.color.black),
+                toolbarColor = requireContext()  .resources.getColor(R.color.black),
                 progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                 guidelines = CropImageView.Guidelines.OFF,
-                aspectRatioX = 3,
-                aspectRatioY = 4,
+                aspectRatioX = 1,
+                aspectRatioY = 1,
                 fixAspectRatio = true
             )
         )
@@ -135,7 +135,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                         postHashMap["caption"] = captionPost
                         postHashMap["image"] = postImageUri.toString()
                         postHashMap["time"] = FieldValue.serverTimestamp()
-                        postHashMap["userId"] = FIREBASE_USER_ID
+                        postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
                         postHashMap["likes"] = 0
                         postHashMap["liked"] = false
                         postHashMap["documentId"] = null
@@ -148,6 +148,14 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                         "Successfully posted to feed",
                                         Toast.LENGTH_SHORT
                                     ).show()
+/*
+                                    Jamii.let {
+                                        it.genListPosts()
+                                        it.feedPosts()
+                                        it.discoverPosts()
+                                        it.myPosts(FIREBASE_USER_ID)
+                                    }*/
+
                                     dismiss()
                                     val documentId = taskDocref.result.id
                                     updateDocWithId(documentId)
@@ -167,7 +175,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
             postHashMap["caption"] = captionPost
             postHashMap["image"] = ""
             postHashMap["time"] = FieldValue.serverTimestamp()
-            postHashMap["userId"] = FIREBASE_USER_ID
+            postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
             postHashMap["likes"] = 0
             postHashMap["liked"] = false
             postHashMap["documentId"] = null
@@ -196,8 +204,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                     }
                 }
         }
-        Jamii.listenerRegisterForPosts()
-        Jamii.genListPosts()
+
     }
 
     private fun updateDocWithId(documentId: String) {

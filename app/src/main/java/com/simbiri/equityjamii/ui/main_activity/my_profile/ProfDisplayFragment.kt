@@ -23,8 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.adapters.SocialAdapter
-import com.simbiri.equityjamii.constants.FIREBASE_USER_ID
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils.getCurrentUserId
+import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
@@ -47,13 +48,14 @@ class ProfDisplayFragment : Fragment() {
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
+    private lateinit var myNetwork: Network
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
-        retreiveDisplayInfo(FIREBASE_USER_ID)
+        retreiveDisplayInfo(getCurrentUserId()!!)
 
     }
 
@@ -101,6 +103,17 @@ class ProfDisplayFragment : Fragment() {
 
         }
 
+        binding.cardPeople.setOnClickListener {
+            binding.contentLoadingProgressBar.visibility = View.VISIBLE
+            val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            networkDialogFrag.show(transaction, networkDialogFrag.tag)
+            Handler().postDelayed({
+                binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+            }, 2500)
+
+        }
+
         return view
     }
 
@@ -138,10 +151,13 @@ class ProfDisplayFragment : Fragment() {
                                     myProf.social.faceb,
                                     myProf.social.xAcc
                                 )
+
                                 listsSocials.shuffle()
                                 setRecyclerViewSocials()
                                 currentPerson = myProf
                             }
+
+                            myNetwork = myProf.network
                         }
                     }
                 }

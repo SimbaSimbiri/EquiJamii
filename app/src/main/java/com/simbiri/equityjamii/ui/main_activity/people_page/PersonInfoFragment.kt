@@ -3,21 +3,26 @@ package com.simbiri.equityjamii.ui.main_activity.people_page
 import android.app.Dialog
 import android.content.Context
 import android.net.Uri
-import android.opengl.Visibility
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
 import com.simbiri.equityjamii.databinding.DialogPeopleDetailBinding
@@ -37,10 +42,45 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private var isCurrentPersonDetails: Boolean = false
     private lateinit var viewModel: PersonInfoViewModel
     private var _binding: DialogPeopleDetailBinding? = null
     private val binding get() = _binding
     private lateinit var listsSocials: ArrayList<String>
+    private lateinit var personParceled: Person
+    private lateinit var currPerson: Person
+    private var isAlreadyFollowed: Boolean = false
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
+
+        AuthUtils.getCurrentPerson { person ->
+            if (person != null) {
+                currPerson = person
+                isAlreadyFollowed = person.network.followingList.contains(personParceled.userId)
+
+                isCurrentPersonDetails =
+                    personParceled.userId.contentEquals(person.userId)
+
+                if (isAlreadyFollowed) {
+                    binding!!.tufuataneImageView.setImageResource(R.drawable.following_icon)
+                }else{
+                    binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
+                }
+
+                Log.i("IsFollowed", "${isAlreadyFollowed}")
+                Log.i("isCurrentPerson", "$isCurrentPersonDetails")
+
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to retrieve current user details",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +92,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         adjustSize()
 
-        val personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)
-        personParceled?.let {
+        personParceled.let {
             visibilityViews(it.city, it.country, it.social)
 
             binding!!.nameOnPeople.text = it.name
@@ -62,7 +101,13 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
             binding!!.textCounty.text = it.city
             binding!!.countryEmojiText.text = it.country
             listsSocials =
-                arrayListOf(it.social.linkedin, it.social.insta, it.social.webs, it.social.faceb, it.social.xAcc)
+                arrayListOf(
+                    it.social.linkedin,
+                    it.social.insta,
+                    it.social.webs,
+                    it.social.faceb,
+                    it.social.xAcc
+                )
             listsSocials.shuffle()
 
             Glide.with(this).load(Uri.parse(it.profileUri))
@@ -72,6 +117,21 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 .into(binding!!.detailBackImageV)
                 .onLoadFailed(requireContext().getDrawable(R.drawable.equityjamiibackground))
 
+        }
+
+
+        binding!!.cardTufuatane.setOnClickListener {
+            if (!isCurrentPersonDetails) {
+                if (isAlreadyFollowed) {
+                    unfollowCurrentPerson(personParceled.userId)
+                    binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
+
+                } else {
+                    followCurrentPerson(personParceled.userId)
+                    binding!!.tufuataneImageView.setImageResource(R.drawable.following_icon)
+
+                }
+            }
 
         }
 
@@ -79,6 +139,68 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         return view
     }
+
+    private fun unfollowCurrentPerson(userId: String) {
+        val userCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+        userCollection.document(AuthUtils.getCurrentUserId()!!)
+            .update("network.followingList", FieldValue.arrayRemove(userId))
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    userCollection.document(userId).update(
+                        "network.followerList", FieldValue.arrayRemove(
+                            AuthUtils.getCurrentUserId()!!
+                        )
+                    ).addOnCompleteListener { taskSnap ->
+                        if (taskSnap.isSuccessful) {
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Unfollowed ${personParceled.name}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            isAlreadyFollowed = false
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+    }
+
+    private fun followCurrentPerson(userId: String) {
+        val userCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+        userCollection.document(AuthUtils.getCurrentUserId()!!)
+            .update("network.followingList", FieldValue.arrayUnion(userId))
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    userCollection.document(userId).update(
+                        "network.followerList", FieldValue.arrayUnion(
+                            AuthUtils.getCurrentUserId()!!
+                        )
+                    ).addOnCompleteListener { taskSnap ->
+                        if (taskSnap.isSuccessful) {
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Followed ${personParceled.name}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            isAlreadyFollowed = true
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+
+    }
+
 
     private fun visibilityViews(city: String, country: String, social: Social) {
         val socialEmpty =
