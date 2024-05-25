@@ -205,17 +205,21 @@ data class Person(
     )
 
     fun narrowDownUsers(existingIds : MutableList<String>) : List<Person>{
+
         var narrowedUsers :MutableList<Person> = mutableListOf()
-        val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
-        collection.get().addOnSuccessListener { result ->
-            result.forEach { doc ->
-                val userResult = doc.toObject(Person::class.java)
-                if (existingIds.contains(userResult.userId)){
-                    narrowedUsers.add(userResult)
+
+        if (existingIds.isNotEmpty()) {
+
+            val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+            collection.get().addOnSuccessListener { result ->
+                result.forEach { doc ->
+                    val userResult = doc.toObject(Person::class.java)
+                    if (existingIds.contains(userResult.userId)) {
+                        narrowedUsers.add(userResult)
+                    }
                 }
             }
         }
-
         return narrowedUsers.toList()
     }
 

@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PostAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Post
+import com.simbiri.equityjamii.databinding.DiscoverTabBinding
 
 class DiscoverFragment : Fragment() {
 
@@ -25,27 +26,26 @@ class DiscoverFragment : Fragment() {
     }
 
     private lateinit var viewModel: DiscoverViewModel
-    private lateinit var recyclerPosts: RecyclerView
     private lateinit var adapterPost: PostAdapter
     val firestore = FirebaseFirestore.getInstance()
-    lateinit var listenerRegistration: ListenerRegistration
     val queryReference = firestore.collection("Post_Gallery")
-    private val postList:MutableList<Post> = mutableListOf()
+    private val postList: MutableList<Post> = mutableListOf()
+    private lateinit var binding: DiscoverTabBinding
 
-
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        genListPosts()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = DiscoverTabBinding.inflate(layoutInflater)
+        val view = binding.root
 
-        val view = inflater.inflate(R.layout.discover_tab, container, false)
-        genListPosts()
-
-        recyclerPosts = view.findViewById(R.id.discoverRecyclerView)
         adapterPost = PostAdapter(requireContext(), postList)
-        recyclerPosts.adapter = adapterPost
-
+        binding.discoverRecyclerView.adapter = adapterPost
 
         setUpPostRecycler()
 
@@ -53,33 +53,26 @@ class DiscoverFragment : Fragment() {
     }
 
 
-    fun listenerRegisterForPosts() {
-
-        listenerRegistration = queryReference.addSnapshotListener { snapshots, error ->
-            var changesDetected = false
-            for (doc in snapshots!!.documentChanges) {
-                if (doc.type == DocumentChange.Type.ADDED) {
-                    val newPost = doc.document.toObject(Post::class.java)
-                    postList.add(newPost)
-                    changesDetected = true
-                }
-            }
-
-            !changesDetected
-        }
-    }
-
     fun genListPosts() {
-        queryReference.orderBy("time", Query.Direction.DESCENDING)
-            .get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val posts = it.result.toObjects(Post::class.java)
-                    postList.clear()
-                    postList.addAll(posts)
-                    Log.i("Feed discover in disc", postList.toString())
-                    recyclerPosts.adapter!!.notifyDataSetChanged()
+        AuthUtils.getCurrentPerson { currentPerson ->
+            queryReference.orderBy("time", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        val posts = it.result.toObjects(Post::class.java)
+
+                        val includeFeedPost =
+                            posts.filter { post ->
+                                !currentPerson!!.network.followingList.contains(post.userId)
+                            }.toMutableList()
+
+                        postList.clear()
+                        postList.addAll(includeFeedPost)
+                        Log.i("FeedList in feed", "${postList}")
+                        binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
+                    }
                 }
-            }
+        }
     }
 
 
@@ -87,12 +80,13 @@ class DiscoverFragment : Fragment() {
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
-        recyclerPosts.layoutManager = layoutManager
+        binding.discoverRecyclerView.layoutManager = layoutManager
 
     }
 
     override fun onStop() {
         super.onStop()
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
