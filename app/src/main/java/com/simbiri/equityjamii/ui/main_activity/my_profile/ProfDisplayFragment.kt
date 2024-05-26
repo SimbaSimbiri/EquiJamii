@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
@@ -48,14 +50,13 @@ class ProfDisplayFragment : Fragment() {
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
-    private lateinit var myNetwork: Network
+    private var myNetwork: Network? = Network()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
-        retreiveDisplayInfo(getCurrentUserId()!!)
 
     }
 
@@ -161,6 +162,7 @@ class ProfDisplayFragment : Fragment() {
                                 currentPerson = myProf
                             }
 
+
                             myNetwork = myProf.network
                         }
                     }
@@ -168,6 +170,7 @@ class ProfDisplayFragment : Fragment() {
             }
 
     }
+
 
 
     private fun setRecyclerViewSocials() {
@@ -207,4 +210,21 @@ class ProfDisplayFragment : Fragment() {
         binding.backImageView.layoutParams = layoutParamsBackG
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        AuthUtils.getCurrentPerson { currPerson->
+            if (currPerson == null){
+                val newPerson = Person()
+                newPerson.userId = getCurrentUserId()!!
+                val editProfileFragment = EditProfileFragment.newInstance(newPerson)
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                editProfileFragment.show(transaction, editProfileFragment.tag)
+
+            }else{
+                retreiveDisplayInfo(getCurrentUserId()!!)
+            }
+        }
+
+    }
 }

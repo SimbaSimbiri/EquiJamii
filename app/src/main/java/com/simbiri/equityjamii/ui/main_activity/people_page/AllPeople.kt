@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -78,11 +79,13 @@ class AllPeople : Fragment() {
             query.get().addOnCompleteListener { it ->
                 if (it.isSuccessful) {
                     val allPeople = it.result.toObjects(Person::class.java)
-                    val addedPeople =
-                        allPeople.filter { person -> !person.userId.contentEquals(currPerson!!.userId) }
 
-                    searchList.addAll(addedPeople)
+                    if (currPerson != null) {
+                        val addedPeople =
+                            allPeople.filter { person -> !person.userId.contentEquals(currPerson.userId) }
 
+                        searchList.addAll(addedPeople)
+                    }
                     binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
                 }
             }

@@ -1,13 +1,12 @@
 package com.simbiri.equityjamii.ui.main_activity.people_page
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,7 +49,7 @@ class EquiLeadersFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (searchList.isEmpty()){
+        if (searchList.isEmpty()) {
             leadersListFireStore()
         }
     }
@@ -75,9 +74,19 @@ class EquiLeadersFragment : Fragment() {
 
             query.get().addOnCompleteListener { it ->
                 if (it.isSuccessful) {
-                    val allLeaders = it.result.toObjects(Person::class.java)
+                    if (currPerson != null) {
+                        val allLeaders = it.result.toObjects(Person::class.java)
 
-                    searchList.addAll(allLeaders)
+                        allLeaders.forEach{person ->
+                            Log.i("One person", "${person.leader}")
+
+                        }
+
+                        val includedLeaders = allLeaders.filter { person -> person.leader }
+
+                        searchList.clear()
+                        searchList.addAll(includedLeaders)
+                    }
 
                     binding.equiLeadersRecycler.adapter!!.notifyDataSetChanged()
                 }
@@ -93,7 +102,7 @@ class EquiLeadersFragment : Fragment() {
         layoutManagerAll.orientation = RecyclerView.VERTICAL
         binding.equiLeadersRecycler.adapter = leadersAdapter
         binding.equiLeadersRecycler.layoutManager = layoutManagerAll
-    }
+        }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

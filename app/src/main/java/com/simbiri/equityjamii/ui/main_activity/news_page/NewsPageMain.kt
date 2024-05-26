@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -17,6 +18,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.main_activity.news_page.featuring.FeaturingFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.for_you.ForYouFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.latest.LatestFragment

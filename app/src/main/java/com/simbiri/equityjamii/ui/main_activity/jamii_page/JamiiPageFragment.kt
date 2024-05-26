@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -71,6 +72,16 @@ class JamiiPageFragment : Fragment() {
             addPostFragment.show(transaction, addPostFragment.tag)
         }
 
+
+        AuthUtils.getCurrentPerson { currentPerson ->
+            if (currentPerson == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Set up profile to access EquiJamii features",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         stateFragAdapter = PostSlidePageAdapter(this@JamiiPageFragment)
         binding.viewPagerPosts.isUserInputEnabled = false

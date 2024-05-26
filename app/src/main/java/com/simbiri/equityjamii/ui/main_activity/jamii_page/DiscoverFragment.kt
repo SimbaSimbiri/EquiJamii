@@ -1,11 +1,11 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,14 +54,17 @@ class DiscoverFragment : Fragment() {
 
                         val posts = it.result.toObjects(Post::class.java)
 
+                        if (currentPerson != null){
                         val includeFeedPost =
                             posts.filter { post ->
-                                !currentPerson!!.network.followingList.contains(post.userId)
-                            }.filter { post -> !post.userId.contentEquals(currentPerson!!.userId) }
+                                currentPerson?.network?.followingList?.contains(post.userId) == false
+
+                            }.filter { post -> !post.userId.contentEquals(currentPerson?.userId) }
                                 .toMutableList()
 
                         postList.clear()
-                        postList.addAll(includeFeedPost)
+                        postList.addAll(includeFeedPost)}
+
                         Log.i("FeedList in feed", "${postList}")
                         binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
                     }
@@ -71,8 +74,9 @@ class DiscoverFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (postList.isEmpty()){
-            genListPosts()}
+        if (postList.isEmpty()) {
+            genListPosts()
+        }
     }
 
 

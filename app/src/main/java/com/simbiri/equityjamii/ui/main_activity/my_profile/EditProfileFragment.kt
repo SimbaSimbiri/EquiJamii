@@ -58,6 +58,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var person: Person
+    private var profileNotComplete = false
 
 
     val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
@@ -108,12 +109,48 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         }
 
         binding!!.saveProfileButton.setOnClickListener {
-            binding!!.progressBar.isVisible = true
-            savePersonalProfileInfo()
+
+            profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.designationProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.branchProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
+                    binding!!.cityProfileEditText.text.isNullOrEmpty() ||
+                    imageProfileUri?.toString().isNullOrEmpty() ||
+                    imageBackgUri?.toString().isNullOrEmpty()
+
+            if (profileNotComplete) {
+                Toast.makeText(
+                    requireContext(),
+                    "To save changes, complete the Personal information block",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } else {
+                binding!!.progressBar.isVisible = true
+                savePersonalProfileInfo()
+            }
         }
 
+
         binding!!.exitButton.setOnClickListener {
-            dismiss()
+            profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.designationProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.branchProfileEdit.text.isNullOrEmpty() ||
+                    binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
+                    binding!!.cityProfileEditText.text.isNullOrEmpty() ||
+                    imageProfileUri?.toString().isNullOrEmpty() ||
+                    imageBackgUri?.toString().isNullOrEmpty()
+
+            if (profileNotComplete) {
+                Toast.makeText(
+                    requireContext(),
+                    "Personal information block and user images must be uploaded",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } else {
+                dismiss()
+            }
         }
 
 
@@ -190,7 +227,8 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         val country = binding!!.countryEmojiEditText.text.toString()
         val imageProfileReference =
             storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
-        val backGReference = storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+        val backGReference =
+            storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
 
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
         val insta = binding!!.instaEdit.text!!.toString()
@@ -202,7 +240,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         val social = Social(aboutMe, linkedIn, insta, faceb, webS, xAcc)
 
         if (clickedProfile) {
-            if (imageProfileUri != null || !name.isNotEmpty() || !designation.isNotEmpty() || !branch.isNotEmpty()) {
+            if (imageProfileUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
                 //upload image profile uri only
                 imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -245,7 +283,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             clickedProfile = false
 
         } else if (clickedBackG) {
-            if (imageBackgUri != null || !name.isNotEmpty() || !designation.isNotEmpty() || !branch.isNotEmpty()) {
+            if (imageBackgUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
                 //upload image profile uri only
                 backGReference.putFile(imageBackgUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -332,9 +370,11 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             "followerList" to person.network.followerList
         )
         mapToFirestore["verified"] = person.verified
+        mapToFirestore["leader"] = person.leader
 
 
-        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).set(mapToFirestore)
+        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)
+            .set(mapToFirestore)
             .addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
                     binding!!.progressBar.isVisible = false

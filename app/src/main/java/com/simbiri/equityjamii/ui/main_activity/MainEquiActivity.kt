@@ -2,7 +2,6 @@ package com.simbiri.equityjamii.ui.main_activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -20,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
 class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/,
@@ -51,6 +51,18 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
             Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG)
                 .show()
             startActivity(intent)
+        }else{
+
+            AuthUtils.getCurrentPerson { currentPerson ->
+                if (currentPerson == null) {
+                    navControllerMain.navigate(R.id.myProfile)
+                    Toast.makeText(
+                        this,
+                        "Set up profile to access EquiJamii features",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
 
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
@@ -62,6 +74,7 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         bottomNavigationView.background = null
 
 
+
         navDrawer.bringToFront()
 
         val navHostFrag =
@@ -69,6 +82,7 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         navControllerMain = navHostFrag.navController
 
         bottomNavigationView.setupWithNavController(navControllerMain)
+
 
         drawerLayoutMain.addDrawerListener(this)
 

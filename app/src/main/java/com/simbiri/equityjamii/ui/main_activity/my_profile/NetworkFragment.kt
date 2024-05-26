@@ -20,7 +20,7 @@ class NetworkFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARGS_NETWORK = "NETWORK_INFO"
-        fun newInstance(myNetwork: Network): NetworkFragment{
+        fun newInstance(myNetwork: Network?): NetworkFragment{
             val fragReturn = NetworkFragment()
             val networkBundle = Bundle()
             networkBundle.putParcelable(ARGS_NETWORK, myNetwork)
@@ -32,7 +32,7 @@ class NetworkFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: DialogNetworkBinding
     private val viewModel: NetworkViewModel by viewModels()
-    private lateinit var networkParced : Network
+    private var networkParced : Network? = Network()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -61,11 +61,11 @@ class NetworkFragment : BottomSheetDialogFragment() {
     ): View {
         binding = DialogNetworkBinding.inflate(layoutInflater)
         val view = binding.root
-        networkParced = arguments?.getParcelable<Network>(ARGS_NETWORK)!!
+        networkParced = arguments?.getParcelable<Network>(ARGS_NETWORK)
 
-        val usersFollowing  = Person().following(networkParced.followingList)
-        val usersFollowed = Person().followers(networkParced.followerList)
-        val usersFollowingFollower = Person().followingFollowers(networkParced.followingList)
+        val usersFollowing  = Person().following(networkParced?.followingList)
+        val usersFollowed = Person().followers(networkParced?.followerList)
+        val usersFollowingFollower = Person().followingFollowers(networkParced?.followingList)
 
         return view
     }

@@ -1,11 +1,11 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,10 +63,22 @@ class MyPostsFragment : Fragment() {
                 .get().addOnCompleteListener {
                     if (it.isSuccessful) {
                         val posts = it.result.toObjects(Post::class.java)
-                        postList.clear()
-                        val includedPosts = posts.filter { p -> p.userId.contentEquals(currentPerson!!.userId) }
-                            .toMutableList()
-                        postList.addAll(includedPosts)
+                        if (currentPerson != null) {
+                            postList.clear()
+                            val includedPosts =
+                                posts.filter { p -> p.userId.contentEquals(currentPerson.userId) }
+                                    .toMutableList()
+
+                            if (includedPosts.isEmpty()) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Your added posts will be included here",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            postList.addAll(includedPosts)
+                        }
+
 
                         Log.i("Feed in myposts", "${postList}")
                         binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
@@ -79,8 +91,9 @@ class MyPostsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (postList.isEmpty()){
-        listMyPostsFirestore()}
+        if (postList.isEmpty()) {
+            listMyPostsFirestore()
+        }
 
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -11,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.AuthUtils
 
 class peopleFragment : Fragment() {
 
@@ -37,6 +39,17 @@ class peopleFragment : Fragment() {
         stateAdapter = ScreenPeopleAdapter(this@peopleFragment)
         viewPagerPeople.adapter = stateAdapter
         viewPagerPeople.isUserInputEnabled = false
+
+
+        AuthUtils.getCurrentPerson { currentPerson ->
+            if (currentPerson == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Set up profile to access EquiJamii features",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         TabLayoutMediator(tabLayout, viewPagerPeople) { tab, position ->
 

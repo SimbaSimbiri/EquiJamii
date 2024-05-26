@@ -79,14 +79,14 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 cropCornerRadius = 8.0F,
                 cropMenuCropButtonTitle = "Done",
                 showCropLabel = true,
-                activityTitle = "CROP IMAGE",
+                activityTitle = "Crop post image",
                 activityBackgroundColor = requireContext().resources.getColor(R.color.black),
                 toolbarColor = requireContext()  .resources.getColor(R.color.black),
                 progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                 guidelines = CropImageView.Guidelines.OFF,
                 aspectRatioX = 1,
                 aspectRatioY = 1,
-                fixAspectRatio = true
+                fixAspectRatio = false
             )
         )
 

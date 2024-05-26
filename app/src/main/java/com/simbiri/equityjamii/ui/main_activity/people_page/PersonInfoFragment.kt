@@ -49,7 +49,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     private lateinit var listsSocials: ArrayList<String>
     private lateinit var personParceled: Person
     private lateinit var currPerson: Person
-    private var isAlreadyFollowed: Boolean = false
+    private var isAlreadyFollowed: Boolean? = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,12 +58,12 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         AuthUtils.getCurrentPerson { person ->
             if (person != null) {
                 currPerson = person
-                isAlreadyFollowed = person.network.followingList.contains(personParceled.userId)
+                isAlreadyFollowed = person.network.followingList?.contains(personParceled.userId)
 
                 isCurrentPersonDetails =
                     personParceled.userId.contentEquals(person.userId)
 
-                if (isAlreadyFollowed) {
+                if (isAlreadyFollowed == true) {
                     binding!!.tufuataneImageView.setImageResource(R.drawable.following_icon)
                 }else{
                     binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
@@ -125,7 +125,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         binding!!.cardTufuatane.setOnClickListener {
             if (!isCurrentPersonDetails) {
-                if (isAlreadyFollowed) {
+                if (isAlreadyFollowed == true) {
                     unfollowCurrentPerson(personParceled.userId)
                     binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
 

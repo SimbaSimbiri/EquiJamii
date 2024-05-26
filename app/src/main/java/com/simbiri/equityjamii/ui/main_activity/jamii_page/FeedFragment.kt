@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +25,7 @@ class FeedFragment : Fragment() {
         fun newInstance() = FeedFragment()
     }
 
-    private lateinit var currPerson: Person
+    private var currPerson: Person? = Person()
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var binding: FeedTabBinding
     private lateinit var feedAdapter: PostAdapter
@@ -55,21 +56,28 @@ class FeedFragment : Fragment() {
 
     private fun genListPosts() {
         AuthUtils.getCurrentPerson { currentPerson ->
-            currPerson = currentPerson!!
+            currPerson = currentPerson
             queryReference.orderBy("time", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener {
                     if (it.isSuccessful) {
 
-                        val posts = it.result.toObjects(Post::class.java)
+                        if (currentPerson != null) {
+                            val posts = it.result.toObjects(Post::class.java)
 
-                        val includeFeedPost =
-                            posts.filter { post ->
-                                currentPerson.network.followingList.contains(post.userId) ||
-                                        currentPerson.userId.contentEquals(post.userId)
-                            }.toMutableList()
+                            val includeFeedPost =
+                                posts.filter { post ->
+                                    currentPerson.network.followingList?.contains(post.userId) == true ||
+                                            post.userId.contentEquals(currentPerson.userId)
+                                }.toMutableList()
 
-                        postList.clear()
-                        postList.addAll(includeFeedPost)
+                            if (includeFeedPost.isEmpty()){
+                                Toast.makeText(requireContext(), "Post from people you follow and yours will be posted here", Toast.LENGTH_SHORT).show()
+                            }
+
+                            postList.clear()
+                            postList.addAll(includeFeedPost)
+                        }
+
                         Log.i("FeedList in feed", "${postList}")
                         binding.feedRecyclerView.adapter!!.notifyDataSetChanged()
                     }
@@ -80,9 +88,11 @@ class FeedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (postList.isEmpty()){
-        genListPosts()}
+        if (postList.isEmpty()) {
+            genListPosts()
+        }
     }
+
     private fun setUpPostRecycler() {
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)

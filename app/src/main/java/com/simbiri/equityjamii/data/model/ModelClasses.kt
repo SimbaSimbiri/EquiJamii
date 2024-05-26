@@ -133,8 +133,8 @@ data class Social(
 }
 
 data class Network(
-    val followingList: MutableList<String>,
-    val followerList: MutableList<String>,
+    val followingList: MutableList<String>?,
+    val followerList: MutableList<String>?,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.createStringArrayList()!!.toMutableList(),
@@ -165,7 +165,7 @@ data class Network(
 }
 
 data class Person(
-    val userId: String,
+    var userId: String,
     val name: String,
     val designation: String,
     val branch: String,
@@ -174,8 +174,9 @@ data class Person(
     val city: String,
     val country: String,
     val social: Social,
-    val network: Network,
-    val verified: Boolean
+    val leader: Boolean,
+    val network: Network = Network(mutableListOf(), mutableListOf()),
+    val verified: Boolean,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -187,6 +188,7 @@ data class Person(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readParcelable(Social::class.java.classLoader) ?: Social("", "", "", "", "", ""),
+        parcel.readByte() != 0.toByte(),
         parcel.readParcelable(Network::class.java.classLoader) ?: Network(
             mutableListOf(),
             mutableListOf()
@@ -204,15 +206,15 @@ data class Person(
         "",
         "",
         "",
-        Social("", "", "", "", "", ""),
+        Social("", "", "", "", "", ""),false,
         Network(mutableListOf(), mutableListOf()), false
     )
 
-    fun narrowDownUsers(existingIds: MutableList<String>): List<Person> {
+    fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
 
         var narrowedUsers: MutableList<Person> = mutableListOf()
 
-        if (existingIds.isNotEmpty()) {
+        if (!existingIds.isNullOrEmpty()) {
 
             val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
             collection.get().addOnSuccessListener { result ->
@@ -227,16 +229,16 @@ data class Person(
         return narrowedUsers.toList()
     }
 
-    fun following(followingList: MutableList<String>): List<Person> {
+    fun following(followingList: MutableList<String>?): List<Person> {
 
         return narrowDownUsers(followingList)
     }
 
-    fun followers(followerList: MutableList<String>): List<Person> {
+    fun followers(followerList: MutableList<String>?): List<Person> {
         return narrowDownUsers(followerList)
     }
 
-    fun followingFollowers(followingList: MutableList<String>): List<Person> {
+    fun followingFollowers(followingList: MutableList<String>?): List<Person> {
         var followerFollowingList: MutableList<Person> = mutableListOf()
         val followingUsers = narrowDownUsers(followingList)
 
@@ -259,6 +261,7 @@ data class Person(
         parcel.writeString(city)
         parcel.writeString(country)
         parcel.writeParcelable(social, flags)
+        parcel.writeByte(if (leader) 1 else 0)
         parcel.writeParcelable(network, flags)
         parcel.writeByte(if (verified) 1 else 0)
 

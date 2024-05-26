@@ -163,7 +163,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
 
             Glide.with(context).load(imagePosted)
                 .apply(RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5))
-                .centerCrop().into(this.imagePosted)
+                .fitCenter().into(this.imagePosted)
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
             if (liked) {

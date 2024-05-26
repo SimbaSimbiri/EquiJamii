@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.cardview.widget.CardView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,6 +19,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SchedulingDataAdapter
 import com.simbiri.equityjamii.adapters.TaskDataAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.AvailableSlots
 
 
@@ -78,6 +80,17 @@ class myWorkspace : Fragment(){
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+
+        AuthUtils.getCurrentPerson { currentPerson ->
+            if (currentPerson == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Set up profile to access EquiJamii features",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         addTask.setOnClickListener {
             val bottomFragmentAddtask =  AddTaskDialogFragment()
