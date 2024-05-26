@@ -152,6 +152,10 @@ class ProfDisplayFragment : Fragment() {
                                     myProf.social.xAcc
                                 )
 
+                                if (myProf.verified){
+                                    binding.verifiedPersonelImage.visibility = View.VISIBLE
+                                }
+
                                 listsSocials.shuffle()
                                 setRecyclerViewSocials()
                                 currentPerson = myProf

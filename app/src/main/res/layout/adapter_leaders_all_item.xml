@@ -2,22 +2,21 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:id="@+id/cardViewPerson"
+    android:layout_width="match_parent"
+    android:id="@+id/cardViewLeader"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="5dp"
-    android:layout_marginTop="7dp"
-    android:layout_marginBottom="7dp"
+    android:layout_marginBottom="10dp"
     app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lighterMaroon">
+        android:background="@color/lighterMaroon"
+        >
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/imageViewLeadersBackground"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,17 +27,19 @@
             />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
+            android:id="@+id/materialCardViewLeaders"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="-20dp"
+            android:layout_marginTop="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="15dp"
             android:backgroundTint="@color/white"
             android:padding="10dp"
             app:cardCornerRadius="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="20dp"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageView4"
+            app:layout_constraintTop_toBottomOf="@id/imageViewLeadersBackground"
             app:layout_constraintVertical_bias="0.315">
 
             <com.google.android.material.card.MaterialCardView
@@ -57,7 +58,7 @@
                 app:layout_constraintVertical_bias="0.315">
 
                 <ImageView
-                    android:id="@+id/profileOnPeople"
+                    android:id="@+id/profileOnLeaders"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -69,19 +70,18 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/nameOnPeople"
-            android:layout_width="wrap_content"
+            android:id="@+id/nameOnLeaders"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:layout_marginTop="5dp"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_marginHorizontal="5dp"
             app:emojiCompatEnabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center_horizontal|bottom"
-            app:layout_constraintBottom_toTopOf="@id/designationOnPeople"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+            android:gravity="start|center_vertical"
+            app:layout_constraintStart_toEndOf="@id/materialCardViewLeaders"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewLeadersBackground"
             app:layout_constraintVertical_bias="0.236" />
 
         <ImageView
@@ -89,31 +89,31 @@
             android:layout_width="15dp"
             android:layout_marginHorizontal="2dp"
             android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@id/nameOnPeople"
             android:foregroundGravity="center_vertical"
             android:src="@drawable/badge_check_svgrepo_com"
-            app:layout_constraintTop_toTopOf="@id/nameOnPeople"
-            app:layout_constraintBottom_toBottomOf="@id/nameOnPeople"
+            app:layout_constraintStart_toEndOf="@id/nameOnLeaders"
+            app:layout_constraintTop_toTopOf="@id/nameOnLeaders"
+            app:layout_constraintBottom_toBottomOf="@id/nameOnLeaders"
             android:layout_height="0dp"/>
 
 
         <TextView
-            android:id="@+id/designationOnPeople"
-            android:layout_width="match_parent"
+            android:id="@+id/designationOnLeaders"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textSize="11sp"
             app:emojiCompatEnabled="false"
             android:layout_marginTop="0dp"
             android:textColor="@color/white"
-            android:gravity="center|top"
-            android:layout_marginBottom="9dp"
+            android:gravity="start|top"
+            android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameOnPeople"
+            app:layout_constraintStart_toEndOf="@id/materialCardViewLeaders"
+            app:layout_constraintTop_toBottomOf="@+id/nameOnLeaders"
             app:layout_constraintVertical_bias="0.0" />
 
 

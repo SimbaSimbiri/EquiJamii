@@ -35,7 +35,6 @@ class FeedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        genListPosts()
     }
 
     override fun onCreateView(
@@ -65,7 +64,8 @@ class FeedFragment : Fragment() {
 
                         val includeFeedPost =
                             posts.filter { post ->
-                                currentPerson.network.followingList.contains(post.userId)
+                                currentPerson.network.followingList.contains(post.userId) ||
+                                        currentPerson.userId.contentEquals(post.userId)
                             }.toMutableList()
 
                         postList.clear()
@@ -78,10 +78,11 @@ class FeedFragment : Fragment() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onResume() {
+        super.onResume()
+        if (postList.isEmpty()){
+        genListPosts()}
     }
-
     private fun setUpPostRecycler() {
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)

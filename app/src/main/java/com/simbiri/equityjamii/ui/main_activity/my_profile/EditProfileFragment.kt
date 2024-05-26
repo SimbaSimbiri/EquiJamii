@@ -331,6 +331,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             "followingList" to person.network.followingList,
             "followerList" to person.network.followerList
         )
+        mapToFirestore["verified"] = person.verified
 
 
         firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).set(mapToFirestore)
@@ -433,49 +434,6 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
 
     }
-
-
-    /*private fun requestStoragePermission() {
-        requestPermissions(storagePerms!!, 200)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == 200) {
-            if (grantResults.isNotEmpty()) {
-                val writeStorageIsAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (writeStorageIsAccepted) {
-                    *//*if (clickedProfile) {
-                        openLastPicker.launch(cropProfileContractOptions)
-                    } else if (clickedBackG) {
-                        openLastPicker.launch(cropBackGContractOptions)
-                    }*//*
-                    openLastPicker.launch(cropBackGContractOptions)
-                }
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Please enable access to Gallery",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-        }
-    }
-
-
-    private fun checkStoragePermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-*/
 
     override fun onDestroy() {
         super.onDestroy()

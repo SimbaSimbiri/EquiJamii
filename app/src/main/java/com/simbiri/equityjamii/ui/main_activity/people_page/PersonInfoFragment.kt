@@ -117,6 +117,9 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 .into(binding!!.detailBackImageV)
                 .onLoadFailed(requireContext().getDrawable(R.drawable.equityjamiibackground))
 
+            if (personParceled.verified){
+                binding!!.verifiedPersonelImage.visibility = View.VISIBLE
+            }
         }
 
 

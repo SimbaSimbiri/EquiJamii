@@ -10,9 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -31,11 +29,6 @@ class DiscoverFragment : Fragment() {
     val queryReference = firestore.collection("Post_Gallery")
     private val postList: MutableList<Post> = mutableListOf()
     private lateinit var binding: DiscoverTabBinding
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        genListPosts()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +57,8 @@ class DiscoverFragment : Fragment() {
                         val includeFeedPost =
                             posts.filter { post ->
                                 !currentPerson!!.network.followingList.contains(post.userId)
-                            }.toMutableList()
+                            }.filter { post -> !post.userId.contentEquals(currentPerson!!.userId) }
+                                .toMutableList()
 
                         postList.clear()
                         postList.addAll(includeFeedPost)
@@ -73,6 +67,12 @@ class DiscoverFragment : Fragment() {
                     }
                 }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (postList.isEmpty()){
+            genListPosts()}
     }
 
 

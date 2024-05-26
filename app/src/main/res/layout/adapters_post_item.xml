@@ -36,6 +36,19 @@
             app:layout_constraintStart_toEndOf="@id/imageUserPost"
             app:layout_constraintTop_toTopOf="@id/imageUserPost" />
 
+        <ImageView
+            android:id="@+id/verifiedPersonelImage"
+            android:layout_width="15dp"
+            android:layout_marginHorizontal="2dp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/textNamePost"
+            android:foregroundGravity="center_vertical"
+            android:src="@drawable/badge_check_svgrepo_com"
+            app:layout_constraintTop_toTopOf="@id/textNamePost"
+            app:layout_constraintBottom_toBottomOf="@id/textNamePost"
+            android:layout_height="0dp"/>
+
+
         <TextView
             android:id="@+id/textDatePost"
             android:layout_width="wrap_content"
@@ -63,7 +76,7 @@
             android:layout_marginStart="7dp"
             android:layout_marginEnd="7dp"
             android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="sans-serif"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

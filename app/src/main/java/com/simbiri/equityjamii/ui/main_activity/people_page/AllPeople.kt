@@ -1,12 +1,12 @@
 package com.simbiri.equityjamii.ui.main_activity.people_page
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -31,16 +31,9 @@ class AllPeople : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
     private val query = firestore.collection("Users")
     private lateinit var listenerRegistration: ListenerRegistration
-    private  lateinit var binding : PeoplePageAllPeopleBinding
+    private lateinit var binding: PeoplePageAllPeopleBinding
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        peopleListFireStore()
-        listenerRegisterForUsers()
-
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,12 +44,6 @@ class AllPeople : Fragment() {
         searchList = mutableListOf()
         setUpRecyclers()
 
-        if (firebaseAuth.currentUser != null) {
-            peopleListFireStore()
-        }
-
-        listenerRegisterForUsers()
-
         return view
     }
 
@@ -66,8 +53,9 @@ class AllPeople : Fragment() {
             for (doc in snapShots!!.documentChanges) {
                 if (doc.type == DocumentChange.Type.ADDED) {
                     val newPerson = doc.document.toObject(Person::class.java)
-                    if (!newPerson.userId.contentEquals(AuthUtils.getCurrentUserId()!!)){
-                    searchList.add(newPerson)}
+                    if (!newPerson.userId.contentEquals(AuthUtils.getCurrentUserId()!!)) {
+                        searchList.add(newPerson)
+                    }
                     binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
 
                 }
@@ -76,15 +64,29 @@ class AllPeople : Fragment() {
         }
     }
 
-    private fun peopleListFireStore() {
-        query.get().addOnCompleteListener { it ->
-            if (it.isSuccessful) {
-                searchList = it.result.toObjects(Person::class.java).filter{person -> person.userId.contentEquals(
-                    AuthUtils.getCurrentUserId()!!) }
-                    .toMutableList()
+    override fun onResume() {
+        super.onResume()
+        if (searchList.isEmpty()){
+            peopleListFireStore()
+        }
+    }
 
-                binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
+
+    private fun peopleListFireStore() {
+        AuthUtils.getCurrentPerson { currPerson ->
+
+            query.get().addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    val allPeople = it.result.toObjects(Person::class.java)
+                    val addedPeople =
+                        allPeople.filter { person -> !person.userId.contentEquals(currPerson!!.userId) }
+
+                    searchList.addAll(addedPeople)
+
+                    binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
+                }
             }
+
         }
 
     }
@@ -102,8 +104,6 @@ class AllPeople : Fragment() {
 
     override fun onStop() {
         super.onStop()
-
-        listenerRegistration.remove()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -32,6 +30,7 @@ class MyPostsFragment : Fragment() {
     val queryReference = firestore.collection("Post_Gallery")
     private var postList: MutableList<Post> = mutableListOf()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,12 +39,11 @@ class MyPostsFragment : Fragment() {
         binding = MyPostsTabBinding.inflate(layoutInflater)
         val view = binding.root
 
-        listMyPostsFirestore()
-
         myActivityAdapter = PostAdapter(requireContext(), postList)
         binding.myPostsRecyclerView.adapter = myActivityAdapter
 
         setUpPostRecycler()
+
         return view
     }
 
@@ -59,22 +57,31 @@ class MyPostsFragment : Fragment() {
     }
 
     fun listMyPostsFirestore() {
-        queryReference.orderBy("time", Query.Direction.DESCENDING)
-            .get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val posts = it.result.toObjects(Post::class.java)
-                    postList.clear()
-                    postList.addAll(posts.filter { p -> p.userId.contentEquals(AuthUtils.getCurrentUserId()!!) })
+        AuthUtils.getCurrentPerson { currentPerson ->
 
-                    Log.i("Feed in myposts", "${postList}")
-                    binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
+            queryReference.orderBy("time", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val posts = it.result.toObjects(Post::class.java)
+                        postList.clear()
+                        val includedPosts = posts.filter { p -> p.userId.contentEquals(currentPerson!!.userId) }
+                            .toMutableList()
+                        postList.addAll(includedPosts)
 
+                        Log.i("Feed in myposts", "${postList}")
+                        binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
+
+                    }
                 }
-            }
+        }
+
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onResume() {
+        super.onResume()
+        if (postList.isEmpty()){
+        listMyPostsFirestore()}
+
     }
 
 

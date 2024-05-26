@@ -48,6 +48,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
         var numLikes: TextView = itemView.findViewById(R.id.numLikesText)
         private val MAX_CHAR_COLLAPSED = 90
         private var isExpanded = false
+        private var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
 
         var currentPost: Post? = null
         var person: Person? = null
@@ -169,6 +170,10 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
                 this.thumbsLikePost.setImageResource(R.drawable.liked)
             } else {
                 this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
+            }
+
+            if (person!!.verified){
+                verifiedImage.visibility = View.VISIBLE
             }
 
         }

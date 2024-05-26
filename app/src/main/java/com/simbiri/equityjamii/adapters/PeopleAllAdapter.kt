@@ -34,6 +34,7 @@ class PeopleDataAdapter(var context: Context, var peopleList: List<Person>) :
         private var designationTextView: TextView = itemView.findViewById(R.id.designationOnPeople)
         private var cardViewPerson : CardView = itemView.findViewById(R.id.cardViewPerson)
         private var cardViewMaterial : CardView = itemView.findViewById(R.id.materialCardView)
+        private var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
 
 
         fun setDatatoItem(personInstance: Person, position: Int) {
@@ -46,6 +47,9 @@ class PeopleDataAdapter(var context: Context, var peopleList: List<Person>) :
             Glide.with(itemView)
                 .load(Uri.parse(currentPerson!!.profileUri)).into(profilePicImageView)
 
+            if (personInstance.verified){
+                verifiedImage.visibility = View.VISIBLE
+            }
 
             Glide.with(itemView).load(currentPerson!!.backGUri).into(imageViewBackG)
 
@@ -68,8 +72,8 @@ class PeopleDataAdapter(var context: Context, var peopleList: List<Person>) :
             val screenWidth = displayMetrics.widthPixels
             layoutParamsPerson.width = screenWidth/2 - 60
 
-            layoutParamsInnerCard.width = layoutParamsPerson.width -60
-            layoutParamsInnerCard.height = layoutParamsPerson.width -60
+            layoutParamsInnerCard.width = layoutParamsPerson.width * 4/5
+            layoutParamsInnerCard.height = layoutParamsPerson.width *4/5
 
             layoutParamsImageBackg.height = layoutParamsInnerCard.height/2
 

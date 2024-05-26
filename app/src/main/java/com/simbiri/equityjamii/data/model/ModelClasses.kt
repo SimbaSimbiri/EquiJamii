@@ -138,7 +138,8 @@ data class Network(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.createStringArrayList()!!.toMutableList(),
-        parcel.createStringArrayList()!!.toMutableList()) {
+        parcel.createStringArrayList()!!.toMutableList()
+    ) {
     }
 
     constructor() : this(mutableListOf(), mutableListOf())
@@ -173,7 +174,8 @@ data class Person(
     val city: String,
     val country: String,
     val social: Social,
-    val network: Network
+    val network: Network,
+    val verified: Boolean
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -187,7 +189,9 @@ data class Person(
         parcel.readParcelable(Social::class.java.classLoader) ?: Social("", "", "", "", "", ""),
         parcel.readParcelable(Network::class.java.classLoader) ?: Network(
             mutableListOf(),
-            mutableListOf())
+            mutableListOf()
+        ),
+        parcel.readByte() != 0.toByte(),
     ) {
     }
 
@@ -201,12 +205,12 @@ data class Person(
         "",
         "",
         Social("", "", "", "", "", ""),
-        Network(mutableListOf(), mutableListOf())
+        Network(mutableListOf(), mutableListOf()), false
     )
 
-    fun narrowDownUsers(existingIds : MutableList<String>) : List<Person>{
+    fun narrowDownUsers(existingIds: MutableList<String>): List<Person> {
 
-        var narrowedUsers :MutableList<Person> = mutableListOf()
+        var narrowedUsers: MutableList<Person> = mutableListOf()
 
         if (existingIds.isNotEmpty()) {
 
@@ -223,18 +227,20 @@ data class Person(
         return narrowedUsers.toList()
     }
 
-    fun following(followingList: MutableList<String>) : List<Person>{
+    fun following(followingList: MutableList<String>): List<Person> {
 
         return narrowDownUsers(followingList)
     }
-    fun followers(followerList: MutableList<String>) : List<Person>{
+
+    fun followers(followerList: MutableList<String>): List<Person> {
         return narrowDownUsers(followerList)
     }
-    fun followingFollowers(followingList: MutableList<String>) : List<Person>{
+
+    fun followingFollowers(followingList: MutableList<String>): List<Person> {
         var followerFollowingList: MutableList<Person> = mutableListOf()
         val followingUsers = narrowDownUsers(followingList)
 
-        followingUsers.forEach{user ->
+        followingUsers.forEach { user ->
             val userFollowerList: List<Person> = narrowDownUsers(user.network.followerList)
             followerFollowingList.addAll(userFollowerList)
         }
@@ -254,6 +260,7 @@ data class Person(
         parcel.writeString(country)
         parcel.writeParcelable(social, flags)
         parcel.writeParcelable(network, flags)
+        parcel.writeByte(if (verified) 1 else 0)
 
     }
 
@@ -273,7 +280,7 @@ data class Person(
 
 }
 
-data class TimeSlot(val time : String)
+data class TimeSlot(val time: String)
 
 data class Video(
     val title: String,
