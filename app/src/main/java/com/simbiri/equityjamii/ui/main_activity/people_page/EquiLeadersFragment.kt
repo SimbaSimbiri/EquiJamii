@@ -27,7 +27,6 @@ class EquiLeadersFragment : Fragment() {
     private lateinit var leadersAdapter: LeadersAllAdapter
     private lateinit var viewModel: EquiLeadersViewModel
     private lateinit var searchList: MutableList<Person>
-    private val firebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val query = firestore.collection("Users")
     private lateinit var listenerRegistration: ListenerRegistration
@@ -76,11 +75,6 @@ class EquiLeadersFragment : Fragment() {
                 if (it.isSuccessful) {
                     if (currPerson != null) {
                         val allLeaders = it.result.toObjects(Person::class.java)
-
-                        allLeaders.forEach{person ->
-                            Log.i("One person", "${person.leader}")
-
-                        }
 
                         val includedLeaders = allLeaders.filter { person -> person.leader }
 

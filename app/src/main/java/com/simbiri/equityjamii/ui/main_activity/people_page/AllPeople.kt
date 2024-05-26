@@ -83,6 +83,7 @@ class AllPeople : Fragment() {
                     if (currPerson != null) {
                         val addedPeople =
                             allPeople.filter { person -> !person.userId.contentEquals(currPerson.userId) }
+                                .filter { person -> !person.leader }
 
                         searchList.addAll(addedPeople)
                     }
