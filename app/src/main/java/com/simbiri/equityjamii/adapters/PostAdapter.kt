@@ -141,11 +141,11 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
 
                 when {
                     daysDifference >= 7 -> dateFormat.format(date)
-                    daysDifference == 1.0.toLong() -> "1 day ago"
-                    daysDifference > 1 -> "$daysDifference days ago"
-                    timeDifference >= 60 * 60 * 1000 -> "${timeDifference / (60 * 60 * 1000)} hours ago"
-                    timeDifference >= 60 * 1000 -> "${timeDifference / (60 * 1000)} minutes ago"
-                    else -> "Just now"
+                    daysDifference == 1.0.toLong() -> "1d ago"
+                    daysDifference > 1 -> "$daysDifference" + "d ago"
+                    timeDifference >= 60 * 60 * 1000 -> "${timeDifference / (60 * 60 * 1000)} h ago"
+                    timeDifference >= 60 * 1000 -> "${timeDifference / (60 * 1000)}m ago"
+                    else -> "just now"
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
