@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -26,7 +27,10 @@ import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
+import com.simbiri.equityjamii.data.model.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.DialogPeopleDetailBinding
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class PersonInfoFragment : BottomSheetDialogFragment() {
 
@@ -43,6 +47,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private lateinit var otherSimilarProfilesAdapter: OtherProfilesAdapter
     private var isCurrentPersonDetails: Boolean = false
     private lateinit var viewModel: PersonInfoViewModel
     private var _binding: DialogPeopleDetailBinding? = null
@@ -85,7 +90,9 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
             }
 
         }
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +105,6 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         adjustSize()
 
         personParceled.let {
-            visibilityViews(it.city, it.country, it.social)
 
             binding!!.nameOnPeople.text = it.name
             binding!!.designationOnPeople.text = it.designation + " at " + it.branch
@@ -146,28 +152,8 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         setRecyclerViewSocials()
         setRecyclerViewProfiles()
-        narrowDownUsers(personParceled.network.followingList)
 
         return view
-    }
-
-    fun narrowDownUsers(existingIds: MutableList<String>?) {
-
-        val collection = firestore.collection(USERS_COLLECTION)
-        collection.get().addOnSuccessListener { result ->
-            result.forEach { doc ->
-                val userResult = doc.toObject(Person::class.java)
-
-                if (existingIds!!.contains(userResult.userId)) {
-                    if (!personParceled.userId.contentEquals(userResult.userId)) {
-                        otherPeopleProfilesList.add(userResult)
-                    }
-                }
-
-            }
-            binding!!.recyclerOtherProfiles.adapter!!.notifyDataSetChanged()
-        }
-
     }
 
 
@@ -233,10 +219,11 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun visibilityViews(city: String, country: String, social: Social) {
+    private fun visibilityViews(city: String = personParceled.city, country: String = personParceled.country, social: Social = personParceled.social) {
         val socialEmpty =
             social.linkedin.isEmpty() && social.insta.isEmpty() && social.webs.isEmpty()
                     && social.faceb.isEmpty()
+        val similarProfilesEmpty = otherPeopleProfilesList.isEmpty()
 
         binding!!.let {
             when {
@@ -247,6 +234,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 socialEmpty -> it.socialTextHead.visibility = View.GONE
                 social.about.isEmpty() -> it.aboutTextHead.visibility = View.GONE
                 social.about.isEmpty() -> it.aboutCardInfo.visibility = View.GONE
+                similarProfilesEmpty -> it.similarProfTextHead.visibility = View.INVISIBLE
             }
         }
 
@@ -269,7 +257,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     private fun setRecyclerViewProfiles() {
 
         val context = requireContext()
-        val otherSimilarProfilesAdapter = OtherProfilesAdapter(
+        otherSimilarProfilesAdapter = OtherProfilesAdapter(
             context,
             otherPeopleProfilesList
         )
@@ -337,6 +325,13 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lifecycleScope.launch {
+            val followingList = personParceled.network.followerList
+            otherPeopleProfilesList.clear()
+            otherPeopleProfilesList.addAll(UserNetworkUtils.following(followingList).toMutableList())
+            visibilityViews()
+            otherSimilarProfilesAdapter.notifyDataSetChanged()
+        }
 
     }
 

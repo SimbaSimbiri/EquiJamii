@@ -16,7 +16,7 @@ import com.simbiri.equityjamii.data.model.Video
 import com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube.YouTubeDialogFrag
 
 
-class LiveVideoAdapter(val context: Context, val listVids: ArrayList<Video>) :
+class LiveVideoAdapter(val context: Context, val listVids: List<Video>) :
     RecyclerView.Adapter<LiveVideoAdapter.LiveVideoViewHolder>() {
 
     inner class LiveVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),

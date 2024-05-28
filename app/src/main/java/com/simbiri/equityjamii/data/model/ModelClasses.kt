@@ -316,3 +316,10 @@ data class Video(
     }
 }
 
+data class YouTubeResponse(val items: List<YouTubeItem>)
+data class YouTubeItem(val id: YouTubeVideoId, val snippet: YouTubeSnippet)
+data class YouTubeVideoId(val videoId: String?)
+data class YouTubeSnippet(val title: String, val thumbnails: YouTubeThumbnails)
+data class YouTubeThumbnails(val high: YouTubeThumbnail)
+data class YouTubeThumbnail(val url: String)
+

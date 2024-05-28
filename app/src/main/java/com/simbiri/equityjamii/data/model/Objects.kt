@@ -1,15 +1,14 @@
 package com.simbiri.equityjamii.data.model
 
 import android.content.Context
-import android.util.Log
-import com.codepath.asynchttpclient.AsyncHttpClient
-import com.codepath.asynchttpclient.RequestParams
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import okhttp3.Headers
+import com.simbiri.equityjamii.services.RetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 object AvailableSlots {
 
@@ -85,6 +84,54 @@ object AuthUtils {
 
 }
 
+object UserNetworkUtils {
+
+    private val ioDispatcher = Dispatchers.IO//BETTER THREAD FOR UPDATING UI
+    suspend fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
+        val narrowedUsers: MutableList<Person> = mutableListOf()
+
+        if (!existingIds.isNullOrEmpty()) {
+            val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+            val taskResult = withContext(ioDispatcher) { collection.get().await() }
+            taskResult.forEach {
+                val userResult = it.toObject(Person::class.java)
+                if (existingIds.contains(userResult.userId)) {
+                    narrowedUsers.add(userResult)
+                }
+            }
+        }
+
+        return narrowedUsers
+    }
+
+    suspend fun following(followingList: MutableList<String>?): List<Person> {
+        return narrowDownUsers(followingList)
+    }
+
+    suspend fun followers(followerList: MutableList<String>?): List<Person> {
+        return narrowDownUsers(followerList)
+    }
+
+    suspend fun followingFollowers(followingList: MutableList<String>?): List<Person> {
+        val followingIDSet: MutableSet<String> = mutableSetOf()
+
+        val followingUsers = narrowDownUsers(followingList)
+
+        followingUsers.forEach { user ->
+            val userFollowerList: List<Person> = narrowDownUsers(user.network.followerList)
+
+            userFollowerList.forEach { person ->
+                if (!person.userId.contentEquals(AuthUtils.getCurrentUserId())) {
+                    followingIDSet.add(person.userId)
+                }
+            }
+        }
+
+        return narrowDownUsers(followingIDSet.toMutableList())
+    }
+}
+
+
 object OfficialNewsTexts {
 
     private val headlineList = arrayOf(
@@ -144,57 +191,44 @@ object YoutubeKeyProvider {
 
 object YouTubeVids {
 
-    fun YoutubeVideos(context: Context, eventType: String): ArrayList<Video> {
+    private val ioDispatcher = Dispatchers.IO
+    suspend fun YoutubeVideos(context: Context, eventType: String): List<Video> {
+        val apiKey = YoutubeKeyProvider.keyProvider(context, 0)
+        val channelId = YoutubeKeyProvider.keyProvider(context, 1)
 
-        val API_KEY = YoutubeKeyProvider.keyProvider(context, 0)
-        val channelD = YoutubeKeyProvider.keyProvider(context, 1)
+        val params = mapOf(
+            "limit" to "20",
+            "eventType" to eventType,
+            "type" to "video",
+            "page" to "1"
+        )
 
-        var videoList: ArrayList<Video> = ArrayList()
+        return withContext(ioDispatcher) {
+            try {
+                val response = RetrofitClient.instance.getYoutubeVideos(
+                    apiKey = apiKey,
+                    channelId = channelId,
+                    part = "snippet,id",
+                    order = "date",
+                    maxResults = 20,
+                    params = params
+                )
 
-        val client = AsyncHttpClient()
-
-        val params = RequestParams()
-        params["limit"] = "20"
-        params["eventType"] = eventType
-        params["type"] = "video"
-        params["page"] = "1"
-
-        client["https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelD}&part=snippet,id&order=date&maxResults=20", params, object :
-            JsonHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
-
-                val items = json.jsonObject.getJSONArray("items")
-
-                for (jsonElementPos in 0 until items.length()) {
-                    val snippet = items.getJSONObject(jsonElementPos).getJSONObject("snippet")
-                    val title = snippet.getString("title")
-                    val videoId = items.getJSONObject(jsonElementPos).optJSONObject("id")
-                        ?.optString("videoId").toString()
-                    val thumbnails = snippet.getJSONObject("thumbnails")
-                    val defaultThumbnail = thumbnails.getJSONObject("high")
-                    val imageUrl = defaultThumbnail.getString("url")
-                    val video = Video(title, imageUrl, videoId)
-
-                    Log.d("videoId$eventType", videoId)
-
-                    videoList.add(video)
+                response.items.mapNotNull {
+                    val videoId = it.id.videoId ?: return@mapNotNull null
+                    val snippet = it.snippet
+                    val title = snippet.title
+                    val imageUrl = snippet.thumbnails.high.url
+                    Video(title, imageUrl, videoId)
                 }
-
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emptyList()
             }
 
-            override fun onFailure(
-                statusCode: Int,
-                headers: Headers?,
-                response: String,
-                throwable: Throwable?
-            ) {
-                Log.d("API FAILURE", response)
-            }
-        }]
-
-        return videoList
-
+        }
     }
+
 
 }
 
