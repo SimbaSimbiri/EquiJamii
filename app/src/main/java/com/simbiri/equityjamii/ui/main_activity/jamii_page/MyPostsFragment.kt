@@ -89,10 +89,18 @@ class MyPostsFragment : Fragment() {
 
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        this@MyPostsFragment.onDestroy()
+    }
     override fun onResume() {
         super.onResume()
         if (postList.isEmpty()) {
             listMyPostsFirestore()
+        }
+        if (binding.myPostsRecyclerView.visibility == View.INVISIBLE){
+            binding.myPostsRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
     }

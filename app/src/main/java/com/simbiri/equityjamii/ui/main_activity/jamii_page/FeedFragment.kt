@@ -91,6 +91,9 @@ class FeedFragment : Fragment() {
         if (postList.isEmpty()) {
             genListPosts()
         }
+        if (binding.feedRecyclerView.visibility == View.INVISIBLE){
+            binding.feedRecyclerView.adapter!!.notifyDataSetChanged()
+        }
     }
 
     private fun setUpPostRecycler() {
@@ -99,6 +102,12 @@ class FeedFragment : Fragment() {
         layoutManager.orientation = RecyclerView.VERTICAL
         binding.feedRecyclerView.layoutManager = layoutManager
 
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        this@FeedFragment.onDestroy()
     }
 
 }

@@ -2,52 +2,44 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/cardViewLeader"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     android:layout_marginHorizontal="5dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lighterMaroon"
-        >
+        android:background="@color/lighterMaroon">
 
         <ImageView
             android:id="@+id/imageViewLeadersBackground"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/equityjamiibackground"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardViewLeaders"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="-50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:padding="10dp"
+            android:layout_marginBottom="-40dp"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewLeadersBackground"
             app:cardCornerRadius="8dp"
-            android:layout_marginHorizontal="20dp"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageViewLeadersBackground"
-            app:layout_constraintVertical_bias="0.315">
+            >
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/white"
                 android:layout_margin="2dp"
+                android:backgroundTint="@color/white"
                 android:padding="10dp"
                 app:cardCornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -61,9 +53,9 @@
                     android:id="@+id/profileOnLeaders"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/white"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/account_box"
-                    android:background="@color/white"/>
+                    android:src="@drawable/account_box" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -71,45 +63,44 @@
 
         <TextView
             android:id="@+id/nameOnLeaders"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginTop="5dp"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginHorizontal="5dp"
             app:emojiCompatEnabled="false"
-            android:gravity="start|center_vertical"
             app:layout_constraintStart_toEndOf="@id/materialCardViewLeaders"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewLeadersBackground"
-            app:layout_constraintVertical_bias="0.236" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewLeadersBackground" />
 
         <ImageView
             android:id="@+id/verifiedPersonelImage"
             android:layout_width="15dp"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="2dp"
-            android:visibility="invisible"
             android:foregroundGravity="center_vertical"
             android:src="@drawable/badge_check_svgrepo_com"
-            app:layout_constraintStart_toEndOf="@id/nameOnLeaders"
-            app:layout_constraintTop_toTopOf="@id/nameOnLeaders"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/nameOnLeaders"
-            android:layout_height="0dp"/>
+            app:layout_constraintStart_toEndOf="@id/nameOnLeaders"
+            app:layout_constraintTop_toTopOf="@id/nameOnLeaders" />
 
 
         <TextView
             android:id="@+id/designationOnLeaders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:fontFamily="sans-serif"
+            android:gravity="start|top"
+            android:textColor="@color/white"
             android:textSize="11sp"
             app:emojiCompatEnabled="false"
-            android:layout_marginTop="0dp"
-            android:textColor="@color/white"
-            android:gravity="start|top"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/materialCardViewLeaders"

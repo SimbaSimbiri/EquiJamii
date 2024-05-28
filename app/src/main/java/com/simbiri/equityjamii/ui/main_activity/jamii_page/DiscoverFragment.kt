@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ class DiscoverFragment : Fragment() {
         adapterPost = PostAdapter(requireContext(), postList)
         binding.discoverRecyclerView.adapter = adapterPost
 
+
         setUpPostRecycler()
 
         return view
@@ -67,6 +69,7 @@ class DiscoverFragment : Fragment() {
 
                         Log.i("FeedList in feed", "${postList}")
                         binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
+
                     }
                 }
         }
@@ -77,6 +80,10 @@ class DiscoverFragment : Fragment() {
         if (postList.isEmpty()) {
             genListPosts()
         }
+        if (binding.discoverRecyclerView.visibility == View.INVISIBLE){
+            binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
+        }
+
     }
 
 
@@ -88,9 +95,9 @@ class DiscoverFragment : Fragment() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-
+    override fun onPause() {
+        super.onPause()
+        this@DiscoverFragment.onDestroy()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

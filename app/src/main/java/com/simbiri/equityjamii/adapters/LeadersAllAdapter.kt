@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
@@ -65,19 +67,43 @@ class LeadersAllAdapter(var context: Context, var leadersList: List<Person>) :
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-            val screenWidth = displayMetrics.widthPixels
-            layoutParamsLeader.width = screenWidth - 120
+            layoutParamsLeader.width = cardViewLeader.layoutParams.width
             layoutParamsLeader.height = displayMetrics.heightPixels/4
 
-            layoutParamsInnerCard.width = (layoutParamsLeader.width/ 3.5).toInt()
-            layoutParamsInnerCard.height = (layoutParamsLeader.width/ 3.5).toInt()
+            layoutParamsInnerCard.width = (layoutParamsLeader.height/ 2)
+            layoutParamsInnerCard.height = (layoutParamsLeader.height/ 2)
 
             layoutParamsImageBackg.height = layoutParamsLeader.height * 3/5
-            layoutParamsImageBackg.width = screenWidth - 120
+            layoutParamsImageBackg.width = cardViewLeader.layoutParams.width
 
             cardViewLeader.layoutParams = layoutParamsLeader
             cardViewMaterial.layoutParams = layoutParamsInnerCard
             imageViewBackG.layoutParams = layoutParamsImageBackg
+
+            val constraintLayout = cardViewMaterial.parent as ConstraintLayout
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintLayout)
+
+            constraintSet.connect(
+                /* startID = */ R.id.materialCardViewLeaders,
+                /* startSide = */ ConstraintSet.BOTTOM,
+                /* endID = */ R.id.imageViewLeadersBackground,
+                /* endSide = */ ConstraintSet.BOTTOM
+            )
+            constraintSet.setMargin(/* viewId = */ R.id.materialCardViewLeaders,
+                /* anchor = */ ConstraintSet.BOTTOM,
+                /* value = */-layoutParamsInnerCard.height / 2)
+
+            val offset = (layoutParamsInnerCard.width / 10)
+            constraintSet.connect(
+                R.id.materialCardViewLeaders,
+                ConstraintSet.START,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.START,
+                offset
+            )
+
+            constraintSet.applyTo(constraintLayout)
         }
 
         fun setOnClickListeners() {

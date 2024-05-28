@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
+        android:theme="@style/FirebaseUI.TopProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/karbBackgrndtint"
         app:layout_constraintStart_toStartOf="parent"

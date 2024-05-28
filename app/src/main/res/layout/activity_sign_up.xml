@@ -21,14 +21,15 @@
 
 
             <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@color/karbBackgrndtint"
+                android:theme="@style/FirebaseUI.TopProgressBar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageBackGround"
@@ -73,9 +74,9 @@
                     style="@style/LoginTextInputInnerFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHighlight="@color/lighterMaroon"
                     android:hint="Type your Email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -98,9 +99,9 @@
                     style="@style/LoginTextInputInnerFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHighlight="@color/lighterMaroon"
                     android:hint="Type Your Password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -123,9 +124,9 @@
                     style="@style/LoginTextInputInnerFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHighlight="@color/lighterMaroon"
                     android:hint="Retype Your Password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton

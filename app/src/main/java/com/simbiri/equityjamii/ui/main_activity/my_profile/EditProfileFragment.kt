@@ -402,6 +402,10 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.profile_page_display)
         dialog.setCanceledOnTouchOutside(true)
+        val displayMetrics = DisplayMetrics()
+        val windowManager =
+            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
@@ -411,8 +415,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-                behavior.peekHeight = 1000
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
 
             }
         }

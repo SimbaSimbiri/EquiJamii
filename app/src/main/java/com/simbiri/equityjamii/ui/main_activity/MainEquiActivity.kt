@@ -22,8 +22,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
-class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/,
-    DrawerLayout.DrawerListener {
+class MainEquiActivity : AppCompatActivity(){
 
     private lateinit var fabWorkspace: FloatingActionButton
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -32,7 +31,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
     var firebaseAuth = FirebaseAuth.getInstance()
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navDrawer: NavigationView
-    private lateinit var drawerLayoutMain: DrawerLayout
     private lateinit var navControllerMain: NavController
     private lateinit var coordLayMain: CoordinatorLayout
 
@@ -46,12 +44,13 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
 
 
+
         if (firebaseAuth.currentUser == null) {
             val intent = Intent(this, SignInActivity::class.java)
             Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG)
                 .show()
             startActivity(intent)
-        }else{
+        } else {
 
             AuthUtils.getCurrentPerson { currentPerson ->
                 if (currentPerson == null) {
@@ -66,16 +65,10 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         }
 
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
-        drawerLayoutMain = findViewById(R.id.drawerLayout)
-        navDrawer = findViewById(R.id.navigationView)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
         fabWorkspace = findViewById(R.id.workspaceFab)
 
         bottomNavigationView.background = null
-
-
-
-        navDrawer.bringToFront()
 
         val navHostFrag =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -84,14 +77,10 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
         bottomNavigationView.setupWithNavController(navControllerMain)
 
 
-        drawerLayoutMain.addDrawerListener(this)
 
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
-                if (drawerLayoutMain.isDrawerOpen(GravityCompat.START)) {
-                    slideDrawerIn()
-                } else if (navControllerMain.currentDestination!!.id == R.id.newsFrag) {
+                if (navControllerMain.currentDestination!!.id == R.id.newsFrag) {
                     finish()
                 } else
                     navControllerMain.navigateUp()
@@ -106,28 +95,6 @@ class MainEquiActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemS
 
 
     }
-
-
-    fun slideDrawerIn() {
-        drawerLayoutMain.closeDrawer(GravityCompat.START)
-    }
-
-
-    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-
-        //coordLayMain.translationX = slideOffset * drawerLayoutMain.width/1.3f
-
-    }
-
-    override fun onDrawerOpened(drawerView: View) {
-    }
-
-    override fun onDrawerClosed(drawerView: View) {
-    }
-
-    override fun onDrawerStateChanged(newState: Int) {
-    }
-
 
 }
 

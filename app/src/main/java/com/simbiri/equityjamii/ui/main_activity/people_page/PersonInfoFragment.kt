@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -47,12 +48,15 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     private var _binding: DialogPeopleDetailBinding? = null
     private val binding get() = _binding
     private lateinit var listsSocials: ArrayList<String>
+    private var otherPeopleProfilesList: MutableList<Person> = mutableListOf()
     private lateinit var personParceled: Person
     private lateinit var currPerson: Person
+    private val firestore = FirebaseFirestore.getInstance()
     private var isAlreadyFollowed: Boolean? = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
         personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
 
         AuthUtils.getCurrentPerson { person ->
@@ -65,7 +69,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
                 if (isAlreadyFollowed == true) {
                     binding!!.tufuataneImageView.setImageResource(R.drawable.following_icon)
-                }else{
+                } else {
                     binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
                 }
 
@@ -79,6 +83,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+
         }
     }
 
@@ -117,9 +122,10 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 .into(binding!!.detailBackImageV)
                 .onLoadFailed(requireContext().getDrawable(R.drawable.equityjamiibackground))
 
-            if (personParceled.verified){
+            if (personParceled.verified) {
                 binding!!.verifiedPersonelImage.visibility = View.VISIBLE
             }
+
         }
 
 
@@ -139,9 +145,31 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         }
 
         setRecyclerViewSocials()
+        setRecyclerViewProfiles()
+        narrowDownUsers(personParceled.network.followingList)
 
         return view
     }
+
+    fun narrowDownUsers(existingIds: MutableList<String>?) {
+
+        val collection = firestore.collection(USERS_COLLECTION)
+        collection.get().addOnSuccessListener { result ->
+            result.forEach { doc ->
+                val userResult = doc.toObject(Person::class.java)
+
+                if (existingIds!!.contains(userResult.userId)) {
+                    if (!personParceled.userId.contentEquals(userResult.userId)) {
+                        otherPeopleProfilesList.add(userResult)
+                    }
+                }
+
+            }
+            binding!!.recyclerOtherProfiles.adapter!!.notifyDataSetChanged()
+        }
+
+    }
+
 
     private fun unfollowCurrentPerson(userId: String) {
         val userCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
@@ -238,6 +266,23 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
     }
 
+    private fun setRecyclerViewProfiles() {
+
+        val context = requireContext()
+        val otherSimilarProfilesAdapter = OtherProfilesAdapter(
+            context,
+            otherPeopleProfilesList
+        )
+
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        binding!!.recyclerOtherProfiles.adapter = otherSimilarProfilesAdapter
+        binding!!.recyclerOtherProfiles.layoutManager = layoutManager
+        binding!!.recyclerOtherProfiles.hasFixedSize()
+
+    }
+
     private fun adjustSize() {
 
 
@@ -250,8 +295,8 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val screenWidth = displayMetrics.widthPixels
-        layoutParamsProfileCardOut.width = screenWidth / 5 + 80
-        layoutParamsProfileCardOut.height = screenWidth / 5 + 80
+        layoutParamsProfileCardOut.width = screenWidth / 4 + 80
+        layoutParamsProfileCardOut.height = screenWidth / 4 + 80
 
         layoutParamsBackG.height = screenWidth / 4 + 100
         layoutParamsBackG.width = screenWidth
@@ -267,6 +312,12 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         dialog.setContentView(R.layout.dialog_people_detail)
         dialog.setCanceledOnTouchOutside(true)
 
+        val displayMetrics = DisplayMetrics()
+        val windowManager =
+            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
             val bottomSheet =
@@ -275,7 +326,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-                behavior.peekHeight = 1000
+                behavior.peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
 
             }
         }

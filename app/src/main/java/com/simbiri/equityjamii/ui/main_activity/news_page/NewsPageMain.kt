@@ -32,10 +32,6 @@ class newsFragment : Fragment() {
     }
 
     private lateinit var viewModel: NewsViewModel
-
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appBarLayout: AppBarLayout
-    private lateinit var toolbar: MaterialToolbar
     private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
     private lateinit var tabLayout: TabLayout
@@ -48,23 +44,7 @@ class newsFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.news_page, container, false)
 
-        appBarLayout = view.findViewById(R.id.appBarNews)
-        collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
-
-        toolbar = collapsingToolbarLayout.findViewById(R.id.topAppBarNews)
         tabLayout = view.findViewById(R.id.tabLayout)
-
-        val drawerLayout =
-            requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout) //for you to instantiate  a drawer layout you have to use the activity's context since
-
-
-        val toggle = ActionBarDrawerToggle(
-            requireActivity(), drawerLayout, toolbar,
-            R.string.openDrawer,
-            R.string.closeDrawer
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
 
 
         viewPager2 = view.findViewById(R.id.viewPagerNews)

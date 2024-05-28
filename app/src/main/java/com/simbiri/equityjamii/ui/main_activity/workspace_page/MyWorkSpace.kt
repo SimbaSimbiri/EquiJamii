@@ -39,9 +39,6 @@ class myWorkspace : Fragment(){
 
     private lateinit var viewModel: WorkspaceViewModel
 
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appBarLayout: AppBarLayout
-    private lateinit var toolbar: MaterialToolbar
     private lateinit var addTask: Button
     lateinit var branchRecyclerView: RecyclerView
     lateinit var personalRecyclerView: RecyclerView
@@ -59,27 +56,12 @@ class myWorkspace : Fragment(){
 
         val view = inflater.inflate(R.layout.my_workspace_page, container, false)
 
-        appBarLayout = view.findViewById(R.id.appBarLayout)
-        collapsingToolbarLayout = appBarLayout.findViewById(R.id.collapsingToolbar)
-        toolbar = view.findViewById(R.id.topAppBar)
         cardViewBranch =view.findViewById(R.id.cardViewBranchTask)
         cardViewPersonal =view.findViewById(R.id.cardViewPersonalTask)
         addTask = view.findViewById(R.id.addTaskButton)
         branchRecyclerView = view.findViewById(R.id.recyclerViewBranchTask)
         personalRecyclerView = view.findViewById(R.id.recyclerViewPersonalTask)
         availableTimeSlotsRecycler =  view.findViewById(R.id.timeSlotsRecycler)
-
-
-        val drawerLayout =
-            requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout) //for you to instantiate  a drawer layout you have to use the activity's context since
-
-        val toggle = ActionBarDrawerToggle(
-            requireActivity(), drawerLayout, toolbar,
-            R.string.openDrawer,
-            R.string.closeDrawer
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
 
 
         AuthUtils.getCurrentPerson { currentPerson ->

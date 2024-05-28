@@ -87,6 +87,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <TextView
                     android:id="@+id/nameOnPeople"
                     android:layout_width="wrap_content"
@@ -105,22 +106,21 @@
                 <ImageView
                     android:id="@+id/verifiedPersonelImage"
                     android:layout_width="20dp"
+                    android:layout_height="0dp"
                     android:layout_marginHorizontal="3dp"
-                    android:visibility="invisible"
                     android:foregroundGravity="center_vertical"
                     android:src="@drawable/badge_check_maroon"
-                    app:layout_constraintStart_toEndOf="@id/nameOnPeople"
-                    app:layout_constraintTop_toTopOf="@id/nameOnPeople"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@id/nameOnPeople"
-                    android:layout_height="0dp"/>
-
+                    app:layout_constraintStart_toEndOf="@id/nameOnPeople"
+                    app:layout_constraintTop_toTopOf="@id/nameOnPeople" />
 
 
                 <TextView
                     android:id="@+id/designationOnPeople"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginHorizontal="30dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="5dp"
@@ -141,8 +141,8 @@
                     android:id="@+id/cardTufuatane"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="-55dp"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintEnd_toEndOf="@id/materialCardView"
                     app:layout_constraintStart_toStartOf="@id/materialCardView"
                     app:layout_constraintTop_toBottomOf="@id/designationOnPeople">
@@ -308,11 +308,34 @@
                     app:layout_constraintTop_toBottomOf="@id/socialTextHead"
                     tools:listitem="@layout/adapters_social_item" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"
+
+                <TextView
+                    android:id="@+id/similarProfTextHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Similar profiles"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/recyclerSocials" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerOtherProfiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="20dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/similarProfTextHead"
+                    tools:listitem="@layout/adapter_similar_profiles_item" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -117,6 +118,7 @@ class JamiiPageFragment : Fragment() {
         override fun getItemCount(): Int {
             return 3
         }
+
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
