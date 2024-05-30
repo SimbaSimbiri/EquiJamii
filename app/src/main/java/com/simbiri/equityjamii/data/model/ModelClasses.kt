@@ -210,47 +210,6 @@ data class Person(
         Network(mutableListOf(), mutableListOf()), false
     )
 
-    fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
-
-        var narrowedUsers: MutableList<Person> = mutableListOf()
-
-        if (!existingIds.isNullOrEmpty()) {
-
-            val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
-            collection.get().addOnSuccessListener { result ->
-                result.forEach { doc ->
-                    val userResult = doc.toObject(Person::class.java)
-                    if (existingIds.contains(userResult.userId)) {
-                        narrowedUsers.add(userResult)
-                    }
-                }
-            }
-        }
-        return narrowedUsers.toList()
-    }
-
-    fun following(followingList: MutableList<String>?): List<Person> {
-
-        return narrowDownUsers(followingList)
-    }
-
-    fun followers(followerList: MutableList<String>?): List<Person> {
-        return narrowDownUsers(followerList)
-    }
-
-    fun followingFollowers(followingList: MutableList<String>?): List<Person> {
-        var followerFollowingList: MutableList<Person> = mutableListOf()
-        val followingUsers = narrowDownUsers(followingList)
-
-        followingUsers.forEach { user ->
-            val userFollowerList: List<Person> = narrowDownUsers(user.network.followerList)
-            followerFollowingList.addAll(userFollowerList)
-        }
-
-        return followerFollowingList
-    }
-
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userId)
         parcel.writeString(name)

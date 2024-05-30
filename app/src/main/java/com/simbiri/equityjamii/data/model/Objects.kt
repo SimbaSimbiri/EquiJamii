@@ -30,8 +30,7 @@ object AvailableSlots {
     )
     var timeSlotToday: ArrayList<TimeSlot>? = null
         get() {
-            if (field != null)
-                return field
+            if (field != null) return field
             field = ArrayList()
 
             for (timeslot in availableTimeList) {
@@ -86,6 +85,13 @@ object AuthUtils {
 
 object UserNetworkUtils {
 
+    private var personalID: String? = null
+
+    init {
+        personalID = AuthUtils.getCurrentUserId()
+    }
+
+
     private val ioDispatcher = Dispatchers.IO//BETTER THREAD FOR UPDATING UI
     suspend fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
         val narrowedUsers: MutableList<Person> = mutableListOf()
@@ -118,16 +124,42 @@ object UserNetworkUtils {
         val followingUsers = narrowDownUsers(followingList)
 
         followingUsers.forEach { user ->
-            val userFollowerList: List<Person> = narrowDownUsers(user.network.followerList)
+            val userFollowerList: List<Person> =
+                narrowDownUsers(user.network.followerList).filter { person ->
+                    !person.userId.contentEquals(
+                        personalID
+                    )
+                }
 
             userFollowerList.forEach { person ->
-                if (!person.userId.contentEquals(AuthUtils.getCurrentUserId())) {
                     followingIDSet.add(person.userId)
                 }
-            }
+
         }
 
         return narrowDownUsers(followingIDSet.toMutableList())
+    }
+
+    suspend fun recommendFollowing(
+        followingList: MutableList<String>?, followerList: MutableList<String>?
+    ): List<Person> {
+        val recommendListFollow: MutableList<Person> = mutableListOf()
+
+        val followingFollowers = followingFollowers(followingList).filter { person ->
+            !person.userId.contentEquals(
+                personalID
+            )
+        }
+
+        followingFollowers.forEach { person ->
+
+            if (followingList?.contains(person.userId) == false) {
+                recommendListFollow.add(person)
+            }
+
+        }
+
+        return recommendListFollow
     }
 }
 
@@ -149,19 +181,14 @@ object OfficialNewsTexts {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. ",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla.  Etiam gravida, turpis nec pellentesque congue",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu. Mauris cursus, velit ac dapibus porttitor, velit elit sodales nunc, vitae euismod justo nisi at mauris. Nunc sit amet odio nec metus consectetur hendrerit.\n" +
-                "\n" +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet euismod purus. Suspendisse potenti. Integer nec aliquet ipsum. Proin eu nisl vitae dui rutrum interdum. Suspendisse potenti. Ut scelerisque, odio ac facilisis feugiat, purus tellus placerat mauris, eget facilisis urna mauris id purus. Phasellus scelerisque odio eu ligula dapibus, vitae feugiat tellus facilisis. Aenean a venenatis lorem. Etiam vehicula, nisi a blandit fringilla, turpis nulla auctor odio, sit amet accumsan ex mi sit amet nulla. Aenean at eros luctus, feugiat lectus eu, tincidunt odio. Mauris semper elit at odio eleifend, at convallis lacus posuere. Suspendisse eu diam dui.\n" +
-                "\n" +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec elit vulputate, vel ultrices dolor iaculis. Sed et ex in purus dignissim consequat. Nam id arcu eget erat elementum pulvinar. Maecenas id tortor et dui posuere mollis non eu justo. Donec rutrum nunc vel quam suscipit pellentesque. Cras ullamcorper feugiat fringilla. Suspendisse maximus justo ligula, id bibendum mauris ultrices vel. Sed malesuada auctor dui, id aliquet tellus pellentesque quis",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu. Mauris cursus, velit ac dapibus porttitor, velit elit sodales nunc, vitae euismod justo nisi at mauris. Nunc sit amet odio nec metus consectetur hendrerit.\n" + "\n" + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet euismod purus. Suspendisse potenti. Integer nec aliquet ipsum. Proin eu nisl vitae dui rutrum interdum. Suspendisse potenti. Ut scelerisque, odio ac facilisis feugiat, purus tellus placerat mauris, eget facilisis urna mauris id purus. Phasellus scelerisque odio eu ligula dapibus, vitae feugiat tellus facilisis. Aenean a venenatis lorem. Etiam vehicula, nisi a blandit fringilla, turpis nulla auctor odio, sit amet accumsan ex mi sit amet nulla. Aenean at eros luctus, feugiat lectus eu, tincidunt odio. Mauris semper elit at odio eleifend, at convallis lacus posuere. Suspendisse eu diam dui.\n" + "\n" + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec elit vulputate, vel ultrices dolor iaculis. Sed et ex in purus dignissim consequat. Nam id arcu eget erat elementum pulvinar. Maecenas id tortor et dui posuere mollis non eu justo. Donec rutrum nunc vel quam suscipit pellentesque. Cras ullamcorper feugiat fringilla. Suspendisse maximus justo ligula, id bibendum mauris ultrices vel. Sed malesuada auctor dui, id aliquet tellus pellentesque quis",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet sapien eget dui tincidunt, ac tincidunt mauris tincidunt. Etiam a odio bibendum, blandit odio vitae, rhoncus nulla. Nam luctus tortor vel nibh finibus, eu tempor nunc tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Integer condimentum eros ac tincidunt pellentesque. Etiam gravida, turpis nec pellentesque congue, eros felis vehicula eros, non sagittis turpis tellus nec neque. Vivamus mattis arcu justo, eu sollicitudin velit scelerisque eu."
     )
 
     var officialNewsList: ArrayList<OfficialNews>? = null
         get() {
 
-            if (field != null)
-                return field
+            if (field != null) return field
             field = ArrayList()
 
             for (headlinePos in headlineList.indices) {
@@ -197,10 +224,7 @@ object YouTubeVids {
         val channelId = YoutubeKeyProvider.keyProvider(context, 1)
 
         val params = mapOf(
-            "limit" to "20",
-            "eventType" to eventType,
-            "type" to "video",
-            "page" to "1"
+            "limit" to "20", "eventType" to eventType, "type" to "video", "page" to "1"
         )
 
         return withContext(ioDispatcher) {

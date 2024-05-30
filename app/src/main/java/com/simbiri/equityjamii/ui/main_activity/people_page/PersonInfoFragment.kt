@@ -29,7 +29,6 @@ import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
 import com.simbiri.equityjamii.data.model.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.DialogPeopleDetailBinding
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class PersonInfoFragment : BottomSheetDialogFragment() {
@@ -89,6 +88,26 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 ).show()
             }
 
+            lifecycleScope.launch {
+                val followingList = currPerson.network.followingList
+                val followerList = currPerson.network.followerList
+
+                val listFromScope = UserNetworkUtils.followingFollowers(
+                    followingList
+                ).filter { person -> !person.userId.contentEquals(personParceled.userId) }
+
+
+
+                otherPeopleProfilesList.clear()
+                if (listFromScope.size > 5){
+                    otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0,4))
+                }else{
+                    otherPeopleProfilesList.addAll(listFromScope.shuffled())
+                }
+
+                visibilityViews()
+                otherSimilarProfilesAdapter.notifyDataSetChanged()
+            }
         }
 
     }
@@ -219,7 +238,11 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun visibilityViews(city: String = personParceled.city, country: String = personParceled.country, social: Social = personParceled.social) {
+    private fun visibilityViews(
+        city: String = personParceled.city,
+        country: String = personParceled.country,
+        social: Social = personParceled.social
+    ) {
         val socialEmpty =
             social.linkedin.isEmpty() && social.insta.isEmpty() && social.webs.isEmpty()
                     && social.faceb.isEmpty()
@@ -325,13 +348,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            val followingList = personParceled.network.followerList
-            otherPeopleProfilesList.clear()
-            otherPeopleProfilesList.addAll(UserNetworkUtils.following(followingList).toMutableList())
-            visibilityViews()
-            otherSimilarProfilesAdapter.notifyDataSetChanged()
-        }
+
 
     }
 
