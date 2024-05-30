@@ -62,11 +62,13 @@ class NetworkFragment : BottomSheetDialogFragment() {
     private fun setupViewPagerAndTabs() {
         val pagerAdapter = NetworkPagerAdapter(this)
         binding.viewPagerNetwork.adapter = pagerAdapter
+        binding.viewPagerNetwork.isUserInputEnabled = false
+
 
         TabLayoutMediator(binding.tabLayoutNetwork, binding.viewPagerNetwork) { tab, position ->
             tab.text = when (position) {
-                0 -> "Following"
-                1 -> "Followers"
+                0 -> "Following ${networkParced?.followingList?.size}"
+                1 -> "Followers ${networkParced?.followerList?.size}"
                 2 -> "Recommended"
                 else -> ""
             }
@@ -78,9 +80,9 @@ class NetworkFragment : BottomSheetDialogFragment() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
+                2 -> RecommendedFragment()
                 0 -> FollowingFragment()
                 1 -> FollowersFragment()
-                2 -> RecommendedFragment()
                 else -> Fragment()
             }
         }
@@ -105,7 +107,6 @@ class NetworkFragment : BottomSheetDialogFragment() {
                 behavior.isDraggable = true
                 behavior.isHideable = true
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
             }
         }
 

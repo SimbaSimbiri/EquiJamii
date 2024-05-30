@@ -1,12 +1,15 @@
 package com.simbiri.equityjamii.ui.main_activity.my_profile
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.adapters.NetworkAdapter
+import com.simbiri.equityjamii.databinding.FollowersBinding
 
 class FollowersFragment : Fragment() {
 
@@ -14,16 +17,28 @@ class FollowersFragment : Fragment() {
         fun newInstance() = FollowersFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var binding: FollowersBinding
+    private val viewModel: NetworkViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
-        // TODO: Use the ViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.followers, container, false)
+        binding = FollowersBinding.inflate(inflater, container, false)
+
+        binding.followerPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        setUpObservers()
+
+        return binding.root
+    }
+
+    private fun setUpObservers() {
+        viewModel.followersList.observe(viewLifecycleOwner) { followerUsers ->
+
+            val adapter = NetworkAdapter(requireContext(), followerUsers)
+            binding.followerPeopleRecyclerView.adapter = adapter
+            binding.followerPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+        }
     }
 }

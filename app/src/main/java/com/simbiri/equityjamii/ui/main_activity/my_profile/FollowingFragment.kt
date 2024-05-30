@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.my_profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,13 +22,6 @@ class FollowingFragment : Fragment() {
     private lateinit var binding: FollowingBinding
     private val viewModel: NetworkViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,9 +29,9 @@ class FollowingFragment : Fragment() {
         binding = FollowingBinding.inflate(inflater, container, false)
 
         binding.followingPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.followingPeopleRecyclerView.hasFixedSize()
 
         setupObservers()
+
         return binding.root
     }
 
