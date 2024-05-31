@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
@@ -38,18 +41,6 @@ class JamiiPageFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        firestore = FirebaseFirestore.getInstance()
-        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).get()
-            .addOnCompleteListener { taskDocSnapShot ->
-                if (taskDocSnapShot.isSuccessful) {
-                    if (taskDocSnapShot.result.exists()) {
-                        val profilePicUrl = taskDocSnapShot.result.getString("profileUri")
-                        personPost = taskDocSnapShot.result.toObject(Person::class.java)!!
-                        Glide.with(context).load(profilePicUrl).into(binding.currentUserImage)
-                    }
-                }
-
-            }
 
     }
 
@@ -59,6 +50,19 @@ class JamiiPageFragment : Fragment() {
     ): View {
         binding = JamiiPageBinding.inflate(layoutInflater)
         val view = binding.root
+
+        firestore = FirebaseFirestore.getInstance()
+        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!).get()
+            .addOnCompleteListener { taskDocSnapShot ->
+                if (taskDocSnapShot.isSuccessful) {
+                    if (taskDocSnapShot.result.exists()) {
+                        val profilePicUrl = taskDocSnapShot.result.getString("profileUri")
+                        personPost = taskDocSnapShot.result.toObject(Person::class.java)!!
+                        Glide.with(requireContext()).load(profilePicUrl).into(binding.currentUserImage)
+                    }
+                }
+
+            }
 
 
         binding.currentUserImage.setOnClickListener {
@@ -108,6 +112,9 @@ class JamiiPageFragment : Fragment() {
 
             }
         }.attach()
+
+        val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0
+        binding.viewPagerPosts.setCurrentItem(initialTabIndex, false)
 
 
         return view

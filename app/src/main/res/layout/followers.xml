@@ -7,32 +7,17 @@
     tools:context=".ui.main_activity.my_profile.FollowingFragment">
 
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchViewAll"
-        style="@style/Widget.AppCompat.SearchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="14dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_stroke_rectangle"
-        app:iconifiedByDefault="false"
-        app:layout_constraintBottom_toTopOf="@id/followerPeopleRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Search for your followers" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/followerPeopleRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:elevation="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchViewAll"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/adapters_network_item" />
 
 

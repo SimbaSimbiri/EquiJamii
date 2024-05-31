@@ -36,12 +36,14 @@
             android:id="@+id/textNameProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:foregroundGravity="center_vertical"
             android:layout_marginHorizontal="5dp"
             android:text="Ray Simbiri"
             android:textColor="@color/logoColour"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toTopOf="@id/textDesignation"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/cardProfileImage"
             app:layout_constraintStart_toEndOf="@id/cardProfileImage"
             app:layout_constraintTop_toTopOf="@id/cardProfileImage" />
 
@@ -49,13 +51,15 @@
             android:id="@+id/textDesignation"
             android:layout_width="0dp"
             android:gravity="start"
+            android:layout_marginTop="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="6dp"
+            android:layout_marginHorizontal="7dp"
+            app:layout_constraintTop_toBottomOf="@id/textNameProfile"
             app:layout_constraintEnd_toStartOf="@id/messageUser"
             android:text="SWE at EquityJamii"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@id/cardProfileImage"
-            app:layout_constraintTop_toBottomOf="@id/textNameProfile" />
+            />
 
         <TextView
             android:layout_width="wrap_content"

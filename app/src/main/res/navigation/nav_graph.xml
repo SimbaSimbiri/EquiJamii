@@ -5,39 +5,49 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/newsFrag">
 
-        <fragment
-            android:id="@+id/newsFrag"
-            android:name="com.simbiri.equityjamii.ui.main_activity.news_page.newsFragment"
-            android:label="@string/newsFragLabel"
-            tools:layout="@layout/news_page" />
+    <fragment
+        android:id="@+id/newsFrag"
+        android:name="com.simbiri.equityjamii.ui.main_activity.news_page.newsFragment"
+        android:label="@string/newsFragLabel"
+        tools:layout="@layout/news_page" />
 
-        <fragment
-            android:id="@+id/jamiiFrag"
-            android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiPageFragment"
-            android:label="Jamii"
-            tools:layout="@layout/discover_tab" />
+    <fragment
+        android:id="@+id/jamiiFrag"
+        android:name="com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiPageFragment"
+        android:label="Jamii"
+        tools:layout="@layout/discover_tab">
+        <argument
+            android:name="initial_tab_index"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 
-        <fragment
-            android:id="@+id/peopleFrag"
-            android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
-            android:label="@string/people_icon"
-            tools:layout="@layout/people_page" />
+    <fragment
+        android:id="@+id/peopleFrag"
+        android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
+        android:label="@string/people_icon"
+        tools:layout="@layout/people_page" />
 
-        <fragment
-            android:id="@+id/myProfile"
-            android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfDisplayFragment"
-            android:label="My Profile"
-            tools:layout="@layout/profile_page_display" />
+    <fragment
+        android:id="@+id/myProfile"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfDisplayFragment"
+        android:label="My Profile"
+        tools:layout="@layout/profile_page_display">
+    </fragment>
 
-        <fragment
-            android:id="@+id/myWorkspace"
-            android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.myWorkspace"
-            android:label="My Workspace"
-            tools:layout="@layout/my_workspace_page" />
+    <fragment
+        android:id="@+id/myWorkspace"
+        android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.myWorkspace"
+        android:label="My Workspace"
+        tools:layout="@layout/my_workspace_page" />
 
-        <action
-            android:id="@+id/action_open_Jamii"
-            app:destination="@id/jamiiFrag" />
+    <action
+        android:id="@+id/action_open_Jamii"
+        app:destination="@id/jamiiFrag" />
+
+    <action
+        android:id="@+id/action_open_workspace"
+        app:destination="@id/myWorkspace"/>
 
 
 </navigation>

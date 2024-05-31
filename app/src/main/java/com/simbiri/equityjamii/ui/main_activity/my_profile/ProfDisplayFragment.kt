@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -17,12 +16,18 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -93,6 +98,29 @@ class ProfDisplayFragment : Fragment() {
             gestureDetectorCompat.onTouchEvent(event)
         }
 
+
+
+        binding.myJamiiTv.setOnClickListener {
+        requireActivity().supportFragmentManager.popBackStackImmediate()
+            val action = ProfDisplayFragmentDirections.actionOpenJamii(2)
+            findNavController().navigate(action)
+
+        }
+
+        binding.myAssistant.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStackImmediate()
+            val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+            findNavController().navigate(action)
+
+        }
+
+        binding.myWorkspaces.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStackImmediate()
+            val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+            findNavController().navigate(action)
+
+        }
+
         binding.editProfileTv.setOnClickListener {
             binding.contentLoadingProgressBar.visibility = View.VISIBLE
             val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
@@ -153,7 +181,7 @@ class ProfDisplayFragment : Fragment() {
                                     myProf.social.xAcc
                                 )
 
-                                if (myProf.verified){
+                                if (myProf.verified) {
                                     binding.verifiedPersonelImage.visibility = View.VISIBLE
                                 }
 
@@ -170,7 +198,6 @@ class ProfDisplayFragment : Fragment() {
             }
 
     }
-
 
 
     private fun setRecyclerViewSocials() {
@@ -213,15 +240,15 @@ class ProfDisplayFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        AuthUtils.getCurrentPerson { currPerson->
-            if (currPerson == null){
+        AuthUtils.getCurrentPerson { currPerson ->
+            if (currPerson == null) {
                 val newPerson = Person()
                 newPerson.userId = getCurrentUserId()!!
                 val editProfileFragment = EditProfileFragment.newInstance(newPerson)
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 editProfileFragment.show(transaction, editProfileFragment.tag)
 
-            }else{
+            } else {
                 retreiveDisplayInfo(getCurrentUserId()!!)
             }
         }

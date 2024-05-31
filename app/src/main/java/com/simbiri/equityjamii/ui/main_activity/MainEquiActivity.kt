@@ -66,7 +66,7 @@ class MainEquiActivity : AppCompatActivity(){
 
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
-        fabWorkspace = findViewById(R.id.workspaceFab)
+        fabWorkspace = findViewById(R.id.jamiiFab)
 
         bottomNavigationView.background = null
 
