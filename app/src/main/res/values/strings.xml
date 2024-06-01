@@ -39,6 +39,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
 
     <string name="userName">Simbiri Ray </string>
     <string name="experience">  Denomination\nCurrent branch working at</string>
+    <string name="about_text">About %1$s</string>
 
     <string name="newsFragLabel">News Page</string>
     <string name="newsFragTitle"> Today\'s top stories</string>

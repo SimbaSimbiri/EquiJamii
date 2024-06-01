@@ -10,8 +10,8 @@
 
         <item
             android:id="@+id/myWorkspace"
-            android:icon="@drawable/workspace_page_icon"
-            android:title="My Workspace"
+            android:icon="@drawable/wksp_front_desk"
+            android:title="Workspaces"
             app:showAsAction="always"
             />
 

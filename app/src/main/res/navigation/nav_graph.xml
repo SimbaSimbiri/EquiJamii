@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/myWorkspace"
-        android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.myWorkspace"
+        android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.MyWorkspace"
         android:label="My Workspace"
         tools:layout="@layout/my_workspace_page" />
 

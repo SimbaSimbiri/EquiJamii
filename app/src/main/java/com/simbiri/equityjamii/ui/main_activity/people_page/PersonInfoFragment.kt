@@ -125,6 +125,8 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         personParceled.let {
 
+            val aboutText = getString(R.string.about_text, it.name)
+            binding!!.aboutTextHead.text = aboutText
             binding!!.nameOnPeople.text = it.name
             binding!!.designationOnPeople.text = it.designation + " at " + it.branch
             binding!!.aboutTextContent.text = it.social.about

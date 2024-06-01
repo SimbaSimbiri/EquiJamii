@@ -27,7 +27,6 @@ import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -172,7 +171,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
                 this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
             }
 
-            if (person!!.verified){
+            if (person!!.verified) {
                 verifiedImage.visibility = View.VISIBLE
             }
 

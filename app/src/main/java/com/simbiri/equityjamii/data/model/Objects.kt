@@ -92,7 +92,7 @@ object UserNetworkUtils {
     }
 
 
-    private val ioDispatcher = Dispatchers.IO//BETTER THREAD FOR UPDATING UI
+    private val ioDispatcher = Dispatchers.IO
     suspend fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
         val narrowedUsers: MutableList<Person> = mutableListOf()
 
