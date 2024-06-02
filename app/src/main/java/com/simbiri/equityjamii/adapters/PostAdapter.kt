@@ -23,18 +23,28 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class PostAdapter(var context: Context, var postList: MutableList<Post>) :
+class PostAdapter(
+    var context: Context,
+    var postList: MutableList<Post>,
+    var editable: Boolean = false
+) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    private val firestoreCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+    private val firestoreUsersCollection =
+        FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
+    private val firestorePostsCollection = FirebaseFirestore.getInstance().collection(
+        POST_COLLECTION
+    )
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -45,9 +55,13 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
         var dateText: TextView = itemView.findViewById(R.id.textDatePost)
         var thumbsLikePost: ImageView = itemView.findViewById(R.id.likesImage)
         var numLikes: TextView = itemView.findViewById(R.id.numLikesText)
+        var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
+        var editPost: TextView = itemView.findViewById(R.id.editPost)
+        var deletePost: ImageView = itemView.findViewById(R.id.deletePost)
+
+
         private val MAX_CHAR_COLLAPSED = 90
         private var isExpanded = false
-        private var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
 
         var currentPost: Post? = null
         var person: Person? = null
@@ -91,8 +105,30 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
 
         }
 
+        fun updateDelete(postInstance: Post) {
+            if (editable) {
+                deletePost.visibility = View.VISIBLE
+                editPost.visibility = View.VISIBLE
+            }
+
+            deletePost.setOnClickListener {
+                firestorePostsCollection.document(postInstance.documentId!!).delete()
+                Toast.makeText(context, "Post was deleted", Toast.LENGTH_SHORT).show()
+                postList.remove(postInstance)
+                notifyDataSetChanged()
+            }
+
+            editPost.setOnClickListener {
+                val editPostDialog = AddPostFragment.newInstance(postInstance)
+                val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                editPostDialog.show(transaction, editPostDialog.tag)
+            }
+
+
+        }
+
         private fun findPerson(userId: String) {
-            firestoreCollection.document(userId).get()
+            firestoreUsersCollection.document(userId).get()
                 .addOnCompleteListener { taskDocSnapShot ->
                     if (taskDocSnapShot.isSuccessful) {
                         if (taskDocSnapShot.result.exists()) {
@@ -213,6 +249,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
                 showPerson(this.person)
             }
 
+
         }
 
         private fun likeUnlikePost() {
@@ -259,6 +296,7 @@ class PostAdapter(var context: Context, var postList: MutableList<Post>) :
     override fun onBindViewHolder(postViewHolder: PostViewHolder, position: Int) {
         val post = postList[position]
         postViewHolder.setDataToPost(post, position)
+        postViewHolder.updateDelete(post)
 
     }
 

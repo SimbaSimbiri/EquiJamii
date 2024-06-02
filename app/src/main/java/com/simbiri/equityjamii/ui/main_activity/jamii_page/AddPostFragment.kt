@@ -28,17 +28,17 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.POST_STORAGE_REF
 import com.simbiri.equityjamii.data.model.AuthUtils
-import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.databinding.DialogAddPostBinding
 
 class AddPostFragment : BottomSheetDialogFragment() {
 
     companion object {
-        private const val ARGS_PERSON_POST = "Poster"
-        fun newInstance(person: Person): AddPostFragment {
+        private const val ARGS_NEW_POST = "Posted post"
+        fun newInstance(post: Post): AddPostFragment {
             val fragment = AddPostFragment()
             val bundle = Bundle()
-            bundle.putParcelable(ARGS_PERSON_POST, person)
+            bundle.putParcelable(ARGS_NEW_POST, post)
             fragment.arguments = bundle
 
             return fragment
@@ -52,6 +52,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
     private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var imageUri: Uri? = null
     private val postStorageRef = FirebaseStorage.getInstance().getReference()
+    private var currentPost: Post? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,7 +71,6 @@ class AddPostFragment : BottomSheetDialogFragment() {
         _binding = DialogAddPostBinding.inflate(layoutInflater, container, false)
         val view = binding!!.root
 
-
         val cropPostContractOptions = CropImageContractOptions(
             null, CropImageOptions(
                 true,
@@ -81,7 +81,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                 showCropLabel = true,
                 activityTitle = "Crop post image",
                 activityBackgroundColor = requireContext().resources.getColor(R.color.black),
-                toolbarColor = requireContext()  .resources.getColor(R.color.black),
+                toolbarColor = requireContext().resources.getColor(R.color.black),
                 progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                 guidelines = CropImageView.Guidelines.OFF,
                 aspectRatioX = 1,
@@ -90,12 +90,19 @@ class AddPostFragment : BottomSheetDialogFragment() {
             )
         )
 
-        binding!!.dismissFrag.setOnClickListener {
-            dismiss()
-        }
         binding!!.addPicturePost.setOnClickListener {
             openPostPicker.launch(cropPostContractOptions)
         }
+
+        currentPost = arguments?.getParcelable<Post>(ARGS_NEW_POST)
+
+        currentPost?.let { parceledPost ->
+            Glide.with(requireContext()).load(parceledPost.image)
+                .into(binding!!.imagePostUpload)
+            binding!!.captionEditTv.setText(parceledPost.caption)
+        }
+
+
 
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
@@ -118,6 +125,9 @@ class AddPostFragment : BottomSheetDialogFragment() {
             }
         }
 
+        binding!!.dismissFrag.setOnClickListener {
+            dismiss()
+        }
         return view
     }
 
@@ -131,78 +141,103 @@ class AddPostFragment : BottomSheetDialogFragment() {
         if (imageUri != null) {
             postItemRef.putFile(Uri.parse(imageUri)).addOnCompleteListener { taskUpload ->
                 if (taskUpload.isSuccessful) {
+
                     postItemRef.downloadUrl.addOnSuccessListener { postImageUri ->
-                        postHashMap["caption"] = captionPost
-                        postHashMap["image"] = postImageUri.toString()
-                        postHashMap["time"] = FieldValue.serverTimestamp()
-                        postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
-                        postHashMap["likes"] = 0
-                        postHashMap["liked"] = false
-                        postHashMap["documentId"] = null
 
-                        firestoreInst.collection(POST_COLLECTION).add(postHashMap)
-                            .addOnCompleteListener { taskDocref ->
-                                if (taskDocref.isSuccessful) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Successfully posted to feed",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-/*
-                                    Jamii.let {
-                                        it.genListPosts()
-                                        it.feedPosts()
-                                        it.discoverPosts()
-                                        it.myPosts(FIREBASE_USER_ID)
-                                    }*/
+                        if (currentPost != null) {
 
-                                    dismiss()
-                                    val documentId = taskDocref.result.id
-                                    updateDocWithId(documentId)
-                                } else {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Error posting, try again later",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Log.i("PostHashMap Failed", postHashMap.toString())
+                            firestoreInst.collection(POST_COLLECTION)
+                                .document(currentPost!!.documentId!!).update("caption", captionPost)
+                            firestoreInst.collection(POST_COLLECTION)
+                                .document(currentPost!!.documentId!!)
+                                .update("image", postImageUri.toString())
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Changes will be updated soon",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            dismiss()
+
+                        } else {
+
+                            postHashMap["caption"] = captionPost
+                            postHashMap["image"] = postImageUri.toString()
+                            postHashMap["time"] = FieldValue.serverTimestamp()
+                            postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
+                            postHashMap["likes"] = 0
+                            postHashMap["liked"] = false
+                            postHashMap["documentId"] = null
+
+                            firestoreInst.collection(POST_COLLECTION).add(postHashMap)
+                                .addOnCompleteListener { taskDocref ->
+                                    if (taskDocref.isSuccessful) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Successfully posted to feed",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+
+                                        dismiss()
+                                        val documentId = taskDocref.result.id
+                                        updateDocWithId(documentId)
+                                    } else {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Error posting, try again later",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.i("PostHashMap Failed", postHashMap.toString())
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
         } else {
-            postHashMap["caption"] = captionPost
-            postHashMap["image"] = ""
-            postHashMap["time"] = FieldValue.serverTimestamp()
-            postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
-            postHashMap["likes"] = 0
-            postHashMap["liked"] = false
-            postHashMap["documentId"] = null
+            if (currentPost != null) {
+
+                firestoreInst.collection(POST_COLLECTION).document(currentPost!!.documentId!!)
+                    .update("caption", captionPost)
+                Toast.makeText(requireContext(), "Changes will be updated soon", Toast.LENGTH_SHORT)
+                    .show()
+                dismiss()
+
+            } else {
+
+                postHashMap["caption"] = captionPost
+                postHashMap["image"] = ""
+                postHashMap["time"] = FieldValue.serverTimestamp()
+                postHashMap["userId"] = AuthUtils.getCurrentUserId()!!
+                postHashMap["likes"] = 0
+                postHashMap["liked"] = false
+                postHashMap["documentId"] = null
 
 
-            firestoreInst.collection(POST_COLLECTION).add(postHashMap)
-                .addOnCompleteListener { taskDocref ->
-                    if (taskDocref.isSuccessful) {
+                firestoreInst.collection(POST_COLLECTION).add(postHashMap)
+                    .addOnCompleteListener { taskDocref ->
+                        if (taskDocref.isSuccessful) {
 
-                        Toast.makeText(
-                            requireContext(),
-                            "Successfully posted to feed",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        dismiss()
+                            Toast.makeText(
+                                requireContext(),
+                                "Successfully posted to feed",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dismiss()
 
-                        val documentId = taskDocref.result.id
-                        updateDocWithId(documentId)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error posting, try again later",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Log.i("PostHashMap Failed", postHashMap.toString())
+                            val documentId = taskDocref.result.id
+                            updateDocWithId(documentId)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Error posting, try again later",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Log.i("PostHashMap Failed", postHashMap.toString())
+                        }
                     }
-                }
+            }
         }
 
     }

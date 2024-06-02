@@ -39,7 +39,7 @@ class MyPostsFragment : Fragment() {
         binding = MyPostsTabBinding.inflate(layoutInflater)
         val view = binding.root
 
-        myActivityAdapter = PostAdapter(requireContext(), postList)
+        myActivityAdapter = PostAdapter(requireContext(), postList, true)
         binding.myPostsRecyclerView.adapter = myActivityAdapter
 
         setUpPostRecycler()
