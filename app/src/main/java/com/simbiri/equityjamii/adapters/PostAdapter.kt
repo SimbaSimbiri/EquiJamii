@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
@@ -40,11 +41,13 @@ class PostAdapter(
 ) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
+    private val firestore = FirebaseFirestore.getInstance()
     private val firestoreUsersCollection =
-        FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
-    private val firestorePostsCollection = FirebaseFirestore.getInstance().collection(
+        firestore.collection(USERS_COLLECTION)
+    private val firestorePostsCollection = firestore.collection(
         POST_COLLECTION
     )
+    private val currentUserId = AuthUtils.getCurrentUserId()
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -70,6 +73,52 @@ class PostAdapter(
         private fun toggleCaptionExpansion() {
             isExpanded = !isExpanded
             setTextsToggled(currentPost?.caption, isExpanded)
+        }
+
+        private fun likeUnlikeFirebaseLogic(userId: String, postId: String) {
+            val currPostRef = firestorePostsCollection.document(postId)
+            val likesSubCollectionCurrent = currPostRef
+                .collection("Likes")
+
+            val userLikeDocument = likesSubCollectionCurrent.document(userId)
+
+            userLikeDocument.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        userLikeDocument.delete()
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    context,
+                                    "Post unliked by user $userId",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                if (this.currentPost!!.liked && this.currentPost!!.likes > 0) {
+                                    updateUIForUnlike()
+                                }
+                            }
+                    } else {
+                        userLikeDocument.set(emptyMap<String, Any>())
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    context,
+                                    "Post liked by user $userId",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                if (!this.currentPost!!.liked) {
+                                    updateUIForLike()
+                                }
+                            }
+
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Error checking like status for user $userId",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
         private fun setTextsToggled(caption: String?, isExpanded: Boolean) {
@@ -120,7 +169,8 @@ class PostAdapter(
 
             editPost.setOnClickListener {
                 val editPostDialog = AddPostFragment.newInstance(postInstance)
-                val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                val transaction =
+                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 editPostDialog.show(transaction, editPostDialog.tag)
             }
 
@@ -252,25 +302,31 @@ class PostAdapter(
 
         }
 
+        private fun updateUIForLike() {
+            this.currentPost!!.liked = true
+            val postRef = firestorePostsCollection.document(currentPost!!.documentId!!)
+            postRef.update("liked", true)
+
+            val numFanLikes = this.currentPost!!.likes + 1
+            this.currentPost!!.likes = numFanLikes
+            this.thumbsLikePost.setImageResource(R.drawable.liked)
+            this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
+        }
+
+        private fun updateUIForUnlike() {
+            this.currentPost!!.liked = false
+            val postRef = firestorePostsCollection.document(currentPost!!.documentId!!)
+            postRef.update("liked", false)
+
+            val numFanLikes = this.currentPost!!.likes - 1
+            this.currentPost!!.likes = numFanLikes
+            this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
+            this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
+        }
+
         private fun likeUnlikePost() {
-            this.currentPost!!.liked = !this.currentPost!!.liked
-
-            var numFanLikes = this.currentPost!!.likes
-
-            if (this.currentPost!!.liked) {
-
-                this.thumbsLikePost.setImageResource(R.drawable.liked)
-                numFanLikes += 1
-                this.currentPost!!.likes = numFanLikes
-                this.numLikes.text =
-                    itemView.resources.getString(R.string.num_likes, numFanLikes)
-            } else {
-                this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
-                numFanLikes -= 1
-                this.currentPost!!.likes = numFanLikes
-                this.numLikes.text =
-                    itemView.resources.getString(R.string.num_likes, numFanLikes)
-            }
+            val postId = currentPost?.documentId ?: return
+            likeUnlikeFirebaseLogic(currentUserId!!, postId)
         }
 
         private fun showPerson(person: Person?) {

@@ -2,13 +2,10 @@ package com.simbiri.equityjamii.ui.main_activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -19,10 +16,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
-class MainEquiActivity : AppCompatActivity(){
+class MainEquiActivity : AppCompatActivity() {
 
     private lateinit var fabWorkspace: FloatingActionButton
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -92,7 +90,6 @@ class MainEquiActivity : AppCompatActivity(){
             val workspaceMenuItem = bottomNavigationView.menu.getItem(2)
             bottomNavigationView.selectedItemId = workspaceMenuItem.itemId
         }
-
 
     }
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
+import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.databinding.DiscoverTabBinding
@@ -27,7 +28,7 @@ class DiscoverFragment : Fragment() {
     private lateinit var viewModel: DiscoverViewModel
     private lateinit var adapterPost: PostAdapter
     val firestore = FirebaseFirestore.getInstance()
-    val queryReference = firestore.collection("Post_Gallery")
+    val queryReference = firestore.collection(POST_COLLECTION)
     private val postList: MutableList<Post> = mutableListOf()
     private lateinit var binding: DiscoverTabBinding
 
