@@ -138,6 +138,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     }
 
     private fun saveNews() {
+
         val title = binding.editTextTitle.text.toString().trim()
         val allNews = binding.editTextAllNews.text.toString().trim()
         val author = binding.editTextAuthor.text.toString().trim()
@@ -210,7 +211,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                     }
                 }
 
-                // Save news item with updated image URLs
                 if (newsText.documentId.isEmpty()) {
                     newsCollection.add(newsText)
                         .addOnSuccessListener { documentReference ->

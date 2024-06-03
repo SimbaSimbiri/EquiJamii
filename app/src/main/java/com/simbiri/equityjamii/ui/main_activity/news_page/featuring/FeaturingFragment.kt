@@ -6,7 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.adapters.NewsAdapter
+import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
+import com.simbiri.equityjamii.databinding.NewsPageTopStoriesBinding
+import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 
 class FeaturingFragment : Fragment() {
 
@@ -14,20 +20,32 @@ class FeaturingFragment : Fragment() {
         fun newInstance() = FeaturingFragment()
     }
 
-    private lateinit var viewModel: FeaturingViewModel
+    private val viewModel: NewsViewModel by viewModels(ownerProducer =  { requireParentFragment() })
+    private lateinit var binding : NewsPageFeaturingBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        return inflater.inflate(R.layout.news_page_featuring, container, false)
+        binding = NewsPageFeaturingBinding.inflate(inflater, container, false)
+
+        binding.featuringRecyclerView.layoutManager =  LinearLayoutManager(requireContext())
+        setUpObservers()
+
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FeaturingViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setUpObservers(){
+        viewModel.newsList.observe(viewLifecycleOwner){ allNewsInstances ->
+/*
+            val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
+*/
+            val adapter = NewsAdapter(requireContext(), allNewsInstances, true)
+            binding.featuringRecyclerView.adapter = adapter
+            binding.featuringRecyclerView.adapter!!.notifyDataSetChanged()
+        }
     }
+
 
 }

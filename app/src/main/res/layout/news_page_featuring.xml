@@ -7,5 +7,11 @@
     tools:context=".ui.main_activity.news_page.featuring.FeaturingFragment"
     >
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/featuringRecyclerView"
+        tools:listitem="@layout/adapters_news_item"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -15,6 +16,8 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.NewsAdapter
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.data.model.YouTubeVids
+import com.simbiri.equityjamii.databinding.NewsPageTopStoriesBinding
+import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 
 class LatestFragment : Fragment() {
 
@@ -22,65 +25,28 @@ class LatestFragment : Fragment() {
         fun newInstance() = LatestFragment()
     }
 
-    private lateinit var viewModel: LatestViewModel
-    private lateinit var recyclerNews: RecyclerView
-    private var  firebaseDatabase = FirebaseDatabase.getInstance()
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var firebaseRecyclerAdapter: NewsAdapter
-    private lateinit var options: FirebaseRecyclerOptions<NewsText>
-
+    private val viewModel: NewsViewModel by viewModels(ownerProducer =  { requireParentFragment() })
+    private lateinit var binding : NewsPageTopStoriesBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-       val  view =  inflater.inflate(R.layout.news_page_top_stories, container, false)
+        binding = NewsPageTopStoriesBinding.inflate(inflater, container, false)
 
-        recyclerNews = view.findViewById(R.id.newsRecylerView)
-        databaseReference = firebaseDatabase.getReference("Latest")
-        setUpRecyclerNews(view)
+        binding.newsRecylerView.layoutManager =  LinearLayoutManager(requireContext())
+        setUpObservers()
 
-
-        return view
+        return binding.root
     }
 
-
-    private fun setUpRecyclerNews(view: View) {
-        val context = requireContext()
-        val layoutManager = LinearLayoutManager(view.context)
-        layoutManager.orientation = RecyclerView.VERTICAL
-        layoutManager.reverseLayout = true
-        layoutManager.stackFromEnd = true
-
-        options = FirebaseRecyclerOptions.Builder<NewsText>().setQuery(databaseReference, NewsText::class.java).build()
-/*
-        firebaseRecyclerAdapter = NewsAdapter(context, options)
-*/
-
-/*
-        recyclerNews.adapter = firebaseRecyclerAdapter
-*/
-        recyclerNews.layoutManager = layoutManager
-
-    }
-
-  /*  override fun onStart() {
-        super.onStart()
-        firebaseRecyclerAdapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        firebaseRecyclerAdapter.stopListening()
-    }
-*/
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LatestViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setUpObservers(){
+        viewModel.newsList.observe(viewLifecycleOwner){ allNewsInstances ->
+            val adapter = NewsAdapter(requireContext(), allNewsInstances, true)
+            binding.newsRecylerView.adapter = adapter
+            binding.newsRecylerView.adapter!!.notifyDataSetChanged()
+        }
     }
 
 }
