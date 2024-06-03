@@ -85,9 +85,13 @@ class ForYouFragment : Fragment() {
 
         optionsKenya = FirebaseRecyclerOptions.Builder<NewsText>()
             .setQuery(databaseReferenceKenya, NewsText::class.java).build()
+/*
         firebaseRecyclerAdapterKenya = FypNewsAdapter(context, optionsKenya)
+*/
 
+/*
         inKenyaRecyclerView.adapter = firebaseRecyclerAdapterKenya
+*/
         inKenyaRecyclerView.layoutManager = layoutManagerKenya
         inKenyaRecyclerView.hasFixedSize()
 
@@ -103,10 +107,14 @@ class ForYouFragment : Fragment() {
 
         optionsScholars = FirebaseRecyclerOptions.Builder<NewsText>()
             .setQuery(databaseReferenceScholars, NewsText::class.java).build()
+/*
         firebaseRecyclerAdapterScholars = FypNewsAdapter(context, optionsScholars)
+*/
 
 
+/*
         elpRecyclerView.adapter = firebaseRecyclerAdapterScholars
+*/
         elpRecyclerView.layoutManager = layoutManagerScholars
         elpRecyclerView.hasFixedSize()
 
@@ -122,17 +130,21 @@ class ForYouFragment : Fragment() {
 
         optionsRwanda = FirebaseRecyclerOptions.Builder<NewsText>()
             .setQuery(databaseReferenceRwanda, NewsText::class.java).build()
+/*
         firebaseRecyclerAdapterRwanda = FypNewsAdapter(context, optionsRwanda)
+*/
 
 
 
+/*
         inRwandaRecyclerView.adapter = firebaseRecyclerAdapterRwanda
+*/
         inRwandaRecyclerView.layoutManager = layoutManagerRwanda
         inRwandaRecyclerView.hasFixedSize()
 
     }
 
-    override fun onStart() {
+ /*   override fun onStart() {
         super.onStart()
 
         firebaseRecyclerAdapterKenya.startListening()
@@ -146,7 +158,7 @@ class ForYouFragment : Fragment() {
         firebaseRecyclerAdapterKenya.stopListening()
         firebaseRecyclerAdapterRwanda.stopListening()
         firebaseRecyclerAdapterScholars.stopListening()
-    }
+    }*/
 
 
 }

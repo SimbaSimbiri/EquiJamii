@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
+import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.databinding.MyPostsTabBinding
@@ -57,7 +58,7 @@ class MyPostsFragment : Fragment() {
     }
 
     fun listMyPostsFirestore() {
-        AuthUtils.getCurrentPerson { currentPerson ->
+        AuthUtils.getCurrentPerson (USER_ID){ currentPerson ->
 
             queryReference.orderBy("time", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener {

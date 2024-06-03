@@ -4,17 +4,11 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
+import android.widget.ImageView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
@@ -31,10 +25,12 @@ class newsFragment : Fragment() {
         fun newInstance() = newsFragment()
     }
 
+    private lateinit var addNewsIcon: ImageView
     private lateinit var viewModel: NewsViewModel
     private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
     private lateinit var tabLayout: TabLayout
+    private val personId = AuthUtils.getCurrentUserId()
 
 
     override fun onCreateView(
@@ -45,7 +41,19 @@ class newsFragment : Fragment() {
         val view = inflater.inflate(R.layout.news_page, container, false)
 
         tabLayout = view.findViewById(R.id.tabLayout)
+        addNewsIcon = view.findViewById(R.id.addNewsIcon)
 
+   /*     AuthUtils.getCurrentPerson(personId){currentPerson->
+            if (currentPerson!!.role.contentEquals("journalist")){
+                addNewsIcon.visibility = View.VISIBLE
+            }
+        }*/
+
+        addNewsIcon.setOnClickListener {
+            val addNewsFrag = AddNewsFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            addNewsFrag.show(transaction, addNewsFrag.tag)
+        }
 
         viewPager2 = view.findViewById(R.id.viewPagerNews)
         viewPager2.isUserInputEnabled = false

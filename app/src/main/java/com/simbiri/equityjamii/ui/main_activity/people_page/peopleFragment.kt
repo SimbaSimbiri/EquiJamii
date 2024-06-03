@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 
 class peopleFragment : Fragment() {
@@ -41,7 +42,7 @@ class peopleFragment : Fragment() {
         viewPagerPeople.isUserInputEnabled = false
 
 
-        AuthUtils.getCurrentPerson { currentPerson ->
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),

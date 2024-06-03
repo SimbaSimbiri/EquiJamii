@@ -3,29 +3,68 @@ package com.simbiri.equityjamii.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.simbiri.equityjamii.constants.USERS_COLLECTION
 
-data class NewsText(val image: String, val title: String, val allNews: String) : Parcelable {
-
-    constructor() : this("", "", "")
+data class ImageDesc(var image: String, var description: String) : Parcelable {
+    constructor() : this("", "")
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-        parcel.readString() ?: "",
         parcel.readString() ?: ""
+    )
 
-    ) {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(image)
+        parcel.writeString(description)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
+    companion object CREATOR : Parcelable.Creator<ImageDesc> {
+        override fun createFromParcel(parcel: Parcel): ImageDesc {
+            return ImageDesc(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ImageDesc?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+data class NewsText(
+    val imageDescList: MutableList<ImageDesc>,
+    var title: String,
+    var allNews: String,
+    var author: String,
+    var newsName: String,
+    var newsTag: String,
+    var documentId: String = ""
+) : Parcelable {
+
+    constructor() : this(mutableListOf(), "", "", "", "", "", "")
+
+    constructor(parcel: Parcel) : this(
+        parcel.createTypedArrayList(ImageDesc.CREATOR)!!.toMutableList(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(image)
+        dest.writeTypedList(imageDescList)
         dest.writeString(title)
         dest.writeString(allNews)
+        dest.writeString(author)
+        dest.writeString(newsName)
+        dest.writeString(newsTag)
+        dest.writeString(documentId)
     }
 
     companion object CREATOR : Parcelable.Creator<NewsText> {
@@ -39,32 +78,30 @@ data class NewsText(val image: String, val title: String, val allNews: String) :
     }
 }
 
+
+
 data class OfficialNews(val headline: String, val officialPreviewText: String)
 
 data class Post(
     val caption: String, val image: String?, val time: Timestamp?, val userId: String,
-    var likes: Int, var liked: Boolean, val documentId: String? = null
+    val documentId: String? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readParcelable(Timestamp::class.java.classLoader)!!,
         parcel.readString() ?: "",
-        parcel.readInt(),
-        parcel.readByte() != 0.toByte(),
         parcel.readString() ?: ""
     ) {
     }
 
-    constructor() : this("", "", null, "", 0, false, "")
+    constructor() : this("", "", null, "", "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(caption)
         parcel.writeString(image)
         parcel.writeParcelable(time, flags)
         parcel.writeString(userId)
-        parcel.writeInt(likes)
-        parcel.writeByte(if (liked) 1 else 0)
         parcel.writeString(documentId)
     }
 
@@ -177,6 +214,7 @@ data class Person(
     val leader: Boolean,
     val network: Network = Network(mutableListOf(), mutableListOf()),
     val verified: Boolean,
+    val role: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -194,6 +232,7 @@ data class Person(
             mutableListOf()
         ),
         parcel.readByte() != 0.toByte(),
+        parcel.readString() ?: ""
     ) {
     }
 
@@ -206,8 +245,8 @@ data class Person(
         "",
         "",
         "",
-        Social("", "", "", "", "", ""),false,
-        Network(mutableListOf(), mutableListOf()), false
+        Social("", "", "", "", "", ""), false,
+        Network(mutableListOf(), mutableListOf()), false, ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -223,6 +262,7 @@ data class Person(
         parcel.writeByte(if (leader) 1 else 0)
         parcel.writeParcelable(network, flags)
         parcel.writeByte(if (verified) 1 else 0)
+        parcel.writeString(role)
 
     }
 

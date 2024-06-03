@@ -180,6 +180,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="back_to_profile">Back to profile</string>
     <string name="personal_website_e_g_business_medium_you_tube">Personal Website e.g business/Medium/You Tube</string>
     <string name="edit_post">Edit post</string>
+    <string name="image_description">Image description</string>
+    <string name="news_image_to_be_posted">News image to be posted</string>
 
 
 </resources>

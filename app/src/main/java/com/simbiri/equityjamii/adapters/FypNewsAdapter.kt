@@ -39,7 +39,9 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
         fun setDetailsToBigItem(image: String, title: String, allNews: String,position: Int) {
             this.positionItem =  position
             textViewBigNews.text = title
-            this.currentNewsTextItem = NewsText(image, title, allNews)
+/*
+            this.currentNewsTextItem = NewsText( image, title, allNews)
+*/
 
             var layoutParams = imageViewBigNews.layoutParams
 
@@ -90,7 +92,9 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
             this.positionItem =  position
 
             textNewsForYou.text = title
+/*
             this.currentNewsTextItem = NewsText(image, title, allNews)
+*/
 
             var layoutParamsCardView = cardViewHolder.layoutParams
             var layoutParamsCardViewImage = cardViewImage.layoutParams
@@ -176,11 +180,15 @@ class FypNewsAdapter(var context: Context,options : FirebaseRecyclerOptions<News
         model: NewsText
     ) {
         if (viewHolder is BigNewsViewHolder) {
+/*
             viewHolder.setDetailsToBigItem(model.image, model.title, model.allNews,position)
+*/
             viewHolder.onClickListernersToBig()
 
         } else if (viewHolder is SmallNewsViewHolder) {
+/*
             viewHolder.setDetailsToSmall(model.image, model.title, model.allNews,position)
+*/
             viewHolder.setOnClickListernerstosmall()
         }
     }

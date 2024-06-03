@@ -24,6 +24,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
@@ -63,7 +64,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
 
-        AuthUtils.getCurrentPerson { person ->
+        AuthUtils.getCurrentPerson(USER_ID) { person ->
             if (person != null) {
                 currPerson = person
                 isAlreadyFollowed = person.network.followingList?.contains(personParceled.userId)

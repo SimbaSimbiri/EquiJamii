@@ -90,9 +90,9 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
         val newsItem = arguments?.getParcelable<NewsText>(ARG_NEWS_ITEM)
         newsItem?.let {
-            Glide.with(this)
+    /*        Glide.with(this)
                 .load(it.image)
-                .into(newsDetailImage)
+                .into(newsDetailImage)*/
 
             newsDetailText.text = it.title
             newsDetailAllNews.text = it.allNews

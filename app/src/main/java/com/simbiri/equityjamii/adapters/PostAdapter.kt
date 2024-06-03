@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.LIKES_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -61,14 +62,16 @@ class PostAdapter(
         var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
         var editPost: TextView = itemView.findViewById(R.id.editPost)
         var deletePost: ImageView = itemView.findViewById(R.id.deletePost)
-
+        var currentPostLikes = 0
 
         private val MAX_CHAR_COLLAPSED = 90
         private var isExpanded = false
+        private var liked = false
 
         var currentPost: Post? = null
         var person: Person? = null
         var currentPosition = 0
+
 
         private fun toggleCaptionExpansion() {
             isExpanded = !isExpanded
@@ -78,7 +81,7 @@ class PostAdapter(
         private fun likeUnlikeFirebaseLogic(userId: String, postId: String) {
             val currPostRef = firestorePostsCollection.document(postId)
             val likesSubCollectionCurrent = currPostRef
-                .collection("Likes")
+                .collection(LIKES_SUB_COLLECTION)
 
             val userLikeDocument = likesSubCollectionCurrent.document(userId)
 
@@ -93,7 +96,7 @@ class PostAdapter(
                                     "Post unliked by user $userId",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                if (this.currentPost!!.liked && this.currentPost!!.likes > 0) {
+                                if (this.liked && this.currentPostLikes > 0) {
                                     updateUIForUnlike()
                                 }
                             }
@@ -105,7 +108,7 @@ class PostAdapter(
                                     "Post liked by user $userId",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                if (!this.currentPost!!.liked) {
+                                if (!this.liked) {
                                     updateUIForLike()
                                 }
                             }
@@ -150,7 +153,43 @@ class PostAdapter(
             this.currentPosition = position
             this.currentPost = postInstance
             setOnClicks()
-            findPerson(postInstance.userId)
+            /*findPerson(postInstance.userId)*/
+            AuthUtils.getCurrentPerson(this.currentPost!!.userId){
+                person ->
+                this.person = person
+
+                setImages(
+                    this.currentPost!!.image, this.person!!.profileUri,
+                    this.liked
+                )
+                setTexts(
+                    this.currentPost!!.caption, this.currentPost!!.time,
+                    this.currentPostLikes, this.person!!.name
+                )
+                setTextsToggled(currentPost?.caption, false)
+
+            }
+
+        }
+
+        fun checkIfLiked(postId: String?, currentUserId: String?) {
+            firestorePostsCollection.document(postId!!).collection(LIKES_SUB_COLLECTION)
+                .document(currentUserId!!).addSnapshotListener { taskSnapshot, _ ->
+                    if (taskSnapshot!!.exists()) {
+                        this.liked = true
+                    } else {
+                        this.liked = false
+                    }
+                }
+        }
+
+        fun userLikes(postId: String) {
+            this.currentPostLikes = 0
+
+            firestorePostsCollection.document(postId).collection(LIKES_SUB_COLLECTION).get()
+                .addOnSuccessListener { taskSnap ->
+                    currentPostLikes = taskSnap.count()
+                }
 
         }
 
@@ -186,11 +225,11 @@ class PostAdapter(
 
                             setImages(
                                 this.currentPost!!.image, this.person!!.profileUri,
-                                this.currentPost!!.liked
+                                this.liked
                             )
                             setTexts(
                                 this.currentPost!!.caption, this.currentPost!!.time,
-                                this.currentPost!!.likes, this.person!!.name
+                                this.currentPostLikes, this.person!!.name
                             )
                             setTextsToggled(currentPost?.caption, false)
 
@@ -303,23 +342,17 @@ class PostAdapter(
         }
 
         private fun updateUIForLike() {
-            this.currentPost!!.liked = true
-            val postRef = firestorePostsCollection.document(currentPost!!.documentId!!)
-            postRef.update("liked", true)
-
-            val numFanLikes = this.currentPost!!.likes + 1
-            this.currentPost!!.likes = numFanLikes
+            this.liked = true
+            val numFanLikes = this.currentPostLikes + 1
+            this.currentPostLikes = numFanLikes
             this.thumbsLikePost.setImageResource(R.drawable.liked)
             this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
         }
 
         private fun updateUIForUnlike() {
-            this.currentPost!!.liked = false
-            val postRef = firestorePostsCollection.document(currentPost!!.documentId!!)
-            postRef.update("liked", false)
-
-            val numFanLikes = this.currentPost!!.likes - 1
-            this.currentPost!!.likes = numFanLikes
+            this.liked = false
+            val numFanLikes = this.currentPostLikes - 1
+            this.currentPostLikes = numFanLikes
             this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
             this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
         }
@@ -353,6 +386,8 @@ class PostAdapter(
         val post = postList[position]
         postViewHolder.setDataToPost(post, position)
         postViewHolder.updateDelete(post)
+        postViewHolder.checkIfLiked(post.documentId!!, currentUserId)
+        postViewHolder.userLikes(post.documentId)
 
     }
 

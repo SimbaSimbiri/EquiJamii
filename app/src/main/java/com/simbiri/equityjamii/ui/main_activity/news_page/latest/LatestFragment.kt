@@ -54,14 +54,18 @@ class LatestFragment : Fragment() {
         layoutManager.stackFromEnd = true
 
         options = FirebaseRecyclerOptions.Builder<NewsText>().setQuery(databaseReference, NewsText::class.java).build()
+/*
         firebaseRecyclerAdapter = NewsAdapter(context, options)
+*/
 
+/*
         recyclerNews.adapter = firebaseRecyclerAdapter
+*/
         recyclerNews.layoutManager = layoutManager
 
     }
 
-    override fun onStart() {
+  /*  override fun onStart() {
         super.onStart()
         firebaseRecyclerAdapter.startListening()
     }
@@ -70,7 +74,7 @@ class LatestFragment : Fragment() {
         super.onStop()
         firebaseRecyclerAdapter.stopListening()
     }
-
+*/
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.databinding.MyWorkspacePageBinding
 
@@ -28,7 +29,7 @@ class MyWorkspace : Fragment() {
         binding = MyWorkspacePageBinding.inflate(layoutInflater)
 
 
-        AuthUtils.getCurrentPerson { currentPerson ->
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),

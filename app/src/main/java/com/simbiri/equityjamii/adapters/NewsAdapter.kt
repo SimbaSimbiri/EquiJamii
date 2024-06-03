@@ -37,7 +37,9 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
         fun setDetails( image: String, title:String, allNews: String,position: Int){
             this.positionItem = position
             textNewsHeadlineView.text = title
+/*
             this.currentNewsTextItem = NewsText(image, title, allNews)
+*/
 
             val layoutParams = imageNewsHeadlineView.layoutParams
 
@@ -80,7 +82,9 @@ class NewsAdapter(var context: Context, options: FirebaseRecyclerOptions<NewsTex
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int, model: NewsText) {
+/*
         holder.setDetails(model.image, model.title,model.allNews,position)
+*/
         holder.setOnclickListeners()
     }
 

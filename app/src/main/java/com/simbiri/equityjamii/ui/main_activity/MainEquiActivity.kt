@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.POST_COLLECTION
+import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
@@ -31,7 +32,6 @@ class MainEquiActivity : AppCompatActivity() {
     private lateinit var navDrawer: NavigationView
     private lateinit var navControllerMain: NavController
     private lateinit var coordLayMain: CoordinatorLayout
-
 
     private var callBack: OnBackPressedCallback? = null
 
@@ -50,7 +50,7 @@ class MainEquiActivity : AppCompatActivity() {
             startActivity(intent)
         } else {
 
-            AuthUtils.getCurrentPerson { currentPerson ->
+            AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
                 if (currentPerson == null) {
                     navControllerMain.navigate(R.id.myProfile)
                     Toast.makeText(

@@ -63,11 +63,10 @@ object AuthUtils {
         return FirebaseAuth.getInstance().currentUser?.uid
     }
 
-    fun getCurrentPerson(callback: (Person?) -> Unit) {
+    fun getCurrentPerson(userId: String?, callback: (Person?) -> Unit) {
         val userCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
-        val currentUserId = getCurrentUserId()
-        if (currentUserId != null) {
-            userCollection.document(currentUserId).get()
+        if (userId != null) {
+            userCollection.document(userId).get()
                 .addOnCompleteListener { snapShotRetrieveTask ->
                     if (snapShotRetrieveTask.isSuccessful) {
                         val person = snapShotRetrieveTask.result.toObject(Person::class.java)
