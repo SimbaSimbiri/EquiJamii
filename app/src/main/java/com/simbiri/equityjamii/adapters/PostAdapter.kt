@@ -30,6 +30,7 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -270,6 +271,24 @@ class PostAdapter(
 
             this.thumbsLikePost.setOnClickListener {
                 likeUnlikePost()
+            }
+
+            val currPostRef = firestorePostsCollection.document(currentPost!!.documentId.toString())
+            val likesSubCollectionCurrent = currPostRef
+                .collection(LIKES_SUB_COLLECTION)
+            likesSubCollectionCurrent.get().addOnSuccessListener { result ->
+
+                val listIds = ArrayList<String>()
+                result.forEach {queryDocumentSnapshot ->
+                    listIds.add(queryDocumentSnapshot.id)
+                }
+
+                this.likesCharText.setOnClickListener {
+                    val likesFrag = LikesDialogFragment.newInstance(listIds)
+                    val transaction =
+                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    likesFrag.show(transaction, likesFrag.tag)
+                }
             }
 
             val gestureDetector = GestureDetectorCompat(

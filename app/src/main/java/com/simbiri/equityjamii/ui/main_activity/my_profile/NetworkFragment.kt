@@ -53,7 +53,6 @@ class NetworkFragment : BottomSheetDialogFragment() {
             viewModel.setNetwork(networkParced!!)
         }
 
-
         setupViewPagerAndTabs()
 
         return view

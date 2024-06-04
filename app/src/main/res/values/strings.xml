@@ -182,6 +182,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="edit_post">Edit post</string>
     <string name="image_description">Image description</string>
     <string name="news_image_to_be_posted">News image to be posted</string>
+    <string name="liked_by">Liked by</string>
 
 
 </resources>
