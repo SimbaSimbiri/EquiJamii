@@ -26,8 +26,6 @@ class ForYouFragment : Fragment() {
         fun newInstance() = ForYouFragment()
     }
 
-
-
     private val viewModel: NewsViewModel by viewModels(ownerProducer =  { requireParentFragment() })
     private lateinit var binding : NewsPageForYouBinding
 
@@ -43,7 +41,6 @@ class ForYouFragment : Fragment() {
 
         return binding.root
     }
-
     private fun setUpObservers(){
         viewModel.newsList.observe(viewLifecycleOwner){ allNewsInstances ->
 /*

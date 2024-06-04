@@ -24,12 +24,7 @@ import com.simbiri.equityjamii.ui.authentications.SignInActivity
 class MainEquiActivity : AppCompatActivity() {
 
     private lateinit var fabWorkspace: FloatingActionButton
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-
-
-    var firebaseAuth = FirebaseAuth.getInstance()
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var navDrawer: NavigationView
     private lateinit var navControllerMain: NavController
     private lateinit var coordLayMain: CoordinatorLayout
 
@@ -39,7 +34,10 @@ class MainEquiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        var firebaseAuth = FirebaseAuth.getInstance()
+/*
         firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
+*/
 
 
 

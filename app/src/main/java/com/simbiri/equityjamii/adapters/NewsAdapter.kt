@@ -13,23 +13,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.NewsText
+import com.simbiri.equityjamii.ui.main_activity.news_page.AddNewsFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsDetailFragment
 
 class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editable: Boolean) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var positionItem: Int = 0
         private var currentNewsTextItem: NewsText? = null
 
         var textNewsHeadlineView: TextView = itemView.findViewById(R.id.textViewHeadline)
         var imageNewsHeadlineView: ImageView = itemView.findViewById(R.id.imageViewHeadNews)
+        var editNewsImageView: ImageView = itemView.findViewById(R.id.editNews)
 
         fun editNews(editable: Boolean) {
             if (editable) {
-
+                editNewsImageView.visibility = View.VISIBLE
+                editNewsImageView.setOnClickListener {
+                    val editNewsFrag = AddNewsFragment.newInstance(this.currentNewsTextItem)
+                    val transaction =
+                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    editNewsFrag.show(transaction, editNewsFrag.tag)
+                }
             }
         }
 
@@ -45,10 +52,6 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
 
         }
 
-
-        override fun onClick(view: View?) {
-
-        }
 
         fun setData(newsInstance: NewsText, position: Int) {
             this.positionItem = position
@@ -90,6 +93,7 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
         val newsInstance = newsList[position]
         holder.setData(newsInstance, position)
         holder.setOnclickListeners()
+        holder.editNews(editable)
     }
 
 }

@@ -62,6 +62,7 @@ class PostAdapter(
         var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
         var editPost: TextView = itemView.findViewById(R.id.editPost)
         var deletePost: ImageView = itemView.findViewById(R.id.deletePost)
+        var likesCharText: TextView = itemView.findViewById(R.id.likesCharText)
         var currentPostLikes = 0
 
         private val MAX_CHAR_COLLAPSED = 90
@@ -91,26 +92,11 @@ class PostAdapter(
                     if (document.exists()) {
                         userLikeDocument.delete()
                             .addOnSuccessListener {
-                                Toast.makeText(
-                                    context,
-                                    "Post unliked by user $userId",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                if (this.liked && this.currentPostLikes > 0) {
-                                    updateUIForUnlike()
-                                }
+
                             }
                     } else {
                         userLikeDocument.set(emptyMap<String, Any>())
                             .addOnSuccessListener {
-                                Toast.makeText(
-                                    context,
-                                    "Post liked by user $userId",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                if (!this.liked) {
-                                    updateUIForLike()
-                                }
                             }
 
                     }
@@ -152,10 +138,10 @@ class PostAdapter(
         fun setDataToPost(postInstance: Post, position: Int) {
             this.currentPosition = position
             this.currentPost = postInstance
+
             setOnClicks()
-            /*findPerson(postInstance.userId)*/
-            AuthUtils.getCurrentPerson(this.currentPost!!.userId){
-                person ->
+
+            AuthUtils.getCurrentPerson(this.currentPost!!.userId) { person ->
                 this.person = person
 
                 setImages(
@@ -168,6 +154,9 @@ class PostAdapter(
                 )
                 setTextsToggled(currentPost?.caption, false)
 
+                this.checkIfLiked(postInstance.documentId!!, currentUserId)
+                this.userLikes(postInstance.documentId)
+
             }
 
         }
@@ -175,11 +164,14 @@ class PostAdapter(
         fun checkIfLiked(postId: String?, currentUserId: String?) {
             firestorePostsCollection.document(postId!!).collection(LIKES_SUB_COLLECTION)
                 .document(currentUserId!!).addSnapshotListener { taskSnapshot, _ ->
-                    if (taskSnapshot!!.exists()) {
-                        this.liked = true
+                    this.liked = taskSnapshot!!.exists()
+
+                    if (this.liked) {
+                        this.thumbsLikePost.setImageResource(R.drawable.liked)
                     } else {
-                        this.liked = false
+                        this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
                     }
+
                 }
         }
 
@@ -189,6 +181,7 @@ class PostAdapter(
             firestorePostsCollection.document(postId).collection(LIKES_SUB_COLLECTION).get()
                 .addOnSuccessListener { taskSnap ->
                     currentPostLikes = taskSnap.count()
+                    this.numLikes.text = currentPostLikes.toString()
                 }
 
         }
@@ -215,35 +208,6 @@ class PostAdapter(
 
 
         }
-
-        private fun findPerson(userId: String) {
-            firestoreUsersCollection.document(userId).get()
-                .addOnCompleteListener { taskDocSnapShot ->
-                    if (taskDocSnapShot.isSuccessful) {
-                        if (taskDocSnapShot.result.exists()) {
-                            this.person = taskDocSnapShot.result.toObject(Person::class.java)
-
-                            setImages(
-                                this.currentPost!!.image, this.person!!.profileUri,
-                                this.liked
-                            )
-                            setTexts(
-                                this.currentPost!!.caption, this.currentPost!!.time,
-                                this.currentPostLikes, this.person!!.name
-                            )
-                            setTextsToggled(currentPost?.caption, false)
-
-                        } else {
-                            Toast.makeText(
-                                itemView.context,
-                                "Unable to retrieve person",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-        }
-
 
         private fun setTexts(caption: String, time: Timestamp?, likes: Int, name: String) {
 
@@ -318,7 +282,6 @@ class PostAdapter(
                 })
 
             this.imagePosted.setOnTouchListener { view, event ->
-
                 view.performClick()
                 gestureDetector.onTouchEvent(event)
             }
@@ -327,8 +290,6 @@ class PostAdapter(
                 v.performClick()
                 gestureDetector.onTouchEvent(event)
             }
-
-
 
             this.imagePostUser.setOnClickListener {
                 showPerson(this.person)
@@ -342,24 +303,39 @@ class PostAdapter(
         }
 
         private fun updateUIForLike() {
-            this.liked = true
-            val numFanLikes = this.currentPostLikes + 1
+            var numFanLikes = this.currentPostLikes
+            numFanLikes++
+
+            this.currentPostLikes = numFanLikes
             this.currentPostLikes = numFanLikes
             this.thumbsLikePost.setImageResource(R.drawable.liked)
             this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
         }
 
         private fun updateUIForUnlike() {
-            this.liked = false
-            val numFanLikes = this.currentPostLikes - 1
+
+            var numFanLikes = this.currentPostLikes
+            if (this.currentPostLikes > 0) {
+                numFanLikes--
+                this.currentPostLikes = numFanLikes
+            }
+
             this.currentPostLikes = numFanLikes
             this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
             this.numLikes.text = itemView.resources.getString(R.string.num_likes, numFanLikes)
         }
 
         private fun likeUnlikePost() {
+            (!this.liked).also { this.liked = it }
+            if (this.liked) {
+                updateUIForLike()
+            } else {
+                updateUIForUnlike()
+            }
             val postId = currentPost?.documentId ?: return
             likeUnlikeFirebaseLogic(currentUserId!!, postId)
+
+
         }
 
         private fun showPerson(person: Person?) {
@@ -386,8 +362,6 @@ class PostAdapter(
         val post = postList[position]
         postViewHolder.setDataToPost(post, position)
         postViewHolder.updateDelete(post)
-        postViewHolder.checkIfLiked(post.documentId!!, currentUserId)
-        postViewHolder.userLikes(post.documentId)
 
     }
 

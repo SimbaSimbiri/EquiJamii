@@ -27,7 +27,6 @@ class FeaturingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = NewsPageFeaturingBinding.inflate(inflater, container, false)
 
         binding.featuringRecyclerView.layoutManager =  LinearLayoutManager(requireContext())

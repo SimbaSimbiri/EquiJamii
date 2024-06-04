@@ -1,12 +1,12 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -43,11 +43,11 @@ class newsFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         addNewsIcon = view.findViewById(R.id.addNewsIcon)
 
-   /*     AuthUtils.getCurrentPerson(personId){currentPerson->
-            if (currentPerson!!.role.contentEquals("journalist")){
+        AuthUtils.getCurrentPerson(personId) { currentPerson ->
+            if (currentPerson?.role.contentEquals("journalist")) {
                 addNewsIcon.visibility = View.VISIBLE
             }
-        }*/
+        }
 
         addNewsIcon.setOnClickListener {
             val addNewsFrag = AddNewsFragment()
@@ -59,7 +59,7 @@ class newsFragment : Fragment() {
         viewPager2.isUserInputEnabled = false
         stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
         viewPager2.adapter = stateAdapter
-        TabLayoutMediator(tabLayout, viewPager2, true, true) { tab, position->
+        TabLayoutMediator(tabLayout, viewPager2, true, true) { tab, position ->
 
             when (position) {
 
@@ -82,7 +82,9 @@ class newsFragment : Fragment() {
 
                 }
 
-                4 -> { tab.text = "Featuring" }
+                4 -> {
+                    tab.text = "Featuring"
+                }
 
 
             }
