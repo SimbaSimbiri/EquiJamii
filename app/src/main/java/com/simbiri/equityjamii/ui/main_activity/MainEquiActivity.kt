@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -42,6 +43,8 @@ class MainEquiActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
         fabWorkspace = findViewById(R.id.jamiiFab)
+
+
 
         bottomNavigationView.background = null
 
@@ -87,6 +90,7 @@ class MainEquiActivity : AppCompatActivity() {
         }
 
     }
+
 
 }
 

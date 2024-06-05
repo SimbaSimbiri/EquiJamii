@@ -31,8 +31,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -54,24 +52,21 @@
         app:layout_constraintStart_toEndOf="@id/addPostCard"
         app:layout_constraintTop_toTopOf="@id/addPostCard" />
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addPostCard">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayoutposts"
-                app:tabGravity="center"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
@@ -79,6 +74,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/primaryColor"
@@ -89,14 +85,14 @@
                 android:id="@+id/viewPagerPosts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"
-                app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
-                app:layout_constraintEnd_toEndOf="@id/constraintLayout"
-                app:layout_constraintStart_toStartOf="@id/constraintLayout"
+                android:layout_marginTop="55dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tabLayoutposts" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

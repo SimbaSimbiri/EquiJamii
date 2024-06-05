@@ -54,12 +54,15 @@ class JamiiPageFragment : Fragment() {
                     if (taskDocSnapShot.result.exists()) {
                         val profilePicUrl = taskDocSnapShot.result.getString("profileUri")
                         personPost = taskDocSnapShot.result.toObject(Person::class.java)!!
-                        Glide.with(requireContext()).load(profilePicUrl).into(binding.currentUserImage)
+                        Glide.with(requireContext()).load(profilePicUrl)
+                            .into(binding.currentUserImage)
                     }
                 }
 
             }
 
+
+        setupViewPager()
 
         binding.currentUserImage.setOnClickListener {
             val addPostFragment = AddPostFragment()
@@ -74,7 +77,7 @@ class JamiiPageFragment : Fragment() {
         }
 
 
-        AuthUtils.getCurrentPerson (USER_ID){ currentPerson ->
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),
@@ -83,6 +86,30 @@ class JamiiPageFragment : Fragment() {
                 ).show()
             }
         }
+
+        val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0
+        binding.viewPagerPosts.setCurrentItem(initialTabIndex, false)
+
+        binding.swipeRefresh.setOnRefreshListener {
+            refreshJamii()
+        }
+
+        return view
+    }
+
+    private fun refreshJamii() {
+        val currentTabPosition = binding.tabLayoutposts.selectedTabPosition
+
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+
+        fragmentTransaction.detach(this).commitNow()
+        fragmentTransaction.attach(this).commitNow()
+
+        binding.viewPagerPosts.currentItem = currentTabPosition
+        binding.swipeRefresh.isRefreshing = false
+    }
+
+    private fun setupViewPager() {
 
         stateFragAdapter = PostSlidePageAdapter(this@JamiiPageFragment)
         binding.viewPagerPosts.isUserInputEnabled = false
@@ -109,11 +136,6 @@ class JamiiPageFragment : Fragment() {
             }
         }.attach()
 
-        val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0
-        binding.viewPagerPosts.setCurrentItem(initialTabIndex, false)
-
-
-        return view
     }
 
     class PostSlidePageAdapter(jamiiPageFragment: JamiiPageFragment) :
@@ -121,7 +143,6 @@ class JamiiPageFragment : Fragment() {
         override fun getItemCount(): Int {
             return 3
         }
-
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
