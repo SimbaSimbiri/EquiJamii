@@ -49,7 +49,6 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
                 bottomFragmentDetail.show(transaction, bottomFragmentDetail.tag)
             }
 
-
         }
 
 
@@ -72,6 +71,7 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
 
             Glide.with(itemView.context as AppCompatActivity)
                 .load(newsInstance.imageDescList[0].image)
+                .fitCenter()
                 .into(imageNewsHeadlineView)
 
         }

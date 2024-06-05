@@ -140,11 +140,13 @@ class PostAdapter(
             this.currentPosition = position
             this.currentPost = postInstance
 
+            this.checkIfLiked(postInstance.documentId!!, currentUserId)
+            this.userLikes(postInstance.documentId)
+
             setOnClicks()
 
             AuthUtils.getCurrentPerson(this.currentPost!!.userId) { person ->
                 this.person = person
-
                 setImages(
                     this.currentPost!!.image, this.person!!.profileUri,
                     this.liked
@@ -155,9 +157,6 @@ class PostAdapter(
                 )
                 setTextsToggled(currentPost?.caption, false)
 
-                this.checkIfLiked(postInstance.documentId!!, currentUserId)
-                this.userLikes(postInstance.documentId)
-
             }
 
         }
@@ -166,13 +165,6 @@ class PostAdapter(
             firestorePostsCollection.document(postId!!).collection(LIKES_SUB_COLLECTION)
                 .document(currentUserId!!).addSnapshotListener { taskSnapshot, _ ->
                     this.liked = taskSnapshot!!.exists()
-
-                    if (this.liked) {
-                        this.thumbsLikePost.setImageResource(R.drawable.liked)
-                    } else {
-                        this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
-                    }
-
                 }
         }
 
@@ -279,7 +271,7 @@ class PostAdapter(
             likesSubCollectionCurrent.get().addOnSuccessListener { result ->
 
                 val listIds = ArrayList<String>()
-                result.forEach {queryDocumentSnapshot ->
+                result.forEach { queryDocumentSnapshot ->
                     listIds.add(queryDocumentSnapshot.id)
                 }
 

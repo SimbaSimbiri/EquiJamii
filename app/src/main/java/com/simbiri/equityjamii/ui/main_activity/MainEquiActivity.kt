@@ -39,7 +39,17 @@ class MainEquiActivity : AppCompatActivity() {
         firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
 */
 
+        bottomNavigationView = findViewById(R.id.bottom_nav_view)
+        coordLayMain = findViewById(R.id.coordinatorLayoutMain)
+        fabWorkspace = findViewById(R.id.jamiiFab)
 
+        bottomNavigationView.background = null
+
+        val navHostFrag =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navControllerMain = navHostFrag.navController
+
+        bottomNavigationView.setupWithNavController(navControllerMain)
 
         if (firebaseAuth.currentUser == null) {
             val intent = Intent(this, SignInActivity::class.java)
@@ -59,19 +69,6 @@ class MainEquiActivity : AppCompatActivity() {
                 }
             }
         }
-
-        bottomNavigationView = findViewById(R.id.bottom_nav_view)
-        coordLayMain = findViewById(R.id.coordinatorLayoutMain)
-        fabWorkspace = findViewById(R.id.jamiiFab)
-
-        bottomNavigationView.background = null
-
-        val navHostFrag =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navControllerMain = navHostFrag.navController
-
-        bottomNavigationView.setupWithNavController(navControllerMain)
-
 
 
         callBack = object : OnBackPressedCallback(true) {

@@ -2,7 +2,6 @@ package com.simbiri.equityjamii.ui.main_activity.news_page
 
 import android.app.Dialog
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -36,17 +36,17 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: NewsDetailViewModel
     private lateinit var newsDetailImage: ImageView
     private lateinit var newsDetailText: TextView
-    private lateinit var newsDetailAllNews : TextView
-    private  var detailFragHeight : Int = DisplayMetrics().heightPixels - 50
+    private lateinit var newsDetailAllNews: TextView
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog =  super.onCreateDialog(savedInstanceState)
+        val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_news_detail)
         dialog.setCanceledOnTouchOutside(true)
 
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
@@ -67,12 +67,13 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
         newsDetailImage = view.findViewById(R.id.newsDetailImage)
         newsDetailText = view.findViewById(R.id.newsDetailText)
-        newsDetailAllNews =view.findViewById(R.id.newsDetailAllnews)
+        newsDetailAllNews = view.findViewById(R.id.newsDetailAllnews)
 
         var layoutParams = newsDetailImage.layoutParams
 
         val displayMetrics = DisplayMetrics()
-        val windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val screenWidth = displayMetrics.widthPixels
@@ -90,9 +91,10 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
         val newsItem = arguments?.getParcelable<NewsText>(ARG_NEWS_ITEM)
         newsItem?.let {
-    /*        Glide.with(this)
-                .load(it.image)
-                .into(newsDetailImage)*/
+            Glide.with(this)
+                .load(it.imageDescList[0].image)
+                .fitCenter()
+                .into(newsDetailImage)
 
             newsDetailText.text = it.title
             newsDetailAllNews.text = it.allNews

@@ -57,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@id/textNameProfile"
             app:layout_constraintEnd_toStartOf="@id/messageUser"
             android:text="SWE at EquityJamii"
-            android:textSize="12sp"
+            android:textSize="11sp"
             app:layout_constraintStart_toEndOf="@id/cardProfileImage"
             />
 
@@ -65,13 +65,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/messageUser"
+            android:textSize="12sp"
             android:background="@drawable/shape_stroke_rectangle"
             android:text="Message"
             android:textColor="@color/logoColour"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:padding="4dp"
+            android:padding="3dp"
             android:layout_margin="6dp"/>
 
 
