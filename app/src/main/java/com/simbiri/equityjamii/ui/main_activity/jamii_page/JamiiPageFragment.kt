@@ -77,7 +77,7 @@ class JamiiPageFragment : Fragment() {
         }
 
 
-        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),

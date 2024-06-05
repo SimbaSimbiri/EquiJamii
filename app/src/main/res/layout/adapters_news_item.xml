@@ -50,7 +50,7 @@
             android:id="@+id/editNews"
             android:visibility="invisible"
             android:layout_height="24dp"
-            android:src="@drawable/edit"
+            android:src="@drawable/add_news_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_margin="10dp"

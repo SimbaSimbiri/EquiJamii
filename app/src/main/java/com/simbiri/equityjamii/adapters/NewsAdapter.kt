@@ -69,10 +69,16 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
 
             imageNewsHeadlineView.layoutParams = layoutParams
 
-            Glide.with(itemView.context as AppCompatActivity)
-                .load(newsInstance.imageDescList[0].image)
-                .fitCenter()
-                .into(imageNewsHeadlineView)
+            if (newsInstance.imageDescList.size > 0){
+
+                Glide.with(itemView.context as AppCompatActivity)
+                    .load(newsInstance.imageDescList[0].image)
+                    .fitCenter()
+                    .into(imageNewsHeadlineView)
+            } else{
+                imageNewsHeadlineView.setImageResource(R.drawable.equityjamiibackground)
+            }
+
 
         }
 

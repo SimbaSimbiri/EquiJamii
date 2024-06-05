@@ -64,7 +64,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
 
-        AuthUtils.getCurrentPerson(USER_ID) { person ->
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { person ->
             if (person != null) {
                 currPerson = person
                 isAlreadyFollowed = person.network.followingList?.contains(personParceled.userId)

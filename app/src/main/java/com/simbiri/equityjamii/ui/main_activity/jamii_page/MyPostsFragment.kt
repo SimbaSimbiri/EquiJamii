@@ -58,7 +58,7 @@ class MyPostsFragment : Fragment() {
     }
 
     fun listMyPostsFirestore() {
-        AuthUtils.getCurrentPerson (USER_ID){ currentPerson ->
+        AuthUtils.getCurrentPerson (AuthUtils.getCurrentUserId()!!){ currentPerson ->
 
             queryReference.orderBy("time", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener {

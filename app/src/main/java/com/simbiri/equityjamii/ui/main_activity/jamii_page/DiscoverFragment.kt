@@ -51,7 +51,7 @@ class DiscoverFragment : Fragment() {
 
 
     fun genListPosts() {
-        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
             queryReference.orderBy("time", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener {
                     if (it.isSuccessful) {

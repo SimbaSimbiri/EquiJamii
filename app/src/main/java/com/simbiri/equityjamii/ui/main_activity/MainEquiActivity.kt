@@ -61,7 +61,7 @@ class MainEquiActivity : AppCompatActivity() {
             startActivity(intent)
         } else {
 
-            AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                 if (currentPerson == null) {
                     navControllerMain.navigate(R.id.myProfile)
                     Toast.makeText(

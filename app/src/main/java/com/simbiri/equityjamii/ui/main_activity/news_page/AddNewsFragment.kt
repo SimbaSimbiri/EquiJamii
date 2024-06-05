@@ -88,7 +88,9 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             toolbarColor = requireContext().resources.getColor(R.color.black),
                             progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                             guidelines = CropImageView.Guidelines.OFF,
-                            fixAspectRatio = false,
+                            aspectRatioY = 9,
+                            aspectRatioX = 16,
+                            fixAspectRatio = true,
                             imageSourceIncludeCamera = false
                         )
                     )
@@ -132,7 +134,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         binding.editTextNewsName.setText(newsText.newsName)
         binding.editTextNewsTag.setText(newsText.newsTag)
 
-        imageDescList.clear()
         imageDescList.addAll(newsText.imageDescList)
         imageDescAdapter.notifyDataSetChanged()
     }
@@ -157,17 +158,18 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             }
         }
 
+
         if (newsText == null) {
             newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag)
         } else {
-            newsText!!.apply {
-                this.imageDescList.clear()
-                this.imageDescList.addAll(imageDescList)
-                this.title = title
-                this.allNews = allNews
-                this.author = author
-                this.newsName = newsName
-                this.newsTag = newsTag
+            newsText!!.let {news->
+                news.imageDescList.clear()
+                news.imageDescList.addAll(imageDescList)
+                news.title = title
+                news.allNews = allNews
+                news.author = author
+                news.newsName = newsName
+                news.newsTag = newsTag
             }
         }
 

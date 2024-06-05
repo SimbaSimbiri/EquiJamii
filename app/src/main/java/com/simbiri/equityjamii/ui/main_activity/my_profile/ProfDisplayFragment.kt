@@ -241,7 +241,7 @@ class ProfDisplayFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        AuthUtils.getCurrentPerson(USER_ID) { currPerson ->
+        AuthUtils.getCurrentPerson(getCurrentUserId()!!) { currPerson ->
             if (currPerson == null) {
                 val newPerson = Person()
                 newPerson.userId = getCurrentUserId()!!

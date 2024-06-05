@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,9 +44,12 @@ class newsFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         addNewsIcon = view.findViewById(R.id.addNewsIcon)
 
-        AuthUtils.getCurrentPerson(personId) { currentPerson ->
-            if (currentPerson?.role.contentEquals("journalist")) {
-                addNewsIcon.visibility = View.VISIBLE
+        if (AuthUtils.getCurrentUserId() != null) {
+
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                if (currentPerson?.role.contentEquals("journalist")) {
+                    addNewsIcon.visibility = View.VISIBLE
+                }
             }
         }
 

@@ -70,7 +70,7 @@ class EquiLeadersFragment : Fragment() {
     }
 
     private fun leadersListFireStore() {
-        AuthUtils.getCurrentPerson (USER_ID){ currPerson ->
+        AuthUtils.getCurrentPerson (AuthUtils.getCurrentUserId()!!){ currPerson ->
 
             query.get().addOnCompleteListener { it ->
                 if (it.isSuccessful) {

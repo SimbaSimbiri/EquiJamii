@@ -29,7 +29,7 @@ class MyWorkspace : Fragment() {
         binding = MyWorkspacePageBinding.inflate(layoutInflater)
 
 
-        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),
