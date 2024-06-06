@@ -14,15 +14,17 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.ImageDescAdapter
+import com.simbiri.equityjamii.constants.NEWS_COLLECTION
+import com.simbiri.equityjamii.constants.NEWS_STORAGE_REF
 import com.simbiri.equityjamii.data.model.ImageDesc
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.AddNewsDialogBinding
@@ -36,6 +38,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private val storageRef = FirebaseStorage.getInstance().getReference()
     private val imageDescList = mutableListOf<ImageDesc>()
     private lateinit var imageDescAdapter: ImageDescAdapter
+    private val newsStorageRef = FirebaseStorage.getInstance().reference
 
     companion object {
         private const val ARG_NEWS_TEXT = "news_text"
@@ -122,9 +125,10 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private fun setupRecyclerView() {
         imageDescAdapter = ImageDescAdapter(requireContext(), imageDescList)
         binding.recyclerViewImages.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = imageDescAdapter
         }
+
     }
 
     private fun populateFields(newsText: NewsText) {
@@ -152,17 +156,18 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         }
 
         for (i in 0 until imageDescList.size) {
-            val viewHolder = binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
+            val viewHolder =
+                binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
             viewHolder?.let {
-                imageDescList[i] = ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
+                imageDescList[i] =
+                    ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
             }
         }
-
-
+        val timestamp = Timestamp.now()
         if (newsText == null) {
-            newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag)
+            newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag, timestamp)
         } else {
-            newsText!!.let {news->
+            newsText!!.let { news ->
                 news.imageDescList.clear()
                 news.imageDescList.addAll(imageDescList)
                 news.title = title
@@ -170,81 +175,112 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 news.author = author
                 news.newsName = newsName
                 news.newsTag = newsTag
+                news.time =timestamp
             }
         }
 
-        uploadImagesAndSaveNews(newsText!!)
+        saveNewsToFireStore(newsText!!)
     }
 
-    private fun uploadImagesAndSaveNews(newsText: NewsText) {
-        val newsCollection = firestoreInst.collection("News")
-        val storageRef = FirebaseStorage.getInstance().reference
+    private fun saveNewsToFireStore(newsText: NewsText) {
 
-        val imageDescList = newsText.imageDescList
-        val uploadTasks = mutableListOf<Task<Uri>>()
+        val imageList = ArrayList<ImageDesc>()
 
         for (i in 0 until imageDescList.size) {
-            val imageDesc = imageDescList[i]
-            val imageUri = Uri.parse(imageDesc.image)
-            val imageRef = storageRef.child("news_images/${imageUri.lastPathSegment}_${System.currentTimeMillis()}.jpg")
+            val newsItemRef = newsStorageRef.child(NEWS_STORAGE_REF)
+                .child(FieldValue.serverTimestamp().toString() + "image${i + 1}.jpg")
+            val curImageDesc = newsText.imageDescList[i]
 
-            val uploadTask = imageRef.putFile(imageUri).continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
+            if (curImageDesc.image.isNotEmpty()) {
+                newsItemRef.putFile(Uri.parse(curImageDesc.image))
+                    .addOnCompleteListener { taskUpload ->
+
+                        if (taskUpload.isSuccessful) {
+
+                            newsItemRef.downloadUrl.addOnSuccessListener { newsImageUri ->
+                                imageList.add(
+                                    ImageDesc(
+                                        newsImageUri.toString(),
+                                        curImageDesc.description
+                                    )
+                                )
+
+                                if (i == imageList.size - 1){
+                                    saveOrUpdate(newsText, imageList)
+                                }
+
+                            }
+
+                        }
+
                     }
-                }
-                imageRef.downloadUrl
             }
 
-            uploadTasks.add(uploadTask)
         }
 
-        Tasks.whenAllComplete(uploadTasks).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                for (i in 0 until task.result.size) {
-                    val result = task.result[i]
-                    if (result.isSuccessful) {
-                        val downloadUri = result.result as Uri
-                        imageDescList[i] = ImageDesc(downloadUri.toString(), imageDescList[i].description)
+
+    }
+    private fun saveOrUpdate(newsText: NewsText, imageList : ArrayList<ImageDesc>){
+        val newsHashMap: HashMap<String, Any?> = HashMap()
+        newsHashMap["allNews"] = newsText.allNews
+        newsHashMap["author"] = newsText.author
+        newsHashMap["imageDescList"] = imageList
+        newsHashMap["newsName"] = newsText.newsName
+        newsHashMap["newsTag"] = newsText.newsTag
+        newsHashMap["title"] = newsText.title
+        newsHashMap["documentId"] = newsText.documentId
+
+        if (!newsText.documentId.isNullOrEmpty()) {
+            newsHashMap["time"] = Timestamp.now()
+
+            firestoreInst.collection(NEWS_COLLECTION).document(newsText.documentId!!)
+                .update(newsHashMap).addOnCompleteListener { taskUpdate ->
+                    if (taskUpdate.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "News changes will be published soon",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        Toast.makeText(
+                            requireContext(),
+                            "Couldn't find news item in database",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+        } else {
+            newsHashMap["time"] = newsText.time
+
+            firestoreInst.collection(NEWS_COLLECTION).add(newsHashMap)
+                .addOnCompleteListener { taskDocRef ->
+                    if (taskDocRef.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Successfully published news",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        dismiss()
+                        val docId = taskDocRef.result.id
+                        updateDocWithId(docId)
                     } else {
-                        Toast.makeText(requireContext(), "Error uploading image: ${result.exception?.message}", Toast.LENGTH_SHORT).show()
-                        return@addOnCompleteListener
-                    }
-                }
 
-                if (newsText.documentId.isEmpty()) {
-                    newsCollection.add(newsText)
-                        .addOnSuccessListener { documentReference ->
-                            val documentId = documentReference.id
-                            newsCollection.document(documentId)
-                                .update("documentId", documentId)
-                                .addOnSuccessListener {
-                                    Toast.makeText(requireContext(), "News successfully added", Toast.LENGTH_SHORT).show()
-                                    dismiss()
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(requireContext(), "Error updating document ID", Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(requireContext(), "Error adding news", Toast.LENGTH_SHORT).show()
-                        }
-                } else {
-                    newsCollection.document(newsText.documentId)
-                        .set(newsText)
-                        .addOnSuccessListener {
-                            Toast.makeText(requireContext(), "News successfully updated", Toast.LENGTH_SHORT).show()
-                            dismiss()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(requireContext(), "Error updating news", Toast.LENGTH_SHORT).show()
-                        }
+                        Toast.makeText(
+                            requireContext(),
+                            "Error publishing news, try again later",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                 }
-            } else {
-                Toast.makeText(requireContext(), "Error uploading images", Toast.LENGTH_SHORT).show()
-            }
         }
+
+    }
+
+    private fun updateDocWithId(docId: String) {
+        firestoreInst.collection(NEWS_COLLECTION).document(docId).update("documentId", docId)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

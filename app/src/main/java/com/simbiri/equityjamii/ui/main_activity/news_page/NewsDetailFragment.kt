@@ -108,7 +108,11 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
             authorSpecialTv.text = newstText.newsName + " by " + newstText.author
             newsTitleTv.text = newstText.title
             ImageSliderNews.setSlideAnimation(AnimationTypes.DEPTH_SLIDE)
-            Handler().postDelayed({ImageSliderNews.stopSliding()}, 10000)
+
+            ImageSliderNews.setOnClickListener {
+                ImageSliderNews.stopSliding()
+            }
+
             newsDetailAllNews.text = newstText.allNews
         }
 

@@ -48,7 +48,9 @@
         <ImageView
             android:layout_width="24dp"
             android:id="@+id/editNews"
-            android:visibility="invisible"
+            android:padding="5dp"
+            android:visibility="visible"
+            android:background="@drawable/circle"
             android:layout_height="24dp"
             android:src="@drawable/add_news_icon"
             app:layout_constraintEnd_toEndOf="parent"

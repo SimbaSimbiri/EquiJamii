@@ -30,7 +30,9 @@ class NewsViewModel : ViewModel() {
 
             val collection = FirebaseFirestore.getInstance().collection(NEWS_COLLECTION)
             val taskResult = withContext(ioDispatcher) { collection.get().await() }
-            _newsList.value = taskResult.toObjects(NewsText::class.java).reversed()
+
+            _newsList.value =
+                taskResult.toObjects(NewsText::class.java).sortedBy { newsText -> newsText.time }
 
         }
     }

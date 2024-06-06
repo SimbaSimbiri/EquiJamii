@@ -3,6 +3,8 @@ package com.simbiri.equityjamii.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 data class ImageDesc(var image: String, var description: String) : Parcelable {
     constructor() : this("", "")
@@ -38,10 +40,11 @@ data class NewsText(
     var author: String,
     var newsName: String,
     var newsTag: String,
-    var documentId: String = ""
+    var time : Timestamp?,
+    var documentId: String? = null
 ) : Parcelable {
 
-    constructor() : this(mutableListOf(), "", "", "", "", "", "")
+    constructor() : this(mutableListOf(), "", "", "", "", "",  null,"")
 
     constructor(parcel: Parcel) : this(
         parcel.createTypedArrayList(ImageDesc.CREATOR)!!.toMutableList(),
@@ -50,8 +53,11 @@ data class NewsText(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readParcelable(Timestamp::class.java.classLoader)!!,
         parcel.readString() ?: ""
-    )
+
+
+        )
 
     override fun describeContents(): Int {
         return 0
@@ -64,7 +70,9 @@ data class NewsText(
         dest.writeString(author)
         dest.writeString(newsName)
         dest.writeString(newsTag)
+        dest.writeParcelable(time, flags)
         dest.writeString(documentId)
+
     }
 
     companion object CREATOR : Parcelable.Creator<NewsText> {

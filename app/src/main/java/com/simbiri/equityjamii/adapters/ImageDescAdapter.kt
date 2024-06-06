@@ -21,10 +21,12 @@ class ImageDescAdapter(
     inner class ImageDescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val editTextDescription: EditText = itemView.findViewById(R.id.editTextDescription)
+        val deleteImage: ImageView = itemView.findViewById(R.id.deleteImageDesc)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageDescViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.adapter_item_image_desc, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.adapter_item_image_desc, parent, false)
         return ImageDescViewHolder(view)
     }
 
@@ -35,10 +37,18 @@ class ImageDescAdapter(
         holder.editTextDescription.addTextChangedListener {
             imageDesc.description = it.toString()
         }
+        holder.deleteImage.setOnClickListener {
+            deleteImageDesc(imageDesc, position)
+        }
     }
 
     override fun getItemCount(): Int {
         return imageDescList.size
+    }
+
+    private fun deleteImageDesc(imageDesc: ImageDesc, position: Int) {
+        imageDescList.remove(imageDesc)
+        notifyItemRemoved(position)
     }
 
     fun addImageDesc(imageDesc: ImageDesc) {
