@@ -44,9 +44,9 @@ class ForYouFragment : Fragment() {
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
                 binding.elpRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-                setUpObservers()
             }
         }
+        setUpObservers()
 
         return binding.root
     }

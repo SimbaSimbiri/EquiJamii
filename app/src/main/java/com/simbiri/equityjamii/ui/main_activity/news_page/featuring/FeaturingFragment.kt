@@ -38,9 +38,10 @@ class FeaturingFragment : Fragment() {
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
                 binding.featuringRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-                setUpObservers()
             }
         }
+
+        setUpObservers()
 
         return binding.root
     }

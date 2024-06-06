@@ -34,9 +34,10 @@ class LatestFragment : Fragment() {
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
                 binding.newsRecylerView.layoutManager = LinearLayoutManager(requireContext())
-                setUpObservers()
             }
         }
+
+        setUpObservers()
 
         return binding.root
     }
