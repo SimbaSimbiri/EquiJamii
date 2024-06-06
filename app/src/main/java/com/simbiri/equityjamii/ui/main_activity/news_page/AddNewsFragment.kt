@@ -78,7 +78,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         }
 
         binding.addPicturePost.setOnClickListener {
-            if (imageDescList.size < 5) {
+            if (imageDescList.size <= 5) {
                 openImagePicker.launch(
                     CropImageContractOptions(
                         null,
@@ -155,7 +155,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             return
         }
 
-        for (i in 0 until imageDescList.size) {
+        for (i in 0 until imageDescAdapter.itemCount) {
             val viewHolder =
                 binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
             viewHolder?.let {
@@ -163,6 +163,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                     ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
             }
         }
+
         val timestamp = Timestamp.now()
         if (newsText == null) {
             newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag, timestamp)
@@ -175,7 +176,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 news.author = author
                 news.newsName = newsName
                 news.newsTag = newsTag
-                news.time =timestamp
+                news.time = timestamp
             }
         }
 
@@ -186,7 +187,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
         val imageList = ArrayList<ImageDesc>()
 
-        for (i in 0 until imageDescList.size) {
+        for (i in 0 until imageDescAdapter.itemCount) {
             val newsItemRef = newsStorageRef.child(NEWS_STORAGE_REF)
                 .child(FieldValue.serverTimestamp().toString() + "image${i + 1}.jpg")
             val curImageDesc = newsText.imageDescList[i]
@@ -205,7 +206,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                                     )
                                 )
 
-                                if (i == imageList.size - 1){
+                                if (i == imageDescAdapter.itemCount - 1) {
                                     saveOrUpdate(newsText, imageList)
                                 }
 
@@ -220,7 +221,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
 
     }
-    private fun saveOrUpdate(newsText: NewsText, imageList : ArrayList<ImageDesc>){
+
+    private fun saveOrUpdate(newsText: NewsText, imageList: ArrayList<ImageDesc>) {
         val newsHashMap: HashMap<String, Any?> = HashMap()
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
@@ -241,13 +243,14 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             "News changes will be published soon",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }else{
+                    } else {
                         Toast.makeText(
                             requireContext(),
                             "Couldn't find news item in database",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    dismiss()
                 }
 
         } else {
@@ -262,7 +265,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        dismiss()
                         val docId = taskDocRef.result.id
                         updateDocWithId(docId)
                     } else {
@@ -273,6 +275,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    dismiss()
 
                 }
         }

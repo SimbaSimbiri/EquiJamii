@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.FypNewsAdapter
 import com.simbiri.equityjamii.adapters.NewsAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
 import com.simbiri.equityjamii.databinding.NewsPageForYouBinding
@@ -28,6 +29,7 @@ class ForYouFragment : Fragment() {
 
     private val viewModel: NewsViewModel by viewModels(ownerProducer =  { requireParentFragment() })
     private lateinit var binding : NewsPageForYouBinding
+    private var canPublishEdit = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +38,15 @@ class ForYouFragment : Fragment() {
 
         binding = NewsPageForYouBinding.inflate(inflater, container, false)
 
-        binding.elpRecyclerView.layoutManager =  LinearLayoutManager(requireContext())
-        setUpObservers()
+        if (AuthUtils.getCurrentUserId() != null) {
+
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
+
+                binding.elpRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                setUpObservers()
+            }
+        }
 
         return binding.root
     }
@@ -46,7 +55,7 @@ class ForYouFragment : Fragment() {
 /*
             val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
 */
-            val adapter = NewsAdapter(requireContext(), allNewsInstances, true)
+            val adapter = NewsAdapter(requireContext(), allNewsInstances, canPublishEdit)
             binding.elpRecyclerView.adapter = adapter
             binding.elpRecyclerView.adapter!!.notifyDataSetChanged()
         }

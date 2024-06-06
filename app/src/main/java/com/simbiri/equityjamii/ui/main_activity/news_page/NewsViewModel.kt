@@ -32,7 +32,7 @@ class NewsViewModel : ViewModel() {
             val taskResult = withContext(ioDispatcher) { collection.get().await() }
 
             _newsList.value =
-                taskResult.toObjects(NewsText::class.java).sortedBy { newsText -> newsText.time }
+                taskResult.toObjects(NewsText::class.java).sortedBy { newsText -> newsText.time }.reversed()
 
         }
     }

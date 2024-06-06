@@ -32,7 +32,7 @@ class ImageDescAdapter(
 
     override fun onBindViewHolder(holder: ImageDescViewHolder, position: Int) {
         val imageDesc = imageDescList[position]
-        Glide.with(context).load(Uri.parse(imageDesc.image)).into(holder.imageView)
+        Glide.with(context).load(Uri.parse(imageDesc.image)).centerCrop().into(holder.imageView)
         holder.editTextDescription.setText(imageDesc.description)
         holder.editTextDescription.addTextChangedListener {
             imageDesc.description = it.toString()

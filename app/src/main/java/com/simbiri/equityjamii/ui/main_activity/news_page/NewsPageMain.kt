@@ -1,7 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +30,8 @@ class newsFragment : Fragment() {
     private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
     private lateinit var tabLayout: TabLayout
+    private var canPublishEdit = false
+
     private val personId = AuthUtils.getCurrentUserId()
 
 
@@ -47,7 +48,8 @@ class newsFragment : Fragment() {
         if (AuthUtils.getCurrentUserId() != null) {
 
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
-                if (currentPerson?.role.contentEquals("journalist")) {
+                canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
+                if (canPublishEdit) {
                     addNewsIcon.visibility = View.VISIBLE
                 }
             }

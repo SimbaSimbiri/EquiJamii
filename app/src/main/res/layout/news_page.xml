@@ -27,7 +27,7 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPagerNews"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
@@ -36,14 +36,14 @@
             app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
     <ImageView
-        android:layout_width="30dp"
+        android:layout_width="35dp"
         android:src="@drawable/add_news_icon"
         android:layout_margin="10dp"
         android:padding="7dp"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:clickable="true"
         android:background="@drawable/circle"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:id="@+id/addNewsIcon"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="Add news to feed"

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.NewsAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
 import com.simbiri.equityjamii.databinding.NewsPageTopStoriesBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
@@ -22,6 +23,8 @@ class FeaturingFragment : Fragment() {
 
     private val viewModel: NewsViewModel by viewModels(ownerProducer =  { requireParentFragment() })
     private lateinit var binding : NewsPageFeaturingBinding
+    private var canPublishEdit = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +32,15 @@ class FeaturingFragment : Fragment() {
     ): View {
         binding = NewsPageFeaturingBinding.inflate(inflater, container, false)
 
-        binding.featuringRecyclerView.layoutManager =  LinearLayoutManager(requireContext())
-        setUpObservers()
+        if (AuthUtils.getCurrentUserId() != null) {
+
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
+
+                binding.featuringRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                setUpObservers()
+            }
+        }
 
         return binding.root
     }
@@ -40,7 +50,7 @@ class FeaturingFragment : Fragment() {
 /*
             val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
 */
-            val adapter = NewsAdapter(requireContext(), allNewsInstances, true)
+            val adapter = NewsAdapter(requireContext(), allNewsInstances, canPublishEdit)
             binding.featuringRecyclerView.adapter = adapter
             binding.featuringRecyclerView.adapter!!.notifyDataSetChanged()
         }
