@@ -34,7 +34,7 @@ data class ImageDesc(var image: String, var description: String) : Parcelable {
     }
 }
 data class NewsText(
-    val imageDescList: MutableList<ImageDesc>,
+    var imageDescList: MutableList<ImageDesc>,
     var title: String,
     var allNews: String,
     var author: String,

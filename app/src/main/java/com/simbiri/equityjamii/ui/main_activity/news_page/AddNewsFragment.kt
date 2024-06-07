@@ -7,6 +7,7 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,8 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -72,7 +75,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             if (result.isSuccessful) {
                 result.uriContent?.let { uri ->
                     val imageDesc = ImageDesc(uri.toString(), "")
-                    imageDescAdapter.addImageDesc(imageDesc)
+                    imageDescList.add(imageDesc)
+                    imageDescAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -112,6 +116,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         }
 
         binding.postButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Initiating saving news", Toast.LENGTH_LONG).show()
             saveNews()
         }
 
@@ -142,41 +147,143 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         imageDescAdapter.notifyDataSetChanged()
     }
 
-    private fun saveNews() {
-
+/*    private fun saveNews() {
         val title = binding.editTextTitle.text.toString().trim()
         val allNews = binding.editTextAllNews.text.toString().trim()
         val author = binding.editTextAuthor.text.toString().trim()
         val newsName = binding.editTextNewsName.text.toString().trim()
         val newsTag = binding.editTextNewsTag.text.toString().trim()
+        binding.progressSaveNews.visibility = View.VISIBLE
 
         if (title.isEmpty() || allNews.isEmpty() || author.isEmpty() || newsName.isEmpty() || newsTag.isEmpty()) {
-            Toast.makeText(requireContext(), "All fields must be filled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "All fields must be filled", Toast.LENGTH_LONG).show()
             return
         }
 
-        for (i in 0 until imageDescAdapter.itemCount) {
-            val viewHolder =
-                binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
-            viewHolder?.let {
-                imageDescList[i] =
-                    ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
-            }
+        if (newsText == null) {
+            newsText = NewsText(mutableListOf(), title, allNews, author, newsName, newsTag, Timestamp.now())
+            Toast.makeText(requireContext(), "Publishing original news item", Toast.LENGTH_LONG).show()
+            uploadImagesAndSaveNews(newsText!!)
+        } else {
+            updateExistingNews(newsText!!)
         }
+    }
+
+    private fun uploadImagesAndSaveNews(newsText: NewsText) {
+        val newImages = imageDescList.filter { it.image.startsWith("file://") } // Assuming new images have a local file URI
+        val existingImages = newsText.imageDescList.filter { it.image.startsWith("https://") }
+
+        val uploads = newImages.map { uploadImage(it) }
+        Tasks.whenAllSuccess<ImageDesc>(uploads)
+            .addOnSuccessListener { uploadedImages ->
+                val updatedList = existingImages + uploadedImages
+                newsText.imageDescList = updatedList.toMutableList()
+                saveNewsToFirestore(newsText, isNew = true)
+            }
+    }
+
+    private fun updateExistingNews(newsText: NewsText) {
+        Toast.makeText(requireContext(), "Updating existing news", Toast.LENGTH_LONG).show()
+
+        // Directly save to Firestore as no new images are uploaded
+        saveNewsToFirestore(newsText, isNew = false)
+    }
+
+    private fun uploadImage(imageDesc: ImageDesc): Task<Uri> {
+        val fileRef = newsStorageRef.child("$NEWS_STORAGE_REF/${System.currentTimeMillis()}-image.jpg")
+        return fileRef.putFile(Uri.parse(imageDesc.image)).continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            fileRef.downloadUrl
+        }.addOnSuccessListener { uri ->
+            ImageDesc(uri.toString(), imageDesc.description)
+        }
+    }
+
+    private fun saveNewsToFirestore(newsText: NewsText, isNew: Boolean) {
+        val newsHashMap: HashMap<String, Any?> = hashMapOf(
+            "title" to newsText.title,
+            "allNews" to newsText.allNews,
+            "author" to newsText.author,
+            "newsName" to newsText.newsName,
+            "newsTag" to newsText.newsTag,
+            "imageDescList" to newsText.imageDescList.map { hashMapOf("image" to it.image, "description" to it.description) },
+            "time" to newsText.time
+        )
+
+        if (isNew) {
+            firestoreInst.collection(NEWS_COLLECTION).add(newsHashMap)
+                .addOnSuccessListener { documentReference ->
+                    updateDocWithId(documentReference.id)
+                    Toast.makeText(requireContext(), "News added successfully", Toast.LENGTH_SHORT).show()
+                    binding.progressSaveNews.visibility = View.INVISIBLE
+                    dismiss()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error publishing news, try again later", Toast.LENGTH_SHORT).show()
+                    binding.progressSaveNews.visibility = View.INVISIBLE
+                    dismiss()
+                }
+        } else {
+            if (newsText.documentId.isNullOrEmpty()) return
+            firestoreInst.collection(NEWS_COLLECTION).document(newsText.documentId!!)
+                .update(newsHashMap)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "News updated successfully", Toast.LENGTH_SHORT).show()
+                    dismiss()
+
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Couldn't publish changes, try again later", Toast.LENGTH_SHORT).show()
+                    dismiss()
+
+                }
+        }
+    }*/
+
+
+        private fun saveNews() {
+
+            val title = binding.editTextTitle.text.toString().trim()
+            val allNews = binding.editTextAllNews.text.toString().trim()
+            val author = binding.editTextAuthor.text.toString().trim()
+            val newsName = binding.editTextNewsName.text.toString().trim()
+            val newsTag = binding.editTextNewsTag.text.toString().trim()
+
+            if (title.isEmpty() || allNews.isEmpty() || author.isEmpty() || newsName.isEmpty() || newsTag.isEmpty()) {
+                Toast.makeText(requireContext(), "All fields must be filled", Toast.LENGTH_LONG).show()
+                return
+            }
+
+
+                val uploadImageList = mutableListOf<ImageDesc>()
+
+
+         for (i in 0 until imageDescList.size) {
+             val viewHolder =
+                 binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
+             viewHolder?.let {
+                 uploadImageList.add(
+                     ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
+                 )
+             }
+         }
 
         val timestamp = Timestamp.now()
         if (newsText == null) {
             newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag, timestamp)
         } else {
             newsText!!.let { news ->
-                news.imageDescList.clear()
-                news.imageDescList.addAll(imageDescList)
+                news.imageDescList = imageDescList
                 news.title = title
                 news.allNews = allNews
                 news.author = author
                 news.newsName = newsName
                 news.newsTag = newsTag
-                news.time = timestamp
+                news.time = news.time
             }
         }
 
@@ -184,13 +291,33 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     }
 
     private fun saveNewsToFireStore(newsText: NewsText) {
+        val imageUploadsCount = newsText.imageDescList.size
+        var uploadCounter = 0
+        val uploadedImageDescList = mutableListOf<ImageDesc>()
 
-        val imageList = ArrayList<ImageDesc>()
 
         for (i in 0 until imageDescAdapter.itemCount) {
+            val curImageDesc = newsText.imageDescList[i]
+
+            if (curImageDesc.image.startsWith("https://")){
+                uploadedImageDescList.add(
+                    ImageDesc(
+                        curImageDesc.image,
+                        curImageDesc.description
+                    )
+                )
+
+                uploadCounter++
+
+                if (uploadCounter == imageUploadsCount) {
+                    saveOrUpdate(newsText, uploadedImageDescList)
+                }
+
+                continue
+            }
+
             val newsItemRef = newsStorageRef.child(NEWS_STORAGE_REF)
                 .child(FieldValue.serverTimestamp().toString() + "image${i + 1}.jpg")
-            val curImageDesc = newsText.imageDescList[i]
 
             if (curImageDesc.image.isNotEmpty()) {
                 newsItemRef.putFile(Uri.parse(curImageDesc.image))
@@ -199,18 +326,27 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                         if (taskUpload.isSuccessful) {
 
                             newsItemRef.downloadUrl.addOnSuccessListener { newsImageUri ->
-                                imageList.add(
+                                uploadedImageDescList.add(
                                     ImageDesc(
                                         newsImageUri.toString(),
                                         curImageDesc.description
                                     )
                                 )
+                                uploadCounter++
 
-                                if (i == imageDescAdapter.itemCount - 1) {
-                                    saveOrUpdate(newsText, imageList)
+                                if (uploadCounter == imageUploadsCount) {
+                                    saveOrUpdate(newsText, uploadedImageDescList)
                                 }
 
                             }
+
+                        } else {
+
+                            Toast.makeText(
+                                requireContext(),
+                                "${taskUpload.exception?.message}}",
+                                Toast.LENGTH_LONG
+                            ).show()
 
                         }
 
@@ -222,18 +358,19 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
     }
 
-    private fun saveOrUpdate(newsText: NewsText, imageList: ArrayList<ImageDesc>) {
+    private fun saveOrUpdate(newsText: NewsText, imageList: MutableList<ImageDesc>) {
         val newsHashMap: HashMap<String, Any?> = HashMap()
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
-        newsHashMap["imageDescList"] = imageList
+        newsHashMap["imageDescList"] = imageList.map { hashMapOf("image" to it.image, "description" to it.description) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title
         newsHashMap["documentId"] = newsText.documentId
+        newsHashMap["time"] = newsText.time
+        binding.progressSaveNews.visibility = View.VISIBLE
 
         if (!newsText.documentId.isNullOrEmpty()) {
-            newsHashMap["time"] = Timestamp.now()
 
             firestoreInst.collection(NEWS_COLLECTION).document(newsText.documentId!!)
                 .update(newsHashMap).addOnCompleteListener { taskUpdate ->
@@ -246,16 +383,15 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                     } else {
                         Toast.makeText(
                             requireContext(),
-                            "Couldn't find news item in database",
+                            "Couldn't publish changes, try again later",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    binding.progressSaveNews.visibility = View.INVISIBLE
                     dismiss()
                 }
 
         } else {
-            newsHashMap["time"] = newsText.time
-
             firestoreInst.collection(NEWS_COLLECTION).add(newsHashMap)
                 .addOnCompleteListener { taskDocRef ->
                     if (taskDocRef.isSuccessful) {
@@ -276,12 +412,13 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                         ).show()
                     }
                     dismiss()
+                    binding.progressSaveNews.visibility = View.INVISIBLE
 
                 }
         }
 
-    }
 
+    }
     private fun updateDocWithId(docId: String) {
         firestoreInst.collection(NEWS_COLLECTION).document(docId).update("documentId", docId)
     }
@@ -293,6 +430,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
         val metrics = DisplayMetrics()
         requireActivity().windowManager?.defaultDisplay?.getMetrics(metrics)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED)
+
 
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
