@@ -4,29 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main_activity.jamii_page.EventsFragment">
+    tools:context=".ui.main_activity.jamii_page.MyEventsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-
-        android:id="@+id/eventsRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/myEventsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/adapters_events_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/addEvent"
-        android:contentDescription="@string/add_new_event"
-        android:layout_width="35dp"
-        android:clickable="true"
-        android:src="@drawable/add_event_icon"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="20dp"
-        android:background="@drawable/circle"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

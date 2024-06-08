@@ -158,6 +158,14 @@ class JamiiPageFragment : Fragment() {
                     MyPostsFragment()
                 }
 
+                3->{
+                    EventsFragment()
+                }
+
+                4-> {
+                    MyEventsFragment()
+                }
+
                 else -> {
                     Fragment()
                 }

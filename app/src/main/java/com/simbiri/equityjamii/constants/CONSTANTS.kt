@@ -9,3 +9,5 @@ val USERS_COLLECTION ="Users"
 val LIKES_SUB_COLLECTION = "Likes"
 val USER_ID = AuthUtils.getCurrentUserId()
 val NEWS_COLLECTION = "News"
+val EVENTS_C0LLECTION = "Events"
+val EVENT_SUB_COLLECTION = "participants"
