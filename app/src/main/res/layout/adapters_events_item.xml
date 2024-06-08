@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?><?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="10dp"
+    android:backgroundTint="@color/lighterMaroon"
+    app:cardCornerRadius="15dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/eventsNameText"
+            style="@style/titleTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="EVENT TITLE"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/editEvent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/eventLocationLink"
+            style="@style/titleTab"
+            android:src="@drawable/virt_link"
+            android:layout_margin="5dp"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="0dp"
+            android:contentDescription="Event link location"
+            android:visibility="visible" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider"
+            />
+
+
+        <TextView
+            android:id="@+id/editEvent"
+            style="@style/titleTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/edit_post"
+            android:text="Edit post"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/eventsNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/eventsNameText" />
+
+        <ImageView
+            android:id="@+id/deleteEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:src="@drawable/delete_icon"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider2" />
+
+        <ImageView
+            android:id="@+id/regUnregForEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:contentDescription="@string/edit_post"
+            android:src="@drawable/register_event"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider2" />
+
+
+        <TextView
+            android:id="@+id/eventDateTimeTypeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Virtual, Thursday July 18, 8:00 - 12:00PM EAT"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventsNameText" />
+
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventDateTimeTypeText" />
+
+        <TextView
+            android:id="@+id/eventsDescriptionExp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/eventLocationLink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider" />
+
+        <ImageView
+            android:id="@+id/eventsThumbNail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:contentDescription="Events thumbnail"
+            android:scaleType="centerCrop"
+            android:src="@drawable/equityjamiibackground"
+            android:tooltipText="@string/posted_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventsDescriptionExp" />
+
+        <View
+            android:id="@+id/viewDivider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventsThumbNail" />
+
+        <ImageView
+            android:id="@+id/eventParticipantsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/registrants_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewDivider2" />
+
+        <TextView
+            android:id="@+id/numParticipantsText"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/num_likes"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/eventParticipantsImage"
+            app:layout_constraintStart_toEndOf="@id/eventParticipantsImage"
+            app:layout_constraintTop_toTopOf="@id/eventParticipantsImage" />
+
+        <TextView
+            android:id="@+id/eventParticipantsTexts"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="@string/event_participants"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/numParticipantsText"
+            app:layout_constraintStart_toEndOf="@id/numParticipantsText"
+            app:layout_constraintTop_toTopOf="@id/numParticipantsText" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
