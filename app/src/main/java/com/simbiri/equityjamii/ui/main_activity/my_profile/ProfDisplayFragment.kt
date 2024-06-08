@@ -124,12 +124,13 @@ class ProfDisplayFragment : Fragment() {
 
         binding.editProfileTv.setOnClickListener {
             binding.contentLoadingProgressBar.visibility = View.VISIBLE
+
             val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            editProfileFragment.show(transaction, editProfileFragment.tag)
             Handler().postDelayed({
                 binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-            }, 2500)
+                editProfileFragment.show(transaction, editProfileFragment.tag)
+            }, 2000)
 
         }
 
@@ -138,9 +139,10 @@ class ProfDisplayFragment : Fragment() {
             val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             networkDialogFrag.show(transaction, networkDialogFrag.tag)
+
             Handler().postDelayed({
                 binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-            }, 2500)
+            }, 1500)
 
         }
 
@@ -205,6 +207,9 @@ class ProfDisplayFragment : Fragment() {
         val context = requireContext()
         val filtered = listsSocials.filter { it != "" }
         val socialAdapter = SocialAdapter(context, filtered)
+        if (filtered.isNotEmpty()){
+            binding.socialTextHead.visibility = View.VISIBLE
+        }
 
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL

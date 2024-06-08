@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -50,6 +51,19 @@ class PostAdapter(
         POST_COLLECTION
     )
     private val currentUserId = AuthUtils.getCurrentUserId()
+    private var requestOptions : RequestOptions
+    init {
+
+        val displayMetrics = DisplayMetrics()
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenHeight = displayMetrics.heightPixels
+        val screenWidth = displayMetrics.widthPixels
+        requestOptions = RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5)
+            .fitCenter()
+            .diskCacheStrategy(DiskCacheStrategy.ALL);
+    }
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -73,7 +87,6 @@ class PostAdapter(
         var currentPost: Post? = null
         var person: Person? = null
         var currentPosition = 0
-
 
         private fun toggleCaptionExpansion() {
             isExpanded = !isExpanded
@@ -235,16 +248,9 @@ class PostAdapter(
         }
 
         private fun setImages(imagePosted: String?, imageUser: String?, liked: Boolean) {
-            val displayMetrics = DisplayMetrics()
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-            val screenHeight = displayMetrics.heightPixels
-            val screenWidth = displayMetrics.widthPixels
-
             Glide.with(context).load(imagePosted)
-                .apply(RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5))
-                .fitCenter().into(this.imagePosted)
+                .apply(requestOptions)
+                .into(this.imagePosted)
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
             if (liked) {
@@ -280,6 +286,7 @@ class PostAdapter(
                     val transaction =
                         (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                     likesFrag.show(transaction, likesFrag.tag)
+
                 }
             }
 
@@ -295,6 +302,7 @@ class PostAdapter(
             this.imagePosted.setOnTouchListener { view, event ->
                 view.performClick()
                 gestureDetector.onTouchEvent(event)
+
             }
 
             this.captionText.setOnTouchListener { v, event ->

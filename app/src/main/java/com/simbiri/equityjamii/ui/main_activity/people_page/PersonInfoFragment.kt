@@ -24,7 +24,6 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
@@ -100,14 +99,18 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
 
                 otherPeopleProfilesList.clear()
-                if (listFromScope.size > 5){
-                    otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0,4))
-                }else{
+                if (listFromScope.size > 5) {
+                    otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0, 4))
+
+                } else {
                     otherPeopleProfilesList.addAll(listFromScope.shuffled())
                 }
-
-                visibilityViews()
-                otherSimilarProfilesAdapter.notifyDataSetChanged()
+            }.invokeOnCompletion {
+                if (otherPeopleProfilesList.isNotEmpty()) {
+                    binding!!.similarProfTextHead.visibility = View.VISIBLE
+                    binding!!.recyclerOtherProfiles.visibility = View.VISIBLE
+                    otherSimilarProfilesAdapter.notifyDataSetChanged()
+                }
             }
         }
 
@@ -172,6 +175,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         }
 
+        visibilityViews()
         setRecyclerViewSocials()
         setRecyclerViewProfiles()
 
@@ -224,7 +228,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                         if (taskSnap.isSuccessful) {
 
                             Toast.makeText(
-                                requireContext(),
+                                requireActivity(),
                                 "Followed ${personParceled.name}",
                                 Toast.LENGTH_LONG
                             ).show()
@@ -249,18 +253,21 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         val socialEmpty =
             social.linkedin.isEmpty() && social.insta.isEmpty() && social.webs.isEmpty()
                     && social.faceb.isEmpty()
-        val similarProfilesEmpty = otherPeopleProfilesList.isEmpty()
 
         binding!!.let {
             when {
-                city.isEmpty() && country.isEmpty() -> it.countryTextHead.visibility =
-                    View.GONE
+                city.isEmpty() && country.isEmpty() -> {
+                    it.countryTextHead.visibility =
+                        View.GONE
+                    it.countryEmojiCard.visibility = View.GONE
+                }
 
-                city.isEmpty() && country.isEmpty() -> it.countryEmojiCard.visibility = View.GONE
-                socialEmpty -> it.socialTextHead.visibility = View.GONE
-                social.about.isEmpty() -> it.aboutTextHead.visibility = View.GONE
-                social.about.isEmpty() -> it.aboutCardInfo.visibility = View.GONE
-                similarProfilesEmpty -> it.similarProfTextHead.visibility = View.INVISIBLE
+                !socialEmpty -> it.socialTextHead.visibility = View.VISIBLE
+                social.about.isEmpty() -> {
+                    it.aboutTextHead.visibility = View.GONE
+                    it.aboutCardInfo.visibility = View.GONE
+                }
+
             }
         }
 
@@ -348,18 +355,5 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PersonInfoViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

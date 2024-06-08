@@ -15,8 +15,6 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -38,7 +36,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private var newsText: NewsText? = null
     private lateinit var openImagePicker: ActivityResultLauncher<CropImageContractOptions>
     private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val storageRef = FirebaseStorage.getInstance().getReference()
     private val imageDescList = mutableListOf<ImageDesc>()
     private lateinit var imageDescAdapter: ImageDescAdapter
     private val newsStorageRef = FirebaseStorage.getInstance().reference
@@ -65,7 +62,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = AddNewsDialogBinding.inflate(inflater, container, false)
         val view = binding.root
 
