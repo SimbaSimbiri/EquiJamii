@@ -52,9 +52,7 @@ class ForYouFragment : Fragment() {
     }
     private fun setUpObservers(){
         viewModel.newsList.observe(viewLifecycleOwner){ allNewsInstances ->
-/*
-            val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
-*/
+
             val adapter = NewsAdapter(requireContext(), allNewsInstances, canPublishEdit)
             binding.elpRecyclerView.adapter = adapter
             binding.elpRecyclerView.adapter!!.notifyDataSetChanged()

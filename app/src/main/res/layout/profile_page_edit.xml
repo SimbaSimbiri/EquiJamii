@@ -191,11 +191,11 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/designationLayout"
-                        style="@style/FirebaseUI.TextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="5dp"
+                        style="@style/FirebaseUI.TextInputLayout"
                         app:boxCornerRadiusBottomEnd="10dp"
                         app:boxCornerRadiusBottomStart="10dp"
                         app:boxCornerRadiusTopEnd="10dp"
@@ -210,12 +210,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/designationProfileEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
-                            android:hint="Designation"
                             android:maxEms="30"
+                            android:hint="Designation"
+                            style="@style/FirebaseUI.TextInputEditText"
+                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:textColorHighlight="@color/lighterMaroon"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"

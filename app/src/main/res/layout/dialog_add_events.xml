@@ -3,139 +3,244 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:background="@drawable/backg_bottom"
+    android:layout_height="match_parent"
     tools:context=".ui.main_activity.jamii_page.AddEventsDialog">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/nestedScrollView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
             android:layout_height="match_parent">
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/titleLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/FirebaseUI.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/logoColour"
+                app:boxStrokeWidth="2dp"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/titleInput"
+                    style="@style/FirebaseUI.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Event Title" />
+                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    android:hint="Event title"
+                    android:textColorHighlight="@color/lighterMaroon"
+                    android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/descriptionLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/FirebaseUI.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/primaryColor"
+                app:boxStrokeWidth="2dp"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionInput"
+                    style="@style/FirebaseUI.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Event Description" />
+                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    android:hint="Event description"
+                    android:textColorHighlight="@color/lighterMaroon"
+                    android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/typeLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/FirebaseUI.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/primaryColor"
+                app:boxStrokeWidth="2dp"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/descriptionLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/typeInput"
+                    style="@style/FirebaseUI.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Event Type" />
+                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    android:hint="Event type"
+                    android:textColorHighlight="@color/lighterMaroon"
+                    android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/locationLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/FirebaseUI.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/typeLayout"
+                android:layout_margin="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/primaryColor"
+                app:boxStrokeWidth="2dp"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/typeLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/locationInput"
+                    style="@style/FirebaseUI.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Event Location or Link" />
+                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    android:hint="Event location or virtual link"
+                    android:textColorHighlight="@color/lighterMaroon"
+                    android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <ImageView
                 android:id="@+id/eventImage"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_stroke_rectangle"
+                android:padding="2dp"
                 android:scaleType="centerCrop"
-                android:layout_marginTop="20dp"
                 android:src="@drawable/equityjamiibackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/locationLayout" />
+                app:layout_constraintTop_toBottomOf="@id/addImageButton" />
 
-            <com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
-                android:id="@+id/datePicker"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                app:dp_spinnerMode="true"
-                app:layout_constraintEnd_toEndOf="parent"
+            <TextView
+                android:id="@+id/selectDateTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Select event date"
+                android:textColor="@color/logoColour"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/eventImage" />
 
-            <com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
+            <com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:datePickerMode="spinner"
+                app:darkModeEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/datePicker"
-                app:tp_spinnerMode="true" />
+                app:layout_constraintTop_toBottomOf="@id/selectDateTv"
+                app:offset="3"
+                 />
+
+            <TextView
+                android:id="@+id/selectTimeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Select event time"
+                android:textColor="@color/logoColour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/datePicker" />
+
+            <com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:timePickerMode="spinner"
+                app:darkModeEnabled="true"
+                app:is24HourViewEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/selectTimeTv"
+                app:offset="2"
+                />
 
 
             <Button
                 android:id="@+id/postButton"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Post Event"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/logoColour"
+                android:layout_margin="20dp"
+                android:text="Add Event"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timePicker" />
 
             <Button
                 android:id="@+id/cancelButton"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:text="Cancel"
+                android:backgroundTint="@color/logoColour"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/postButton" />
+                app:layout_constraintTop_toBottomOf="@id/timePicker" />
 
             <Button
                 android:id="@+id/addImageButton"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:backgroundTint="@color/logoColour"
                 android:layout_height="wrap_content"
-                android:text="Add Image"
+                android:layout_margin="20dp"
+                android:text="Add event poster"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cancelButton" />
+                app:layout_constraintTop_toBottomOf="@id/locationLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

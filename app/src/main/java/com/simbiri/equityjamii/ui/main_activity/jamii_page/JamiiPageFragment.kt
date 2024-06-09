@@ -133,6 +133,16 @@ class JamiiPageFragment : Fragment() {
                     tab.text = "My Posts"
                 }
 
+                3 -> {
+                    tab.text = "Events"
+                }
+
+
+                4 -> {
+                    tab.text = "My events"
+                }
+
+
             }
         }.attach()
 
@@ -141,7 +151,7 @@ class JamiiPageFragment : Fragment() {
     class PostSlidePageAdapter(jamiiPageFragment: JamiiPageFragment) :
         FragmentStateAdapter(jamiiPageFragment) {
         override fun getItemCount(): Int {
-            return 3
+            return 5
         }
 
         override fun createFragment(position: Int): Fragment {

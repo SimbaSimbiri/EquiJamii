@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,11 +19,12 @@ import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
 import com.simbiri.equityjamii.constants.EVENT_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
 
 class EventsAdapter(
     private val context: Context,
     private var eventsList: MutableList<Event>,
-    private val editable: Boolean
+    private val editable: Boolean = false
 ) : RecyclerView.Adapter<EventsAdapter.EventViewHolder>() {
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -36,8 +38,9 @@ class EventsAdapter(
         var editEvent: ImageView = itemView.findViewById(R.id.editEvent)
         var deleteEvent: ImageView = itemView.findViewById(R.id.deleteEvent)
         var registerEvent: ImageView = itemView.findViewById(R.id.regUnregForEvent)
+        var eventLink: ImageView = itemView.findViewById(R.id.eventLocationLink)
 
-        private var currentEvent : Event? =  null
+        private var currentEvent: Event? = null
         private var isDescriptionExpanded = false
         private val MAX_CHAR_COLLAPSED = 90
 
@@ -47,19 +50,29 @@ class EventsAdapter(
             setTextsToggled(event.description, isDescriptionExpanded)
             eventDateTime.text = event.dateTime.toString()
 
-            if (event.eventType.contentEquals("virtual", true)){
-            }else{}
+            if (event.eventType.contentEquals("virtual", true)) {
+                eventLink.setImageResource(R.drawable.virt_link)
+            } else {
+                eventLink.setImageResource(R.drawable.location_link)
+            }
 
             Glide.with(context).load(event.imageUrl).into(eventImage)
 
             if (editable) {
                 editEvent.visibility = View.VISIBLE
+                registerEvent.visibility = View.GONE
                 deleteEvent.visibility = View.VISIBLE
+
                 editEvent.setOnClickListener {
-                    // Logic to open AddEventsDialog with event for editing
+                    val editEventFrag = AddEventsDialog.newInstance(currentEvent)
+                    val transaction =
+                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    editEventFrag.show(transaction, editEventFrag.tag)
                 }
+
                 deleteEvent.setOnClickListener {
-                    // Logic to delete the event from Firebase
+                    firestore.collection(EVENTS_C0LLECTION).document(currentEvent!!.documentId!!)
+                        .delete()
                 }
             }
 
@@ -67,6 +80,7 @@ class EventsAdapter(
                 toggleRegistration(event.documentId)
             }
         }
+
         private fun setTextsToggled(description: String?, isExpanded: Boolean) {
             val spannable = SpannableStringBuilder(description)
             if (description != null) {
@@ -102,18 +116,19 @@ class EventsAdapter(
             val eventRef = firestore.collection(EVENTS_C0LLECTION).document(eventId!!)
             val registrationRef = eventRef.collection(EVENT_SUB_COLLECTION)
 
-                registrationRef.document(userId!!).get().addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        registrationRef.document(userId).delete()
-                    } else {
-                        registrationRef.document(userId).set(emptyMap<String, Any>()) // Register user
-                    }
+            registrationRef.document(userId!!).get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    registrationRef.document(userId).delete()
+                } else {
+                    registrationRef.document(userId).set(emptyMap<String, Any>())
                 }
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.adapters_events_item, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.adapters_events_item, parent, false)
         return EventViewHolder(view)
     }
 

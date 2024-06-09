@@ -1,12 +1,15 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.simbiri.equityjamii.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.simbiri.equityjamii.adapters.EventsAdapter
+import com.simbiri.equityjamii.data.model.Event
+import com.simbiri.equityjamii.databinding.EventsFragBinding
 
 class EventsFragment : Fragment() {
 
@@ -15,17 +18,42 @@ class EventsFragment : Fragment() {
     }
 
     private val viewModel: EventsViewModel by viewModels()
+    private lateinit var binding: EventsFragBinding
+    private var eventsList = mutableListOf<Event>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.events_frag, container, false)
+        binding = EventsFragBinding.inflate(inflater, container, false)
+
+        binding.eventsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = EventsAdapter(requireActivity(), eventsList)
+            hasFixedSize()
+        }
+
+        binding.addEvent.setOnClickListener {
+            val addNewEvent = AddEventsDialog()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            addNewEvent.show(transaction, addNewEvent.tag)
+        }
+
+        setUpObservers()
+
+        return binding.root
+    }
+
+    private fun setUpObservers() {
+        viewModel.eventList.observe(viewLifecycleOwner) { allEvents ->
+            eventsList = allEvents
+            binding.eventsRecyclerView.adapter!!.notifyDataSetChanged()
+
+        }
     }
 }
