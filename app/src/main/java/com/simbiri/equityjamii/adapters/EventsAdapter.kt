@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +21,8 @@ import com.simbiri.equityjamii.constants.EVENT_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class EventsAdapter(
     private val context: Context,
@@ -35,20 +38,24 @@ class EventsAdapter(
         var eventDescription: TextView = itemView.findViewById(R.id.eventsDescriptionExp)
         var eventDateTime: TextView = itemView.findViewById(R.id.eventDateTimeTypeText)
         var eventImage: ImageView = itemView.findViewById(R.id.eventsThumbNail)
-        var editEvent: ImageView = itemView.findViewById(R.id.editEvent)
+        var editEvent: TextView = itemView.findViewById(R.id.editEvent)
         var deleteEvent: ImageView = itemView.findViewById(R.id.deleteEvent)
         var registerEvent: ImageView = itemView.findViewById(R.id.regUnregForEvent)
         var eventLink: ImageView = itemView.findViewById(R.id.eventLocationLink)
+        var numParticipants: TextView = itemView.findViewById(R.id.numParticipantsText)
 
         private var currentEvent: Event? = null
         private var isDescriptionExpanded = false
         private val MAX_CHAR_COLLAPSED = 90
 
-        fun bind(event: Event) {
+        fun bind(event: Event, position: Int) {
             currentEvent = event
             eventNameText.text = event.title
             setTextsToggled(event.description, isDescriptionExpanded)
-            eventDateTime.text = event.dateTime.toString()
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy @ hh:mm a", Locale.getDefault())
+
+            eventDateTime.text = " Date & time: ${dateFormat.format(event.dateTime!!.toDate())}"
+            numParticipants(currentEvent!!)
 
             if (event.eventType.contentEquals("virtual", true)) {
                 eventLink.setImageResource(R.drawable.virt_link)
@@ -56,7 +63,7 @@ class EventsAdapter(
                 eventLink.setImageResource(R.drawable.location_link)
             }
 
-            Glide.with(context).load(event.imageUrl).into(eventImage)
+            Glide.with(context).load(event.imageUrl).fitCenter().into(eventImage)
 
             if (editable) {
                 editEvent.visibility = View.VISIBLE
@@ -73,6 +80,10 @@ class EventsAdapter(
                 deleteEvent.setOnClickListener {
                     firestore.collection(EVENTS_C0LLECTION).document(currentEvent!!.documentId!!)
                         .delete()
+                    eventsList.remove(event)
+                    notifyItemRemoved(position)
+                    Toast.makeText(context, "Deleted event", Toast.LENGTH_SHORT).show()
+
                 }
             }
 
@@ -80,6 +91,18 @@ class EventsAdapter(
                 toggleRegistration(event.documentId)
             }
         }
+
+        fun numParticipants(event: Event) {
+            var count = 0
+            firestore.collection(EVENTS_C0LLECTION).document(event.documentId!!).collection(
+                EVENT_SUB_COLLECTION
+            ).get().addOnSuccessListener {
+                count = it.count()
+                this.numParticipants.text = count.toString()
+            }
+
+        }
+
 
         private fun setTextsToggled(description: String?, isExpanded: Boolean) {
             val spannable = SpannableStringBuilder(description)
@@ -119,8 +142,13 @@ class EventsAdapter(
             registrationRef.document(userId!!).get().addOnSuccessListener { document ->
                 if (document.exists()) {
                     registrationRef.document(userId).delete()
+                    Toast.makeText(context, "Unregistered from event", Toast.LENGTH_SHORT).show()
+                    this.registerEvent.setImageResource(R.drawable.register_event)
                 } else {
                     registrationRef.document(userId).set(emptyMap<String, Any>())
+                    Toast.makeText(context, "Registered for event", Toast.LENGTH_SHORT).show()
+                    this.registerEvent.setImageResource(R.drawable.register_event)
+
                 }
             }
         }
@@ -133,7 +161,7 @@ class EventsAdapter(
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(eventsList[position])
+        holder.bind(eventsList[position], position)
     }
 
     override fun getItemCount(): Int = eventsList.size

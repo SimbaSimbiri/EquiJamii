@@ -3,24 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/backg_bottom"
     android:layout_height="match_parent"
+    android:background="@drawable/backg_bottom"
     tools:context=".ui.main_activity.jamii_page.AddEventsDialog">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView3"
-        android:layout_width="0dp"
+    <ScrollView
+        android:id="@+id/nestedView"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_height="match_parent">
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/titleLayout"
@@ -28,12 +26,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:boxStrokeColor="@color/logoColour"
-                app:boxStrokeWidth="2dp"
                 app:cursorColor="@color/logoColour"
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,19 +43,12 @@
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/descriptionLayout"
                 style="@style/FirebaseUI.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:boxStrokeColor="@color/primaryColor"
-                app:boxStrokeWidth="2dp"
                 app:cursorColor="@color/logoColour"
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -87,12 +72,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:boxStrokeColor="@color/primaryColor"
-                app:boxStrokeWidth="2dp"
                 app:cursorColor="@color/logoColour"
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,12 +95,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:boxStrokeColor="@color/primaryColor"
-                app:boxStrokeWidth="2dp"
                 app:cursorColor="@color/logoColour"
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -139,102 +112,12 @@
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <ImageView
-                android:id="@+id/eventImage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/shape_stroke_rectangle"
-                android:padding="2dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/equityjamiibackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addImageButton" />
-
-            <TextView
-                android:id="@+id/selectDateTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Select event date"
-                android:textColor="@color/logoColour"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventImage" />
-
-            <com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
-                android:id="@+id/datePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:datePickerMode="spinner"
-                app:darkModeEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/selectDateTv"
-                app:offset="3"
-                 />
-
-            <TextView
-                android:id="@+id/selectTimeTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Select event time"
-                android:textColor="@color/logoColour"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/datePicker" />
-
-            <com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:timePickerMode="spinner"
-                app:darkModeEnabled="true"
-                app:is24HourViewEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/selectTimeTv"
-                app:offset="2"
-                />
-
-
-            <Button
-                android:id="@+id/postButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/logoColour"
-                android:layout_margin="20dp"
-                android:text="Add Event"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timePicker" />
-
-            <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="Cancel"
-                android:backgroundTint="@color/logoColour"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timePicker" />
-
             <Button
                 android:id="@+id/addImageButton"
                 android:layout_width="wrap_content"
-                android:backgroundTint="@color/logoColour"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:backgroundTint="@color/logoColour"
                 android:text="Add event poster"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -242,8 +125,119 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/locationLayout" />
 
+            <ImageView
+                android:id="@+id/eventImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_stroke_rectangle"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.526"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addImageButton"
+                app:layout_constraintVertical_bias="0.2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </ScrollView>
 
-    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nestedView">
+
+
+        <TextView
+            android:id="@+id/selectDateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="10dp"
+            android:clickable="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="Select event date"
+            android:textColor="@color/logoColour"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
+            android:id="@+id/datePicker"
+            style="@style/titleTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:isScrollContainer="true"
+            android:nestedScrollingEnabled="false"
+            app:darkModeEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/selectDateTv"
+            app:offset="1" />
+
+
+        <TextView
+            android:id="@+id/selectTimeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Select event time"
+            android:textColor="@color/logoColour"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/datePicker" />
+
+        <com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:isScrollContainer="true"
+            app:darkModeEnabled="true"
+            app:is24HourViewEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/selectTimeTv"
+            app:offset="1" />
+
+
+        <Button
+            android:id="@+id/postButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Add Event"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

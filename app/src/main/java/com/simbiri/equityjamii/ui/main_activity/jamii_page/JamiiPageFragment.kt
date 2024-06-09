@@ -129,11 +129,11 @@ class JamiiPageFragment : Fragment() {
                     tab.text = "Feed"
                 }
 
-                2 -> {
+                3 -> {
                     tab.text = "My Posts"
                 }
 
-                3 -> {
+                2 -> {
                     tab.text = "Events"
                 }
 
@@ -164,11 +164,11 @@ class JamiiPageFragment : Fragment() {
                     FeedFragment()
                 }
 
-                2 -> {
+                3 -> {
                     MyPostsFragment()
                 }
 
-                3->{
+                2->{
                     EventsFragment()
                 }
 

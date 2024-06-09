@@ -25,7 +25,7 @@
         android:src="@drawable/add_event_icon"
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="20dp"
+        android:layout_margin="5dp"
         android:background="@drawable/circle"
         app:layout_constraintEnd_toEndOf="parent" />
 

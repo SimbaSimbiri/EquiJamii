@@ -7,19 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.adapters.EventsAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.databinding.MyEventsFragmentBinding
 
 class MyEventsFragment : Fragment() {
 
     companion object {
-
         fun newInstance() = MyEventsFragment()
     }
 
     private lateinit var binding: MyEventsFragmentBinding
     private var eventsList = mutableListOf<Event>()
     private val viewModel = EventsViewModel()
+    private val currentUserId = AuthUtils.getCurrentUserId()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +41,10 @@ class MyEventsFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.eventList.observe(viewLifecycleOwner) { allEvents ->
-            eventsList = allEvents
+            eventsList.clear()
+            eventsList.addAll(allEvents.filter { event: Event ->
+                event.userId.contentEquals(currentUserId)
+            })
             binding.myEventsRecycler.adapter!!.notifyDataSetChanged()
 
         }

@@ -51,7 +51,8 @@ class EventsFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.eventList.observe(viewLifecycleOwner) { allEvents ->
-            eventsList = allEvents
+            eventsList.clear()
+            eventsList.addAll(allEvents)
             binding.eventsRecyclerView.adapter!!.notifyDataSetChanged()
 
         }

@@ -134,7 +134,7 @@ data class Event(
     val title: String,
     val description: String,
     val location: String,
-    val dateTime: Timestamp,
+    val dateTime: Timestamp?,
     val imageUrl: String?,
     val userId: String,
     val eventType: String,
@@ -150,6 +150,8 @@ data class Event(
         parcel.readString() ?: "",
         parcel.readString()
     )
+
+    constructor():this("","","",null,"","","",)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)

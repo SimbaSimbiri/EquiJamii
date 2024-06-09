@@ -67,7 +67,7 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayoutposts"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/tabPosts"
@@ -76,7 +76,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/primaryColor"
                 app:tabTextAppearance="@style/titleTab2"
                 app:tabTextColor="@color/tabUnselected" />
