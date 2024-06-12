@@ -101,7 +101,7 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                         guidelines = CropImageView.Guidelines.OFF,
                         aspectRatioX = 1,
                         aspectRatioY = 1,
-                        fixAspectRatio = true
+                        fixAspectRatio = false
                     )
                 )
 
@@ -115,10 +115,12 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 typeInput.setText(it.eventType)
                 Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
                 locationInput.setText(it.location)
-
-                setupDateTimePickers()
             }
+
+            setupDateTimePickers()
+
         }
+
     }
 
     private fun setupDateTimePickers() {
@@ -129,7 +131,6 @@ class AddEventsDialog : BottomSheetDialogFragment() {
             setDate(initialDateMillis)
             setDateChangeListener(object : DatePicker.DateChangeListener {
                 override fun onDateChanged(date: Long, day: Int, month: Int, year: Int) {
-                    eventDate.set(Calendar.DATE, date.toInt())
                     eventDate.set(Calendar.YEAR, year)
                     eventDate.set(Calendar.MONTH, month)
                     eventDate.set(Calendar.DAY_OF_MONTH, day)
@@ -145,7 +146,7 @@ class AddEventsDialog : BottomSheetDialogFragment() {
 
 
         binding.timePicker.apply {
-            eventDate.time = event?.dateTime?.toDate()!!
+            eventDate.timeInMillis = initialDateMillis
             setTime(eventDate.get(Calendar.HOUR_OF_DAY), eventDate.get(Calendar.MINUTE))
             setTimeChangeListener(object : TimePicker.TimeChangeListener {
                 override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
@@ -163,78 +164,6 @@ class AddEventsDialog : BottomSheetDialogFragment() {
 
     }
 
-    /*
-        private fun postEvent() {
-
-            val eventItemRef = eventStorageRef.child(POST_STORAGE_REF)
-                .child(FieldValue.serverTimestamp().toString() + ".jpg")
-            if (imageUri != null) {
-
-                eventItemRef.putFile(Uri.parse(imageUri.toString()))
-                    .addOnCompleteListener { taskUpload ->
-                        if (taskUpload.isSuccessful) {
-
-                            eventItemRef.downloadUrl.addOnSuccessListener { eventImageUri ->
-
-                                val newEvent = Event(
-                                    title = binding.titleInput.text.toString().trim(),
-                                    description = binding.descriptionInput.text.toString().trim(),
-                                    location = binding.locationInput.text.toString().trim(),
-                                    dateTime = Timestamp(eventDate.time),
-                                    imageUrl = eventImageUri.toString() ?: event?.imageUrl,
-                                    userId = currentId!!,
-                                    eventType = binding.typeInput.text.toString().trim(),
-                                    documentId = event?.documentId
-                                )
-
-                                if (event == null) {
-                                    firestore.collection(EVENTS_C0LLECTION).add(newEvent)
-                                        .addOnSuccessListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Event added successfully",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            updateWithDocumentId(it.id)
-                                            dismiss()
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Failed to add event",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                } else {
-                                    firestore.collection(EVENTS_C0LLECTION)
-                                        .document(newEvent.documentId!!)
-                                        .set(newEvent)
-                                        .addOnSuccessListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Event updated successfully",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            dismiss()
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(
-                                                context,
-                                                "Failed to update event",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                }
-
-
-                            }
-                        }
-                    }
-            }
-
-
-        }
-    */
 
     private fun postEvent() {
         val eventItemRef = eventStorageRef.child(POST_STORAGE_REF)
