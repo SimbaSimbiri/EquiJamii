@@ -132,11 +132,11 @@
         <ImageView
             android:id="@+id/eventsThumbNail"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
             android:clickable="true"
             android:contentDescription="Events thumbnail"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:src="@drawable/equityjamiibackground"
             android:tooltipText="@string/posted_image"
             app:layout_constraintEnd_toEndOf="parent"

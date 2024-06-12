@@ -37,8 +37,8 @@ class SignInActivity : AppCompatActivity() {
 	//added comment line via vim
 
         binding.signInButton.setOnClickListener {
-            val email = binding.emailEt.text.toString()
-            val pass = binding.passET.text.toString()
+            val email = binding.emailEt.text.toString().trim()
+            val pass = binding.passET.text.toString().trim()
             binding.progressBar.isVisible = true
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
@@ -50,8 +50,7 @@ class SignInActivity : AppCompatActivity() {
                         binding.progressBar.isVisible = false
 
                     } else {
-                        Log.i("Error authentication", it.exception.toString())
-                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, it.exception?.message.toString(), Toast.LENGTH_SHORT).show()
                         binding.progressBar.isVisible = false
 
                     }

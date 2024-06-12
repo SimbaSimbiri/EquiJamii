@@ -22,6 +22,7 @@ import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
 import com.simbiri.equityjamii.constants.EVENT_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
@@ -134,14 +135,21 @@ class EventsAdapter(
             AuthUtils.getCurrentPerson(event.userId) { organizerPerson ->
                 eventOrganizerTv.text = "Event organized by: ${organizerPerson!!.name}"
                 eventOrganizerTv.setOnClickListener {
-                    val organizerFragDetail = PersonInfoFragment.newInstance(organizerPerson)
-                    val transaction =
-                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    organizerFragDetail.show(transaction, organizerFragDetail.tag)
+                    showOrganizer(organizerPerson)
+                }
+                eventDateTime.setOnClickListener {
+                    showOrganizer(organizerPerson)
                 }
             }
 
 
+        }
+
+        private  fun showOrganizer(person: Person){
+            val organizerFragDetail = PersonInfoFragment.newInstance(person)
+            val transaction =
+                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+            organizerFragDetail.show(transaction, organizerFragDetail.tag)
         }
 
         private fun displayParticipants(event: Event) {

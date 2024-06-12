@@ -57,7 +57,7 @@ class ProfDisplayFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
     private var myNetwork: Network? = Network()
-
+    private var firebaseAuth = FirebaseAuth.getInstance()
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -150,7 +150,7 @@ class ProfDisplayFragment : Fragment() {
     }
 
     private fun signOutApp() {
-        FirebaseAuth.getInstance().signOut()
+        firebaseAuth.signOut()
         val intent = Intent(requireActivity(), SignInActivity::class.java)
         startActivity(intent)
         requireActivity().finish()

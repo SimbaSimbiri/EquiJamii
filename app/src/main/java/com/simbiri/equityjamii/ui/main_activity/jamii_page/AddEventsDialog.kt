@@ -113,7 +113,7 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 titleInput.setText(it.title)
                 descriptionInput.setText(it.description)
                 typeInput.setText(it.eventType)
-                Glide.with(requireActivity()).load(event?.imageUrl).into(this.eventImage)
+                Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
                 locationInput.setText(it.location)
 
                 setupDateTimePickers()
