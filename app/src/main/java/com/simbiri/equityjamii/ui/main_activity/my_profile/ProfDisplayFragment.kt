@@ -103,7 +103,7 @@ class ProfDisplayFragment : Fragment() {
 
         binding.myJamiiTv.setOnClickListener {
         requireActivity().supportFragmentManager.popBackStackImmediate()
-            val action = ProfDisplayFragmentDirections.actionOpenJamii(2)
+            val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
             findNavController().navigate(action)
 
         }

@@ -38,12 +38,6 @@ class EventsFragment : Fragment() {
             hasFixedSize()
         }
 
-        binding.addEvent.setOnClickListener {
-            val addNewEvent = AddEventsDialog()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            addNewEvent.show(transaction, addNewEvent.tag)
-        }
-
         setUpObservers()
 
         return binding.root

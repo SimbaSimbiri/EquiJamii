@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.JamiiPageBinding
@@ -129,17 +128,12 @@ class JamiiPageFragment : Fragment() {
                     tab.text = "Feed"
                 }
 
-                3 -> {
-                    tab.text = "My Posts"
-                }
-
                 2 -> {
                     tab.text = "Events"
                 }
 
-
-                4 -> {
-                    tab.text = "My events"
+                3 -> {
+                    tab.text = "My Activity"
                 }
 
 
@@ -151,7 +145,7 @@ class JamiiPageFragment : Fragment() {
     class PostSlidePageAdapter(jamiiPageFragment: JamiiPageFragment) :
         FragmentStateAdapter(jamiiPageFragment) {
         override fun getItemCount(): Int {
-            return 5
+            return 4
         }
 
         override fun createFragment(position: Int): Fragment {
@@ -164,17 +158,14 @@ class JamiiPageFragment : Fragment() {
                     FeedFragment()
                 }
 
-                3 -> {
-                    MyPostsFragment()
-                }
-
                 2->{
                     EventsFragment()
                 }
 
-                4-> {
-                    MyEventsFragment()
+                3 -> {
+                    MyActivityFragment()
                 }
+
 
                 else -> {
                     Fragment()

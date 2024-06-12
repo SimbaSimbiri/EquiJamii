@@ -17,10 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Network
-import com.simbiri.equityjamii.data.model.Person
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.DialogNetworkBinding
-import com.simbiri.equityjamii.databinding.MyPostsTabBinding
 
 class NetworkFragment : BottomSheetDialogFragment() {
 

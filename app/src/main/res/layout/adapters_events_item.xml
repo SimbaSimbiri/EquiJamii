@@ -15,12 +15,13 @@
 
         <TextView
             android:id="@+id/eventsNameText"
-            style="@style/titleTab"
+            android:fontFamily="sans-serif-medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="EVENT TITLE"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@id/editEvent"
@@ -41,17 +42,14 @@
             app:layout_constraintTop_toBottomOf="@id/viewDivider" />
 
 
-        <TextView
+        <ImageView
             android:id="@+id/editEvent"
-            style="@style/titleTab"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_marginVertical="2dp"
             android:contentDescription="@string/edit_post"
-            android:text="Edit event"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:src="@drawable/edit"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/eventsNameText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,18 +78,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewDivider2" />
 
-
         <TextView
-            android:id="@+id/eventDateTimeTypeText"
+            android:id="@+id/eventOrganizerTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:text="Virtual, Thursday July 18, 8:00 - 12:00PM EAT"
+            android:layout_marginStart="10dp"
+            android:text="Event organized by: "
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventsNameText" />
+
+        <TextView
+            android:id="@+id/eventDateTimeTypeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Virtual, Thursday July 18, 8:00 - 12:00PM EAT"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventOrganizerTv" />
+
 
         <View
             android:id="@+id/viewDivider"
@@ -121,7 +132,7 @@
         <ImageView
             android:id="@+id/eventsThumbNail"
             android:layout_width="match_parent"
-            android:layout_height="275dp"
+            android:layout_height="300dp"
             android:layout_marginVertical="5dp"
             android:clickable="true"
             android:contentDescription="Events thumbnail"
@@ -148,7 +159,9 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
             android:layout_marginStart="10dp"
-            android:src="@drawable/registrants_icon"
+            android:contentDescription="People participating"
+            android:clickable="true"
+            android:src="@drawable/people_registrants"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewDivider2" />
@@ -158,6 +171,7 @@
             style="@style/titleTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_marginStart="5dp"
             android:text="@string/num_likes"
             android:textColor="@color/white"
@@ -173,6 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="@string/event_participants"
+            android:clickable="true"
             android:textColor="@color/white"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@id/numParticipantsText"

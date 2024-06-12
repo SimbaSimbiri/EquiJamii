@@ -1,6 +1,8 @@
 package com.simbiri.equityjamii.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -21,6 +23,8 @@ import com.simbiri.equityjamii.constants.EVENT_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
+import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -38,29 +42,48 @@ class EventsAdapter(
         var eventDescription: TextView = itemView.findViewById(R.id.eventsDescriptionExp)
         var eventDateTime: TextView = itemView.findViewById(R.id.eventDateTimeTypeText)
         var eventImage: ImageView = itemView.findViewById(R.id.eventsThumbNail)
-        var editEvent: TextView = itemView.findViewById(R.id.editEvent)
+        var editEvent: ImageView = itemView.findViewById(R.id.editEvent)
         var deleteEvent: ImageView = itemView.findViewById(R.id.deleteEvent)
         var registerEvent: ImageView = itemView.findViewById(R.id.regUnregForEvent)
         var eventLink: ImageView = itemView.findViewById(R.id.eventLocationLink)
+
         var numParticipants: TextView = itemView.findViewById(R.id.numParticipantsText)
+        var imageParticipants: ImageView = itemView.findViewById(R.id.eventParticipantsImage)
+        var eventParticText: TextView = itemView.findViewById(R.id.eventParticipantsTexts)
+        var eventOrganizerTv: TextView = itemView.findViewById(R.id.eventOrganizerTv)
+        private var currentParticipantsCount = 0
 
         private var currentEvent: Event? = null
         private var isDescriptionExpanded = false
         private val MAX_CHAR_COLLAPSED = 90
 
         fun bind(event: Event, position: Int) {
+            eventOrganizer(event)
             currentEvent = event
             eventNameText.text = event.title
             setTextsToggled(event.description, isDescriptionExpanded)
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy @ hh:mm a", Locale.getDefault())
+            checkIfRegistered(event)
+            numParticipants(event)
 
-            eventDateTime.text = " Date & time: ${dateFormat.format(event.dateTime!!.toDate())}"
-            numParticipants(currentEvent!!)
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy @ hh:mm a", Locale.getDefault())
+            eventDateTime.text = "Date & time: ${dateFormat.format(event.dateTime!!.toDate())}"
 
             if (event.eventType.contentEquals("virtual", true)) {
                 eventLink.setImageResource(R.drawable.virt_link)
             } else {
                 eventLink.setImageResource(R.drawable.location_link)
+            }
+
+            eventLink.setOnClickListener {
+                val url = event.location
+
+                if (url.isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "No valid event link found!", Toast.LENGTH_SHORT).show()
+                }
+
             }
 
             Glide.with(context).load(event.imageUrl).fitCenter().into(eventImage)
@@ -87,10 +110,70 @@ class EventsAdapter(
                 }
             }
 
+
             registerEvent.setOnClickListener {
                 toggleRegistration(event.documentId)
             }
+
+            eventParticText.setOnClickListener {
+                displayParticipants(event)
+            }
+
+            numParticipants.setOnClickListener {
+                displayParticipants(event)
+
+            }
+
+            imageParticipants.setOnClickListener {
+                displayParticipants(event)
+
+            }
         }
+
+        private fun eventOrganizer(event: Event) {
+            AuthUtils.getCurrentPerson(event.userId) { organizerPerson ->
+                eventOrganizerTv.text = "Event organized by: ${organizerPerson!!.name}"
+                eventOrganizerTv.setOnClickListener {
+                    val organizerFragDetail = PersonInfoFragment.newInstance(organizerPerson)
+                    val transaction =
+                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    organizerFragDetail.show(transaction, organizerFragDetail.tag)
+                }
+            }
+
+
+        }
+
+        private fun displayParticipants(event: Event) {
+            firestore.collection(EVENTS_C0LLECTION).document(event.documentId!!).collection(
+                EVENT_SUB_COLLECTION
+            ).get().addOnSuccessListener { result ->
+
+                val listIds = ArrayList<String>()
+                result.forEach { queryDocumentSnapshot ->
+                    listIds.add(queryDocumentSnapshot.id)
+                }
+
+                val eventParticiPantsFrag = LikesDialogFragment.newInstance(listIds)
+                val transaction =
+                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                eventParticiPantsFrag.show(transaction, eventParticiPantsFrag.tag)
+
+            }
+        }
+
+        fun checkIfRegistered(event: Event) {
+            firestore.collection(EVENTS_C0LLECTION).document(event.documentId!!).collection(
+                EVENT_SUB_COLLECTION
+            ).document(userId!!).get().addOnSuccessListener {
+                if (it.exists()) {
+                    registerEvent.setImageResource(R.drawable.register_event)
+                } else {
+                    registerEvent.setImageResource(R.drawable.event_pending)
+                }
+            }
+        }
+
 
         fun numParticipants(event: Event) {
             var count = 0
@@ -98,6 +181,7 @@ class EventsAdapter(
                 EVENT_SUB_COLLECTION
             ).get().addOnSuccessListener {
                 count = it.count()
+                currentParticipantsCount = count
                 this.numParticipants.text = count.toString()
             }
 
@@ -115,11 +199,16 @@ class EventsAdapter(
                         spannable.append(" ...read less")
                     }
 
-                    spannable.setSpan(object : ClickableSpan() {
-                        override fun onClick(widget: View) {
-                            toggleDescriptionExpansion()
-                        }
-                    }, spannable.length - 12, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannable.setSpan(
+                        object : ClickableSpan() {
+                            override fun onClick(widget: View) {
+                                toggleDescriptionExpansion()
+                            }
+                        },
+                        spannable.length - 12,
+                        spannable.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
 
                     eventDescription.text = spannable
                     eventDescription.movementMethod = LinkMovementMethod.getInstance()
@@ -142,12 +231,19 @@ class EventsAdapter(
             registrationRef.document(userId!!).get().addOnSuccessListener { document ->
                 if (document.exists()) {
                     registrationRef.document(userId).delete()
-                    Toast.makeText(context, "Unregistered from event", Toast.LENGTH_SHORT).show()
-                    this.registerEvent.setImageResource(R.drawable.register_event)
+                    Toast.makeText(context, "Unregistered from event", Toast.LENGTH_SHORT)
+                        .show()
+                    this.registerEvent.setImageResource(R.drawable.event_pending)
+                    if (currentParticipantsCount > 0) {
+                        currentParticipantsCount--
+                    }
+                    this.numParticipants.text = currentParticipantsCount.toString()
                 } else {
                     registrationRef.document(userId).set(emptyMap<String, Any>())
                     Toast.makeText(context, "Registered for event", Toast.LENGTH_SHORT).show()
                     this.registerEvent.setImageResource(R.drawable.register_event)
+                    currentParticipantsCount++
+                    this.numParticipants.text = currentParticipantsCount.toString()
 
                 }
             }
