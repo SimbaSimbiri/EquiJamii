@@ -1,22 +1,18 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
+import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
-import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.databinding.DiscoverTabBinding
 
@@ -26,64 +22,62 @@ class DiscoverFragment : Fragment() {
         fun newInstance() = DiscoverFragment()
     }
 
-    private lateinit var viewModel: DiscoverViewModel
+    private var viewModel = JamiiPageViewModel()
+    private var currPerson: Person? = Person()
+
     private lateinit var adapterPost: PostAdapter
-    val firestore = FirebaseFirestore.getInstance()
-    val queryReference = firestore.collection(POST_COLLECTION)
     private val postList: MutableList<Post> = mutableListOf()
     private lateinit var binding: DiscoverTabBinding
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        adapterPost = PostAdapter(context, postList)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DiscoverTabBinding.inflate(layoutInflater)
         val view = binding.root
 
-        adapterPost = PostAdapter(requireContext(), postList)
-        binding.discoverRecyclerView.adapter = adapterPost
-
-
         setUpPostRecycler()
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+            if (currentPerson != null) {
+                currPerson = currentPerson
+                setUpObservers(currentPerson)
+            } else {
+                Toast.makeText(
+                    requireActivity(),
+                    "Sign up first before accessing feed",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+        }
 
         return view
     }
 
+    private fun setUpObservers(currPerson: Person) {
+        viewModel.allPosts.observe(viewLifecycleOwner) { allPosts ->
+            val includeDiscoverPost =
+                allPosts.filter { post ->
+                    currPerson.network.followingList?.contains(post.userId) == false
+                }.filter { post -> !post.userId.contentEquals(currPerson.userId) }
+                    .toMutableList().toMutableList()
 
-    fun genListPosts() {
-        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
-            queryReference.orderBy("time", Query.Direction.DESCENDING)
-                .get().addOnCompleteListener {
-                    if (it.isSuccessful) {
+            if (includeDiscoverPost.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Post from people you follow and yours will be posted here",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
-                        val posts = it.result.toObjects(Post::class.java)
-
-                        if (currentPerson != null){
-                        val includeFeedPost =
-                            posts.filter { post ->
-                                currentPerson?.network?.followingList?.contains(post.userId) == false
-
-                            }.filter { post -> !post.userId.contentEquals(currentPerson?.userId) }
-                                .toMutableList()
-
-                        postList.clear()
-                        postList.addAll(includeFeedPost)}
-
-                        Log.i("FeedList in feed", "${postList}")
-                        binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
-
-                    }
-                }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (postList.isEmpty()) {
-            genListPosts()
-        }
-        if (binding.discoverRecyclerView.visibility == View.INVISIBLE){
+            postList.clear()
+            postList.addAll(includeDiscoverPost)
             binding.discoverRecyclerView.adapter!!.notifyDataSetChanged()
+
         }
 
     }
@@ -91,21 +85,10 @@ class DiscoverFragment : Fragment() {
 
     private fun setUpPostRecycler() {
         val context = requireContext()
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = RecyclerView.VERTICAL
-        binding.discoverRecyclerView.layoutManager = layoutManager
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        this@DiscoverFragment.onDestroy()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
-        // TODO: Use the ViewModel
+        binding.discoverRecyclerView.apply {
+            adapter = adapterPost
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
     }
 
 
