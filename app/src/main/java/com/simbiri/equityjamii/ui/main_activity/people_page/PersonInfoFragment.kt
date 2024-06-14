@@ -4,6 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -57,6 +61,8 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     private lateinit var currPerson: Person
     private val firestore = FirebaseFirestore.getInstance()
     private var isAlreadyFollowed: Boolean? = false
+    private var isAboutExpanded = false
+    private val MAX_CHAR_COLLAPSED_ABOUT = 200
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -133,7 +139,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
             binding!!.aboutTextHead.text = aboutText
             binding!!.nameOnPeople.text = it.name
             binding!!.designationOnPeople.text = it.designation + " at " + it.branch
-            binding!!.aboutTextContent.text = it.social.about
+            setAboutText(it.social.about)
             binding!!.textCounty.text = it.city
             binding!!.countryEmojiText.text = it.country
             listsSocials =
@@ -180,6 +186,41 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         setRecyclerViewProfiles()
 
         return view
+    }
+
+    private fun setAboutText(aboutText: String?) {
+        val spannable = SpannableStringBuilder(aboutText)
+        if (aboutText != null) {
+            if (aboutText.length > MAX_CHAR_COLLAPSED_ABOUT) {
+                if (isAboutExpanded) {
+                    spannable.append(" ...read less")
+                } else {
+                    spannable.delete(MAX_CHAR_COLLAPSED_ABOUT, aboutText.length)
+                    spannable.append(" ...read more")
+                }
+
+                spannable.setSpan(
+                    object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            toggleAboutExpansion()
+                        }
+                    },
+                    spannable.length - " ...read more".length,
+                    spannable.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                binding!!.aboutTextContent.text = spannable
+                binding!!.aboutTextContent.movementMethod = LinkMovementMethod.getInstance()
+            } else {
+                binding!!.aboutTextContent.text = aboutText
+            }
+        }
+    }
+
+    private fun toggleAboutExpansion() {
+        isAboutExpanded = !isAboutExpanded
+        setAboutText(personParceled.social.about)
     }
 
 

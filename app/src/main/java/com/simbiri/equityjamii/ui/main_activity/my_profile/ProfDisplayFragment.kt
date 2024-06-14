@@ -5,6 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.DisplayMetrics
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -16,22 +20,11 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
-import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.constants.USER_ID
-import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
@@ -53,18 +46,12 @@ class ProfDisplayFragment : Fragment() {
     }
 
     private lateinit var binding: ProfilePageDisplayBinding
-    private lateinit var storageReference: StorageReference
-    private lateinit var firestore: FirebaseFirestore
     private lateinit var listsSocials: ArrayList<String>
     private var myNetwork: Network? = Network()
     private var firebaseAuth = FirebaseAuth.getInstance()
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    private var isAboutExpanded = false
+    private val MAX_CHAR_COLLAPSED_ABOUT = 200
 
-        storageReference = FirebaseStorage.getInstance().reference
-        firestore = FirebaseFirestore.getInstance()
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -102,10 +89,14 @@ class ProfDisplayFragment : Fragment() {
 
 
         binding.myJamiiTv.setOnClickListener {
-        requireActivity().supportFragmentManager.popBackStackImmediate()
+            requireActivity().supportFragmentManager.popBackStackImmediate()
             val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
             findNavController().navigate(action)
 
+        }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            refreshJamii()
         }
 
         binding.myAssistant.setOnClickListener {
@@ -149,6 +140,41 @@ class ProfDisplayFragment : Fragment() {
         return view
     }
 
+    private fun setAboutText(aboutText: String?) {
+        val spannable = SpannableStringBuilder(aboutText)
+        if (aboutText != null) {
+            if (aboutText.length > MAX_CHAR_COLLAPSED_ABOUT) {
+                if (isAboutExpanded) {
+                    spannable.append(" ...read less")
+                } else {
+                    spannable.delete(MAX_CHAR_COLLAPSED_ABOUT, aboutText.length)
+                    spannable.append(" ...read more")
+                }
+
+                spannable.setSpan(
+                    object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            toggleAboutExpansion()
+                        }
+                    },
+                    spannable.length - " ...read more".length,
+                    spannable.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                binding.aboutTextContent.text = spannable
+                binding.aboutTextContent.movementMethod = LinkMovementMethod.getInstance()
+            } else {
+                binding.aboutTextContent.text = aboutText
+            }
+        }
+    }
+
+    private fun toggleAboutExpansion() {
+        isAboutExpanded = !isAboutExpanded
+        setAboutText(currentPerson.social.about)
+    }
+
     private fun signOutApp() {
         firebaseAuth.signOut()
         val intent = Intent(requireActivity(), SignInActivity::class.java)
@@ -156,49 +182,61 @@ class ProfDisplayFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun retreiveDisplayInfo(firebaseUserId: String) {
-        firestore.collection(USERS_COLLECTION).document(firebaseUserId).get()
-            .addOnCompleteListener { snapShotRetreiveTask ->
+    private fun refreshJamii() {
 
-                if (snapShotRetreiveTask.isSuccessful) {
-                    if (snapShotRetreiveTask.result.exists()) {
-                        val myProfile = snapShotRetreiveTask.result.toObject(Person::class.java)!!
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
 
-                        myProfile.let { myProf ->
-                            binding.let {
-                                Glide.with(requireContext()).load(Uri.parse(myProf.backGUri))
-                                    .into(it.backImageView)
-                                Glide.with(requireContext()).load(Uri.parse(myProf.profileUri))
-                                    .into(it.profileImageView)
-                                it.nameOnPeople.text = myProf.name
-                                it.designationOnPeople.text =
-                                    myProf.designation + " at " + myProf.branch
-                                it.aboutTextContent.text = myProf.social.about
-                                it.textCounty.text = myProf.city
-                                it.countryEmojiText.text = myProf.country
-                                listsSocials = arrayListOf(
-                                    myProf.social.linkedin,
-                                    myProf.social.insta,
-                                    myProf.social.webs,
-                                    myProf.social.faceb,
-                                    myProf.social.xAcc
-                                )
+        fragmentTransaction.detach(this).commitNow()
+        fragmentTransaction.attach(this).commitNow()
 
-                                if (myProf.verified) {
-                                    binding.verifiedPersonelImage.visibility = View.VISIBLE
-                                }
+        binding.swipeRefresh.isRefreshing = false
+    }
 
-                                listsSocials.shuffle()
-                                setRecyclerViewSocials()
-                                currentPerson = myProf
-                            }
+    private fun retreiveDisplayInfo() {
+        viewModel.myProf.observe(viewLifecycleOwner) { myProf ->
 
+            if (myProf == null) {
+                val newPerson = Person()
+                newPerson.userId = getCurrentUserId()!!
+                val editProfileFragment = EditProfileFragment.newInstance(newPerson)
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                editProfileFragment.show(transaction, editProfileFragment.tag)
 
-                            myNetwork = myProf.network
-                        }
+            } else {
+
+                binding.let {
+                    Glide.with(requireContext()).load(Uri.parse(myProf.backGUri))
+                        .into(it.backImageView)
+                    Glide.with(requireContext()).load(Uri.parse(myProf.profileUri))
+                        .into(it.profileImageView)
+                    it.nameOnPeople.text = myProf.name
+                    it.designationOnPeople.text =
+                        myProf.designation + " at " + myProf.branch
+                    setAboutText(myProf.social.about)
+                    it.textCounty.text = myProf.city
+                    it.countryEmojiText.text = myProf.country
+                    listsSocials = arrayListOf(
+                        myProf.social.linkedin,
+                        myProf.social.insta,
+                        myProf.social.webs,
+                        myProf.social.faceb,
+                        myProf.social.xAcc
+                    )
+
+                    if (myProf.verified) {
+                        binding.verifiedPersonelImage.visibility = View.VISIBLE
                     }
+
+                    listsSocials.shuffle()
+                    setRecyclerViewSocials()
+                    currentPerson = myProf
+
+
+                    myNetwork = myProf.network
                 }
             }
+
+        }
 
     }
 
@@ -207,7 +245,7 @@ class ProfDisplayFragment : Fragment() {
         val context = requireContext()
         val filtered = listsSocials.filter { it != "" }
         val socialAdapter = SocialAdapter(context, filtered)
-        if (filtered.isNotEmpty()){
+        if (filtered.isNotEmpty()) {
             binding.socialTextHead.visibility = View.VISIBLE
         }
 
@@ -246,18 +284,8 @@ class ProfDisplayFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        AuthUtils.getCurrentPerson(getCurrentUserId()!!) { currPerson ->
-            if (currPerson == null) {
-                val newPerson = Person()
-                newPerson.userId = getCurrentUserId()!!
-                val editProfileFragment = EditProfileFragment.newInstance(newPerson)
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                editProfileFragment.show(transaction, editProfileFragment.tag)
+        retreiveDisplayInfo()
 
-            } else {
-                retreiveDisplayInfo(getCurrentUserId()!!)
-            }
-        }
 
     }
 }

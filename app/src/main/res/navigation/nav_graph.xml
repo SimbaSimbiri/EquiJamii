@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/peopleFrag"
-        android:name="com.simbiri.equityjamii.ui.main_activity.people_page.peopleFragment"
+        android:name="com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragment"
         android:label="@string/people_icon"
         tools:layout="@layout/people_page" />
 

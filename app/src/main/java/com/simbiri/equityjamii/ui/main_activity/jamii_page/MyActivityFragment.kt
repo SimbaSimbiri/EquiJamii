@@ -30,7 +30,7 @@ class MyActivityFragment : Fragment() {
     private lateinit var binding: MyActivityTabBinding
     private lateinit var myActivityAdapter: PostAdapter
     private lateinit var myEventsAdapter: EventsAdapter
-    private val USER_ID =AuthUtils.getCurrentUserId()
+    private val USER_ID = AuthUtils.getCurrentUserId()
 
     private var postList: MutableList<Post> = mutableListOf()
     private var eventsList = mutableListOf<Event>()

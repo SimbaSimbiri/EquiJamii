@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.simbiri.equityjamii.adapters.PostAdapter
-import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
@@ -27,6 +26,7 @@ class FeedFragment : Fragment() {
     private var currPerson: Person? = Person()
     private val viewModel = JamiiPageViewModel()
     private lateinit var binding: FeedTabBinding
+    private val USER_ID = AuthUtils.getCurrentUserId()
     private val postList: MutableList<Post> = mutableListOf()
     private  lateinit var feedAdapter: PostAdapter
     val firestore = FirebaseFirestore.getInstance()

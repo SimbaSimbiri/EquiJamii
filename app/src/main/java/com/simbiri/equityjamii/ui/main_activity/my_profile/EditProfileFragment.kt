@@ -220,28 +220,28 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
     private fun savePersonalProfileInfo() {
 
-        val name = binding!!.nameProfileEdit.text!!.toString()
-        val designation = binding!!.designationProfileEdit.text!!.toString()
-        val branch = binding!!.branchProfileEdit.text!!.toString()
-        val city = binding!!.cityProfileEditText.text!!.toString()
-        val country = binding!!.countryEmojiEditText.text.toString()
+        val name = binding!!.nameProfileEdit.text!!.toString().trim()
+        val designation = binding!!.designationProfileEdit.text!!.toString().trim()
+        val branch = binding!!.branchProfileEdit.text!!.toString().trim()
+        val city = binding!!.cityProfileEditText.text!!.toString().trim()
+        val country = binding!!.countryEmojiEditText.text.toString().trim()
         val imageProfileReference =
             storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
         val backGReference =
             storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
 
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
-        val insta = binding!!.instaEdit.text!!.toString()
-        val faceb = binding!!.facebookEdit.text!!.toString()
-        val linkedIn = binding!!.linkedInEdit.text!!.toString()
-        val webS = binding!!.websiteEdit.text!!.toString()
-        val xAcc = binding!!.xEdit.text!!.toString()
+        val insta = binding!!.instaEdit.text!!.toString().trim()
+        val faceb = binding!!.facebookEdit.text!!.toString().trim()
+        val linkedIn = binding!!.linkedInEdit.text!!.toString().trim()
+        val webS = binding!!.websiteEdit.text!!.toString().trim()
+        val xAcc = binding!!.xEdit.text!!.toString().trim()
 
         val social = Social(aboutMe, linkedIn, insta, faceb, webS, xAcc)
 
         if (clickedProfile) {
             if (imageProfileUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
-                //upload image profile uri only
+
                 imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         imageProfileReference.downloadUrl.addOnSuccessListener { profileUri ->
@@ -284,7 +284,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
         } else if (clickedBackG) {
             if (imageBackgUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
-                //upload image profile uri only
+
                 backGReference.putFile(imageBackgUri!!).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         backGReference.downloadUrl.addOnSuccessListener { backGUri ->

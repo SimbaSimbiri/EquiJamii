@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,6 +32,7 @@ import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
+import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,18 +51,21 @@ class PostAdapter(
         POST_COLLECTION
     )
     private val currentUserId = AuthUtils.getCurrentUserId()
-    private var requestOptions : RequestOptions
+    private var screenHeight: Int = 0
+    private var screenWidth: Int = 0
+    private lateinit var requestOptions: RequestOptions
+
+
     init {
 
         val displayMetrics = DisplayMetrics()
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        val screenHeight = displayMetrics.heightPixels
-        val screenWidth = displayMetrics.widthPixels
+        screenHeight = displayMetrics.heightPixels
+        screenWidth = displayMetrics.widthPixels
         requestOptions = RequestOptions().override(screenWidth - 50, screenHeight * 3 / 5)
             .fitCenter()
-            .diskCacheStrategy(DiskCacheStrategy.ALL);
     }
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -160,10 +163,13 @@ class PostAdapter(
 
             AuthUtils.getCurrentPerson(this.currentPost!!.userId) { person ->
                 this.person = person
+
                 setImages(
-                    this.currentPost!!.image, this.person!!.profileUri,
-                    this.liked
+                    currentPost!!.image, person!!.profileUri,
+                    liked
                 )
+
+
                 setTexts(
                     this.currentPost!!.caption, this.currentPost!!.time,
                     this.currentPostLikes, this.person!!.name
@@ -248,9 +254,12 @@ class PostAdapter(
         }
 
         private fun setImages(imagePosted: String?, imageUser: String?, liked: Boolean) {
-            Glide.with(context).load(imagePosted)
-                .apply(requestOptions)
-                .into(this.imagePosted)
+
+            if (!imagePosted.isNullOrEmpty()) {
+                Glide.with(context).load(imagePosted).apply(requestOptions)
+                    .into(this.imagePosted)
+            }
+
             Glide.with(context).load(imageUser).into(this.imagePostUser)
 
             if (liked) {

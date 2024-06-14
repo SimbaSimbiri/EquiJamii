@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.adapters.PostAdapter
-import com.simbiri.equityjamii.constants.USER_ID
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
@@ -24,6 +23,7 @@ class DiscoverFragment : Fragment() {
 
     private var viewModel = JamiiPageViewModel()
     private var currPerson: Person? = Person()
+    private val USER_ID = AuthUtils.getCurrentUserId()
 
     private lateinit var adapterPost: PostAdapter
     private val postList: MutableList<Post> = mutableListOf()
@@ -48,7 +48,7 @@ class DiscoverFragment : Fragment() {
             } else {
                 Toast.makeText(
                     requireActivity(),
-                    "Sign up first before accessing feed",
+                    "Sign up first before accessing discover",
                     Toast.LENGTH_LONG
                 ).show()
             }
