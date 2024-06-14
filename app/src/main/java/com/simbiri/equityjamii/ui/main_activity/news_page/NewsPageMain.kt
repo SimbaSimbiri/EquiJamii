@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.databinding.NewsPageBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.featuring.FeaturingFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.for_you.ForYouFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.latest.LatestFragment
@@ -25,12 +22,10 @@ class newsFragment : Fragment() {
         fun newInstance() = newsFragment()
     }
 
-    private lateinit var addNewsIcon: ImageView
     private lateinit var viewModel: NewsViewModel
-    private lateinit var viewPager2: ViewPager2
     private lateinit var stateAdapter: FragmentStateAdapter
-    private lateinit var tabLayout: TabLayout
     private var canPublishEdit = false
+    private lateinit var binding: NewsPageBinding
 
     private val personId = AuthUtils.getCurrentUserId()
 
@@ -38,66 +33,69 @@ class newsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        binding = NewsPageBinding.inflate(layoutInflater)
 
-        val view = inflater.inflate(R.layout.news_page, container, false)
+        val view = binding.root
 
-        tabLayout = view.findViewById(R.id.tabLayout)
-        addNewsIcon = view.findViewById(R.id.addNewsIcon)
 
-        if (AuthUtils.getCurrentUserId() != null) {
+        binding.apply {
 
-            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
-                canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
-                if (canPublishEdit) {
-                    addNewsIcon.visibility = View.VISIBLE
+
+            if (AuthUtils.getCurrentUserId() != null) {
+
+                AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                    canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
+                    if (canPublishEdit) {
+                        addNewsIcon.visibility = View.VISIBLE
+                    }
                 }
             }
-        }
 
-        addNewsIcon.setOnClickListener {
-            val addNewsFrag = AddNewsFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            addNewsFrag.show(transaction, addNewsFrag.tag)
-        }
-
-        viewPager2 = view.findViewById(R.id.viewPagerNews)
-        viewPager2.isUserInputEnabled = false
-        stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
-        viewPager2.adapter = stateAdapter
-        TabLayoutMediator(tabLayout, viewPager2, true, true) { tab, position ->
-
-            when (position) {
-
-                0 -> {
-                    tab.text = "Latest"
-                }
-
-                1 -> {
-                    tab.text = "For You"
-
-                }
-
-                2 -> {
-                    tab.text = "Live"
-
-                }
-
-                3 -> {
-                    tab.text = "Official"
-
-                }
-
-                4 -> {
-                    tab.text = "Featuring"
-                }
-
-
+            addNewsIcon.setOnClickListener {
+                val addNewsFrag = AddNewsFragment()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                addNewsFrag.show(transaction, addNewsFrag.tag)
             }
 
-        }.attach()
+            stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
+            viewPagerNews.apply {
+                isUserInputEnabled = false
+                adapter = stateAdapter
+            }
 
+            TabLayoutMediator(tabLayout, viewPagerNews, true, true) { tab, position ->
 
+                when (position) {
+
+                    0 -> {
+                        tab.text = "Latest"
+                    }
+
+                    1 -> {
+                        tab.text = "For You"
+
+                    }
+
+                    2 -> {
+                        tab.text = "Live"
+
+                    }
+
+                    3 -> {
+                        tab.text = "Official"
+
+                    }
+
+                    4 -> {
+                        tab.text = "Featuring"
+                    }
+
+                }
+
+            }.attach()
+
+        }
         return view
 
     }

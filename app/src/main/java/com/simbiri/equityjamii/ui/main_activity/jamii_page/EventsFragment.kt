@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.adapters.EventsAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.databinding.EventsFragBinding
 
@@ -20,6 +21,7 @@ class EventsFragment : Fragment() {
     private val viewModel: EventsViewModel by viewModels()
     private lateinit var binding: EventsFragBinding
     private var eventsList = mutableListOf<Event>()
+    private val USER_ID = AuthUtils.getCurrentUserId()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,11 @@ class EventsFragment : Fragment() {
             hasFixedSize()
         }
 
-        setUpObservers()
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+            if (currentPerson != null) {
+                setUpObservers()
+            }
+        }
 
         return binding.root
     }

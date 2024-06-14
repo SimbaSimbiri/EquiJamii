@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:id="@+id/cardViewPerson"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="5dp"
+    android:layout_marginStart="10dp"
     android:layout_marginTop="7dp"
     android:layout_marginBottom="7dp"
     app:cardCornerRadius="8dp">

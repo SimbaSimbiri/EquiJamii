@@ -57,9 +57,10 @@ class NetworkFragment : BottomSheetDialogFragment() {
 
     private fun setupViewPagerAndTabs() {
         val pagerAdapter = NetworkPagerAdapter(this)
-        binding.viewPagerNetwork.adapter = pagerAdapter
-        binding.viewPagerNetwork.isUserInputEnabled = false
-
+        binding.viewPagerNetwork.apply {
+            adapter = pagerAdapter
+            isUserInputEnabled = false
+        }
 
         TabLayoutMediator(binding.tabLayoutNetwork, binding.viewPagerNetwork) { tab, position ->
             tab.text = when (position) {

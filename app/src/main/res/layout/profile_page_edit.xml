@@ -379,7 +379,7 @@
                         app:boxStrokeColor="@color/primaryColor"
                         app:boxStrokeWidth="2dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="500"
+                        app:counterMaxLength="900"
                         app:counterTextColor="@color/karbBackgrndtint"
                         app:cursorColor="@color/logoColour"
                         app:hintTextColor="@color/logoColour"

@@ -72,10 +72,10 @@ class PeopleDataAdapter(var context: Context, var peopleList: List<Person>) :
             val screenWidth = displayMetrics.widthPixels
             layoutParamsPerson.width = screenWidth/2 - 60
 
-            layoutParamsInnerCard.width = layoutParamsPerson.width * 4/5
-            layoutParamsInnerCard.height = layoutParamsPerson.width *4/5
+            layoutParamsInnerCard.width = layoutParamsPerson.width * 3/5
+            layoutParamsInnerCard.height = layoutParamsPerson.width * 3/5
 
-            layoutParamsImageBackg.height = layoutParamsInnerCard.height/2
+            layoutParamsImageBackg.height = (layoutParamsInnerCard.height/1.75).toInt()
 
             cardViewPerson.layoutParams = layoutParamsPerson
             cardViewMaterial.layoutParams = layoutParamsInnerCard

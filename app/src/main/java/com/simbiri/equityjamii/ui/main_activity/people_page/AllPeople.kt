@@ -26,94 +26,46 @@ class AllPeople : Fragment() {
     }
 
     private lateinit var allAdapter: PeopleDataAdapter
-    private lateinit var viewModel: AllPeopleViewModel
-    private lateinit var searchList: MutableList<Person>
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
-    private val query = firestore.collection("Users")
-    private lateinit var listenerRegistration: ListenerRegistration
+    private var viewModel = PeopleViewModel()
+    private var searchList: MutableList<Person> = mutableListOf()
     private lateinit var binding: PeoplePageAllPeopleBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = PeoplePageAllPeopleBinding.inflate(layoutInflater)
         val view = binding.root
 
-        searchList = mutableListOf()
         setUpRecyclers()
+
+        AuthUtils.getCurrentPerson(viewModel.currentId){
+            if (it !=null){
+                setUpObservers()
+            }
+        }
 
         return view
     }
 
-    private fun listenerRegisterForUsers() {
-        listenerRegistration = query.addSnapshotListener { snapShots, error ->
-
-            for (doc in snapShots!!.documentChanges) {
-                if (doc.type == DocumentChange.Type.ADDED) {
-                    val newPerson = doc.document.toObject(Person::class.java)
-                    if (!newPerson.userId.contentEquals(AuthUtils.getCurrentUserId()!!)) {
-                        searchList.add(newPerson)
-                    }
-                    binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
-
-                }
-            }
-
+    private fun setUpObservers() {
+        viewModel.jamaaList.observe(viewLifecycleOwner) { jamaaList ->
+            searchList.clear()
+            searchList.addAll(jamaaList)
+            binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (searchList.isEmpty()){
-            peopleListFireStore()
-        }
-    }
-
-
-    private fun peopleListFireStore() {
-        AuthUtils.getCurrentPerson (AuthUtils.getCurrentUserId()!!){ currPerson ->
-
-            query.get().addOnCompleteListener { it ->
-                if (it.isSuccessful) {
-                    val allPeople = it.result.toObjects(Person::class.java)
-
-                    if (currPerson != null) {
-                        val addedPeople =
-                            allPeople.filter { person -> !person.userId.contentEquals(currPerson.userId) }
-                                .filter { person -> !person.leader }
-
-                        searchList.addAll(addedPeople)
-                    }
-                    binding.allPeopleRecycler.adapter!!.notifyDataSetChanged()
-                }
-            }
-
-        }
-
     }
 
     private fun setUpRecyclers() {
         val context = requireContext()
 
         allAdapter = PeopleDataAdapter(context, searchList)
-        val layoutManagerAll = GridLayoutManager(context, 2)
-        layoutManagerAll.orientation = RecyclerView.VERTICAL
-        binding.allPeopleRecycler.adapter = allAdapter
-        binding.allPeopleRecycler.layoutManager = layoutManagerAll
-
+        binding.allPeopleRecycler.apply {
+            layoutManager = GridLayoutManager(context,2)
+            adapter = allAdapter
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AllPeopleViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

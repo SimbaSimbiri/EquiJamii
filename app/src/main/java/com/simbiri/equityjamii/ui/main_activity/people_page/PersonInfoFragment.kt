@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -59,7 +58,6 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
     private var otherPeopleProfilesList: MutableList<Person> = mutableListOf()
     private lateinit var personParceled: Person
     private lateinit var currPerson: Person
-    private val firestore = FirebaseFirestore.getInstance()
     private var isAlreadyFollowed: Boolean? = false
     private var isAboutExpanded = false
     private val MAX_CHAR_COLLAPSED_ABOUT = 200
@@ -103,7 +101,6 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 ).filter { person -> !person.userId.contentEquals(personParceled.userId) }
 
 
-
                 otherPeopleProfilesList.clear()
                 if (listFromScope.size > 5) {
                     otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0, 4))
@@ -133,36 +130,38 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         adjustSize()
 
-        personParceled.let {
+        personParceled.let {it->
 
-            val aboutText = getString(R.string.about_text, it.name)
-            binding!!.aboutTextHead.text = aboutText
-            binding!!.nameOnPeople.text = it.name
-            binding!!.designationOnPeople.text = it.designation + " at " + it.branch
-            setAboutText(it.social.about)
-            binding!!.textCounty.text = it.city
-            binding!!.countryEmojiText.text = it.country
-            listsSocials =
-                arrayListOf(
-                    it.social.linkedin,
-                    it.social.insta,
-                    it.social.webs,
-                    it.social.faceb,
-                    it.social.xAcc
-                )
-            listsSocials.shuffle()
+            binding!!.apply {
 
-            Glide.with(this).load(Uri.parse(it.profileUri))
-                .into(binding!!.profileOnPeopleImageV)
-                .onLoadFailed(requireContext().getDrawable(R.drawable.account_box))
-            Glide.with(this).load(Uri.parse(it.backGUri))
-                .into(binding!!.detailBackImageV)
-                .onLoadFailed(requireContext().getDrawable(R.drawable.equityjamiibackground))
+                val aboutText = getString(R.string.about_text, it.name)
+                aboutTextHead.text = aboutText
+                nameOnPeople.text = it.name
+                designationOnPeople.text = it.designation + " at " + it.branch
+                setAboutText(it.social.about)
+                textCounty.text = it.city
+                countryEmojiText.text = it.country
+                listsSocials =
+                    arrayListOf(
+                        it.social.linkedin,
+                        it.social.insta,
+                        it.social.webs,
+                        it.social.faceb,
+                        it.social.xAcc
+                    )
+                listsSocials.shuffle()
 
-            if (personParceled.verified) {
-                binding!!.verifiedPersonelImage.visibility = View.VISIBLE
+                Glide.with(this@PersonInfoFragment).load(Uri.parse(it.profileUri))
+                    .into(profileOnPeopleImageV)
+                    .onLoadFailed(requireContext().getDrawable(R.drawable.account_box))
+                Glide.with(this@PersonInfoFragment).load(Uri.parse(it.backGUri))
+                    .into(detailBackImageV)
+                    .onLoadFailed(requireContext().getDrawable(R.drawable.equityjamiibackground))
+
+                if (personParceled.verified) {
+                    verifiedPersonelImage.visibility = View.VISIBLE
+                }
             }
-
         }
 
 
@@ -193,10 +192,10 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         if (aboutText != null) {
             if (aboutText.length > MAX_CHAR_COLLAPSED_ABOUT) {
                 if (isAboutExpanded) {
-                    spannable.append(" ...read less")
+                    spannable.append(" \n...read less")
                 } else {
                     spannable.delete(MAX_CHAR_COLLAPSED_ABOUT, aboutText.length)
-                    spannable.append(" ...read more")
+                    spannable.append("  ...read more")
                 }
 
                 spannable.setSpan(
@@ -205,7 +204,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                             toggleAboutExpansion()
                         }
                     },
-                    spannable.length - " ...read more".length,
+                    spannable.length - "  ...read more".length,
                     spannable.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
@@ -319,77 +318,78 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         val filtered = listsSocials.filter { it != "" }
         val socialAdapter = SocialAdapter(context, filtered)
 
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-
-        binding!!.recyclerSocials.adapter = socialAdapter
-        binding!!.recyclerSocials.layoutManager = layoutManager
-        binding!!.recyclerSocials.hasFixedSize()
-
+        binding!!.recyclerSocials.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = socialAdapter
+            hasFixedSize()
+        }
     }
 
     private fun setRecyclerViewProfiles() {
 
         val context = requireContext()
-        otherSimilarProfilesAdapter = OtherProfilesAdapter(
-            context,
-            otherPeopleProfilesList
-        )
+        otherSimilarProfilesAdapter = OtherProfilesAdapter(context, otherPeopleProfilesList)
 
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-
-        binding!!.recyclerOtherProfiles.adapter = otherSimilarProfilesAdapter
-        binding!!.recyclerOtherProfiles.layoutManager = layoutManager
-        binding!!.recyclerOtherProfiles.hasFixedSize()
+        binding!!.recyclerOtherProfiles.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = otherSimilarProfilesAdapter
+            hasFixedSize()
+        }
 
     }
 
     private fun adjustSize() {
 
+        binding!!.apply {
 
-        val layoutParamsProfileCardOut = binding!!.materialCardView.layoutParams
-        val layoutParamsBackG = binding!!.detailBackImageV.layoutParams
+            val layoutParamsProfileCardOut = materialCardView.layoutParams
+            val layoutParamsBackG = detailBackImageV.layoutParams
 
-        val displayMetrics = DisplayMetrics()
-        val windowManager =
-            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val displayMetrics = DisplayMetrics()
+            val windowManager =
+                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        val screenWidth = displayMetrics.widthPixels
-        layoutParamsProfileCardOut.width = screenWidth / 4 + 80
-        layoutParamsProfileCardOut.height = screenWidth / 4 + 80
+            val screenWidth = displayMetrics.widthPixels
+            layoutParamsProfileCardOut.width = screenWidth / 4 + 80
+            layoutParamsProfileCardOut.height = screenWidth / 4 + 80
 
-        layoutParamsBackG.height = screenWidth / 4 + 100
-        layoutParamsBackG.width = screenWidth
+            layoutParamsBackG.height = screenWidth / 4 + 100
+            layoutParamsBackG.width = screenWidth
 
 
-        binding!!.materialCardView.layoutParams = layoutParamsProfileCardOut
-        binding!!.detailBackImageV.layoutParams = layoutParamsBackG
+            materialCardView.layoutParams = layoutParamsProfileCardOut
+            detailBackImageV.layoutParams = layoutParamsBackG
+        }
     }
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.dialog_people_detail)
-        dialog.setCanceledOnTouchOutside(true)
+        dialog.apply {
 
-        val displayMetrics = DisplayMetrics()
-        val windowManager =
-            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
+            setContentView(R.layout.dialog_people_detail)
+            setCanceledOnTouchOutside(true)
+
+            val displayMetrics = DisplayMetrics()
+            val windowManager =
+                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
 
 
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.isDraggable = true
-                behavior.isHideable = true
-                behavior.peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
+            setOnShowListener { dialogInterface ->
+                val bottomSheetDialog = dialogInterface as BottomSheetDialog
+                val bottomSheet =
+                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheet?.let {
+                    val behavior = BottomSheetBehavior.from(bottomSheet)
+                    behavior.apply {
+                        isDraggable = true
+                        isHideable = true
+                        peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
+                    }
 
+                }
             }
         }
 

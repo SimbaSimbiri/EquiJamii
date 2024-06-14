@@ -51,23 +51,19 @@ class MyActivityFragment : Fragment() {
 
         setUpRecyclers()
 
-        binding.addEvent.setOnClickListener {
-            val addNewEvent = AddEventsDialog()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            addNewEvent.show(transaction, addNewEvent.tag)
-        }
 
         AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
             if (currentPerson != null) {
                 currPerson = currentPerson
-                setUpEventObservers(currPerson)
-                setUpPostObservers(currPerson)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "Sign up first before accessing feed",
-                    Toast.LENGTH_LONG
-                ).show()
+                setUpEventObservers(currPerson.userId)
+                setUpPostObservers(currPerson.userId)
+
+                binding.addEvent.setOnClickListener {
+                    val addNewEvent = AddEventsDialog()
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                    addNewEvent.show(transaction, addNewEvent.tag)
+                }
+
             }
         }
 
@@ -88,20 +84,12 @@ class MyActivityFragment : Fragment() {
         }
     }
 
-    private fun setUpPostObservers(currentPerson: Person) {
+    private fun setUpPostObservers(userId: String) {
         viewModelPosts.allPosts.observe(viewLifecycleOwner) { allPosts ->
 
             val includedPosts =
-                allPosts.filter { p -> p.userId.contentEquals(currentPerson.userId) }
+                allPosts.filter { p -> p.userId.contentEquals(userId) }
                     .toMutableList()
-
-            if (includedPosts.isEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Your added posts will be included here",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
 
             postList.clear()
             postList.addAll(includedPosts)
@@ -109,11 +97,11 @@ class MyActivityFragment : Fragment() {
         }
     }
 
-    private fun setUpEventObservers(currentPerson: Person) {
+    private fun setUpEventObservers(userId: String) {
         viewModelEvent.eventList.observe(viewLifecycleOwner) { allEvents ->
             eventsList.clear()
             eventsList.addAll(allEvents.filter { event: Event ->
-                event.userId.contentEquals(currentPerson.userId)
+                event.userId.contentEquals(userId)
             })
             binding.myEventsRecyclerView.adapter!!.notifyDataSetChanged()
 

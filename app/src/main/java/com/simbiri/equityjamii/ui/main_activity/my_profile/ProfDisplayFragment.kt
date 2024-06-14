@@ -66,7 +66,7 @@ class ProfDisplayFragment : Fragment() {
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     Toast.makeText(
                         requireContext(),
-                        "${binding.nameOnPeople.text} signed out\nCome back soon!",
+                        "You signed out\nCome back soon!",
                         Toast.LENGTH_LONG
                     ).show()
                     signOutApp()
@@ -145,10 +145,10 @@ class ProfDisplayFragment : Fragment() {
         if (aboutText != null) {
             if (aboutText.length > MAX_CHAR_COLLAPSED_ABOUT) {
                 if (isAboutExpanded) {
-                    spannable.append(" ...read less")
+                    spannable.append(" \n...read less")
                 } else {
                     spannable.delete(MAX_CHAR_COLLAPSED_ABOUT, aboutText.length)
-                    spannable.append(" ...read more")
+                    spannable.append("  ...read more")
                 }
 
                 spannable.setSpan(
@@ -157,7 +157,7 @@ class ProfDisplayFragment : Fragment() {
                             toggleAboutExpansion()
                         }
                     },
-                    spannable.length - " ...read more".length,
+                    spannable.length - "  ...read more".length,
                     spannable.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )

@@ -63,35 +63,44 @@ class JamiiPageFragment : Fragment() {
 
         setupViewPager()
 
-        binding.currentUserImage.setOnClickListener {
-            val addPostFragment = AddPostFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            addPostFragment.show(transaction, addPostFragment.tag)
-        }
-
-        binding.yourThoughtsTv.setOnClickListener {
-            val addPostFragment = AddPostFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            addPostFragment.show(transaction, addPostFragment.tag)
-        }
-
 
         AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
             if (currentPerson == null) {
                 Toast.makeText(
                     requireContext(),
-                    "Set up profile to access EquiJamii features",
+                    "Set up profile to access Jamii",
                     Toast.LENGTH_LONG
                 ).show()
+            } else {
+                binding.apply {
+                    currentUserImage.setOnClickListener {
+                        val addPostFragment = AddPostFragment()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+                        addPostFragment.show(transaction, addPostFragment.tag)
+                    }
+
+                    yourThoughtsTv.setOnClickListener {
+                        val addPostFragment = AddPostFragment()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+                        addPostFragment.show(transaction, addPostFragment.tag)
+                    }
+                }
+
             }
         }
 
         val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0
-        binding.viewPagerPosts.setCurrentItem(initialTabIndex, false)
 
-        binding.swipeRefresh.setOnRefreshListener {
-            refreshJamii()
+        binding.apply {
+            viewPagerPosts.setCurrentItem(initialTabIndex, false)
+
+            swipeRefresh.setOnRefreshListener {
+                refreshJamii()
+            }
         }
+
 
         return view
     }
@@ -111,8 +120,11 @@ class JamiiPageFragment : Fragment() {
     private fun setupViewPager() {
 
         stateFragAdapter = PostSlidePageAdapter(this@JamiiPageFragment)
-        binding.viewPagerPosts.isUserInputEnabled = false
-        binding.viewPagerPosts.adapter = stateFragAdapter
+        binding.viewPagerPosts.apply {
+            isUserInputEnabled = false
+            adapter = stateFragAdapter
+        }
+
         TabLayoutMediator(
             binding.tabLayoutposts,
             binding.viewPagerPosts,
@@ -158,14 +170,13 @@ class JamiiPageFragment : Fragment() {
                     FeedFragment()
                 }
 
-                2->{
+                2 -> {
                     EventsFragment()
                 }
 
                 3 -> {
                     MyActivityFragment()
                 }
-
 
                 else -> {
                     Fragment()

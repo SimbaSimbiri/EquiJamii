@@ -50,12 +50,6 @@ class FeedFragment : Fragment() {
             if (currentPerson != null) {
                 currPerson = currentPerson
                 setUpObservers(currentPerson)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "Sign up first before accessing feed",
-                    Toast.LENGTH_LONG
-                ).show()
             }
 
         }
