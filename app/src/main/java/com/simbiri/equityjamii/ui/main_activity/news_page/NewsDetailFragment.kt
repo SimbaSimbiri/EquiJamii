@@ -19,8 +19,11 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.NewsText
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class NewsDetailFragment : BottomSheetDialogFragment() {
 
@@ -39,7 +42,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: NewsDetailViewModel
     private lateinit var ImageSliderNews: ImageSlider
-    private lateinit var newsDetailText: TextView
+    private lateinit var newsDateText: TextView
     private lateinit var newsDetailAllNews: TextView
     private lateinit var authorSpecialTv: TextView
     private lateinit var newsTitleTv : TextView
@@ -75,6 +78,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         newsDetailAllNews = view.findViewById(R.id.newsDetailAllnews)
         authorSpecialTv = view.findViewById(R.id.authorTextView)
         newsTitleTv = view.findViewById(R.id.newsTitle)
+        newsDateText = view.findViewById(R.id.dateTextView)
 
         var layoutParams = ImageSliderNews.layoutParams
 
@@ -107,6 +111,7 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
             ImageSliderNews.setImageList(imageList, ScaleTypes.CENTER_CROP)
             authorSpecialTv.text = newstText.newsName + " by " + newstText.author
             newsTitleTv.text = newstText.title
+            newsDateText.text = "published ${displayDate(newstText.time)}"
             ImageSliderNews.setSlideAnimation(AnimationTypes.DEPTH_SLIDE)
 
             ImageSliderNews.setOnClickListener {
@@ -117,6 +122,28 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         }
 
 
+    }
+
+    private fun displayDate(timestamp: Timestamp?): String? {
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+
+        return try {
+            val date = timestamp?.toDate()
+            val currentDate = java.util.Date()
+
+            val timeDifference = currentDate.time - date!!.time
+            val daysDifference = timeDifference / (1000 * 60 * 60 * 24)
+
+            when {
+                daysDifference >= 1 -> dateFormat.format(date)
+                timeDifference >= 60 * 60 * 1000 -> "${timeDifference / (60 * 60 * 1000)}h ago"
+                timeDifference >= (60 * 1000).toLong() -> "${timeDifference / (60 * 1000)}m ago"
+                else -> "just now"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Couldn't display date"
+        }
     }
 
 

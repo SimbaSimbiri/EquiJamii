@@ -30,6 +30,16 @@ class EquiLeadersFragment : Fragment() {
     private var searchList: MutableList<Person> = mutableListOf()
     private lateinit var binding: PeoplePageEquileadersBinding
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        AuthUtils.getCurrentPerson(viewModel.currentId) {
+            if (it != null) {
+                setUpObservers()
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,11 +49,6 @@ class EquiLeadersFragment : Fragment() {
 
         setUpRecyclers()
 
-        AuthUtils.getCurrentPerson(viewModel.currentId) {
-            if (it != null) {
-                setUpObservers()
-            }
-        }
         return view
     }
 
@@ -86,9 +91,8 @@ class EquiLeadersFragment : Fragment() {
     */
 
     private fun setUpRecyclers() {
-        val context = requireContext()
-        leadersAdapter = LeadersAllAdapter(context, searchList)
         binding.equiLeadersRecycler.apply {
+            leadersAdapter = LeadersAllAdapter(context, searchList)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = leadersAdapter
         }

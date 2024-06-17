@@ -32,7 +32,6 @@ import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
-import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,7 +77,7 @@ class PostAdapter(
         var thumbsLikePost: ImageView = itemView.findViewById(R.id.likesImage)
         var numLikes: TextView = itemView.findViewById(R.id.numLikesText)
         var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
-        var editPost: TextView = itemView.findViewById(R.id.editPost)
+        var editPost: ImageView = itemView.findViewById(R.id.editPost)
         var deletePost: ImageView = itemView.findViewById(R.id.deletePost)
         var likesCharText: TextView = itemView.findViewById(R.id.likesCharText)
         var currentPostLikes = 0
@@ -165,8 +164,7 @@ class PostAdapter(
                 this.person = person
 
                 setImages(
-                    currentPost!!.image, person!!.profileUri,
-                    liked
+                    currentPost!!.image, person!!.profileUri
                 )
 
 
@@ -184,6 +182,13 @@ class PostAdapter(
             firestorePostsCollection.document(postId!!).collection(LIKES_SUB_COLLECTION)
                 .document(currentUserId!!).addSnapshotListener { taskSnapshot, _ ->
                     this.liked = taskSnapshot!!.exists()
+
+                    if (liked) {
+                        this.thumbsLikePost.setImageResource(R.drawable.liked)
+                    } else {
+                        this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
+                    }
+
                 }
         }
 
@@ -253,7 +258,7 @@ class PostAdapter(
             }
         }
 
-        private fun setImages(imagePosted: String?, imageUser: String?, liked: Boolean) {
+        private fun setImages(imagePosted: String?, imageUser: String?) {
 
             if (!imagePosted.isNullOrEmpty()) {
                 Glide.with(context).load(imagePosted).apply(requestOptions)
@@ -261,12 +266,6 @@ class PostAdapter(
             }
 
             Glide.with(context).load(imageUser).into(this.imagePostUser)
-
-            if (liked) {
-                this.thumbsLikePost.setImageResource(R.drawable.liked)
-            } else {
-                this.thumbsLikePost.setImageResource(R.drawable.not_liked_yet)
-            }
 
             if (person!!.verified) {
                 verifiedImage.visibility = View.VISIBLE

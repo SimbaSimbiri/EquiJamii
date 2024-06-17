@@ -23,9 +23,13 @@ class EventsFragment : Fragment() {
     private var eventsList = mutableListOf<Event>()
     private val USER_ID = AuthUtils.getCurrentUserId()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+            if (currentPerson != null) {
+                setUpObservers()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -37,13 +41,6 @@ class EventsFragment : Fragment() {
         binding.eventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = EventsAdapter(requireActivity(), eventsList)
-            hasFixedSize()
-        }
-
-        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
-            if (currentPerson != null) {
-                setUpObservers()
-            }
         }
 
         return binding.root

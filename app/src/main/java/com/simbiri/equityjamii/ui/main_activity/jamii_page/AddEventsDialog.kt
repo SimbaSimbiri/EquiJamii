@@ -108,7 +108,6 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 openImagePicker.launch(options)
             }
 
-            // Populate the views if editing an existing event
             event?.let {
                 titleInput.setText(it.title)
                 descriptionInput.setText(it.description)
@@ -168,6 +167,12 @@ class AddEventsDialog : BottomSheetDialogFragment() {
     private fun postEvent() {
         val eventItemRef = eventStorageRef.child(POST_STORAGE_REF)
             .child(FieldValue.serverTimestamp().toString() + ".jpg")
+
+        Toast.makeText(
+            requireContext(),
+            "Uploading event to cloud",
+            Toast.LENGTH_LONG
+        ).show()
 
         if (imageUri != null) {
             eventItemRef.putFile(Uri.parse(imageUri.toString()))

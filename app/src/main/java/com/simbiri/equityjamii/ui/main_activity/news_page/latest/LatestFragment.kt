@@ -22,6 +22,14 @@ class LatestFragment : Fragment() {
     private lateinit var binding: NewsPageTopStoriesBinding
     private var canPublishEdit = false
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (AuthUtils.getCurrentUserId() != null) {
+
+            setUpObservers()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,18 +41,16 @@ class LatestFragment : Fragment() {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
-                binding.newsRecylerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.newsRecylerView.layoutManager = LinearLayoutManager(context)
             }
         }
-
-        setUpObservers()
 
         return binding.root
     }
 
     private fun setUpObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
-            val adapter = NewsAdapter(requireContext(), allNewsInstances, canPublishEdit)
+            val adapter = context?.let { NewsAdapter(it, allNewsInstances, canPublishEdit) }
             binding.newsRecylerView.adapter = adapter
             binding.newsRecylerView.adapter!!.notifyDataSetChanged()
         }

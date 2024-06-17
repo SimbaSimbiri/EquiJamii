@@ -37,6 +37,17 @@ class FeedFragment : Fragment() {
         feedAdapter  = PostAdapter(requireContext(), postList)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
+            if (currentPerson != null) {
+                currPerson = currentPerson
+                setUpObservers(currentPerson)
+            }
+
+        }
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,13 +57,6 @@ class FeedFragment : Fragment() {
 
 
         setUpPostRecycler()
-        AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
-            if (currentPerson != null) {
-                currPerson = currentPerson
-                setUpObservers(currentPerson)
-            }
-
-        }
 
         return view
     }
@@ -91,8 +95,6 @@ class FeedFragment : Fragment() {
     }
 
     private fun setUpPostRecycler() {
-        val context = requireContext()
-
         binding.feedRecyclerView.apply {
             adapter = feedAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

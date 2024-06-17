@@ -127,7 +127,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private fun setupRecyclerView() {
         imageDescAdapter = ImageDescAdapter(requireContext(), imageDescList)
         binding.recyclerViewImages.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = imageDescAdapter
         }
 
@@ -194,6 +194,11 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         var uploadCounter = 0
         val uploadedImageDescList = mutableListOf<ImageDesc>()
 
+        Toast.makeText(
+            requireContext(),
+            "Uploading images to cloud",
+            Toast.LENGTH_LONG
+        ).show()
 
         for (i in 0 until imageDescAdapter.itemCount) {
             val curImageDesc = newsText.imageDescList[i]
@@ -329,8 +334,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
         val metrics = DisplayMetrics()
         requireActivity().windowManager?.defaultDisplay?.getMetrics(metrics)
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED)
-
 
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog

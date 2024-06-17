@@ -48,17 +48,13 @@
             app:layout_constraintStart_toEndOf="@id/textNamePost"
             app:layout_constraintTop_toTopOf="@id/textNamePost" />
 
-        <TextView
+        <ImageView
             android:id="@+id/editPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
+            android:src="@drawable/edit"
             android:layout_marginBottom="10dp"
-            android:text="Edit post"
-            style="@style/titleTab"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
             android:contentDescription="@string/edit_post"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/viewDivider"

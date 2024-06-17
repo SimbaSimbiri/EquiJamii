@@ -33,14 +33,13 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:background="@drawable/backg_bottom"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/backg_bottom">
 
                 <com.denzcoskun.imageslider.ImageSlider
                     android:id="@+id/imageSliderNews"
                     style="@style/titleTab"
                     android:layout_width="match_parent"
-                    app:iss_title_background="@color/navColor"
                     android:layout_height="300dp"
                     android:contentDescription="@string/newsImage"
                     android:scaleType="centerCrop"
@@ -48,6 +47,7 @@
                     app:iss_delay="1000"
                     app:iss_period="3500"
                     app:iss_text_align="CENTER"
+                    app:iss_title_background="@color/navColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -91,13 +91,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="13dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="0dp"
                     android:justificationMode="inter_word"
                     android:paddingTop="6dp"
                     android:text="@string/loremIpsum"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/newsTitle" />
+                    app:layout_constraintTop_toBottomOf="@id/dateTextView" />
 
                 <TextView
                     android:id="@+id/authorTextView"
@@ -112,6 +112,19 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/newsDetailAllnews" />
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="italic"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/newsTitle" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

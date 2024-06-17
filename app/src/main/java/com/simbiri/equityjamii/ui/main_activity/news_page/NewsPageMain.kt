@@ -95,8 +95,28 @@ class newsFragment : Fragment() {
 
             }.attach()
 
+            swipeRefresh.setOnRefreshListener {
+                refreshNews()
+            }
+
         }
         return view
+
+    }
+
+    private fun refreshNews() {
+
+        val currentTabPosition = binding.tabLayout.selectedTabPosition
+
+        val fragmentTransactionExit = parentFragmentManager.beginTransaction()
+        val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
+
+        fragmentTransactionExit.detach(this).commitNow()
+        fragmentTransactionEnter.attach(this).commitNow()
+
+        binding.viewPagerNews.currentItem = currentTabPosition
+        binding.swipeRefresh.isRefreshing = false
+
 
     }
 

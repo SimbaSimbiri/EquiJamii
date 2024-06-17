@@ -38,7 +38,7 @@ class LiveVideosFragment : Fragment() {
         airingImageSlider = view.findViewById(R.id.airingImageSwitcher)
         recyclerVideos = view.findViewById(R.id.recyclerViewYoutubeLive)
 
-        val layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
         recyclerVideos.layoutManager = layoutManager
 
@@ -76,7 +76,7 @@ class LiveVideosFragment : Fragment() {
 
             airingImageSlider.setImageList(slideModels)
 
-            val adapter = LiveVideoAdapter(requireContext(), completedList)
+            val adapter = context?.let { LiveVideoAdapter(it, completedList) }
             recyclerVideos.adapter = adapter
             recyclerVideos.adapter!!.notifyDataSetChanged()
         }

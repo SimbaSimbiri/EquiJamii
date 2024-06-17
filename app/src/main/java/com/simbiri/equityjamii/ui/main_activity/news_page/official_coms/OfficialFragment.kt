@@ -18,9 +18,7 @@ class OfficialFragment : Fragment() {
         fun newInstance() = OfficialFragment()
     }
 
-    private lateinit var viewModel: OfficialViewModel
     private lateinit var recylerViewOfficial : RecyclerView
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,16 +27,16 @@ class OfficialFragment : Fragment() {
         val view =  inflater.inflate(R.layout.news_page_official, container, false)
 
         recylerViewOfficial = view.findViewById(R.id.officialRecycler)
-        setUpRecyclerOfficial(view)
+        setUpRecyclerOfficial()
 
 
         return view
     }
 
 
-    private fun setUpRecyclerOfficial(view: View?) {
-        val context = requireContext()
-        val officialAdapter = OfficialAdapter(context, OfficialNewsTexts.officialNewsList!!)
+    private fun setUpRecyclerOfficial() {
+
+        val officialAdapter = context?.let { OfficialAdapter(it, OfficialNewsTexts.officialNewsList!!) }
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
 
@@ -47,10 +45,5 @@ class OfficialFragment : Fragment() {
         recylerViewOfficial.hasFixedSize()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(OfficialViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

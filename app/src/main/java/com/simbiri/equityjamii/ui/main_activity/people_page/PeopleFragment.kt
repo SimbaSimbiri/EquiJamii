@@ -77,10 +77,12 @@ class PeopleFragment : Fragment() {
 
         val currentTabPosition = binding.tabLayoutPeople.selectedTabPosition
 
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        val fragmentTransactionExit = parentFragmentManager.beginTransaction()
+        val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
 
-        fragmentTransaction.detach(this@PeopleFragment).commitNow()
-        fragmentTransaction.attach(this@PeopleFragment).commitNow()
+
+        fragmentTransactionExit.detach(this).commitNow()
+        fragmentTransactionEnter.attach(this).commitNow()
 
         binding.viewPagerPeople.currentItem = currentTabPosition
         binding.swipeRefresh.isRefreshing = false

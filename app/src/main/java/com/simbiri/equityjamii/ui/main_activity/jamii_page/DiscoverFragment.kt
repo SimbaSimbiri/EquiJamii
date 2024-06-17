@@ -33,14 +33,9 @@ class DiscoverFragment : Fragment() {
         super.onAttach(context)
         adapterPost = PostAdapter(context, postList)
     }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DiscoverTabBinding.inflate(layoutInflater)
-        val view = binding.root
 
-        setUpPostRecycler()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         AuthUtils.getCurrentPerson(USER_ID) { currentPerson ->
             if (currentPerson != null) {
                 currPerson = currentPerson
@@ -54,6 +49,16 @@ class DiscoverFragment : Fragment() {
             }
 
         }
+
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DiscoverTabBinding.inflate(layoutInflater)
+        val view = binding.root
+
+        setUpPostRecycler()
 
         return view
     }
@@ -84,7 +89,6 @@ class DiscoverFragment : Fragment() {
 
 
     private fun setUpPostRecycler() {
-        val context = requireContext()
         binding.discoverRecyclerView.apply {
             adapter = adapterPost
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

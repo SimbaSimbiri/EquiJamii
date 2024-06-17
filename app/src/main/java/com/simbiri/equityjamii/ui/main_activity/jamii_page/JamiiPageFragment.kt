@@ -108,10 +108,12 @@ class JamiiPageFragment : Fragment() {
     private fun refreshJamii() {
         val currentTabPosition = binding.tabLayoutposts.selectedTabPosition
 
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        val fragmentTransactionExit = parentFragmentManager.beginTransaction()
+        val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
 
-        fragmentTransaction.detach(this).commitNow()
-        fragmentTransaction.attach(this).commitNow()
+
+        fragmentTransactionExit.detach(this).commitNow()
+        fragmentTransactionEnter.attach(this).commitNow()
 
         binding.viewPagerPosts.currentItem = currentTabPosition
         binding.swipeRefresh.isRefreshing = false

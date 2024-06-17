@@ -26,6 +26,14 @@ class FeaturingFragment : Fragment() {
     private var canPublishEdit = false
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (AuthUtils.getCurrentUserId() != null){
+
+            setUpObservers()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,11 +45,9 @@ class FeaturingFragment : Fragment() {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
-                binding.featuringRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.featuringRecyclerView.layoutManager = LinearLayoutManager(context)
             }
         }
-
-        setUpObservers()
 
         return binding.root
     }
@@ -51,7 +57,7 @@ class FeaturingFragment : Fragment() {
 /*
             val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
 */
-            val adapter = NewsAdapter(requireContext(), allNewsInstances, canPublishEdit)
+            val adapter = context?.let { NewsAdapter(it, allNewsInstances, canPublishEdit) }
             binding.featuringRecyclerView.adapter = adapter
             binding.featuringRecyclerView.adapter!!.notifyDataSetChanged()
         }

@@ -58,10 +58,9 @@ class AllPeople : Fragment() {
     }
 
     private fun setUpRecyclers() {
-        val context = requireContext()
 
-        allAdapter = PeopleDataAdapter(context, searchList)
         binding.allPeopleRecycler.apply {
+            allAdapter = PeopleDataAdapter(context, searchList)
             layoutManager = GridLayoutManager(context,2)
             adapter = allAdapter
         }

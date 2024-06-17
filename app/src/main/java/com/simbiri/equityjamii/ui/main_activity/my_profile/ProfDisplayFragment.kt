@@ -96,7 +96,7 @@ class ProfDisplayFragment : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            refreshJamii()
+            refreshProfileInfo()
         }
 
         binding.myAssistant.setOnClickListener {
@@ -182,12 +182,17 @@ class ProfDisplayFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun refreshJamii() {
+    private fun refreshProfileInfo() {
 
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        val fragmentTransactionExit = parentFragmentManager.beginTransaction()
+        val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
 
-        fragmentTransaction.detach(this).commitNow()
-        fragmentTransaction.attach(this).commitNow()
+
+
+        fragmentTransactionExit.detach(this).commit()
+        this.onAttach(requireContext())
+        fragmentTransactionEnter.attach(this).commit()
+        retreiveDisplayInfo()
 
         binding.swipeRefresh.isRefreshing = false
     }
