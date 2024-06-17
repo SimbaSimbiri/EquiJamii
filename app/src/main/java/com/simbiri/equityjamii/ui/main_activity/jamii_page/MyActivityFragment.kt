@@ -119,9 +119,9 @@ class MyActivityFragment : Fragment() {
 
         }
 
-        viewModelEvent.registeredEventsList.observe(viewLifecycleOwner){registeredEvents->
+        viewModelEvent.registeredEventsList.observe(viewLifecycleOwner) { registeredEvents ->
             registeredList.clear()
-            registeredList.addAll(registeredEvents)
+            registeredList.addAll(registeredEvents.sortedBy { event: Event -> event.dateTime })
 
             binding.myRegisteredEventsRecyclerView.adapter!!.notifyDataSetChanged()
         }

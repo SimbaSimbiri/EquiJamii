@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
@@ -145,7 +146,7 @@ class EventsAdapter(
 
         }
 
-        private  fun showOrganizer(person: Person){
+        private fun showOrganizer(person: Person) {
             val organizerFragDetail = PersonInfoFragment.newInstance(person)
             val transaction =
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
@@ -233,6 +234,16 @@ class EventsAdapter(
 
 
         private fun toggleRegistration(eventId: String?) {
+
+            if (currentEvent!!.dateTime!! < Timestamp.now()) {
+                Toast.makeText(
+                    context,
+                    "Event expired, please contact organizer for past event recordings/minutes",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                return
+            }
             val eventRef = firestore.collection(EVENTS_C0LLECTION).document(eventId!!)
             val registrationRef = eventRef.collection(EVENT_SUB_COLLECTION)
 
