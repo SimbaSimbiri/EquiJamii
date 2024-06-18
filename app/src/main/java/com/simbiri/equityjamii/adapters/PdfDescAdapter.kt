@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.FileTitle
+import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogViewDocument
 
 class PdfDescAdapter(
     private val context: Context,
@@ -18,6 +20,15 @@ class PdfDescAdapter(
     inner class PdfDescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textPdfName: TextView = itemView.findViewById(R.id.textPdfName)
         val deletePdf: ImageView = itemView.findViewById(R.id.deletePdf)
+
+        fun displayPdf(pdf: FileTitle) {
+            val viewCurDoc = DialogViewDocument.newInstance(pdf)
+            val itemContext = itemView.context
+            if (itemContext is AppCompatActivity) {
+                val transaction = itemContext.supportFragmentManager.beginTransaction()
+                viewCurDoc.show(transaction, viewCurDoc.tag)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfDescViewHolder {
@@ -28,8 +39,11 @@ class PdfDescAdapter(
 
     override fun onBindViewHolder(holder: PdfDescViewHolder, position: Int) {
         val pdfDesc = fileTitleList[position]
-
         holder.textPdfName.text = pdfDesc.fileTitle
+
+        holder.textPdfName.setOnClickListener {
+            holder.displayPdf(pdfDesc)
+        }
 
         if (editable) {
             holder.deletePdf.visibility = View.VISIBLE

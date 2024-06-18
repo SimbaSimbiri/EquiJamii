@@ -53,6 +53,9 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        binding = DialogAddOfficialBinding.inflate(layoutInflater)
+        setUpRecyclers(context)
+
         pdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri->
             val filename  = uri?.let { DocumentFile.fromSingleUri(context,it)?.name }
             val fileTitle = FileTitle(uri.toString(), filename!!)
@@ -73,9 +76,6 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogAddOfficialBinding.inflate(layoutInflater)
-
-        setUpRecyclers()
 
         binding.apply {
             addPdfButton.setOnClickListener{
@@ -292,7 +292,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
     }
 
 
-    private fun setUpRecyclers() {
+    private fun setUpRecyclers(context: Context) {
         binding.recyclerPdfs.apply {
             pdfDescAdapter = PdfDescAdapter(context,fileTitleList, true)
             layoutManager = LinearLayoutManager(context)

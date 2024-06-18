@@ -35,7 +35,6 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
     private val viewModel: DialogDocumentsViewModel by viewModels()
     private lateinit var binding: DialogDocumentsBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,10 +43,10 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
 
         val fileLists = arguments?.getParcelableArrayList<FileTitle>(ARGS_FILE_LIST)
 
-        fileLists?.let { listFiles ->
+        fileLists.let { listFiles ->
             binding.apply {
                 documentsRecyclerView.apply {
-                    adapter = PdfDescAdapter(context, fileLists)
+                    adapter = PdfDescAdapter(requireContext(), listFiles!!.toMutableList())
                     layoutManager = LinearLayoutManager(context)
                     adapter!!.notifyDataSetChanged()
                 }

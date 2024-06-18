@@ -36,7 +36,8 @@
         <TextView
             android:id="@+id/textPdfName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
             android:layout_marginHorizontal="5dp"
             android:fontFamily="sans-serif-medium"
             android:foregroundGravity="center_vertical"
