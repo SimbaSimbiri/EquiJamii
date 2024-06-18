@@ -1,4 +1,58 @@
 package com.simbiri.equityjamii.adapters
 
-class PdfDescAdapter {
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.FileTitle
+
+class PdfDescAdapter(
+    private val context: Context,
+    private val fileTitleList: MutableList<FileTitle>, var editable: Boolean = false
+) : RecyclerView.Adapter<PdfDescAdapter.PdfDescViewHolder>() {
+
+    inner class PdfDescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textPdfName: TextView = itemView.findViewById(R.id.textPdfName)
+        val deletePdf: ImageView = itemView.findViewById(R.id.deletePdf)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfDescViewHolder {
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.adapters_pdf_item, parent, false)
+        return PdfDescViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: PdfDescViewHolder, position: Int) {
+        val pdfDesc = fileTitleList[position]
+
+        holder.textPdfName.text = pdfDesc.fileTitle
+
+        if (editable) {
+            holder.deletePdf.visibility = View.VISIBLE
+
+            holder.deletePdf.setOnClickListener {
+                deletePdfDesc(pdfDesc, position)
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return fileTitleList.size
+    }
+
+    private fun deletePdfDesc(fileTitle: FileTitle, position: Int) {
+        fileTitleList.remove(fileTitle)
+        notifyItemRemoved(position)
+    }
+
+    fun addPdfDesc(fileTitle: FileTitle) {
+        if (fileTitleList.size < 5) {
+            fileTitleList.add(fileTitle)
+            notifyItemInserted(fileTitleList.size - 1)
+        }
+    }
 }

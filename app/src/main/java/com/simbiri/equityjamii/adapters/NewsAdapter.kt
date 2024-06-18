@@ -69,10 +69,10 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
 
             imageNewsHeadlineView.layoutParams = layoutParams
 
-            if (newsInstance.imageDescList.size > 0){
+            if (newsInstance.fileTitleList.size > 0){
 
                 Glide.with(itemView.context as AppCompatActivity)
-                    .load(newsInstance.imageDescList[0].image)
+                    .load(newsInstance.fileTitleList[0].fileUri)
                     .fitCenter()
                     .into(imageNewsHeadlineView)
             } else{

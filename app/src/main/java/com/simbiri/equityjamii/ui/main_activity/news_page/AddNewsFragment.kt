@@ -7,7 +7,6 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +25,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.ImageDescAdapter
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_STORAGE_REF
-import com.simbiri.equityjamii.data.model.ImageDesc
+import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.AddNewsDialogBinding
 
@@ -36,7 +35,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private var newsText: NewsText? = null
     private lateinit var openImagePicker: ActivityResultLauncher<CropImageContractOptions>
     private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val imageDescList = mutableListOf<ImageDesc>()
+    private val fileTitleList = mutableListOf<FileTitle>()
     private lateinit var imageDescAdapter: ImageDescAdapter
     private val newsStorageRef = FirebaseStorage.getInstance().reference
 
@@ -71,15 +70,15 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         openImagePicker = registerForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
                 result.uriContent?.let { uri ->
-                    val imageDesc = ImageDesc(uri.toString(), "")
-                    imageDescList.add(imageDesc)
+                    val fileTitle = FileTitle(uri.toString(), "")
+                    fileTitleList.add(fileTitle)
                     imageDescAdapter.notifyDataSetChanged()
                 }
             }
         }
 
         binding.addPicturePost.setOnClickListener {
-            if (imageDescList.size <= 5) {
+            if (fileTitleList.size < 5) {
                 openImagePicker.launch(
                     CropImageContractOptions(
                         null,
@@ -125,7 +124,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupRecyclerView() {
-        imageDescAdapter = ImageDescAdapter(requireContext(), imageDescList)
+        imageDescAdapter = ImageDescAdapter(requireContext(), fileTitleList)
         binding.recyclerViewImages.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = imageDescAdapter
@@ -140,7 +139,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         binding.editTextNewsName.setText(newsText.newsName)
         binding.editTextNewsTag.setText(newsText.newsTag)
 
-        imageDescList.addAll(newsText.imageDescList)
+        fileTitleList.addAll(newsText.fileTitleList)
         imageDescAdapter.notifyDataSetChanged()
     }
 
@@ -158,25 +157,25 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             }
 
 
-                val uploadImageList = mutableListOf<ImageDesc>()
+                val uploadImageList = mutableListOf<FileTitle>()
 
 
-         for (i in 0 until imageDescList.size) {
+         for (i in 0 until fileTitleList.size) {
              val viewHolder =
                  binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
              viewHolder?.let {
                  uploadImageList.add(
-                     ImageDesc(imageDescList[i].image, it.editTextDescription.text.toString())
+                     FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString())
                  )
              }
          }
 
         val timestamp = Timestamp.now()
         if (newsText == null) {
-            newsText = NewsText(imageDescList, title, allNews, author, newsName, newsTag, timestamp)
+            newsText = NewsText(fileTitleList, title, allNews, author, newsName, newsTag, timestamp)
         } else {
             newsText!!.let { news ->
-                news.imageDescList = imageDescList
+                news.fileTitleList = fileTitleList
                 news.title = title
                 news.allNews = allNews
                 news.author = author
@@ -190,9 +189,9 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     }
 
     private fun saveNewsToFireStore(newsText: NewsText) {
-        val imageUploadsCount = newsText.imageDescList.size
+        val imageUploadsCount = newsText.fileTitleList.size
         var uploadCounter = 0
-        val uploadedImageDescList = mutableListOf<ImageDesc>()
+        val uploadedFileTitleList = mutableListOf<FileTitle>()
 
         Toast.makeText(
             requireContext(),
@@ -200,21 +199,23 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             Toast.LENGTH_LONG
         ).show()
 
-        for (i in 0 until imageDescAdapter.itemCount) {
-            val curImageDesc = newsText.imageDescList[i]
+        binding.progressSaveNews.visibility = View.VISIBLE
 
-            if (curImageDesc.image.startsWith("https://")){
-                uploadedImageDescList.add(
-                    ImageDesc(
-                        curImageDesc.image,
-                        curImageDesc.description
+        for (i in 0 until imageDescAdapter.itemCount) {
+            val curImageDesc = newsText.fileTitleList[i]
+
+            if (curImageDesc.fileUri.startsWith("https://")){
+                uploadedFileTitleList.add(
+                    FileTitle(
+                        curImageDesc.fileUri,
+                        curImageDesc.fileTitle
                     )
                 )
 
                 uploadCounter++
 
                 if (uploadCounter == imageUploadsCount) {
-                    saveOrUpdate(newsText, uploadedImageDescList)
+                    saveOrUpdate(newsText, uploadedFileTitleList)
                 }
 
                 continue
@@ -223,23 +224,23 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             val newsItemRef = newsStorageRef.child(NEWS_STORAGE_REF)
                 .child(FieldValue.serverTimestamp().toString() + "image${i + 1}.jpg")
 
-            if (curImageDesc.image.isNotEmpty()) {
-                newsItemRef.putFile(Uri.parse(curImageDesc.image))
+            if (curImageDesc.fileUri.isNotEmpty()) {
+                newsItemRef.putFile(Uri.parse(curImageDesc.fileUri))
                     .addOnCompleteListener { taskUpload ->
 
                         if (taskUpload.isSuccessful) {
 
                             newsItemRef.downloadUrl.addOnSuccessListener { newsImageUri ->
-                                uploadedImageDescList.add(
-                                    ImageDesc(
+                                uploadedFileTitleList.add(
+                                    FileTitle(
                                         newsImageUri.toString(),
-                                        curImageDesc.description
+                                        curImageDesc.fileTitle
                                     )
                                 )
                                 uploadCounter++
 
                                 if (uploadCounter == imageUploadsCount) {
-                                    saveOrUpdate(newsText, uploadedImageDescList)
+                                    saveOrUpdate(newsText, uploadedFileTitleList)
                                 }
 
                             }
@@ -262,11 +263,11 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
     }
 
-    private fun saveOrUpdate(newsText: NewsText, imageList: MutableList<ImageDesc>) {
+    private fun saveOrUpdate(newsText: NewsText, imageList: MutableList<FileTitle>) {
         val newsHashMap: HashMap<String, Any?> = HashMap()
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
-        newsHashMap["imageDescList"] = imageList.map { hashMapOf("image" to it.image, "description" to it.description) }
+        newsHashMap["fileTitleList"] = imageList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title

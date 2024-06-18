@@ -5,6 +5,7 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 val POST_COLLECTION ="Post_Gallery"
 val POST_STORAGE_REF ="PostStorage_Images"
 val NEWS_STORAGE_REF = "NewsImageStore"
+val NEWS_PDF_STORE = "OfficialDocumentsStore"
 val USERS_COLLECTION ="Users"
 val LIKES_SUB_COLLECTION = "Likes"
 val NEWS_COLLECTION = "News"

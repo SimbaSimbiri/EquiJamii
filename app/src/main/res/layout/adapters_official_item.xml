@@ -1,50 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="15dp"
-    android:elevation="20dp">
+    android:layout_marginVertical="5dp"
+    android:layout_marginHorizontal="5dp"
+    android:elevation="20dp"
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
             android:id="@+id/titleOfficialItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/primaryColor"
-            android:text="@string/newsOfficialHeadline"
-            android:fontFamily="@font/baloo_paaji_2_semibold"
-            android:textSize="17sp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/newsOfficialHeadline"
+            android:textColor="@color/primaryColor"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/previewOfficialItem"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/editNews"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/circle"
+            android:padding="5dp"
+            android:src="@drawable/add_news_icon"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/previewOfficialItem"
             android:layout_width="match_parent"
-            android:text="@string/newsOfficialText"
-            android:textAppearance="@style/titleTab"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textSize="15sp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Detailed Summary of communication"
+            android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="20dp"
             app:layout_constraintTop_toBottomOf="@id/titleOfficialItem" />
+
+        <TextView
+            android:id="@+id/viewAttachmentsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="sans-serif-medium"
+            android:text="view related attachments"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/previewOfficialItem" />
+
+        <ImageView
+            android:id="@+id/viewAttachmentsImage"
+            android:layout_width="wrap_content"
+            android:scaleType="fitCenter"
+            android:contentDescription="View all attachments"
+            android:src="@drawable/attachments_icon"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/viewAttachmentsText"
+            app:layout_constraintStart_toEndOf="@id/viewAttachmentsText"
+            app:layout_constraintBottom_toBottomOf="@id/viewAttachmentsText"/>
+
+
 
 
 

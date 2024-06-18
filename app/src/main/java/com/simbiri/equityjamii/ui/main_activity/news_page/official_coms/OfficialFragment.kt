@@ -1,16 +1,16 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page.official_coms
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OfficialAdapter
-import com.simbiri.equityjamii.data.model.OfficialNewsTexts
+import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.databinding.NewsPageOfficialBinding
+import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 
 class OfficialFragment : Fragment() {
 
@@ -18,31 +18,63 @@ class OfficialFragment : Fragment() {
         fun newInstance() = OfficialFragment()
     }
 
-    private lateinit var recylerViewOfficial : RecyclerView
+    private lateinit var binding: NewsPageOfficialBinding
+    private val viewModel: NewsViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private var canPublishEdit = false
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (AuthUtils.getCurrentUserId() != null) {
+
+            setUpObservers()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view =  inflater.inflate(R.layout.news_page_official, container, false)
+    ): View {
+        binding = NewsPageOfficialBinding.inflate(layoutInflater)
 
-        recylerViewOfficial = view.findViewById(R.id.officialRecycler)
-        setUpRecyclerOfficial()
+        if (AuthUtils.getCurrentUserId() != null) {
 
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
+                binding.officialRecycler.layoutManager = LinearLayoutManager(context)
 
-        return view
+            }
+        }
+
+        binding.apply {
+
+            addOfficialDocs.setOnClickListener {
+                val addOfficialDialog = AddOfficialDialog()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                addOfficialDialog.show(transaction, addOfficialDialog.tag)
+            }
+        }
+
+        return binding.root
     }
 
+    private fun setUpObservers() {
+        viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
+            val adapter = context?.let {
+                OfficialAdapter(
+                    it,
+                    allNewsInstances.filter { newsText ->
+                        newsText.newsTag.contentEquals(
+                            "official",
+                            true
+                        )
+                    }.toMutableList(), canPublishEdit
+                )
+            }
 
-    private fun setUpRecyclerOfficial() {
-
-        val officialAdapter = context?.let { OfficialAdapter(it, OfficialNewsTexts.officialNewsList!!) }
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = RecyclerView.VERTICAL
-
-        recylerViewOfficial.adapter =  officialAdapter
-        recylerViewOfficial.layoutManager = layoutManager
-        recylerViewOfficial.hasFixedSize()
+            binding.officialRecycler.adapter = adapter
+            binding.officialRecycler.adapter!!.notifyDataSetChanged()
+        }
     }
 
 

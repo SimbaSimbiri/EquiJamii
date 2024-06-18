@@ -10,14 +10,23 @@
         android:id="@+id/officialRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginHorizontal="5dp"
         tools:listitem="@layout/adapters_official_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:contentDescription="Add official docs"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/addOfficialDocs"
+        android:clickable="true"
+        android:src="@drawable/add_official_docs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp"/>
 
 
 

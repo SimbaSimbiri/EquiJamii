@@ -50,7 +50,17 @@ class LatestFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
-            val adapter = context?.let { NewsAdapter(it, allNewsInstances, canPublishEdit) }
+            val adapter = context?.let {
+                NewsAdapter(
+                    it,
+                    allNewsInstances.filter { newsText ->
+                        !newsText.newsTag.contentEquals(
+                            "official",
+                            true
+                        )
+                    },
+                    canPublishEdit)
+            }
             binding.newsRecylerView.adapter = adapter
             binding.newsRecylerView.adapter!!.notifyDataSetChanged()
         }

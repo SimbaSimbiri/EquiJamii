@@ -11,11 +11,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.data.model.ImageDesc
+import com.simbiri.equityjamii.data.model.FileTitle
 
 class ImageDescAdapter(
     private val context: Context,
-    private val imageDescList: MutableList<ImageDesc>
+    private val fileTitleList: MutableList<FileTitle>
 ) : RecyclerView.Adapter<ImageDescAdapter.ImageDescViewHolder>() {
 
     inner class ImageDescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,12 +31,12 @@ class ImageDescAdapter(
     }
 
     override fun onBindViewHolder(holder: ImageDescViewHolder, position: Int) {
-        val imageDesc = imageDescList[position]
-        Glide.with(context).load(Uri.parse(imageDesc.image)).fitCenter().into(holder.imageView)
+        val imageDesc = fileTitleList[position]
+        Glide.with(context).load(Uri.parse(imageDesc.fileUri)).fitCenter().into(holder.imageView)
 
-        holder.editTextDescription.setText(imageDesc.description)
+        holder.editTextDescription.setText(imageDesc.fileTitle)
         holder.editTextDescription.addTextChangedListener {
-            imageDesc.description = it.toString()
+            imageDesc.fileTitle = it.toString()
         }
         holder.deleteImage.setOnClickListener {
             deleteImageDesc(imageDesc, position)
@@ -44,18 +44,18 @@ class ImageDescAdapter(
     }
 
     override fun getItemCount(): Int {
-        return imageDescList.size
+        return fileTitleList.size
     }
 
-    private fun deleteImageDesc(imageDesc: ImageDesc, position: Int) {
-        imageDescList.remove(imageDesc)
+    private fun deleteImageDesc(fileTitle: FileTitle, position: Int) {
+        fileTitleList.remove(fileTitle)
         notifyItemRemoved(position)
     }
 
-    fun addImageDesc(imageDesc: ImageDesc) {
-        if (imageDescList.size < 5) {
-            imageDescList.add(imageDesc)
-            notifyItemInserted(imageDescList.size - 1)
+    fun addImageDesc(fileTitle: FileTitle) {
+        if (fileTitleList.size < 5) {
+            fileTitleList.add(fileTitle)
+            notifyItemInserted(fileTitleList.size - 1)
         }
     }
 }

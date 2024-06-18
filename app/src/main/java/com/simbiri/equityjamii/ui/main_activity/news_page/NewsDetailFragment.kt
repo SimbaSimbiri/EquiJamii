@@ -3,14 +3,12 @@ package com.simbiri.equityjamii.ui.main_activity.news_page
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.AnimationTypes
@@ -104,8 +102,8 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         arguments?.getParcelable<NewsText>(ARG_NEWS_ITEM)?.let { newstText ->
 
             val imageList = ArrayList<SlideModel>()
-            newstText.imageDescList.forEach { imageDesc ->
-                imageList.add(SlideModel(imageDesc.image, imageDesc.description))
+            newstText.fileTitleList.forEach { imageDesc ->
+                imageList.add(SlideModel(imageDesc.fileUri, imageDesc.fileTitle))
             }
 
             ImageSliderNews.setImageList(imageList, ScaleTypes.CENTER_CROP)

@@ -54,10 +54,8 @@ class FeaturingFragment : Fragment() {
 
     private fun setUpObservers(){
         viewModel.newsList.observe(viewLifecycleOwner){ allNewsInstances ->
-/*
-            val featureNews = allNewsInstances.filter { newsInst -> newsInst.newsName.contentEquals("featuring") }
-*/
-            val adapter = context?.let { NewsAdapter(it, allNewsInstances, canPublishEdit) }
+
+            val adapter = context?.let { NewsAdapter(it, allNewsInstances.filter { newsText -> !newsText.newsTag.contentEquals("official",true)}, canPublishEdit) }
             binding.featuringRecyclerView.adapter = adapter
             binding.featuringRecyclerView.adapter!!.notifyDataSetChanged()
         }

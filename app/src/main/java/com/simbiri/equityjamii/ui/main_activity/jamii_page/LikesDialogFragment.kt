@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,8 +22,8 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
         private const val ARGS_USER_IDS = "user_ids"
         fun newInstance(likedUserIds: ArrayList<String>): LikesDialogFragment {
             val frag = LikesDialogFragment()
-            val args =  Bundle()
-            args.putStringArrayList(ARGS_USER_IDS,likedUserIds)
+            val args = Bundle()
+            args.putStringArrayList(ARGS_USER_IDS, likedUserIds)
 
             frag.arguments = args
             return frag
@@ -34,18 +32,18 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
     }
 
     private lateinit var dialogLikesBinding: DialogLikesBinding
-    private val viewModel : LikesViewModel  = LikesViewModel()
+    private val viewModel: LikesViewModel = LikesViewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View{
-        dialogLikesBinding = DialogLikesBinding.inflate(inflater,container,false)
+    ): View {
+        dialogLikesBinding = DialogLikesBinding.inflate(inflater, container, false)
 
         val listIds = arguments?.getStringArrayList(ARGS_USER_IDS)
 
         viewModel.fetchLikesList(listIds)
 
-        dialogLikesBinding.let { binding->
+        dialogLikesBinding.let { binding ->
 
             binding.likesPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             setUpObservers()
@@ -56,10 +54,10 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setUpObservers() {
-        viewModel.likesPeopleList.observe(viewLifecycleOwner){likedUsers->
+        viewModel.likesPeopleList.observe(viewLifecycleOwner) { likedUsers ->
 
             val adapter = NetworkAdapter(requireContext(), likedUsers)
-            dialogLikesBinding.likesPeopleRecyclerView.adapter =adapter
+            dialogLikesBinding.likesPeopleRecyclerView.adapter = adapter
             dialogLikesBinding.likesPeopleRecyclerView.adapter!!.notifyDataSetChanged()
         }
     }

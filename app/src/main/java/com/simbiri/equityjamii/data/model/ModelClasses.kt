@@ -3,10 +3,8 @@ package com.simbiri.equityjamii.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 
-data class ImageDesc(var image: String, var description: String) : Parcelable {
+data class FileTitle(var fileUri: String, var fileTitle: String) : Parcelable {
     constructor() : this("", "")
 
     constructor(parcel: Parcel) : this(
@@ -15,26 +13,26 @@ data class ImageDesc(var image: String, var description: String) : Parcelable {
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(image)
-        parcel.writeString(description)
+        parcel.writeString(fileUri)
+        parcel.writeString(fileTitle)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<ImageDesc> {
-        override fun createFromParcel(parcel: Parcel): ImageDesc {
-            return ImageDesc(parcel)
+    companion object CREATOR : Parcelable.Creator<FileTitle> {
+        override fun createFromParcel(parcel: Parcel): FileTitle {
+            return FileTitle(parcel)
         }
 
-        override fun newArray(size: Int): Array<ImageDesc?> {
+        override fun newArray(size: Int): Array<FileTitle?> {
             return arrayOfNulls(size)
         }
     }
 }
 data class NewsText(
-    var imageDescList: MutableList<ImageDesc>,
+    var fileTitleList: MutableList<FileTitle>,
     var title: String,
     var allNews: String,
     var author: String,
@@ -47,7 +45,7 @@ data class NewsText(
     constructor() : this(mutableListOf(), "", "", "", "", "",  null,"")
 
     constructor(parcel: Parcel) : this(
-        parcel.createTypedArrayList(ImageDesc.CREATOR)!!.toMutableList(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -64,7 +62,7 @@ data class NewsText(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeTypedList(imageDescList)
+        dest.writeTypedList(fileTitleList)
         dest.writeString(title)
         dest.writeString(allNews)
         dest.writeString(author)
