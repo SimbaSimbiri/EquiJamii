@@ -4,12 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -49,11 +52,26 @@ class FeaturingFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        binding = NewsPageFeaturingBinding.inflate(layoutInflater)
+
+        val layoutParams = binding.snapShotsImageSlider.layoutParams
+        val displayMetrics = DisplayMetrics()
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenheight = displayMetrics.heightPixels
+        layoutParams.height = screenheight * 3 / 5
+
+        binding.snapShotsImageSlider.layoutParams = layoutParams
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = NewsPageFeaturingBinding.inflate(inflater, container, false)
 
         if (AuthUtils.getCurrentUserId() != null) {
 
@@ -62,6 +80,8 @@ class FeaturingFragment : Fragment() {
 
             }
         }
+
+
 
         return binding.root
     }
@@ -120,16 +140,20 @@ class FeaturingFragment : Fragment() {
                 snapShotsTv.text = "Snapshots of ${curNewsFeaturing.title}"
                 titleMagicText.text = "About ${curNewsFeaturing.title}"
                 moreAboutTextView.text = "A peek into the life of ${curNewsFeaturing.title}"
+                tapTextView.text = "Tap card to reveal more about ${curNewsFeaturing.title}"
                 magicCardView.setOnClickListener {
 
                 }
                 snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
-                
+
                 val parts = curNewsFeaturing.allNews.split("\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
 
 
                 magicCardView.setOnClickListener {
+
+                    snapShotsImageSlider.startSliding()
+                    Handler().postDelayed({ snapShotsImageSlider.stopSliding() }, 1500)
 
                     val slideOut = ObjectAnimator.ofFloat(
                         magicCardView,
@@ -154,10 +178,6 @@ class FeaturingFragment : Fragment() {
                             val currentIndex = parts.indexOf(currentText)
                             val nextIndex = (currentIndex + 1) % parts.size
                             contentMagicText.text = parts[nextIndex]
-
-                            snapShotsImageSlider.startSliding()
-                            Handler().postDelayed({ snapShotsImageSlider.stopSliding() }, 1500)
-
                             slideIn.start()
                         }
                     })
