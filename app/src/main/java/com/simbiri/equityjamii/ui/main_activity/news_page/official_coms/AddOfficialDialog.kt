@@ -24,7 +24,6 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_PDF_STORE
-import com.simbiri.equityjamii.constants.NEWS_STORAGE_REF
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.DialogAddOfficialBinding
@@ -44,7 +43,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
     }
 
     private lateinit var pdfLauncher: ActivityResultLauncher<String>
-    private lateinit var binding : DialogAddOfficialBinding
+    private lateinit var binding: DialogAddOfficialBinding
     private val fileTitleList = mutableListOf<FileTitle>()
     private val firestoreInst: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var pdfDescAdapter: PdfDescAdapter
@@ -56,14 +55,17 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         binding = DialogAddOfficialBinding.inflate(layoutInflater)
         setUpRecyclers(context)
 
-        pdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri->
-            val filename  = uri?.let { DocumentFile.fromSingleUri(context,it)?.name }
-            val fileTitle = FileTitle(uri.toString(), filename!!)
-            fileTitleList.add(fileTitle)
-            pdfDescAdapter.notifyDataSetChanged()
+        pdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            val filename = uri?.let { DocumentFile.fromSingleUri(context, it)?.name }
+
+            if (filename != null) {
+                val fileTitle = FileTitle(uri.toString(), filename)
+                fileTitleList.add(fileTitle)
+                pdfDescAdapter.notifyDataSetChanged()
+            }
 
         }
-   }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +80,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
     ): View {
 
         binding.apply {
-            addPdfButton.setOnClickListener{
+            addPdfButton.setOnClickListener {
                 pdfLauncher.launch("application/pdf")
             }
 
@@ -87,7 +89,11 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
             }
 
             postButton.setOnClickListener {
-                Toast.makeText(requireContext(), "Initiating uploading official communication", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Initiating uploading official communication",
+                    Toast.LENGTH_LONG
+                ).show()
                 saveNews()
             }
 
@@ -106,6 +112,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         fileTitleList.addAll(newsText.fileTitleList)
         pdfDescAdapter.notifyDataSetChanged()
     }
+
     private fun saveNews() {
 
         val title = binding.editTextTitle.text.toString().trim()
@@ -168,7 +175,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         for (i in 0 until pdfDescAdapter.itemCount) {
             val curPdfDesc = newsText.fileTitleList[i]
 
-            if (curPdfDesc.fileUri.startsWith("https://")){
+            if (curPdfDesc.fileUri.startsWith("https://")) {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curPdfDesc.fileUri,
@@ -231,7 +238,8 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         val newsHashMap: HashMap<String, Any?> = HashMap()
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
-        newsHashMap["fileTitleList"] = pdfList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
+        newsHashMap["fileTitleList"] =
+            pdfList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title
@@ -287,6 +295,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
 
 
     }
+
     private fun updateDocWithId(docId: String) {
         firestoreInst.collection(NEWS_COLLECTION).document(docId).update("documentId", docId)
     }
@@ -294,7 +303,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
 
     private fun setUpRecyclers(context: Context) {
         binding.recyclerPdfs.apply {
-            pdfDescAdapter = PdfDescAdapter(context,fileTitleList, true)
+            pdfDescAdapter = PdfDescAdapter(context, fileTitleList, true)
             layoutManager = LinearLayoutManager(context)
             adapter = pdfDescAdapter
         }

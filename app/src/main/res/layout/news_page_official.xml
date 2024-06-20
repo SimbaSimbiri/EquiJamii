@@ -17,17 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:contentDescription="Add official docs"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/addOfficialDocs"
-        android:clickable="true"
-        android:src="@drawable/add_official_docs"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="10dp"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

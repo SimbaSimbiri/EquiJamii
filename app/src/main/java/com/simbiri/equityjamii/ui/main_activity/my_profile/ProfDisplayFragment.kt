@@ -40,11 +40,6 @@ class ProfDisplayFragment : Fragment() {
     private var currentPerson: Person = Person()
     private val viewModel: ProfDisplayViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     private lateinit var binding: ProfilePageDisplayBinding
     private lateinit var listsSocials: ArrayList<String>
     private var myNetwork: Network? = Network()
@@ -121,7 +116,7 @@ class ProfDisplayFragment : Fragment() {
             Handler().postDelayed({
                 binding.contentLoadingProgressBar.visibility = View.INVISIBLE
                 editProfileFragment.show(transaction, editProfileFragment.tag)
-            }, 2000)
+            }, 3000)
 
         }
 
@@ -133,7 +128,7 @@ class ProfDisplayFragment : Fragment() {
 
             Handler().postDelayed({
                 binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-            }, 1500)
+            }, 3000)
 
         }
 

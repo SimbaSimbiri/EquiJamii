@@ -48,11 +48,6 @@ class OfficialFragment : Fragment() {
 
         binding.apply {
 
-            addOfficialDocs.setOnClickListener {
-                val addOfficialDialog = AddOfficialDialog()
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                addOfficialDialog.show(transaction, addOfficialDialog.tag)
-            }
         }
 
         return binding.root

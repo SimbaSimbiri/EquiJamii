@@ -77,16 +77,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="sans-serif-medium"
             android:padding="5dp"
+            app:layout_constraintEnd_toStartOf="@id/viewAttachmentsImage"
             android:text="view related attachments"
             android:textColor="@color/lighterMaroon"
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/viewAttachmentsText"
             app:layout_constraintTop_toBottomOf="@id/previewOfficialItem" />
 
         <ImageView
@@ -99,7 +99,6 @@
             android:src="@drawable/attachments_icon"
             app:layout_constraintBottom_toBottomOf="@id/viewAttachmentsText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/viewAttachmentsText"
             app:layout_constraintTop_toTopOf="@id/viewAttachmentsText" />
 
 

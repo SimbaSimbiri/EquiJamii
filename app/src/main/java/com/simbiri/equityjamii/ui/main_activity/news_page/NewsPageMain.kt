@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.databinding.NewsPageBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.featuring.FeaturingFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.for_you.ForYouFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.latest.LatestFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube.LiveVideosFragment
+import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.AddOfficialDialog
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.OfficialFragment
 
 class newsFragment : Fragment() {
@@ -25,6 +26,7 @@ class newsFragment : Fragment() {
     private lateinit var stateAdapter: FragmentStateAdapter
     private var canPublishEdit = false
     private lateinit var binding: NewsPageBinding
+    var fabVisible = false
 
 
     override fun onCreateView(
@@ -44,15 +46,46 @@ class newsFragment : Fragment() {
                 AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                     canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
                     if (canPublishEdit) {
-                        addNewsIcon.visibility = View.VISIBLE
+                        fabAdd.visibility = View.VISIBLE
                     }
                 }
             }
 
-            addNewsIcon.setOnClickListener {
+            fabAdd.setOnClickListener {
+
+                if (!fabVisible) {
+
+                    fabAddNews.show()
+                    fabAddOfficial.show()
+
+                    fabAddNews.visibility = View.VISIBLE
+                    fabAddOfficial.visibility = View.VISIBLE
+
+                    fabAdd.setImageDrawable(resources.getDrawable(R.drawable.cancel_fab_icon))
+                    fabVisible = true
+                } else {
+
+                    fabAddNews.hide()
+                    fabAddOfficial.hide()
+
+                    fabAddNews.visibility = View.GONE
+                    fabAddOfficial.visibility = View.GONE
+
+                    fabAdd.setImageDrawable(resources.getDrawable(R.drawable.add_icon))
+                    fabVisible = false
+                }
+            }
+
+            fabAddNews.setOnClickListener {
                 val addNewsFrag = AddNewsFragment()
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 addNewsFrag.show(transaction, addNewsFrag.tag)
+            }
+
+            fabAddOfficial.setOnClickListener {
+                val addOfficialDialog = AddOfficialDialog()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                addOfficialDialog.show(transaction, addOfficialDialog.tag)
             }
 
             stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
