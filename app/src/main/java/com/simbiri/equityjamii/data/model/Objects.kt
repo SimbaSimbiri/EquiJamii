@@ -131,8 +131,8 @@ object UserNetworkUtils {
                 }
 
             userFollowerList.forEach { person ->
-                    followingIDSet.add(person.userId)
-                }
+                followingIDSet.add(person.userId)
+            }
 
         }
 
@@ -218,6 +218,29 @@ object YoutubeKeyProvider {
 object YouTubeVids {
 
     private val ioDispatcher = Dispatchers.IO
+
+    suspend fun getYoutubeVideo(context: Context, videoId: String): Video? {
+        val apiKey = YoutubeKeyProvider.keyProvider(context, 0)
+
+        return withContext(ioDispatcher) {
+            try {
+                val response = RetrofitClient.instance.getYoutubeVideoDetails(
+                    videoId = videoId,
+                    apiKey = apiKey,
+                    part = "snippet"
+                )
+
+                response.items.firstOrNull()?.let {
+                    val snippet = it.snippet
+                    Video(snippet.title, snippet.thumbnails.high.url, it.id.videoId ?: "nullVidId")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     suspend fun YoutubeVideos(context: Context, eventType: String): List<Video> {
         val apiKey = YoutubeKeyProvider.keyProvider(context, 0)
         val channelId = YoutubeKeyProvider.keyProvider(context, 1)

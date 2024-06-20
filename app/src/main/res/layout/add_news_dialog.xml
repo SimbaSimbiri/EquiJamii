@@ -172,6 +172,37 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/news_link_layout"
+                style="@style/FirebaseUI.TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/primaryColor"
+                app:boxStrokeWidth="2dp"
+                android:visibility="gone"
+                app:cursorColor="@color/logoColour"
+                app:hintTextColor="@color/logoColour"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/news_tag_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNewsLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    android:hint="Featuring news link"
+                    android:inputType="text"
+                    android:textColorHighlight="@color/lighterMaroon"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/addPicturePost"
                 android:layout_width="wrap_content"
@@ -184,7 +215,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/news_tag_layout" />
+                app:layout_constraintTop_toBottomOf="@id/news_link_layout" />
+
+            <Button
+                android:id="@+id/addFeaturingLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:backgroundTint="@color/logoColour"
+                android:text="Add featuring link"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addPicturePost" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewImages"
@@ -193,7 +239,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addPicturePost"
+                app:layout_constraintTop_toBottomOf="@id/addFeaturingLink"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintWidth_percent="0.9"
                 tools:listitem="@layout/adapter_item_image_desc" />

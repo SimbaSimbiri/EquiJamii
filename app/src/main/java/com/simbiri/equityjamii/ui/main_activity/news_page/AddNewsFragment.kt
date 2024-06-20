@@ -3,6 +3,8 @@ package com.simbiri.equityjamii.ui.main_activity.news_page
 import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -93,7 +95,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             guidelines = CropImageView.Guidelines.OFF,
                             aspectRatioY = 9,
                             aspectRatioX = 16,
-                            fixAspectRatio = true,
+                            fixAspectRatio = false,
                             imageSourceIncludeCamera = false
                         )
                     )
@@ -120,6 +122,29 @@ class AddNewsFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
+        binding.editTextNewsName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().equals("featuring", ignoreCase = true)) {
+                    binding.addFeaturingLink.visibility = View.VISIBLE
+                } else {
+                    binding.addFeaturingLink.visibility = View.GONE
+                    binding.newsLinkLayout.visibility = View.GONE
+                    binding.editTextNewsLink.visibility = View.GONE
+                }
+            }
+        })
+
+        binding.addFeaturingLink.setOnClickListener {
+            binding.newsLinkLayout.visibility = View.VISIBLE
+            binding.editTextNewsLink.visibility = View.VISIBLE
+        }
+
         return view
     }
 
@@ -138,37 +163,54 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         binding.editTextAuthor.setText(newsText.author)
         binding.editTextNewsName.setText(newsText.newsName)
         binding.editTextNewsTag.setText(newsText.newsTag)
+        if (newsText.newsName.contentEquals("featuring", true)) {
+            binding.newsLinkLayout.visibility = View.VISIBLE
+            binding.editTextNewsLink.visibility = View.VISIBLE
+        }
 
         fileTitleList.addAll(newsText.fileTitleList)
         imageDescAdapter.notifyDataSetChanged()
     }
 
-        private fun saveNews() {
+    private fun saveNews() {
 
-            val title = binding.editTextTitle.text.toString().trim()
-            val allNews = binding.editTextAllNews.text.toString().trim()
-            val author = binding.editTextAuthor.text.toString().trim()
-            val newsName = binding.editTextNewsName.text.toString().trim()
-            val newsTag = binding.editTextNewsTag.text.toString().trim()
+        val title = binding.editTextTitle.text.toString().trim()
+        val allNews = binding.editTextAllNews.text.toString().trim()
+        val author = binding.editTextAuthor.text.toString().trim()
+        val newsName = binding.editTextNewsName.text.toString().trim()
+        val newsTag = binding.editTextNewsTag.text.toString().trim()
+        val featuringUri = binding.editTextNewsLink.text.toString().trim()
 
-            if (title.isEmpty() || allNews.isEmpty() || author.isEmpty() || newsName.isEmpty() || newsTag.isEmpty()) {
-                Toast.makeText(requireContext(), "All fields must be filled", Toast.LENGTH_LONG).show()
-                return
+        if (title.isEmpty() || allNews.isEmpty() || author.isEmpty() || newsName.isEmpty() || newsTag.isEmpty()) {
+            Toast.makeText(requireContext(), "All fields must be filled", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val uploadImageList = mutableListOf<FileTitle>()
+
+
+        for (i in 0 until fileTitleList.size) {
+            val viewHolder =
+                binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
+            viewHolder?.let {
+                uploadImageList.add(
+                    FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString())
+                )
             }
+        }
 
+        if (featuringUri.contains("https://")) {
 
-                val uploadImageList = mutableListOf<FileTitle>()
+            val featuringFileTitle =
+                extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube") }
 
-
-         for (i in 0 until fileTitleList.size) {
-             val viewHolder =
-                 binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
-             viewHolder?.let {
-                 uploadImageList.add(
-                     FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString())
-                 )
-             }
-         }
+            if (featuringFileTitle != null) {
+                fileTitleList.add(featuringFileTitle)
+            } else {
+                Toast.makeText(requireContext(), "Paste valid you tube video", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
 
         val timestamp = Timestamp.now()
         if (newsText == null) {
@@ -188,6 +230,13 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         saveNewsToFireStore(newsText!!)
     }
 
+    fun extractYouTubeVideoId(youtubeUrl: String): String? {
+        val pattern = Regex(
+            pattern = "(?:youtube\\.com/(?:[^/\\n\\s]+/\\S+/|(?:v|e(?:mbed)?)/|\\S*?[?&]v=)|youtu\\.be/)([a-zA-Z0-9_-]{11})"
+        )
+        return pattern.find(youtubeUrl)?.groupValues?.get(1)
+    }
+
     private fun saveNewsToFireStore(newsText: NewsText) {
         val imageUploadsCount = newsText.fileTitleList.size
         var uploadCounter = 0
@@ -204,7 +253,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         for (i in 0 until imageDescAdapter.itemCount) {
             val curImageDesc = newsText.fileTitleList[i]
 
-            if (curImageDesc.fileUri.startsWith("https://")){
+            if (curImageDesc.fileUri.startsWith("https://")) {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curImageDesc.fileUri,
@@ -267,7 +316,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         val newsHashMap: HashMap<String, Any?> = HashMap()
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
-        newsHashMap["fileTitleList"] = imageList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
+        newsHashMap["fileTitleList"] =
+            imageList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title
@@ -324,6 +374,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
 
     }
+
     private fun updateDocWithId(docId: String) {
         firestoreInst.collection(NEWS_COLLECTION).document(docId).update("documentId", docId)
     }

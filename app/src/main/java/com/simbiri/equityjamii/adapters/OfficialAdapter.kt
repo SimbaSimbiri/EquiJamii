@@ -34,17 +34,10 @@ class OfficialAdapter(
         private var viewAttachmentsTv: TextView = itemView.findViewById(R.id.viewAttachmentsText)
         private var viewAttachmentsImg: ImageView = itemView.findViewById(R.id.viewAttachmentsImage)
         private var publisherDateTv: TextView = itemView.findViewById(R.id.datePublisherTv)
-        private var isContentExpanded = false
-        private val MAX_CHAR_COLLAPSED = 400
 
         fun setDatatoItem(officialNewsInstance: NewsText, position: Int) {
             this.positionItem = position
             this.currentOfficialItem = officialNewsInstance
-
-            /*
-                        setTextsToggled(currentOfficialItem!!.allNews, isDescriptionExpanded)
-            */
-
             textHeadlineOfficial.text = officialNewsInstance.title
             textPreviewOfficial.text = officialNewsInstance.allNews
 

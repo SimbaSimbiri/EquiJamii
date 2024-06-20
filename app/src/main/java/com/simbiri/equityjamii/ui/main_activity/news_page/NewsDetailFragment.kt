@@ -38,7 +38,6 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private lateinit var viewModel: NewsDetailViewModel
     private lateinit var ImageSliderNews: ImageSlider
     private lateinit var newsDateText: TextView
     private lateinit var newsDetailAllNews: TextView
@@ -144,11 +143,5 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         }
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NewsDetailViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

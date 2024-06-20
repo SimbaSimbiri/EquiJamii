@@ -19,6 +19,13 @@ interface YouTubeApiService {
         @Query("maxResults") maxResults: Int,
         @QueryMap params: Map<String, String>
     ): YouTubeResponse
+
+    @GET("videos")
+    suspend fun getYoutubeVideoDetails(
+        @Query("id") videoId: String,
+        @Query("key") apiKey: String,
+        @Query("part") part: String
+    ): YouTubeResponse
 }
 
 object RetrofitClient {
