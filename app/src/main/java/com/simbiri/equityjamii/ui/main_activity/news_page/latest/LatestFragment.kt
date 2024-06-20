@@ -58,6 +58,13 @@ class LatestFragment : Fragment() {
                             "official",
                             true
                         )
+                    }.filter {
+                            newsText ->
+                        !newsText.newsName.contentEquals(
+                            "featuring",
+                            true
+                        )
+
                     },
                     canPublishEdit)
             }

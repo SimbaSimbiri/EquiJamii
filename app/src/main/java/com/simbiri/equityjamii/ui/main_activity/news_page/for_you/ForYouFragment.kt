@@ -56,7 +56,18 @@ class ForYouFragment : Fragment() {
             val adapter = context?.let {
                 NewsAdapter(
                     it,
-                    allNewsInstances.filter { newsText -> !newsText.newsTag.contentEquals("official",true) },
+                    allNewsInstances.filter { newsText ->
+                        !newsText.newsTag.contentEquals(
+                            "official",
+                            true
+                        )
+                    }.filter { newsText ->
+                        !newsText.newsName.contentEquals(
+                            "featuring",
+                            true
+                        )
+
+                    },
                     canPublishEdit
                 )
             }

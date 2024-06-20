@@ -40,6 +40,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private val fileTitleList = mutableListOf<FileTitle>()
     private lateinit var imageDescAdapter: ImageDescAdapter
     private val newsStorageRef = FirebaseStorage.getInstance().reference
+    private var featuringFile: FileTitle? = null
 
     companion object {
         private const val ARG_NEWS_TEXT = "news_text"
@@ -205,7 +206,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube") }
 
             if (featuringFileTitle != null) {
-                fileTitleList.add(featuringFileTitle)
+                featuringFile = featuringFileTitle
             } else {
                 Toast.makeText(requireContext(), "Paste valid you tube video", Toast.LENGTH_LONG)
                     .show()
@@ -289,6 +290,9 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                                 uploadCounter++
 
                                 if (uploadCounter == imageUploadsCount) {
+                                    if (featuringFile != null) {
+                                        uploadedFileTitleList.add(featuringFile!!)
+                                    }
                                     saveOrUpdate(newsText, uploadedFileTitleList)
                                 }
 
