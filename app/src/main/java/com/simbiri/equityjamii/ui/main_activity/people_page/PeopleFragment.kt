@@ -18,7 +18,6 @@ class PeopleFragment : Fragment() {
         fun newInstance() = PeopleFragment()
     }
 
-    private lateinit var viewModel: PeopleViewModel
     private lateinit var stateAdapter: FragmentStateAdapter
     private lateinit var binding: PeoplePageBinding
 
@@ -47,7 +46,7 @@ class PeopleFragment : Fragment() {
                 }
             }
 
-            TabLayoutMediator(tabLayoutPeople, viewPagerPeople) { tab, position ->
+            TabLayoutMediator(tabLayoutPeople, viewPagerPeople, true, false) { tab, position ->
 
                 when (position) {
 
@@ -113,10 +112,5 @@ class PeopleFragment : Fragment() {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PeopleViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

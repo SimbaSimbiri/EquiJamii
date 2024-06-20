@@ -318,7 +318,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                 it.requestLayout()
 
                 val behavior = BottomSheetBehavior.from(it)
-                behavior.isDraggable = true
+                behavior.isDraggable = false
                 behavior.isHideable = true
                 behavior.peekHeight = metrics.heightPixels
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED

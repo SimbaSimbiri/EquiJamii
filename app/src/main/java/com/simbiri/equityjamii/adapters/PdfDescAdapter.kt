@@ -1,11 +1,13 @@
 package com.simbiri.equityjamii.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
@@ -22,6 +24,7 @@ class PdfDescAdapter(
         val deletePdf: ImageView = itemView.findViewById(R.id.deletePdf)
 
         fun displayPdf(pdf: FileTitle) {
+
             val viewCurDoc = DialogViewDocument.newInstance(pdf)
             val itemContext = itemView.context
             if (itemContext is AppCompatActivity) {
@@ -42,7 +45,15 @@ class PdfDescAdapter(
         holder.textPdfName.text = pdfDesc.fileTitle
 
         holder.textPdfName.setOnClickListener {
-            holder.displayPdf(pdfDesc)
+            if (pdfDesc.fileUri.contains("https://")) {
+                holder.displayPdf(pdfDesc)
+            } else {
+                Toast.makeText(
+                    context,
+                    "Can't view pdf before upload,\nkindly use local pdf viewer to access contents",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         if (editable) {

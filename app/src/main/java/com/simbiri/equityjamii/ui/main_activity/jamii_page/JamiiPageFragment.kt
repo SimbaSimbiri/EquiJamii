@@ -131,7 +131,7 @@ class JamiiPageFragment : Fragment() {
             binding.tabLayoutposts,
             binding.viewPagerPosts,
             true,
-            true
+            false
         ) { tab, position ->
             when (position) {
                 0 -> {

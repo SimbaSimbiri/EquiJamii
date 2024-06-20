@@ -22,12 +22,9 @@ class newsFragment : Fragment() {
         fun newInstance() = newsFragment()
     }
 
-    private lateinit var viewModel: NewsViewModel
     private lateinit var stateAdapter: FragmentStateAdapter
     private var canPublishEdit = false
     private lateinit var binding: NewsPageBinding
-
-    private val personId = AuthUtils.getCurrentUserId()
 
 
     override fun onCreateView(
@@ -64,7 +61,7 @@ class newsFragment : Fragment() {
                 adapter = stateAdapter
             }
 
-            TabLayoutMediator(tabLayout, viewPagerNews, true, true) { tab, position ->
+            TabLayoutMediator(tabLayout, viewPagerNews, true, false) { tab, position ->
 
                 when (position) {
 
@@ -117,7 +114,6 @@ class newsFragment : Fragment() {
         binding.viewPagerNews.currentItem = currentTabPosition
         binding.swipeRefresh.isRefreshing = false
 
-
     }
 
     inner class ScreenSlidePageAdapter(newsFragment: newsFragment) :
@@ -156,13 +152,6 @@ class newsFragment : Fragment() {
         }
 
 
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 
