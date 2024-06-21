@@ -108,12 +108,13 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 } else {
                     otherPeopleProfilesList.addAll(listFromScope.shuffled())
                 }
-            }.invokeOnCompletion {
+
                 if (otherPeopleProfilesList.isNotEmpty()) {
                     binding!!.similarProfTextHead.visibility = View.VISIBLE
                     binding!!.recyclerOtherProfiles.visibility = View.VISIBLE
                     otherSimilarProfilesAdapter.notifyDataSetChanged()
                 }
+
             }
         }
 

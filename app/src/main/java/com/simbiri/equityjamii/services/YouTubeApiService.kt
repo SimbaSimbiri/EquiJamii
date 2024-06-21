@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.services
 
 import com.simbiri.equityjamii.data.model.YouTubeResponse
+import com.simbiri.equityjamii.data.model.YouTubeVideoResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
@@ -25,7 +26,7 @@ interface YouTubeApiService {
         @Query("id") videoId: String,
         @Query("key") apiKey: String,
         @Query("part") part: String
-    ): YouTubeResponse
+    ): YouTubeVideoResponse
 }
 
 object RetrofitClient {

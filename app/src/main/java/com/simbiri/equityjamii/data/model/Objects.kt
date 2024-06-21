@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.data.model
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
@@ -179,8 +180,7 @@ object YoutubeKeyProvider {
 object YouTubeVids {
 
     private val ioDispatcher = Dispatchers.IO
-
-    suspend fun getYoutubeVideo(context: Context, videoId: String): Video? {
+    suspend fun getVideoDetails(context: Context, videoId: String): Video? {
         val apiKey = YoutubeKeyProvider.keyProvider(context, 0)
 
         return withContext(ioDispatcher) {
@@ -190,13 +190,17 @@ object YouTubeVids {
                     apiKey = apiKey,
                     part = "snippet"
                 )
-                val items = response.items ?: return@withContext null
-                val firstItem = items.firstOrNull() ?: return@withContext null
 
-                val snippet = firstItem.snippet
-                Video(snippet.title, snippet.thumbnails.high.url, firstItem.id.videoId?:"null")
+                val videoItem = response.items.firstOrNull()
+                if (videoItem != null) {
+                    val snippet = videoItem.snippet
+                    val title = snippet.title
+                    val imageUrl = snippet.thumbnails.high.url
+                    Video(title, imageUrl, videoId)
+                } else {
+                    null
+                }
             } catch (e: Exception) {
-                e.printStackTrace()
                 null
             }
         }

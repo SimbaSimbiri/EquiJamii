@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Video
@@ -29,7 +28,9 @@ import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.AddNewsFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 import com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube.YouTubeDialogFrag
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FeaturingFragment : Fragment() {
 
@@ -57,15 +58,19 @@ class FeaturingFragment : Fragment() {
         super.onAttach(context)
         binding = NewsPageFeaturingBinding.inflate(layoutInflater)
 
-        val layoutParams = binding.snapShotsImageSlider.layoutParams
+        val layoutParamsSlider = binding.snapShotsImageSlider.layoutParams
+        val layoutParamsCardYT = binding.youTubeCardView.layoutParams
+
         val displayMetrics = DisplayMetrics()
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val screenheight = displayMetrics.heightPixels
-        layoutParams.height = screenheight * 3 / 5
+        layoutParamsSlider.height = screenheight * 3 / 5
+        layoutParamsCardYT.height = screenheight * 1 / 3
 
-        binding.snapShotsImageSlider.layoutParams = layoutParams
+        binding.snapShotsImageSlider.layoutParams = layoutParamsSlider
+        binding.youTubeCardView.layoutParams = layoutParamsCardYT
 
     }
 
@@ -106,37 +111,36 @@ class FeaturingFragment : Fragment() {
 
             val hasYouTubeVid: Boolean = curNewsFeaturing.fileTitleList.any { isYouTubeFile(it) }
             if (hasYouTubeVid) {
+
                 val youTubeNews =
                     curNewsFeaturing.fileTitleList.first(isYouTubeFile)
-                lifecycleScope.launch {
-                    videoYt =
-                        YouTubeVids.getYoutubeVideo(requireContext(), youTubeNews.fileUri)
-                    Log.i("VideoYT", videoYt.toString())
 
-                }.invokeOnCompletion {
-                    if (videoYt == null) {
-                        videoYt = Video("youTube", "null", youTubeNews.fileUri)
-                        Log.i("VideoYT", videoYt.toString())
+                lifecycleScope.launch {
+                    val video = withContext(Dispatchers.IO) {
+                        YouTubeVids.getVideoDetails(requireContext(), youTubeNews.fileUri)
+                    }
+
+                    Log.i("VideoYTFirst", video.toString())
+
+                    context?.let {
+                        Glide.with(it).load(video?.thumbnailUrl).centerCrop()
+                            .into(binding.youTubeThumbNail)
                     }
 
                     binding.apply {
                         moreAboutTextView.visibility = View.VISIBLE
                         youTubeCardView.visibility = View.VISIBLE
-                        youTubeThumbNail.setImageDrawable(resources.getDrawable(R.drawable.equityjamiibackground))
-                        /*context?.let {
-                            Glide.with(it).load(videoYt?.thumbnailUrl).centerCrop()
-                                .into(youTubeThumbNail)
-                                .onLoadFailed(resources.getDrawable(R.drawable.equityjamiibackground))
-                        }*/
 
                         youTubeCardView.setOnClickListener {
-                            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(videoYt!!)
+                            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(video!!)
                             val transaction =
                                 requireActivity().supportFragmentManager.beginTransaction()
                             youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
                         }
+
                     }
                 }
+
             }
 
             curNewsFeaturing.fileTitleList.filter { !isYouTubeFile(it) }

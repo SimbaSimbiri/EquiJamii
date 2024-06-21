@@ -86,8 +86,6 @@ data class NewsText(
 
 
 
-data class OfficialNews(val headline: String, val officialPreviewText: String)
-
 data class Post(
     val caption: String, val image: String?, val time: Timestamp?, val userId: String,
     val documentId: String? = null
@@ -364,8 +362,10 @@ data class Video(
     }
 }
 
-data class YouTubeResponse(val items: List<YouTubeItem>)
-data class YouTubeItem(val id: YouTubeVideoId, val snippet: YouTubeSnippet)
+data class YouTubeResponse(val items: List<YouTubeItemList>)
+data class YouTubeVideoResponse(val items : List<YouTubeItem>)
+data class YouTubeItemList(val id: YouTubeVideoId, val snippet: YouTubeSnippet)
+data class YouTubeItem(val id: String, val snippet: YouTubeSnippet)
 data class YouTubeVideoId(val videoId: String?)
 data class YouTubeSnippet(val title: String, val thumbnails: YouTubeThumbnails)
 data class YouTubeThumbnails(val high: YouTubeThumbnail)

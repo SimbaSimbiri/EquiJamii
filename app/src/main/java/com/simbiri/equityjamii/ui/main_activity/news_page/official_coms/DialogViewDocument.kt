@@ -1,12 +1,20 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page.official_coms
 
+import android.Manifest
 import android.app.Dialog
+import android.app.DownloadManager
+import android.content.Context.DOWNLOAD_SERVICE
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -18,6 +26,7 @@ import com.simbiri.equityjamii.databinding.DialogViewDocumentBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.net.URL
 
 class DialogViewDocument : BottomSheetDialogFragment() {
@@ -37,14 +46,19 @@ class DialogViewDocument : BottomSheetDialogFragment() {
 
     private val viewModel: DialogViewDocumentViewModel by viewModels()
     private lateinit var binding: DialogViewDocumentBinding
+    private lateinit var downloadManager: DownloadManager
+    private val PERMISSION_REQUEST_CODE = 1001
+    private var pdfParceledMain: FileTitle? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = DialogViewDocumentBinding.inflate(layoutInflater)
-
+        downloadManager = requireActivity().getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         arguments?.getParcelable<FileTitle>(ARG_PDF_FILE).let { pdfParceled ->
+            pdfParceledMain = pdfParceled
             binding.apply {
                 lifecycleScope.launch(Dispatchers.IO) {
                     val inputStream = URL(pdfParceled?.fileUri).openStream()
@@ -67,11 +81,81 @@ class DialogViewDocument : BottomSheetDialogFragment() {
                 }
 
                 downloadPdf.setOnClickListener {
-
+                    if (checkAndReqPermision()) {
+                        downloadPdf(pdfParceled?.fileUri, pdfParceled?.fileTitle)
+                    }
                 }
             }
         }
         return binding.root
+    }
+
+    private fun checkAndReqPermision(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val writeExternalStoragePermission = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            val listPermissionsNeeded = mutableListOf<String>()
+
+            if (writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            if (listPermissionsNeeded.isNotEmpty()) {
+                requestPermissions(listPermissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    downloadPdf(pdfParceledMain?.fileUri, pdfParceledMain?.fileTitle)
+                } else {
+                    Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }
+    }
+
+    private fun downloadPdf(fileUri: String?, fileTitle: String?) {
+        try {
+            val request = DownloadManager.Request(Uri.parse(fileUri))
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
+                .setAllowedOverRoaming(true)
+                .setTitle(fileTitle)
+                .setMimeType("application/pdf")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS,
+                    File.separator + fileTitle
+                )
+
+            downloadManager.enqueue(request)
+            Toast.makeText(
+                requireContext(),
+                "File downloading, you will be notified once completed",
+                Toast.LENGTH_LONG
+            ).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(),
+                e.message,
+                Toast.LENGTH_LONG
+            ).show()
+
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
