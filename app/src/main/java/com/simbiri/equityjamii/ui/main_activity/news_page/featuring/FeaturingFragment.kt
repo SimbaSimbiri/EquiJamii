@@ -19,7 +19,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.interfaces.ItemChangeListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -110,18 +109,25 @@ class FeaturingFragment : Fragment() {
                 val youTubeNews =
                     curNewsFeaturing.fileTitleList.first(isYouTubeFile)
                 lifecycleScope.launch {
-                    videoYt = YouTubeVids.getYoutubeVideo(requireContext(), youTubeNews.fileUri)
+                    videoYt =
+                        YouTubeVids.getYoutubeVideo(requireContext(), youTubeNews.fileUri)
                     Log.i("VideoYT", videoYt.toString())
-                    videoYt = Video("Title", "url", youTubeNews.fileUri)
+
+                }.invokeOnCompletion {
+                    if (videoYt == null) {
+                        videoYt = Video("youTube", "null", youTubeNews.fileUri)
+                        Log.i("VideoYT", videoYt.toString())
+                    }
 
                     binding.apply {
                         moreAboutTextView.visibility = View.VISIBLE
                         youTubeCardView.visibility = View.VISIBLE
-                        context?.let {
-                            Glide.with(it).load(videoYt?.thumbnailUrl)
+                        youTubeThumbNail.setImageDrawable(resources.getDrawable(R.drawable.equityjamiibackground))
+                        /*context?.let {
+                            Glide.with(it).load(videoYt?.thumbnailUrl).centerCrop()
                                 .into(youTubeThumbNail)
                                 .onLoadFailed(resources.getDrawable(R.drawable.equityjamiibackground))
-                        }
+                        }*/
 
                         youTubeCardView.setOnClickListener {
                             val youTubeDialogFrag = YouTubeDialogFrag.newInstance(videoYt!!)
@@ -130,7 +136,6 @@ class FeaturingFragment : Fragment() {
                             youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
                         }
                     }
-
                 }
             }
 
@@ -157,7 +162,7 @@ class FeaturingFragment : Fragment() {
                 val parts = curNewsFeaturing.allNews.split("\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
 
-                snapShotsImageSlider.setImageList(imageList,ScaleTypes.CENTER_CROP)
+                snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
 
                 magicCardView.setOnClickListener {
                     snapShotsImageSlider.startSliding()

@@ -115,7 +115,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         }
 
         binding.postButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Initiating saving news", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Initiating publishing news", Toast.LENGTH_LONG).show()
             saveNews()
         }
 
@@ -125,6 +125,13 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
         binding.editTextNewsName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                if (s.toString().equals("featuring", ignoreCase = true)) {
+                    binding.addFeaturingLink.visibility = View.VISIBLE
+                } else {
+                    binding.addFeaturingLink.visibility = View.GONE
+                    binding.newsLinkLayout.visibility = View.GONE
+                    binding.editTextNewsLink.visibility = View.GONE
+                }
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -175,12 +182,18 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         val hasYouTubeVid: Boolean = newsText.fileTitleList.any { isYouTubeFile(it) }
 
         if (hasYouTubeVid) {
-            binding.newsLinkLayout.visibility = View.VISIBLE
-            binding.editTextNewsLink.visibility = View.VISIBLE
+
+            if (newsText.newsName.contentEquals("featuring", true)) {
+                binding.newsLinkLayout.visibility = View.VISIBLE
+                binding.editTextNewsLink.visibility = View.VISIBLE
+                binding.addFeaturingLink.visibility = View.VISIBLE
+            }
 
             val toAdapter =
                 newsText.fileTitleList.filter { fileTitle: FileTitle -> !isYouTubeFile(fileTitle) }
+
             val toFeaturingLink = newsText.fileTitleList.first(isYouTubeFile)
+            featuringFile = toFeaturingLink
 
             binding.editTextNewsLink.setText("https://www.youtube.com/watch?v=${toFeaturingLink.fileUri}")
             fileTitleList.addAll(toAdapter)
@@ -222,13 +235,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
 
             val featuringFileTitle =
                 extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube") }
-
-            if (featuringFileTitle != null) {
                 featuringFile = featuringFileTitle
-            } else {
-                Toast.makeText(requireContext(), "Paste valid you tube video", Toast.LENGTH_LONG)
-                    .show()
-            }
         }
 
         val timestamp = Timestamp.now()
@@ -283,6 +290,9 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 uploadCounter++
 
                 if (uploadCounter == imageUploadsCount) {
+                    if (featuringFile != null) {
+                        uploadedFileTitleList.add(featuringFile!!)
+                    }
                     saveOrUpdate(newsText, uploadedFileTitleList)
                 }
 
@@ -354,7 +364,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                     if (taskUpdate.isSuccessful) {
                         Toast.makeText(
                             requireContext(),
-                            "News changes will be published soon",
+                            "Updated changes will be published soon",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {

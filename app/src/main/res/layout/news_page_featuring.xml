@@ -124,34 +124,20 @@
 
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/moreAboutTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="More exclusive sauce about Ray Simbiri"
-                android:textColor="@color/logoColour"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/magicCardView" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/youTubeCardView"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
-                android:visibility="gone"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/moreAboutTextView">
+                app:layout_constraintTop_toBottomOf="@id/magicCardView">
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -161,12 +147,32 @@
                         android:id="@+id/youTubeThumbNail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         android:contentDescription="You Tube for featuring"
-                        android:src="@drawable/equityjamiibackground" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/equityjamiibackground"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
+                    <TextView
+                        android:id="@+id/moreAboutTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="More exclusive sauce about Ray Simbiri"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/youtube_icon"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

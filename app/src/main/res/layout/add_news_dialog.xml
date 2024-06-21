@@ -230,7 +230,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addPicturePost" />
+                app:layout_constraintTop_toBottomOf="@id/news_link_layout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewImages"
@@ -239,7 +239,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addFeaturingLink"
+                app:layout_constraintTop_toBottomOf="@id/addPicturePost"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintWidth_percent="0.9"
                 tools:listitem="@layout/adapter_item_image_desc" />
@@ -256,7 +256,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
+                app:layout_constraintTop_toBottomOf="@id/addFeaturingLink"
 
                 />
 
@@ -269,7 +269,7 @@
                 android:layout_marginBottom="30dp"
                 app:layout_constraintEnd_toStartOf="@id/dismissFrag"
                 android:visibility="invisible"
-                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
+                app:layout_constraintTop_toBottomOf="@id/addFeaturingLink"
 
                 />
 
@@ -286,7 +286,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
+                app:layout_constraintTop_toBottomOf="@id/addFeaturingLink"
                 />
 
 
