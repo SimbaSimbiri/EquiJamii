@@ -9,22 +9,37 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/snapShotsTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="15dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="Snapshots of Ray Simbiri"
                 android:textColor="@color/logoColour"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editFeaturing" />
+
+            <ImageView
+                android:id="@+id/editFeaturing"
+                android:layout_width="28dp"
+                android:layout_height="24dp"
+                android:layout_margin="10dp"
+                android:contentDescription="Edit featuring news"
+                android:src="@drawable/add_news_icon"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
@@ -38,42 +53,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/snapShotsTv">
 
-                <com.denzcoskun.imageslider.ImageSlider
-                    android:id="@+id/snapShotsImageSlider"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    app:iss_period="1000"
-                    android:scaleType="centerCrop"
-                    app:iss_auto_cycle="false"
-                    app:iss_text_align="CENTER"
-                    app:iss_title_background="@color/navColor" />
+                    android:layout_height="wrap_content">
+
+                    <com.denzcoskun.imageslider.ImageSlider
+                        android:id="@+id/snapShotsImageSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:scaleType="centerCrop"
+                        app:iss_auto_cycle="false"
+                        app:iss_period="550"
+                        app:iss_text_align="CENTER"
+                        app:iss_title_background="@color/navColor"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/tapTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Tap card to reveal more"
-                android:textColor="@color/logoColour"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardSnapShots" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/magicCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="30dp"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tapTextView">
+                app:layout_constraintTop_toBottomOf="@id/cardSnapShots">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -85,9 +96,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Hobbies"
+                        android:text="Tap me to reveal more about"
                         android:textColor="@color/logoColour"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -97,12 +108,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:fontFamily="sans-serif-medium"
                         android:justificationMode="inter_word"
                         android:text="All text goes here"
-                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -122,8 +134,8 @@
                 android:text="More exclusive sauce about Ray Simbiri"
                 android:textColor="@color/logoColour"
                 android:textSize="14sp"
-                android:visibility="gone"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/magicCardView" />
 
@@ -132,9 +144,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginHorizontal="15dp"
-                android:visibility="gone"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="20dp"
+                android:visibility="gone"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -148,9 +160,9 @@
                     <ImageView
                         android:id="@+id/youTubeThumbNail"
                         android:layout_width="match_parent"
-                        android:src="@drawable/equityjamiibackground"
                         android:layout_height="match_parent"
-                        android:contentDescription="You Tube for featuring" />
+                        android:contentDescription="You Tube for featuring"
+                        android:src="@drawable/equityjamiibackground" />
 
                     <ImageView
                         android:layout_width="wrap_content"

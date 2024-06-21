@@ -33,7 +33,7 @@
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewImages">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextTitle"
@@ -215,7 +215,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/news_link_layout" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/addFeaturingLink"
@@ -256,7 +256,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewImages"
+                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
 
                 />
 
@@ -265,12 +265,13 @@
                 android:background="@color/logoColour"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewImages"
                 app:layout_constraintStart_toEndOf="@id/postButton"
                 android:layout_marginBottom="30dp"
                 app:layout_constraintEnd_toStartOf="@id/dismissFrag"
                 android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
+
+                />
 
             <Button
                 android:id="@+id/dismissFrag"
@@ -285,7 +286,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewImages" />
+                app:layout_constraintTop_toBottomOf="@id/news_link_layout"
+                />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

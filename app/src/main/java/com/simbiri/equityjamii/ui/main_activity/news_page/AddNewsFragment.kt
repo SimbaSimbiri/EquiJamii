@@ -164,12 +164,30 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         binding.editTextAuthor.setText(newsText.author)
         binding.editTextNewsName.setText(newsText.newsName)
         binding.editTextNewsTag.setText(newsText.newsTag)
-        if (newsText.newsName.contentEquals("featuring", true)) {
-            binding.newsLinkLayout.visibility = View.VISIBLE
-            binding.editTextNewsLink.visibility = View.VISIBLE
+
+        val isYouTubeFile = { curFile: FileTitle ->
+            curFile.fileTitle.contentEquals(
+                "youTube",
+                true
+            )
         }
 
-        fileTitleList.addAll(newsText.fileTitleList)
+        val hasYouTubeVid: Boolean = newsText.fileTitleList.any { isYouTubeFile(it) }
+
+        if (hasYouTubeVid) {
+            binding.newsLinkLayout.visibility = View.VISIBLE
+            binding.editTextNewsLink.visibility = View.VISIBLE
+
+            val toAdapter =
+                newsText.fileTitleList.filter { fileTitle: FileTitle -> !isYouTubeFile(fileTitle) }
+            val toFeaturingLink = newsText.fileTitleList.first(isYouTubeFile)
+
+            binding.editTextNewsLink.setText("https://www.youtube.com/watch?v=${toFeaturingLink.fileUri}")
+            fileTitleList.addAll(toAdapter)
+        } else {
+            fileTitleList.addAll(newsText.fileTitleList)
+        }
+
         imageDescAdapter.notifyDataSetChanged()
     }
 

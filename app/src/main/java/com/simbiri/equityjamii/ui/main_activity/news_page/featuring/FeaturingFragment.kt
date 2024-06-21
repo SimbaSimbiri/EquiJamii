@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.interfaces.ItemChangeListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -26,6 +27,7 @@ import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Video
 import com.simbiri.equityjamii.data.model.YouTubeVids
 import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
+import com.simbiri.equityjamii.ui.main_activity.news_page.AddNewsFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 import com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube.YouTubeDialogFrag
 import kotlinx.coroutines.launch
@@ -77,7 +79,6 @@ class FeaturingFragment : Fragment() {
 
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
-
             }
         }
 
@@ -104,95 +105,106 @@ class FeaturingFragment : Fragment() {
                 )
             }
 
-            val youTubeNews =
-                curNewsFeaturing.fileTitleList.filter(isYouTubeFile).first()
+            val hasYouTubeVid: Boolean = curNewsFeaturing.fileTitleList.any { isYouTubeFile(it) }
+            if (hasYouTubeVid) {
+                val youTubeNews =
+                    curNewsFeaturing.fileTitleList.first(isYouTubeFile)
+                lifecycleScope.launch {
+                    videoYt = YouTubeVids.getYoutubeVideo(requireContext(), youTubeNews.fileUri)
+                    Log.i("VideoYT", videoYt.toString())
+                    videoYt = Video("Title", "url", youTubeNews.fileUri)
 
-            lifecycleScope.launch {
-                videoYt = YouTubeVids.getYoutubeVideo(requireContext(), youTubeNews.fileUri)
-                Log.i("VideoYT", videoYt.toString())
-                videoYt = Video("Title", "url", youTubeNews.fileUri)
+                    binding.apply {
+                        moreAboutTextView.visibility = View.VISIBLE
+                        youTubeCardView.visibility = View.VISIBLE
+                        context?.let {
+                            Glide.with(it).load(videoYt?.thumbnailUrl)
+                                .into(youTubeThumbNail)
+                                .onLoadFailed(resources.getDrawable(R.drawable.equityjamiibackground))
+                        }
 
-                binding.apply {
-                    moreAboutTextView.visibility = View.VISIBLE
-                    youTubeCardView.visibility = View.VISIBLE
-                    context?.let {
-                        Glide.with(it).load(videoYt?.thumbnailUrl)
-                            .into(youTubeThumbNail)
-                            .onLoadFailed(resources.getDrawable(R.drawable.equityjamiibackground))
+                        youTubeCardView.setOnClickListener {
+                            val youTubeDialogFrag = YouTubeDialogFrag.newInstance(videoYt!!)
+                            val transaction =
+                                requireActivity().supportFragmentManager.beginTransaction()
+                            youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
+                        }
                     }
 
-                    youTubeCardView.setOnClickListener {
-                        val youTubeDialogFrag = YouTubeDialogFrag.newInstance(videoYt!!)
-                        val transaction =
-                            requireActivity().supportFragmentManager.beginTransaction()
-                        youTubeDialogFrag.show(transaction, youTubeDialogFrag.tag)
-                    }
                 }
-
             }
 
-
-            curNewsFeaturing.fileTitleList.filter { fileTitle -> !isYouTubeFile(fileTitle) }
+            curNewsFeaturing.fileTitleList.filter { !isYouTubeFile(it) }
                 .forEach {
                     imageList.add(SlideModel(it.fileUri, it.fileTitle))
                 }
             binding.apply {
-                snapShotsTv.text = "Snapshots of ${curNewsFeaturing.title}"
-                titleMagicText.text = "About ${curNewsFeaturing.title}"
-                moreAboutTextView.text = "A peek into the life of ${curNewsFeaturing.title}"
-                tapTextView.text = "Tap card to reveal more about ${curNewsFeaturing.title}"
-                magicCardView.setOnClickListener {
+                snapShotsTv.text = "Today's featuring snapshots"
+                titleMagicText.text = "Tap me to reveal more about ${curNewsFeaturing.title}"
+                moreAboutTextView.text = "A better peek into the life of ${curNewsFeaturing.title}"
 
+                if (canPublishEdit) {
+                    editFeaturing.visibility = View.VISIBLE
+                    editFeaturing.setOnClickListener {
+                        val newsFrag = AddNewsFragment.newInstance(curNewsFeaturing)
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+
+                        newsFrag.show(transaction, newsFrag.tag)
+                    }
                 }
-                snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
 
                 val parts = curNewsFeaturing.allNews.split("\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
 
+                snapShotsImageSlider.setImageList(imageList,ScaleTypes.CENTER_CROP)
 
                 magicCardView.setOnClickListener {
-
                     snapShotsImageSlider.startSliding()
-                    Handler().postDelayed({ snapShotsImageSlider.stopSliding() }, 1500)
-
-                    val slideOut = ObjectAnimator.ofFloat(
-                        magicCardView,
-                        "translationX",
-                        0f,
-                        magicCardView.width.toFloat()
-                    )
-                    slideOut.duration = 700
-
-                    val slideIn = ObjectAnimator.ofFloat(
-                        magicCardView,
-                        "translationX",
-                        -magicCardView.width.toFloat(),
-                        0f
-                    )
-                    slideIn.duration = 700
-                    slideOut.addListener(object : AnimatorListenerAdapter() {
-
-                        override fun onAnimationEnd(animation: Animator) {
-                            super.onAnimationEnd(animation)
-                            val currentText = contentMagicText.text.toString()
-                            val currentIndex = parts.indexOf(currentText)
-                            val nextIndex = (currentIndex + 1) % parts.size
-                            contentMagicText.text = parts[nextIndex]
-                            slideIn.start()
-                        }
-                    })
-
-                    // Combine the animations
-                    val animatorSet = AnimatorSet()
-                    animatorSet.playSequentially(slideOut, slideIn)
-                    animatorSet.interpolator = AccelerateDecelerateInterpolator()
-                    animatorSet.start()
+                    animateCard(parts)
                 }
 
-
             }
+        }
+    }
 
+    private fun animateCard(parts: List<String>) {
 
+        binding.apply {
+
+            val slideOut = ObjectAnimator.ofFloat(
+                magicCardView,
+                "translationX",
+                0f,
+                magicCardView.width.toFloat()
+            )
+            slideOut.duration = 700
+
+            val slideIn = ObjectAnimator.ofFloat(
+                magicCardView,
+                "translationX",
+                -magicCardView.width.toFloat(),
+                0f
+            )
+            slideIn.duration = 700
+            slideOut.addListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    val currentText = contentMagicText.text.toString()
+                    val currentIndex = parts.indexOf(currentText)
+                    val nextIndex = (currentIndex + 1) % parts.size
+                    contentMagicText.text = parts[nextIndex]
+                    slideIn.start()
+                    Handler().postDelayed({ snapShotsImageSlider.stopSliding() }, 1000)
+
+                }
+            })
+
+            val animatorSet = AnimatorSet()
+            animatorSet.playSequentially(slideOut, slideIn)
+            animatorSet.interpolator = AccelerateDecelerateInterpolator()
+            animatorSet.start()
         }
     }
 
