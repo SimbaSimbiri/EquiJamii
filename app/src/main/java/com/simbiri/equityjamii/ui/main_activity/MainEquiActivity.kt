@@ -69,6 +69,7 @@ class MainEquiActivity : AppCompatActivity() {
             Toast.makeText(this, "Sign in First to access EquityJamii features", Toast.LENGTH_LONG)
                 .show()
             startActivity(intent)
+            finish()
         } else {
 
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
