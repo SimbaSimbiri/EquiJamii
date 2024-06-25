@@ -288,6 +288,11 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 )
 
                 uploadCounter++
+                Toast.makeText(
+                    requireContext(),
+                    "Uploaded image ${uploadCounter} out of ${imageDescAdapter.itemCount}",
+                    Toast.LENGTH_SHORT
+                ).show()
 
                 if (uploadCounter == imageUploadsCount) {
                     if (featuringFile != null) {
@@ -316,7 +321,11 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                                     )
                                 )
                                 uploadCounter++
-
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Uploaded image ${uploadCounter} out of ${imageDescAdapter.itemCount}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 if (uploadCounter == imageUploadsCount) {
                                     if (featuringFile != null) {
                                         uploadedFileTitleList.add(featuringFile!!)
@@ -374,8 +383,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    binding.progressSaveNews.visibility = View.INVISIBLE
                     dismiss()
+                    binding.progressSaveNews.visibility = View.INVISIBLE
                 }
 
         } else {
@@ -398,8 +407,8 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    dismiss()
                     binding.progressSaveNews.visibility = View.INVISIBLE
+                    dismiss()
 
                 }
         }

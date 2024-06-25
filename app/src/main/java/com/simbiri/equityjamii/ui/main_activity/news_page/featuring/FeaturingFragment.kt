@@ -203,6 +203,10 @@ class FeaturingFragment : Fragment() {
                     val currentText = contentMagicText.text.toString()
                     val currentIndex = parts.indexOf(currentText)
                     val nextIndex = (currentIndex + 1) % parts.size
+
+                    if (nextIndex != 0) titleMagicText.visibility = View.GONE
+                    else titleMagicText.visibility = View.VISIBLE
+
                     contentMagicText.text = parts[nextIndex]
                     slideIn.start()
                     Handler().postDelayed({ snapShotsImageSlider.stopSliding() }, 1000)

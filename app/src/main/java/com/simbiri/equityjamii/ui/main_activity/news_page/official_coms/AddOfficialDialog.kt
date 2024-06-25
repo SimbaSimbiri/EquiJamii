@@ -189,6 +189,12 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                     saveOrUpdate(newsText, uploadedFileTitleList)
                 }
 
+                Toast.makeText(
+                    requireContext(),
+                    "Uploaded file ${uploadCounter} out of ${pdfDescAdapter.itemCount}",
+                    Toast.LENGTH_LONG
+                ).show()
+
                 continue
             }
 
@@ -213,6 +219,11 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                                 if (uploadCounter == imageUploadsCount) {
                                     saveOrUpdate(newsText, uploadedFileTitleList)
                                 }
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Uploaded file ${uploadCounter} out of ${pdfDescAdapter.itemCount}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
                             }
 
@@ -221,7 +232,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                             Toast.makeText(
                                 requireContext(),
                                 "${taskUpload.exception?.message}}",
-                                Toast.LENGTH_LONG
+                                Toast.LENGTH_SHORT
                             ).show()
 
                         }
