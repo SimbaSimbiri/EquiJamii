@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
@@ -16,7 +15,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -631,174 +629,6 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
-
-                <!--<TextView
-                    android:id="@+id/otherSettingsTextHead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Other settings"
-                    android:textColor="@color/primaryColor"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/mysettingsCard" />
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/myOthersettingsCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="5dp"
-                    android:backgroundTint="@color/logoColour"
-                    app:cardCornerRadius="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/otherSettingsTextHead">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                        <TextView
-                            android:id="@+id/helpTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Contact admin support"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="@id/helpDivider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                        </TextView>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="7dp"
-                            android:src="@drawable/foward_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/helpTv"
-                            app:layout_constraintEnd_toEndOf="@id/helpTv"
-                            app:layout_constraintTop_toTopOf="@id/helpTv" />
-
-                        <View
-                            android:id="@+id/helpDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-                            app:layout_constraintTop_toBottomOf="@id/helpTv" />
-
-                        <TextView
-                            android:id="@+id/legalTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Legal information"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toTopOf="@id/legalDivider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/helpDivider">
-
-                        </TextView>
-
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="7dp"
-                            android:src="@drawable/foward_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/legalTv"
-                            app:layout_constraintEnd_toEndOf="@id/legalTv"
-                            app:layout_constraintTop_toTopOf="@id/legalTv" />
-
-                        <View
-                            android:id="@+id/legalDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/legalTv" />
-
-
-                        <TextView
-                            android:id="@+id/aboutUsTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="About us"
-                            android:textColor="@color/white"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/legalDivider">
-
-                        </TextView>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="7dp"
-                            android:src="@drawable/foward_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/aboutUsTv"
-                            app:layout_constraintEnd_toEndOf="@id/aboutUsTv"
-                            app:layout_constraintTop_toTopOf="@id/aboutUsTv" />
-
-                        <View
-                            android:id="@+id/aboutUsDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/aboutUsTv" />
-
-
-                        <TextView
-                            android:id="@+id/rateUsTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Rate us"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/aboutUsDivider">
-
-                        </TextView>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="7dp"
-                            android:src="@drawable/foward_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/rateUsTv"
-                            app:layout_constraintEnd_toEndOf="@id/rateUsTv"
-                            app:layout_constraintTop_toTopOf="@id/rateUsTv" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.cardview.widget.CardView>
-    -->
                 <View
                     android:id="@+id/view"
                     android:layout_width="match_parent"

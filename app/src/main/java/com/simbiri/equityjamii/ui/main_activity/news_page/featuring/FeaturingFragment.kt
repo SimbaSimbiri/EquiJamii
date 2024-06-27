@@ -66,7 +66,7 @@ class FeaturingFragment : Fragment() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val screenheight = displayMetrics.heightPixels
-        layoutParamsSlider.height = screenheight * 3 / 5
+        layoutParamsSlider.height = screenheight *1 / 2
         layoutParamsCardYT.height = screenheight * 1 / 3
 
         binding.snapShotsImageSlider.layoutParams = layoutParamsSlider
@@ -85,7 +85,6 @@ class FeaturingFragment : Fragment() {
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
             }
         }
-
 
 
         return binding.root
@@ -165,6 +164,7 @@ class FeaturingFragment : Fragment() {
 
                 val parts = curNewsFeaturing.allNews.split("\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
+                titleMagicText.visibility = View.VISIBLE
 
                 snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
 
@@ -200,6 +200,7 @@ class FeaturingFragment : Fragment() {
 
                 override fun onAnimationEnd(animation: Animator) {
                     super.onAnimationEnd(animation)
+
                     val currentText = contentMagicText.text.toString()
                     val currentIndex = parts.indexOf(currentText)
                     val nextIndex = (currentIndex + 1) % parts.size

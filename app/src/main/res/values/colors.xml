@@ -18,6 +18,8 @@
     <color name="navColor">#605C2C2A</color>
 
     <color name="transparent">#80FFFFFF</color>
+    <color name="clear">#00FFFFFF</color>
+
 
 
     <color name="purple_200">#FFBB86FC</color>
