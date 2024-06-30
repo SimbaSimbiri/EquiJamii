@@ -56,7 +56,6 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
                 } else {
                     selectedTags.remove(tag.name)
                 }
-
             }
             val spanCount = calculateSpanCount()
             binding.tagsRecyclerView.apply {
@@ -86,9 +85,9 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
 
-        val itemWidth = 80
+        val itemWidth = screenWidth/5
 
-        return (screenWidth / itemWidth).coerceAtLeast(3)
+        return (screenWidth / itemWidth)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

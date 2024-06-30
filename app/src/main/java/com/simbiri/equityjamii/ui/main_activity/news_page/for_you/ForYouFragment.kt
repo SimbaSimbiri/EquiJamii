@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page.for_you
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,11 +32,53 @@ class ForYouFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (AuthUtils.getCurrentUserId() != null) {
-
-            setUpObservers()
+            setUpFirstObservers()
         }
 
 
+    }
+
+    private fun setUpFirstObservers() {
+        viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
+
+            allNews = allNewsInstances.filter { newsText ->
+                !newsText.newsTag.contentEquals(
+                    "official",
+                    true
+                )
+            }.filter { newsText ->
+                !newsText.newsName.contentEquals(
+                    "featuring",
+                    true
+                )
+
+            }.toMutableList()
+            filterNews()
+
+            setUpSecondObservers()
+        }
+    }
+
+    private fun setUpSecondObservers() {
+        viewModel.selectedTagList.observe(viewLifecycleOwner) { myTags ->
+
+            val tagsAdapter = TagNewsAdapter(myTags) { tag ->
+
+                if (tag.isSelected) {
+                    selectedTags.add(tag.name)
+                } else {
+                    selectedTags.remove(tag.name)
+                }
+
+                Handler().postDelayed({
+                    filterNews()
+                }, 700)
+            }
+
+            binding.tagsRecyclerView.adapter = tagsAdapter
+            binding.tagsRecyclerView.adapter!!.notifyDataSetChanged()
+
+        }
     }
 
     override fun onCreateView(
@@ -51,59 +94,18 @@ class ForYouFragment : Fragment() {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
                 canPublishEdit = currentPerson?.role?.contentEquals("journalist") == true
 
-                binding.forYouRecyclerView.layoutManager = LinearLayoutManager(context)
-                binding.tagsRecyclerView.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             }
+            binding.forYouRecyclerView.layoutManager = LinearLayoutManager(context)
+            binding.tagsRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
         }
 
         return binding.root
     }
 
-    private fun setUpObservers() {
-        viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
-
-            allNews = allNewsInstances.filter { newsText ->
-                !newsText.newsTag.contentEquals(
-                    "official",
-                    true
-                )
-            }.filter { newsText ->
-                !newsText.newsName.contentEquals(
-                    "featuring",
-                    true
-                )
-
-            }.toMutableList()
-
-            filteredNews = allNews.toMutableList()
-
-        }
-
-        viewModel.selectedTagList.observe(viewLifecycleOwner) { allTags ->
-            val tagsAdapter = TagNewsAdapter(allTags) { tag ->
-
-                if (tag.isSelected) {
-                    selectedTags.add(tag.name)
-                } else {
-                    selectedTags.remove(tag.name)
-                }
-
-                filterNews()
-                updateNewsAdapter()
-            }
-
-            binding.tagsRecyclerView.adapter = tagsAdapter
-            binding.tagsRecyclerView.adapter!!.notifyDataSetChanged()
-
-
-        }
-    }
-
-
     private fun filterNews() {
-
-        if (filteredNews.isNotEmpty()) filteredNews.clear()
+        filteredNews.clear()
 
         filteredNews.addAll(allNews.filter { newsText ->
             selectedTags.any { tag -> newsText.newsTag.contentEquals(tag, true) }

@@ -23,7 +23,6 @@ class NewsViewModel : ViewModel() {
     private val _selectedTagList = MutableLiveData<List<Tag>>()
     val selectedTagList: LiveData<List<Tag>> = _selectedTagList
 
-
     private val _allTagList = MutableLiveData<List<Tag>>()
     val allTagList: LiveData<List<Tag>> = _allTagList
 
@@ -36,8 +35,7 @@ class NewsViewModel : ViewModel() {
         }
     }
 
-    suspend fun fetchTags() {
-
+    private fun fetchTags() {
         val firebaseCollection = FirebaseFirestore.getInstance().collection(
             NEWS_TAGS_COLLECTION
         )
@@ -66,6 +64,7 @@ class NewsViewModel : ViewModel() {
                     _allTagList.value = listTagsAll
                 }
             }
+
         }
 
     }
