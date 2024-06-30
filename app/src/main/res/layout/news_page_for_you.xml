@@ -12,7 +12,19 @@
         tools:context=".ui.main_activity.news_page.for_you.ForYouFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/elpRecyclerView"
+            android:id="@+id/tagsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:elevation="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/adapters_tag_news" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forYouRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -22,8 +34,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagsRecyclerView"
             tools:listitem="@layout/adapters_news_item" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

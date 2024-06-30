@@ -334,7 +334,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-
                         <TextView
                             android:id="@+id/myAssistant"
                             style="@style/titleTab2"
@@ -412,10 +411,10 @@
                             android:layout_height="50dp"
                             android:layout_marginStart="7dp"
                             android:clickable="true"
+                            app:layout_constraintBottom_toBottomOf="@id/workspaceDivider"
                             android:gravity="center_vertical"
                             android:text="@string/my_workspaces"
                             android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/jamiiDivider">
@@ -430,6 +429,45 @@
                             app:layout_constraintBottom_toBottomOf="@id/myWorkspaces"
                             app:layout_constraintEnd_toEndOf="@id/myWorkspaces"
                             app:layout_constraintTop_toTopOf="@id/myWorkspaces" />
+
+
+                        <View
+                            android:id="@+id/workspaceDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/white"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/myWorkspaces" />
+
+                        <TextView
+                            android:id="@+id/myNewsPreferences"
+                            style="@style/titleTab2"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="7dp"
+                            android:clickable="true"
+                            android:gravity="center_vertical"
+                            android:text="My news preferences"
+                            android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/workspaceDivider">
+
+                        </TextView>
+
+                        <ImageView
+                            android:id="@+id/editPreferences"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="10dp"
+                            android:clickable="true"
+                            android:contentDescription="Edit news preferences"
+                            android:src="@drawable/add_news_white_icon"
+                            app:layout_constraintBottom_toBottomOf="@id/myNewsPreferences"
+                            app:layout_constraintEnd_toEndOf="@id/myNewsPreferences"
+                            app:layout_constraintTop_toTopOf="@id/myNewsPreferences" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

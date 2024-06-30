@@ -30,6 +30,7 @@ import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
+import com.simbiri.equityjamii.ui.main_activity.news_page.for_you.EditNewsPrefFragment
 
 class ProfDisplayFragment : Fragment() {
 
@@ -233,6 +234,22 @@ class ProfDisplayFragment : Fragment() {
 
 
                     myNetwork = myProf.network
+
+                    it.myNewsPreferences.setOnClickListener {
+                        val editNews = EditNewsPrefFragment()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+                        editNews.show(transaction, editNews.tag)
+                    }
+
+                    it.editPreferences.setOnClickListener {
+                        val editNews = EditNewsPrefFragment()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+                        editNews.show(transaction, editNews.tag)
+                    }
+
+
                 }
             }
 
