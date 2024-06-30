@@ -459,12 +459,12 @@
 
                         <ImageView
                             android:id="@+id/editPreferences"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_marginEnd="10dp"
                             android:clickable="true"
                             android:contentDescription="Edit news preferences"
-                            android:src="@drawable/add_news_white_icon"
+                            android:src="@drawable/news_page_icon"
                             app:layout_constraintBottom_toBottomOf="@id/myNewsPreferences"
                             app:layout_constraintEnd_toEndOf="@id/myNewsPreferences"
                             app:layout_constraintTop_toTopOf="@id/myNewsPreferences" />

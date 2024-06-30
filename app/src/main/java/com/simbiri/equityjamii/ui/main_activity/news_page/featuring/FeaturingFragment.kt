@@ -148,7 +148,7 @@ class FeaturingFragment : Fragment() {
                 }
             binding.apply {
                 snapShotsTv.text = "Today's featuring snapshots"
-                titleMagicText.text = "Tap me to reveal more about ${curNewsFeaturing.title}"
+                titleMagicText.text = "Tap to reveal more about ${curNewsFeaturing.title}"
                 moreAboutTextView.text = "A better peek into the life of ${curNewsFeaturing.title}"
 
                 if (canPublishEdit) {
@@ -162,7 +162,7 @@ class FeaturingFragment : Fragment() {
                     }
                 }
 
-                val parts = curNewsFeaturing.allNews.split("\n\n")
+                val parts = curNewsFeaturing.allNews.split("\n\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
                 titleMagicText.visibility = View.VISIBLE
 
