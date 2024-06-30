@@ -72,7 +72,7 @@ class ForYouFragment : Fragment() {
 
                 Handler().postDelayed({
                     filterNews()
-                }, 700)
+                }, 300)
             }
 
             binding.tagsRecyclerView.adapter = tagsAdapter

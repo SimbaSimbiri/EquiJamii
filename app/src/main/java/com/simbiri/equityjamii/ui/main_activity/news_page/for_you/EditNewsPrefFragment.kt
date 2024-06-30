@@ -40,6 +40,7 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
         firebaseInstance.collection(USERS_COLLECTION).document(firebaseUserId!!)
             .update("newsTags", selectedTags.toList())
         Toast.makeText(context, "News preferences updated", Toast.LENGTH_SHORT).show()
+        dismiss()
     }
 
     override fun onCreateView(
