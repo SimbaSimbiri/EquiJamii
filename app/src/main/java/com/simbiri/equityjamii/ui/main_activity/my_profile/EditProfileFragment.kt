@@ -372,6 +372,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         mapToFirestore["verified"] = person.verified
         mapToFirestore["leader"] = person.leader
         mapToFirestore["role"] = person.role
+        mapToFirestore["newsTags"] = person.newsTags
 
 
         firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)

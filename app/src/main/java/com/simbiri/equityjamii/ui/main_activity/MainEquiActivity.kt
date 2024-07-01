@@ -6,24 +6,22 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.constants.POST_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.ui.authentications.SignInActivity
 
 class MainEquiActivity : AppCompatActivity() {
 
-    private lateinit var fabWorkspace: FloatingActionButton
+    private lateinit var fabJamii: FloatingActionButton
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navControllerMain: NavController
     private lateinit var coordLayMain: CoordinatorLayout
@@ -45,14 +43,12 @@ class MainEquiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var firebaseAuth = FirebaseAuth.getInstance()
-/*
-        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-*/
+        val firebaseAuth = FirebaseAuth.getInstance()
+
 
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
         coordLayMain = findViewById(R.id.coordinatorLayoutMain)
-        fabWorkspace = findViewById(R.id.jamiiFab)
+        fabJamii = findViewById(R.id.jamiiFab)
 
 
 
@@ -95,14 +91,17 @@ class MainEquiActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
-        fabWorkspace.setOnClickListener {
-            val workspaceMenuItem = bottomNavigationView.menu.getItem(2)
-            bottomNavigationView.selectedItemId = workspaceMenuItem.itemId
+        fabJamii.setOnClickListener {
+            navigateJamii()
         }
 
     }
 
-
+    private fun navigateJamii() {
+        bottomNavigationView.selectedItemId = bottomNavigationView.menu.getItem(2).itemId
+        fabJamii.background =
+            ContextCompat.getDrawable(this@MainEquiActivity, R.color.logoColour)
+    }
 }
 
 

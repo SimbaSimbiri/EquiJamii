@@ -5,6 +5,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,6 +62,14 @@ class ForYouFragment : Fragment() {
 
     private fun setUpSecondObservers() {
         viewModel.selectedTagList.observe(viewLifecycleOwner) { myTags ->
+
+            if (myTags.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please set up your news preferences in your profile settings",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
 
             val tagsAdapter = TagNewsAdapter(myTags) { tag ->
 

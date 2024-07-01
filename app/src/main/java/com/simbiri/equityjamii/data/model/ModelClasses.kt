@@ -267,7 +267,7 @@ data class Person(
     val network: Network = Network(mutableListOf(), mutableListOf()),
     val verified: Boolean,
     val role: String,
-    val newsTags : MutableList<String>
+    val newsTags : MutableList<String> = mutableListOf()
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
