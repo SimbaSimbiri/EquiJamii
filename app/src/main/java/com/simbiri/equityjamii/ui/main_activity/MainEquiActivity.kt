@@ -95,6 +95,33 @@ class MainEquiActivity : AppCompatActivity() {
             navigateJamii()
         }
 
+        navControllerMain.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.jamiiFrag -> {
+                    fabJamii.background = ContextCompat.getDrawable(this, R.color.logoColour)
+                    fabJamii.backgroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.logoColour)
+                    fabJamii.foregroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.logoColour)
+                }
+
+                else -> {
+                    fabJamii.background = ContextCompat.getDrawable(this, com.denzcoskun.imageslider.R.color.grey_font)
+
+                    fabJamii.backgroundTintList =
+                        ContextCompat.getColorStateList(
+                            this,
+                            com.denzcoskun.imageslider.R.color.grey_font
+                        )
+                    fabJamii.foregroundTintList =
+                        ContextCompat.getColorStateList(
+                            this,
+                            com.denzcoskun.imageslider.R.color.grey_font
+                        )
+                }
+            }
+        }
+
     }
 
     private fun navigateJamii() {
@@ -103,6 +130,3 @@ class MainEquiActivity : AppCompatActivity() {
             ContextCompat.getDrawable(this@MainEquiActivity, R.color.logoColour)
     }
 }
-
-
-

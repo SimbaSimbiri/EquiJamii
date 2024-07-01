@@ -42,7 +42,6 @@
             android:clickable="true"
             android:src="@drawable/jamii_icon"
             android:tooltipText="@string/my_jamii"
-            android:backgroundTint="@color/logoColour"
             app:layout_anchor="@id/bottom_app_bar"
             app:layout_anchorGravity="bottom|center" />
 
