@@ -36,13 +36,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/titleInput"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Event title"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -61,14 +60,13 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionInput"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:inputType="text"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Event description e.g registration deadline, duration etc"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -87,13 +85,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/typeInput"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Event type i.e physical or virtual"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -110,13 +107,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/locationInput"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Event link i.e location pin or zoom link"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

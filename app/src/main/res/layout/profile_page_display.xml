@@ -209,12 +209,11 @@
 
                         <TextView
                             android:id="@+id/aboutTextContent"
-                            style="@style/titleTab"
+                            style="@style/titleTab2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:justificationMode="inter_word"
                             android:textColor="@color/white"
-                            android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

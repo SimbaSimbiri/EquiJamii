@@ -36,7 +36,7 @@
 
     <TextView
         android:id="@+id/yourThoughtsTv"
-        style="@style/titleTab"
+        style="@style/titleTab2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="7dp"
@@ -46,7 +46,6 @@
         android:gravity="center"
         android:text="Tell us what's on your mind"
         android:textColor="@color/karbBackgrndtint"
-        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/addPostCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/addPostCard"
@@ -79,7 +78,7 @@
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/primaryColor"
-                app:tabTextAppearance="@style/titleTab2"
+                app:tabTextAppearance="@style/titleTab"
                 app:tabTextColor="@color/tabUnselected" />
 
             <androidx.viewpager2.widget.ViewPager2

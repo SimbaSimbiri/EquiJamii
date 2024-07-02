@@ -39,11 +39,11 @@
                     android:id="@+id/editTextTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="News Title"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,14 +69,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextAllNews"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="News content"
                     android:inputType="textMultiLine"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp"
                     app:cursorColor="@color/logoColour"
                      />
 
@@ -104,11 +102,11 @@
                     android:id="@+id/editTextAuthor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="Author Name"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,11 +132,11 @@
                     android:id="@+id/editTextNewsName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="Special news category e.g evening jamii spill"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,11 +162,11 @@
                     android:id="@+id/editTextNewsTag"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="News tag e.g ELP, EGS"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,11 +193,11 @@
                     android:id="@+id/editTextNewsLink"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="Featuring news link"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 

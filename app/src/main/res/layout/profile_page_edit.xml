@@ -178,10 +178,9 @@
                             android:id="@+id/nameProfileEdit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            style="@style/titleTab2"
                             android:inputType="textPersonName"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -214,10 +213,8 @@
                             android:layout_height="wrap_content"
                             android:maxEms="30"
                             android:hint="Designation"
-                            style="@style/FirebaseUI.TextInputEditText"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
+                            style="@style/titleTab2"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -244,15 +241,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/branchProfileEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="Branch"
                             android:textColorHighlight="@color/lighterMaroon"
                             android:textColorHint="@color/lighterMaroon"
-                            android:textSize="12sp"
+                            style="@style/titleTab2"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/designationLayout" />
@@ -281,14 +276,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/cityProfileEditText"
-                            style="@style/FirebaseUI.TextInputEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="City/State/County"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
+                            style="@style/titleTab2"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/cityLayout" />
@@ -317,14 +310,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/countryEmojiEditText"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="Nationality emoji"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/countryEmojiLayout" />
@@ -389,13 +380,11 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/aboutMeEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="About me"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
+                            style="@style/titleTab2"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -425,14 +414,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/linkedInEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="LinkedIn"
                             android:maxEms="30"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -460,14 +447,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/instaEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="Instagram"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -494,14 +479,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/facebookEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="Facebook"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -528,14 +511,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/xEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="X account"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -562,14 +543,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/websiteEdit"
-                            style="@style/FirebaseUI.TextInputEditText"
+                            style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:fontFamily="@font/baloo_paaji_2_semibold"
                             android:hint="@string/personal_website_e_g_business_medium_you_tube"
                             android:textColorHighlight="@color/lighterMaroon"
-                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

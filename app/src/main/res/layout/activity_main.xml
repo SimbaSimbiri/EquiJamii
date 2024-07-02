@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
 
             android:id="@+id/constraintLayout"
@@ -62,10 +61,11 @@
                 android:background="@android:color/transparent"
                 android:requiresFadingEdge="horizontal"
                 app:elevation="8dp"
+                app:itemTextAppearanceActiveBoldEnabled="true"
                 app:itemBackground="@android:color/transparent"
                 app:itemIconTint="@color/bottomnavselect"
-                app:itemTextAppearanceActive="@style/titleTab"
-                app:itemTextAppearanceInactive="@style/titleTab"
+                app:itemTextAppearanceActive="@style/titleTab3"
+                app:itemTextAppearanceInactive="@style/titleTab3"
                 app:itemTextColor="@color/bottomnavselect"
                 app:labelVisibilityMode="labeled"
                 app:layout_constraintBottom_toBottomOf="parent"

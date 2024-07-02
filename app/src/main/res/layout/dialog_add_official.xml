@@ -37,12 +37,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextTitle"
                     android:layout_width="match_parent"
+                    style="@style/titleTab2"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Official communication title"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,14 +68,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextCommSummary"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
                     android:hint="Official communication summary"
                     android:inputType="textMultiLine"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp"
                     app:cursorColor="@color/logoColour" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -103,11 +101,11 @@
                     android:id="@+id/editTextDepartment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/baloo_paaji_2_semibold"
+                    style="@style/titleTab2"
                     android:hint="Department name"
                     android:inputType="text"
                     android:textColorHighlight="@color/lighterMaroon"
-                    android:textSize="12sp" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 

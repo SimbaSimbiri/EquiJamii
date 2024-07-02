@@ -21,8 +21,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/dragCard"
-                android:layout_width="40dp"
-                android:layout_height="3dp"
+                android:layout_width="25dp"
+                android:layout_height="5dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -217,12 +217,11 @@
 
                         <TextView
                             android:id="@+id/aboutTextContent"
-                            style="@style/titleTab"
+                            style="@style/titleTab2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:justificationMode="inter_word"
                             android:textColor="@color/white"
-                            android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

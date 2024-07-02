@@ -64,12 +64,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/captionEditTv"
                     android:layout_width="match_parent"
-                    style="@style/FirebaseUI.TextInputEditText"
+                    style="@style/titleTab2"
                     android:layout_height="match_parent"
                     android:textColorHighlight="@color/lighterMaroon"
                     android:focusedByDefault="true"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="normal" />
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 

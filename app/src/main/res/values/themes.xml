@@ -80,14 +80,21 @@
     </style>
 
     <style name="titleTab" parent="Widget.Design.TabLayout">
-        <item name="android:textSize">10sp</item>
-        <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="titleTab2" parent="Widget.Design.TabLayout">
-        <item name="android:textSize">12sp</item>
-        <item name="fontFamily">@font/baloo_paaji_2_semibold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
     </style>
+
+    <style name="titleTab3" parent="Widget.Design.TabLayout">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
 
     <style name="ThemeOverlay.EquityJamii.FullscreenContainer" parent="">
         <item name="fullscreenBackgroundColor">@color/light_blue_600</item>

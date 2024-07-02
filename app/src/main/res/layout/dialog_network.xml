@@ -47,7 +47,7 @@
                 android:nestedScrollingEnabled="false"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/primaryColor"
-                app:tabTextAppearance="@style/titleTab2"
+                app:tabTextAppearance="@style/titleTab"
                 app:tabTextColor="@color/tabUnselected" />
 
 
