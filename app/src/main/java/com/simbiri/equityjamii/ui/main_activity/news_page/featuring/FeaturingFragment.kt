@@ -165,7 +165,6 @@ class FeaturingFragment : Fragment() {
                 val parts = curNewsFeaturing.allNews.split("\n\n\n")
                 contentMagicText.text = parts.firstOrNull() ?: ""
                 titleMagicText.visibility = View.VISIBLE
-
                 snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
 
                 magicCardView.setOnClickListener {
