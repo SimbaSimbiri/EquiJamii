@@ -72,6 +72,7 @@ class FeaturingFragment : Fragment() {
 
         binding.snapShotsImageSlider.layoutParams = layoutParamsSlider
         binding.youTubeCardView.layoutParams = layoutParamsCardYT
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
     }
 

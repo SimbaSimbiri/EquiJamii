@@ -45,10 +45,8 @@ class OfficialFragment : Fragment() {
 
             }
         }
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
-        binding.apply {
-
-        }
 
         return binding.root
     }

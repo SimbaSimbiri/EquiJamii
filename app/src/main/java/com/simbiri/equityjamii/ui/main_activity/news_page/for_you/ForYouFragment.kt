@@ -114,6 +114,7 @@ class ForYouFragment : Fragment() {
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         }
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
         return binding.root
     }

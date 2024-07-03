@@ -44,6 +44,7 @@ class LatestFragment : Fragment() {
                 binding.newsRecylerView.layoutManager = LinearLayoutManager(context)
             }
         }
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
         return binding.root
     }
