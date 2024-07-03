@@ -22,6 +22,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
+import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.data.model.Video
 import com.simbiri.equityjamii.data.model.YouTubeVids
 import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
@@ -92,8 +93,11 @@ class FeaturingFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
+            if (allNewsInstances.isNotEmpty()){
+                binding.contentLoadingProgressBar.visibility = View.GONE
+            }
 
-            val curNewsFeaturing = allNewsInstances.first { newsText ->
+            val curNewsFeaturing : NewsText = allNewsInstances.first { newsText ->
                 newsText.newsName.contentEquals(
                     "featuring",
                     true
@@ -118,8 +122,6 @@ class FeaturingFragment : Fragment() {
                     val video = withContext(Dispatchers.IO) {
                         YouTubeVids.getVideoDetails(requireContext(), youTubeNews.fileUri)
                     }
-
-                    Log.i("VideoYTFirst", video.toString())
 
                     context?.let {
                         Glide.with(it).load(video?.thumbnailUrl).centerCrop()

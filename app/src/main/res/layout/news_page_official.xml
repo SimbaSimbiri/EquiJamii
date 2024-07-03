@@ -6,17 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.main_activity.news_page.official_coms.OfficialFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/officialRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="5dp"
-        tools:listitem="@layout/adapters_official_item"
+    <ProgressBar
+        android:id="@+id/contentLoadingProgressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@color/logoColour"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/officialRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/adapters_official_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

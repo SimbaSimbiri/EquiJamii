@@ -85,6 +85,7 @@ class ProfDisplayFragment : Fragment() {
 
 
         binding.myJamiiTv.setOnClickListener {
+            progressBarToggle()
             requireActivity().supportFragmentManager.popBackStackImmediate()
             val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
             findNavController().navigate(action)
@@ -96,6 +97,7 @@ class ProfDisplayFragment : Fragment() {
         }
 
         binding.myAssistant.setOnClickListener {
+            progressBarToggle()
             requireActivity().supportFragmentManager.popBackStackImmediate()
             val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
             findNavController().navigate(action)
@@ -103,6 +105,7 @@ class ProfDisplayFragment : Fragment() {
         }
 
         binding.myWorkspaces.setOnClickListener {
+            progressBarToggle()
             requireActivity().supportFragmentManager.popBackStackImmediate()
             val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
             findNavController().navigate(action)
@@ -110,30 +113,27 @@ class ProfDisplayFragment : Fragment() {
         }
 
         binding.editProfileTv.setOnClickListener {
-            binding.contentLoadingProgressBar.visibility = View.VISIBLE
-
+            progressBarToggle()
             val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            Handler().postDelayed({
-                binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-                editProfileFragment.show(transaction, editProfileFragment.tag)
-            }, 3000)
-
+            editProfileFragment.show(transaction, editProfileFragment.tag)
         }
 
         binding.cardPeople.setOnClickListener {
-            binding.contentLoadingProgressBar.visibility = View.VISIBLE
+            progressBarToggle()
             val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             networkDialogFrag.show(transaction, networkDialogFrag.tag)
-
-            Handler().postDelayed({
-                binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-            }, 3000)
-
         }
 
         return view
+    }
+
+    private fun progressBarToggle(){
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
+        Handler().postDelayed({
+            binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+        }, 3000)
     }
 
     private fun setAboutText(aboutText: String?) {
@@ -179,11 +179,8 @@ class ProfDisplayFragment : Fragment() {
     }
 
     private fun refreshProfileInfo() {
-
         val fragmentTransactionExit = parentFragmentManager.beginTransaction()
         val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
-
-
 
         fragmentTransactionExit.detach(this).commit()
         this.onAttach(requireContext())
@@ -236,6 +233,7 @@ class ProfDisplayFragment : Fragment() {
                     myNetwork = myProf.network
 
                     it.myNewsPreferences.setOnClickListener {
+                        progressBarToggle()
                         val editNews = EditNewsPrefFragment()
                         val transaction =
                             requireActivity().supportFragmentManager.beginTransaction()
@@ -243,6 +241,7 @@ class ProfDisplayFragment : Fragment() {
                     }
 
                     it.editPreferences.setOnClickListener {
+                        progressBarToggle()
                         val editNews = EditNewsPrefFragment()
                         val transaction =
                             requireActivity().supportFragmentManager.beginTransaction()

@@ -41,7 +41,9 @@ class ForYouFragment : Fragment() {
 
     private fun setUpFirstObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
-
+            if (allNewsInstances.isNotEmpty()){
+                binding.contentLoadingProgressBar.visibility = View.GONE
+            }
             allNews = allNewsInstances.filter { newsText ->
                 !newsText.newsTag.contentEquals(
                     "official",
@@ -62,6 +64,9 @@ class ForYouFragment : Fragment() {
 
     private fun setUpSecondObservers() {
         viewModel.selectedTagList.observe(viewLifecycleOwner) { myTags ->
+            if (myTags.isNotEmpty()){
+                binding.contentLoadingProgressBar.visibility = View.GONE
+            }
 
             if (myTags.isEmpty()) {
                 Toast.makeText(

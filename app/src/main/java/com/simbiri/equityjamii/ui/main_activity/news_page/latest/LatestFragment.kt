@@ -50,6 +50,10 @@ class LatestFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
+            if (allNewsInstances.isNotEmpty()){
+                binding.contentLoadingProgressBar.visibility = View.GONE
+            }
+
             val adapter = context?.let {
                 NewsAdapter(
                     it,

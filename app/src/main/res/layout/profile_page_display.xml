@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
@@ -26,6 +27,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp">
+
+                <ProgressBar
+                    android:id="@+id/contentLoadingProgressBar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/logoColour"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toTopOf="@id/mysettingsCard"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/myEssentialsCard" />
 
                 <ImageView
                     android:id="@+id/backImageView"
@@ -503,18 +515,6 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-
-                        <ProgressBar
-                            android:id="@+id/contentLoadingProgressBar"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@color/logoColour"
-                            android:visibility="invisible"
-                            app:layout_constraintBottom_toBottomOf="@id/editProfileDivider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
 
 
                         <TextView

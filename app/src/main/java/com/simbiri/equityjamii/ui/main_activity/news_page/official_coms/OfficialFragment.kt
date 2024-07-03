@@ -55,6 +55,9 @@ class OfficialFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { allNewsInstances ->
+            if (allNewsInstances.isNotEmpty()){
+                binding.contentLoadingProgressBar.visibility =  View.INVISIBLE
+            }
             val adapter = context?.let {
                 OfficialAdapter(
                     it,

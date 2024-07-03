@@ -1,11 +1,13 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page.for_you
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -66,6 +68,7 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
                     StaggeredGridLayoutManager.VERTICAL
                 )
             }
+            binding.progressBar.visibility = View.GONE
             binding.tagsRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
@@ -90,6 +93,14 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
 
         return (screenWidth / itemWidth)
     }
+    private fun setupHalfHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = displayMetrics.heightPixels/2
+        bottomSheet.layoutParams = layoutParams
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -100,11 +111,11 @@ class EditNewsPrefFragment : BottomSheetDialogFragment() {
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
             val bottomSheet =
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
+            setupHalfHeight(bottomSheet!!)
+            bottomSheet.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-
             }
         }
 
