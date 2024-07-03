@@ -112,6 +112,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 if (otherPeopleProfilesList.isNotEmpty()) {
                     binding!!.similarProfTextHead.visibility = View.VISIBLE
                     binding!!.recyclerOtherProfiles.visibility = View.VISIBLE
+                    binding!!.progressBar.visibility = View.GONE
                     otherSimilarProfilesAdapter.notifyDataSetChanged()
                 }
 
@@ -364,6 +365,14 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun setupFullHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        bottomSheet.layoutParams = layoutParams
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -382,12 +391,14 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 val bottomSheetDialog = dialogInterface as BottomSheetDialog
                 val bottomSheet =
                     bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                bottomSheet?.let {
+                setupFullHeight(bottomSheet!!)
+                bottomSheet.let {
                     val behavior = BottomSheetBehavior.from(bottomSheet)
                     behavior.apply {
                         isDraggable = true
                         isHideable = true
-                        peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
+                        peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
+                        state = BottomSheetBehavior.STATE_EXPANDED
                     }
 
                 }

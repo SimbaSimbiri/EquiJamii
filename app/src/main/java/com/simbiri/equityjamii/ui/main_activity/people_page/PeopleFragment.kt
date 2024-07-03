@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.data.model.AuthUtils
@@ -63,6 +62,13 @@ class PeopleFragment : Fragment() {
 
             swipeRefresh.setOnRefreshListener {
                 refreshJamii()
+            }
+
+            searchViewAll.setOnClickListener {
+                val searchFrag = SearchJamaaFragment()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                searchFrag.show(transaction, searchFrag.tag)
             }
         }
 

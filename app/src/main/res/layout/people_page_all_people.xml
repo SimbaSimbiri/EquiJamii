@@ -11,21 +11,6 @@
         android:layout_height="match_parent"
         >
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewAll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.SearchView"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="0dp"
-            app:iconifiedByDefault="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/allPeopleRecycler"
-            app:layout_constraintTop_toTopOf="parent"
-            app:queryHint="Search for jamaa"
-            android:background="@drawable/shape_stroke_rectangle"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/allPeopleRecycler"
             android:layout_width="match_parent"
@@ -33,9 +18,9 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
             android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="@id/searchViewAll"
-            app:layout_constraintStart_toStartOf="@id/searchViewAll"
-            app:layout_constraintTop_toBottomOf="@id/searchViewAll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/adapters_people_all_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

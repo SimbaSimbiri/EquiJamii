@@ -60,36 +60,6 @@ class EquiLeadersFragment : Fragment() {
         }
     }
 
-    /*
-        override fun onResume() {
-            super.onResume()
-            if (searchList.isEmpty()) {
-                leadersListFireStore()
-            }
-        }
-
-
-        private fun leadersListFireStore() {
-            AuthUtils.getCurrentPerson (AuthUtils.getCurrentUserId()!!){ currPerson ->
-
-                query.get().addOnCompleteListener { it ->
-                    if (it.isSuccessful) {
-                        if (currPerson != null) {
-                            val allLeaders = it.result.toObjects(Person::class.java)
-
-                            val includedLeaders = allLeaders.filter { person -> person.leader }
-
-                            searchList.clear()
-                            searchList.addAll(includedLeaders)
-                        }
-
-                        binding.equiLeadersRecycler.adapter!!.notifyDataSetChanged()
-                    }
-                }
-            }
-        }
-    */
-
     private fun setUpRecyclers() {
         binding.equiLeadersRecycler.apply {
             leadersAdapter = LeadersAllAdapter(context, searchList)

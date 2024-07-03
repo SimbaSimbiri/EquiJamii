@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/backg_bottom"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ui.main_activity.my_profile.NetworkFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayoutNetwork"
@@ -50,27 +50,12 @@
                 app:tabTextAppearance="@style/titleTab"
                 app:tabTextColor="@color/tabUnselected" />
 
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchViewAll"
-                style="@style/Widget.AppCompat.SearchView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="14dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_stroke_rectangle"
-                app:iconifiedByDefault="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayoutNetwork"
-                app:queryHint="Search for jamaa" />
-
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerNetwork"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
-                app:layout_constraintTop_toBottomOf="@id/searchViewAll"
+                app:layout_constraintTop_toBottomOf="@id/tabLayoutNetwork"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"

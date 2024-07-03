@@ -49,6 +49,35 @@
                     app:tabTextAppearance="@style/titleTab"
                     app:tabTextColor="@color/tabUnselected" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/searchViewAll"
+                    style="@style/titleTab2"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:clickable="true"
+                    android:text="Search for jamaa or leader"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/shape_stroke_rectangle"
+                    android:textAppearance="@style/titleTab2"
+                    android:padding="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tabLayoutPeople"
+                    />
+
+                <ImageView
+                    android:id="@+id/searchIcon"
+                    android:layout_width="24dp"
+                    android:src="@drawable/search_icon"
+                    android:layout_margin="15dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="@id/searchViewAll"
+                    app:layout_constraintTop_toTopOf="@id/searchViewAll"
+                    app:layout_constraintBottom_toBottomOf="@id/searchViewAll"
+                    />
+
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPagerPeople"
                     android:layout_width="match_parent"
@@ -59,7 +88,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
                     app:layout_constraintEnd_toEndOf="@id/constraintLayout"
                     app:layout_constraintStart_toStartOf="@id/constraintLayout"
-                    app:layout_constraintTop_toBottomOf="@id/tabLayoutPeople" />
+                    app:layout_constraintTop_toBottomOf="@id/searchViewAll" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

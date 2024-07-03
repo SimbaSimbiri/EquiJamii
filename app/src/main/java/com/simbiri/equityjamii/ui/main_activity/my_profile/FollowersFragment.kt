@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.NetworkAdapter
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.FollowersBinding
 
-class FollowersFragment : Fragment() {
+class FollowersFragment : Fragment(), SearchView.OnQueryTextListener {
 
     companion object {
         fun newInstance() = FollowersFragment()
@@ -19,7 +21,8 @@ class FollowersFragment : Fragment() {
 
     private lateinit var binding: FollowersBinding
     private val viewModel: NetworkViewModel by viewModels(ownerProducer = { requireParentFragment() })
-
+    private var fullList = mutableListOf<Person>()
+    private var searchList = mutableListOf<Person>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,18 +30,49 @@ class FollowersFragment : Fragment() {
     ): View {
         binding = FollowersBinding.inflate(inflater, container, false)
 
-        binding.followerPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        setUpRecyclers()
         setUpObservers()
+        setUpSearchView()
 
         return binding.root
     }
+    private fun setUpSearchView() {
+        binding.searchViewAll.setOnQueryTextListener(this@FollowersFragment)
+    }
 
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        filter(newText ?: "")
+        return true
+    }
+    private fun setUpRecyclers() {
+
+        binding.followerPeopleRecyclerView.apply {
+            adapter = NetworkAdapter(requireContext(), searchList)
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+    }
+
+    private fun filter(text: String) {
+        val filteredList = if (text.isEmpty()) {
+            fullList
+        } else {
+            fullList.filter { it.name.contains(text, ignoreCase = true) }
+        }
+
+        searchList.clear()
+        searchList.addAll(filteredList)
+        binding.followerPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+    }
     private fun setUpObservers() {
         viewModel.followersList.observe(viewLifecycleOwner) { followerUsers ->
-
-            val adapter = NetworkAdapter(requireContext(), followerUsers)
-            binding.followerPeopleRecyclerView.adapter = adapter
-            binding.followerPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+            fullList.clear()
+            fullList.addAll(followerUsers)
+            filter("")
         }
     }
 }

@@ -2,41 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main_activity.my_profile.FollowingFragment">
-
+    android:background="@drawable/backg_bottom"
+    tools:context=".ui.main_activity.people_page.SearchJamaaFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewAll"
-        style="@style/Widget.AppCompat.SearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="14dp"
+        android:textAppearance="@style/titleTab2"
+        style="@style/Widget.AppCompat.SearchView"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:background="@drawable/shape_stroke_rectangle"
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Search for following" />
-
+        app:queryHint="Search for jamaa or leader"
+        android:background="@drawable/shape_stroke_rectangle"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/followingPeopleRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/searchPeopleRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:orientation="vertical"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:elevation="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchViewAll"
         tools:listitem="@layout/adapters_network_item" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

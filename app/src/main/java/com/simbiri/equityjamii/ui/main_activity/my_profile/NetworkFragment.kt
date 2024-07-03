@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.appcompat.widget.SearchView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -17,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Network
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.DialogNetworkBinding
 
 class NetworkFragment : BottomSheetDialogFragment() {
@@ -55,6 +57,7 @@ class NetworkFragment : BottomSheetDialogFragment() {
         return view
     }
 
+
     private fun setupViewPagerAndTabs() {
         val pagerAdapter = NetworkPagerAdapter(this)
         binding.viewPagerNetwork.apply {
@@ -85,6 +88,15 @@ class NetworkFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun setupFullHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        bottomSheet.layoutParams = layoutParams
+    }
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -99,10 +111,12 @@ class NetworkFragment : BottomSheetDialogFragment() {
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
             val bottomSheet =
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
+            setupFullHeight(bottomSheet!!)
+            bottomSheet.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
+                behavior.peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
