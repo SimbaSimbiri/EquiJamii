@@ -20,11 +20,15 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
@@ -83,35 +87,48 @@ class ProfDisplayFragment : Fragment() {
         }
 
 
+        AuthUtils.getCurrentPerson(getCurrentUserId()) { person ->
+            if (person != null) {
 
-        binding.myJamiiTv.setOnClickListener {
-            progressBarToggle()
-            requireActivity().supportFragmentManager.popBackStackImmediate()
-            val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
-            findNavController().navigate(action)
+                val navHostFrag =
+                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
+                binding.myJamiiTv.setOnClickListener {
+                    progressBarToggle()
+                    requireActivity().supportFragmentManager.popBackStackImmediate()
+                    val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
+                    navHostFrag.findNavController().navigate(action)
+
+                }
+
+                binding.swipeRefresh.setOnRefreshListener {
+                    refreshProfileInfo()
+                }
+
+                binding.myAssistant.setOnClickListener {
+                    progressBarToggle()
+                    requireActivity().supportFragmentManager.popBackStackImmediate()
+                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+                    navHostFrag.findNavController().navigate(action)
+
+                }
+
+                binding.myWorkspaces.setOnClickListener {
+                    progressBarToggle()
+                    requireActivity().supportFragmentManager.popBackStackImmediate()
+                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+                    navHostFrag.findNavController().navigate(action)
+
+                }
+                binding.cardPeople.setOnClickListener {
+                    progressBarToggle()
+                    val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                    networkDialogFrag.show(transaction, networkDialogFrag.tag)
+                }
+
+            }
         }
-
-        binding.swipeRefresh.setOnRefreshListener {
-            refreshProfileInfo()
-        }
-
-        binding.myAssistant.setOnClickListener {
-            progressBarToggle()
-            requireActivity().supportFragmentManager.popBackStackImmediate()
-            val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
-            findNavController().navigate(action)
-
-        }
-
-        binding.myWorkspaces.setOnClickListener {
-            progressBarToggle()
-            requireActivity().supportFragmentManager.popBackStackImmediate()
-            val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
-            findNavController().navigate(action)
-
-        }
-
         binding.editProfileTv.setOnClickListener {
             progressBarToggle()
             val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
@@ -119,17 +136,11 @@ class ProfDisplayFragment : Fragment() {
             editProfileFragment.show(transaction, editProfileFragment.tag)
         }
 
-        binding.cardPeople.setOnClickListener {
-            progressBarToggle()
-            val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            networkDialogFrag.show(transaction, networkDialogFrag.tag)
-        }
 
         return view
     }
 
-    private fun progressBarToggle(){
+    private fun progressBarToggle() {
         binding.contentLoadingProgressBar.visibility = View.VISIBLE
         Handler().postDelayed({
             binding.contentLoadingProgressBar.visibility = View.INVISIBLE

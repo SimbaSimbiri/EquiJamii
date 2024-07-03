@@ -42,6 +42,19 @@ class PeopleFragment : Fragment() {
                         "Set up profile to access EquiJamii features",
                         Toast.LENGTH_LONG
                     ).show()
+                } else {
+
+                    swipeRefresh.setOnRefreshListener {
+                        refreshJamii()
+                    }
+
+                    searchViewAll.setOnClickListener {
+                        val searchFrag = SearchJamaaFragment()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
+
+                        searchFrag.show(transaction, searchFrag.tag)
+                    }
                 }
             }
 
@@ -60,16 +73,6 @@ class PeopleFragment : Fragment() {
 
             }.attach()
 
-            swipeRefresh.setOnRefreshListener {
-                refreshJamii()
-            }
-
-            searchViewAll.setOnClickListener {
-                val searchFrag = SearchJamaaFragment()
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-
-                searchFrag.show(transaction, searchFrag.tag)
-            }
         }
 
 
