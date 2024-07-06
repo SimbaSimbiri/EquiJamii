@@ -6,7 +6,10 @@ The app will have:
   1. A social page for the official interaction with other employees.
   2. A slack like workspace that enables teamwork within the banks branches. Users will  also access HR resources smoothly.
   3. A news space where major events concerning the growth of the Bank, e.g annual achievements are posted, broadcast live events etc.
-  4. A people section with  Equileaders and EquiJamaa. 
+  4. A people section with  Equileaders and EquiJamaa.
+
+## Current progress
+[Video Preview](https://photos.app.goo.gl/RqXRNPwitFpa4K8K8)
 
 ## License
 
