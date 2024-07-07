@@ -231,6 +231,7 @@ class ProfDisplayFragment : Fragment() {
                         myProf.social.faceb,
                         myProf.social.xAcc
                     )
+                    listsSocials.sort()
 
                     if (myProf.verified) {
                         binding.verifiedPersonelImage.visibility = View.VISIBLE

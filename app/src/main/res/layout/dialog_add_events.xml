@@ -62,7 +62,7 @@
                     android:id="@+id/descriptionInput"
                     style="@style/titleTab2"
                     android:layout_width="match_parent"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:layout_height="wrap_content"
                     android:hint="Event description e.g registration deadline, duration etc"
                     android:textColorHighlight="@color/lighterMaroon"

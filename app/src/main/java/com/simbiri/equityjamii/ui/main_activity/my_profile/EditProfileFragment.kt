@@ -402,7 +402,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.profile_page_display)
+        dialog.setContentView(R.layout.profile_page_edit)
         dialog.setCanceledOnTouchOutside(true)
         val displayMetrics = DisplayMetrics()
         val windowManager =

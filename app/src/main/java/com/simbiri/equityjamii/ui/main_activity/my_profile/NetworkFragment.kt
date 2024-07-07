@@ -116,7 +116,6 @@ class NetworkFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-                behavior.peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }

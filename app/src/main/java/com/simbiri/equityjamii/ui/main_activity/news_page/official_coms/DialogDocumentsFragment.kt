@@ -2,6 +2,7 @@ package com.simbiri.equityjamii.ui.main_activity.news_page.official_coms
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.adapters.ImageDescAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.databinding.DialogDocumentsBinding
@@ -44,13 +46,29 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
         val fileLists = arguments?.getParcelableArrayList<FileTitle>(ARGS_FILE_LIST)
 
         fileLists.let { listFiles ->
-            binding.apply {
-                documentsRecyclerView.apply {
-                    adapter = PdfDescAdapter(requireContext(), listFiles!!.toMutableList())
-                    layoutManager = LinearLayoutManager(context)
-                    adapter!!.notifyDataSetChanged()
+            if (listFiles != null) {
+                binding.apply {
+
+                    documentsRecyclerView.apply {
+                        adapter = PdfDescAdapter(requireContext(), listFiles.toMutableList())
+                        layoutManager = LinearLayoutManager(context)
+                        adapter!!.notifyDataSetChanged()
+                    }
+
+                    Handler().postDelayed({
+
+                        if (listFiles.count() == 1) {
+                            val viewHolder =
+                                documentsRecyclerView.findViewHolderForAdapterPosition(0) as? PdfDescAdapter.PdfDescViewHolder
+                            viewHolder?.displayPdf(listFiles.first())
+                        }
+
+                    }, 500)
+
                 }
+
             }
+
         }
 
         return binding.root
