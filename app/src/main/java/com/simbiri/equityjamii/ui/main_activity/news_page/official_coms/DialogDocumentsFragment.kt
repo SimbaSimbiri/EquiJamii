@@ -47,6 +47,7 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
 
         fileLists.let { listFiles ->
             if (listFiles != null) {
+                listFiles.sortBy { fileTitle -> fileTitle.position}
                 binding.apply {
 
                     documentsRecyclerView.apply {

@@ -68,6 +68,7 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
             layoutParams.height = screenWidth * 9 / 16
 
             imageNewsHeadlineView.layoutParams = layoutParams
+            newsInstance.fileTitleList.sortBy { fileTitle -> fileTitle.position}
 
             if (newsInstance.fileTitleList.size > 0){
 
@@ -78,7 +79,6 @@ class NewsAdapter(var context: Context, var newsList: List<NewsText>, var editab
             } else{
                 imageNewsHeadlineView.setImageResource(R.drawable.equityjamiibackground)
             }
-
 
         }
 

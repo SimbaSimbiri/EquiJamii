@@ -100,6 +100,8 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
 
         arguments?.getParcelable<NewsText>(ARG_NEWS_ITEM)?.let { newstText ->
 
+            newstText.fileTitleList.sortBy { fileTitle -> fileTitle.position}
+
             val imageList = ArrayList<SlideModel>()
             newstText.fileTitleList.forEach { imageDesc ->
                 imageList.add(SlideModel(imageDesc.fileUri, imageDesc.fileTitle))

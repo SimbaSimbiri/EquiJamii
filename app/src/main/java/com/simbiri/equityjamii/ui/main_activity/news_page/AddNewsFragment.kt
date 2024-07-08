@@ -73,7 +73,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         openImagePicker = registerForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
                 result.uriContent?.let { uri ->
-                    val fileTitle = FileTitle(uri.toString(), "")
+                    val fileTitle = FileTitle(uri.toString(), "",0)
                     fileTitleList.add(fileTitle)
                     imageDescAdapter.notifyDataSetChanged()
                 }
@@ -226,7 +226,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
             viewHolder?.let {
                 uploadImageList.add(
-                    FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString())
+                    FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString(), i + 1)
                 )
             }
         }
@@ -234,7 +234,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         if (featuringUri.contains("https://")) {
 
             val featuringFileTitle =
-                extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube") }
+                extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube",1000) }
                 featuringFile = featuringFileTitle
         }
 
@@ -283,7 +283,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curImageDesc.fileUri,
-                        curImageDesc.fileTitle
+                        curImageDesc.fileTitle,i + 1
                     )
                 )
 
@@ -317,7 +317,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                                 uploadedFileTitleList.add(
                                     FileTitle(
                                         newsImageUri.toString(),
-                                        curImageDesc.fileTitle
+                                        curImageDesc.fileTitle, i
                                     )
                                 )
                                 uploadCounter++
@@ -358,7 +358,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
         newsHashMap["fileTitleList"] =
-            imageList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
+            imageList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle, "position" to it.position) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title

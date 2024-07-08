@@ -11,10 +11,11 @@
         android:id="@+id/nestedView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,9 +27,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:cursorColor="@color/logoColour"
                 app:counterEnabled="true"
                 app:counterMaxLength="100"
+                app:cursorColor="@color/logoColour"
                 app:hintTextColor="@color/logoColour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,8 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event title"
-                    android:textColorHighlight="@color/lighterMaroon"
-                    />
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -62,11 +62,10 @@
                     android:id="@+id/descriptionInput"
                     style="@style/titleTab2"
                     android:layout_width="match_parent"
-                    android:inputType="textMultiLine"
                     android:layout_height="wrap_content"
                     android:hint="Event description e.g registration deadline, duration etc"
-                    android:textColorHighlight="@color/lighterMaroon"
-                    />
+                    android:inputType="textMultiLine"
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -89,8 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event type i.e physical or virtual"
-                    android:textColorHighlight="@color/lighterMaroon"
-                    />
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -111,8 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event link i.e location pin or zoom link"
-                    android:textColorHighlight="@color/lighterMaroon"
-                    />
+                    android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -133,13 +130,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_margin="10dp"
-                android:padding="2dp"
+                android:visibility="gone"
                 android:background="@drawable/shape_stroke_rectangle"
+                android:padding="2dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addImageButton"
-                />
+                app:layout_constraintTop_toBottomOf="@id/addImageButton" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -148,19 +145,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nestedView">
-
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/selectDateTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
             android:clickable="true"
             android:fontFamily="sans-serif-medium"
             android:text="Select event date"
@@ -210,35 +205,32 @@
             app:offset="1" />
 
 
-        <Button
-            android:id="@+id/postButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="10dp"
-            android:backgroundTint="@color/logoColour"
-            android:text="Add Event"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="10dp"
-            android:backgroundTint="@color/logoColour"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Button
+        android:id="@+id/postButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="5dp"
+        android:backgroundTint="@color/logoColour"
+        android:text="Add Event"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/nestedView" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="5dp"
+        android:backgroundTint="@color/logoColour"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/nestedView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

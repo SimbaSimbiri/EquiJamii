@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +61,7 @@ class AddEventsDialog : BottomSheetDialogFragment() {
         super.onAttach(context)
         openImagePicker = registerForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
+                binding.eventImage.visibility = View.VISIBLE
                 Glide.with(requireContext()).load(result.uriContent).centerCrop()
                     .into(binding.eventImage)
                 imageUri = result.uriContent
@@ -112,7 +114,12 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 titleInput.setText(it.title)
                 descriptionInput.setText(it.description)
                 typeInput.setText(it.eventType)
-                Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
+
+                if (it.imageUrl != null){
+                    binding.eventImage.visibility = View.VISIBLE
+                    Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
+                }
+
                 locationInput.setText(it.location)
             }
 
@@ -146,7 +153,9 @@ class AddEventsDialog : BottomSheetDialogFragment() {
 
         binding.timePicker.apply {
             eventDate.timeInMillis = initialDateMillis
-            setTime(eventDate.get(Calendar.HOUR_OF_DAY), eventDate.get(Calendar.MINUTE))
+            Handler().postDelayed({
+                setTime(eventDate.get(Calendar.HOUR_OF_DAY), eventDate.get(Calendar.MINUTE))
+            }, 600)
             setTimeChangeListener(object : TimePicker.TimeChangeListener {
                 override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
                     eventDate.set(Calendar.HOUR_OF_DAY, hour)
@@ -159,7 +168,6 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 true
             }
         }
-
 
     }
 

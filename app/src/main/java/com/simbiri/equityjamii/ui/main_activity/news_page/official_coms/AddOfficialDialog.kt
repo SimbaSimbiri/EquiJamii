@@ -59,7 +59,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
             val filename = uri?.let { DocumentFile.fromSingleUri(context, it)?.name }
 
             if (filename != null) {
-                val fileTitle = FileTitle(uri.toString(), filename)
+                val fileTitle = FileTitle(uri.toString(), filename,0)
                 fileTitleList.add(fileTitle)
                 pdfDescAdapter.notifyDataSetChanged()
             }
@@ -135,7 +135,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                 binding.recyclerPdfs.findViewHolderForAdapterPosition(i) as? PdfDescAdapter.PdfDescViewHolder
             viewHolder?.let {
                 uploadPdfList.add(
-                    FileTitle(fileTitleList[i].fileUri, it.textPdfName.text.toString())
+                    FileTitle(fileTitleList[i].fileUri, it.textPdfName.text.toString(), i+1)
                 )
             }
         }
@@ -179,7 +179,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curPdfDesc.fileUri,
-                        curPdfDesc.fileTitle
+                        curPdfDesc.fileTitle, i+1
                     )
                 )
 
@@ -211,7 +211,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                                 uploadedFileTitleList.add(
                                     FileTitle(
                                         newsImageUri.toString(),
-                                        curPdfDesc.fileTitle
+                                        curPdfDesc.fileTitle, i+1
                                     )
                                 )
                                 uploadCounter++
@@ -250,7 +250,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
         newsHashMap["allNews"] = newsText.allNews
         newsHashMap["author"] = newsText.author
         newsHashMap["fileTitleList"] =
-            pdfList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle) }
+            pdfList.map { hashMapOf("fileUri" to it.fileUri, "fileTitle" to it.fileTitle, "position" to it.position) }
         newsHashMap["newsName"] = newsText.newsName
         newsHashMap["newsTag"] = newsText.newsTag
         newsHashMap["title"] = newsText.title

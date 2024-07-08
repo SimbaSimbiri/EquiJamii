@@ -4,17 +4,19 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
 
-data class FileTitle(var fileUri: String, var fileTitle: String) : Parcelable {
-    constructor() : this("", "")
+data class FileTitle(var fileUri: String, var fileTitle: String, var position : Int) : Parcelable {
+    constructor() : this("", "",0)
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-        parcel.readString() ?: ""
+        parcel.readString() ?: "",
+        parcel.readInt()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(fileUri)
         parcel.writeString(fileTitle)
+        parcel.writeInt(position)
     }
 
     override fun describeContents(): Int {

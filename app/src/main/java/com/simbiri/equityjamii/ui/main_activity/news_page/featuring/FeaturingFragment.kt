@@ -105,6 +105,7 @@ class FeaturingFragment : Fragment() {
                 )
             }
 
+
             val imageList = ArrayList<SlideModel>()
             val isYouTubeFile = { curFile: FileTitle ->
                 curFile.fileTitle.contentEquals(
@@ -144,6 +145,9 @@ class FeaturingFragment : Fragment() {
                 }
 
             }
+
+
+            curNewsFeaturing.fileTitleList.sortBy{fileTitle -> fileTitle.position }
 
             curNewsFeaturing.fileTitleList.filter { !isYouTubeFile(it) }
                 .forEach {
