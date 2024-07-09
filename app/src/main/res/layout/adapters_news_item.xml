@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/cardItemSample"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginBottom="15dp"
     android:backgroundTint="@color/logoColour"
     android:clickable="true"
     android:focusable="true"

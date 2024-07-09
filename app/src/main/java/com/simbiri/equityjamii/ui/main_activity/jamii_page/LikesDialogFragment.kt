@@ -62,6 +62,16 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+
+    private fun setupHalfHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = displayMetrics.heightPixels * 4/7
+        bottomSheet.layoutParams = layoutParams
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_likes)
@@ -75,7 +85,8 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
             val bottomSheet =
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
+            setupHalfHeight(bottomSheet!!)
+            bottomSheet.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true

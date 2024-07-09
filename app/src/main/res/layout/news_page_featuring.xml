@@ -105,15 +105,17 @@
                         android:id="@+id/titleMagicText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
+                        android:layout_margin="10dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Tap to reveal more about"
                         android:textColor="@color/logoColour"
                         style="@style/titleTab"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         android:textStyle="bold"
+                        android:gravity="center"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/contentMagicText" />
 
                     <TextView
                         android:id="@+id/contentMagicText"
@@ -124,13 +126,13 @@
                         android:layout_marginBottom="15dp"
                         android:fontFamily="sans-serif-medium"
                         android:justificationMode="inter_word"
+                        app:layout_constraintBottom_toTopOf="@id/titleMagicText"
                         android:text="All text goes here"
                         android:textColor="@color/black"
                         android:textSize="13sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/titleMagicText" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

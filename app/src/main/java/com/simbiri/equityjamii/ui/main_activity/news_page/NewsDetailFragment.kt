@@ -3,6 +3,7 @@ package com.simbiri.equityjamii.ui.main_activity.news_page
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -108,14 +109,16 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
             }
 
             ImageSliderNews.setImageList(imageList, ScaleTypes.CENTER_CROP)
+            ImageSliderNews.stopSliding()
+
             authorSpecialTv.text = newstText.newsName + " by " + newstText.author
             newsTitleTv.text = newstText.title
             newsDateText.text = "published ${displayDate(newstText.time)}"
+            Handler().postDelayed({
+                ImageSliderNews.setSlideAnimation(AnimationTypes.DEPTH_SLIDE)
+                ImageSliderNews.startSliding()
+            }, 3000)
             ImageSliderNews.setSlideAnimation(AnimationTypes.DEPTH_SLIDE)
-
-            ImageSliderNews.setOnClickListener {
-                ImageSliderNews.stopSliding()
-            }
 
             newsDetailAllNews.text = newstText.allNews
         }
