@@ -17,7 +17,7 @@ class MyWorkspace : Fragment() {
         fun newInstance() = MyWorkspace()
     }
 
-    private lateinit var viewModel: WorkspaceViewModel
+    private var viewModel: WorkspaceViewModel =  WorkspaceViewModel()
 
     private lateinit var binding: MyWorkspacePageBinding
 
@@ -42,12 +42,6 @@ class MyWorkspace : Fragment() {
         return binding.root
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(WorkspaceViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 
 }
