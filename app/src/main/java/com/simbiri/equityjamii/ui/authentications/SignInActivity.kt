@@ -1,18 +1,20 @@
 package com.simbiri.equityjamii.ui.authentications
 
-import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.Task
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,14 +22,17 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.databinding.ActivitySignInBinding
 import com.simbiri.equityjamii.ui.karibu_splash.KaribuActivity
 import com.simbiri.equityjamii.ui.main_activity.MainEquiActivity
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.concurrent.CancellationException
 
 class SignInActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivitySignInBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var oneTapClient: SignInClient
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,25 +40,32 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        oneTapClient = Identity.getSignInClient(this)
         binding.progressBar.isVisible = false
 
-        firebaseAuth = FirebaseAuth.getInstance()
+        this.auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client))
-            .requestEmail().build()
-        googleSignInClient = GoogleSignIn.getClient(this,gso)
 
         binding.toSignUpText.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        binding.signInGoogleButton.setOnClickListener {
-            signInWithGoogle()
+        binding.forgotPassText.setOnClickListener {
+            startActivity(Intent(this, ForgetPassActivity::class.java))
         }
 
-        //added comment line via vim
+        binding.signInGoogleButton.setOnClickListener {
+            binding.progressBar.visibility = View.INVISIBLE
+            lifecycleScope.launch {
+                val signInIntentSender = signIn()
+                resultLauncher.launch(
+                    IntentSenderRequest.Builder(
+                        signInIntentSender ?: return@launch
+                    ).build()
+                )
+            }
+        }
 
         binding.signInButton.setOnClickListener {
             val email = binding.emailEt.text.toString().trim()
@@ -66,7 +78,7 @@ class SignInActivity : AppCompatActivity() {
                     Toast.makeText(this, "Enter valid email!!", Toast.LENGTH_SHORT).show()
                 } else {
 
-                    firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+                    this.auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
                             val intent = Intent(this, KaribuActivity::class.java)
                             startActivity(intent)
@@ -86,67 +98,74 @@ class SignInActivity : AppCompatActivity() {
 
                 }
             } else {
-                Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, "Empty Fields Are not Allowed !!",
+                    Toast.LENGTH_SHORT
+                ).show()
                 binding.progressBar.isVisible = false
 
             }
         }
 
-
     }
 
-    private fun signInWithGoogle() {
-        binding.progressBar.isVisible = true
-        val signInIntent = googleSignInClient.signInIntent
-        launcher.launch(signInIntent)
-    }
-
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-    {result->
-        if (result.resultCode == Activity.RESULT_OK)
-        {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            handleResults(task)
-        }
-    }
-
-    private fun handleResults(task: Task<GoogleSignInAccount>) {
-        if (task.isSuccessful)
-        {
-            val account: GoogleSignInAccount? = task.result
-            if (account!=null) {
-                updateUI(account)
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult())
+        { result ->
+            if (result.resultCode == RESULT_OK) {
+                lifecycleScope.launch {
+                    binding.progressBar.visibility = View.VISIBLE
+                    signInWithIntent(result.data ?: return@launch)
+                }
             }
         }
-        else
-        {
-            Toast.makeText(this,"Sign In Failed, try again.",Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    private fun updateUI(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken,null)
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener{
-            if (it.isSuccessful)
-            {
-                val intent = Intent(this, KaribuActivity::class.java)
-                startActivity(intent)
-                binding.progressBar.isVisible = false
+    private fun signInWithIntent(intent: Intent) {
+        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
+        val idToken = credential.googleIdToken
+        val googleCredentials = GoogleAuthProvider.getCredential(idToken, null)
+
+        auth.signInWithCredential(googleCredentials).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(this, "Sign In successful.", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this, KaribuActivity::class.java))
+                binding.progressBar.visibility = View.INVISIBLE
                 finish()
-            }
-            else
-            {
-                binding.progressBar.isVisible = false
-                Toast.makeText(this,"Sign In Failed, try again.",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Sign In Failed, try again.", Toast.LENGTH_LONG).show()
+                binding.progressBar.visibility = View.INVISIBLE
             }
         }
     }
 
+    private suspend fun signIn(): IntentSender? {
+        val result = try {
+            oneTapClient.beginSignIn(buildSignInRequest()).await()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            null
+        }
+
+        return result?.pendingIntent?.intentSender
+    }
+
+    private fun buildSignInRequest(): BeginSignInRequest {
+        return BeginSignInRequest.Builder()
+            .setGoogleIdTokenRequestOptions(
+                GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(getString(R.string.default_web_client)).build()
+            ).setAutoSelectEnabled(true).build()
+
+    }
 
     override fun onStart() {
         super.onStart()
 
-        if (firebaseAuth.currentUser != null) {
+        if (this.auth.currentUser != null) {
             val intent = Intent(this, MainEquiActivity::class.java)
             startActivity(intent)
         }
@@ -156,6 +175,5 @@ class SignInActivity : AppCompatActivity() {
         super.onRestart()
         finish()
     }
-
 
 }

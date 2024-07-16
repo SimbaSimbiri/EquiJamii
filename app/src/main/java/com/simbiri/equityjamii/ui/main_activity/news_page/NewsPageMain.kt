@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -51,83 +52,95 @@ class newsFragment : Fragment() {
                 }
             }
 
-            fabAdd.setOnClickListener {
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
+                if (currentPerson == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Set up profile to access EquiJamii features",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }else{
 
-                if (!fabVisible) {
+                    fabAdd.setOnClickListener {
 
-                    fabAddNews.show()
-                    fabAddOfficial.show()
+                        if (!fabVisible) {
 
-                    fabAddNews.visibility = View.VISIBLE
-                    fabAddOfficial.visibility = View.VISIBLE
+                            fabAddNews.show()
+                            fabAddOfficial.show()
 
-                    fabAdd.setImageDrawable(resources.getDrawable(R.drawable.cancel_fab_icon))
-                    fabVisible = true
-                } else {
+                            fabAddNews.visibility = View.VISIBLE
+                            fabAddOfficial.visibility = View.VISIBLE
 
-                    fabAddNews.hide()
-                    fabAddOfficial.hide()
+                            fabAdd.setImageDrawable(resources.getDrawable(R.drawable.cancel_fab_icon))
+                            fabVisible = true
+                        } else {
 
-                    fabAddNews.visibility = View.GONE
-                    fabAddOfficial.visibility = View.GONE
+                            fabAddNews.hide()
+                            fabAddOfficial.hide()
 
-                    fabAdd.setImageDrawable(resources.getDrawable(R.drawable.add_icon))
-                    fabVisible = false
+                            fabAddNews.visibility = View.GONE
+                            fabAddOfficial.visibility = View.GONE
+
+                            fabAdd.setImageDrawable(resources.getDrawable(R.drawable.add_icon))
+                            fabVisible = false
+                        }
+                    }
+
+                    fabAddNews.setOnClickListener {
+                        val addNewsFrag = AddNewsFragment()
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        addNewsFrag.show(transaction, addNewsFrag.tag)
+                    }
+
+                    fabAddOfficial.setOnClickListener {
+                        val addOfficialDialog = AddOfficialDialog()
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        addOfficialDialog.show(transaction, addOfficialDialog.tag)
+                    }
+
+                    stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
+                    viewPagerNews.apply {
+                        isUserInputEnabled = false
+                        adapter = stateAdapter
+                    }
+
+                    TabLayoutMediator(tabLayout, viewPagerNews, true, false) { tab, position ->
+
+                        when (position) {
+
+                            0 -> {
+                                tab.text = "Latest"
+                            }
+
+                            1 -> {
+                                tab.text = "For You"
+
+                            }
+
+                            2 -> {
+                                tab.text = "Live"
+
+                            }
+
+                            3 -> {
+                                tab.text = "Official"
+
+                            }
+
+                            4 -> {
+                                tab.text = "Featuring"
+                            }
+
+                        }
+
+                    }.attach()
+
+                    swipeRefresh.setOnRefreshListener {
+                        refreshNews()
+                    }
                 }
             }
 
-            fabAddNews.setOnClickListener {
-                val addNewsFrag = AddNewsFragment()
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                addNewsFrag.show(transaction, addNewsFrag.tag)
-            }
-
-            fabAddOfficial.setOnClickListener {
-                val addOfficialDialog = AddOfficialDialog()
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                addOfficialDialog.show(transaction, addOfficialDialog.tag)
-            }
-
-            stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
-            viewPagerNews.apply {
-                isUserInputEnabled = false
-                adapter = stateAdapter
-            }
-
-            TabLayoutMediator(tabLayout, viewPagerNews, true, false) { tab, position ->
-
-                when (position) {
-
-                    0 -> {
-                        tab.text = "Latest"
-                    }
-
-                    1 -> {
-                        tab.text = "For You"
-
-                    }
-
-                    2 -> {
-                        tab.text = "Live"
-
-                    }
-
-                    3 -> {
-                        tab.text = "Official"
-
-                    }
-
-                    4 -> {
-                        tab.text = "Featuring"
-                    }
-
-                }
-
-            }.attach()
-
-            swipeRefresh.setOnRefreshListener {
-                refreshNews()
-            }
 
         }
         return view

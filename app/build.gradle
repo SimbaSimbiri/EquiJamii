@@ -76,22 +76,6 @@ android {
     flavorDimensions "monetization"
     //what will be the metric for the  different versions of my buildtype? If it is a release type, will it have a paid or unpaid version?
 
-    productFlavors { //the flavors are the exact versions of this current buildtype
-
-        free {
-            dimension "monetization"
-            applicationIdSuffix ".free"
-            versionNameSuffix "-free"
-        }
-
-        pro {
-            dimension "monetization"
-            applicationIdSuffix ".pro"
-            versionNameSuffix "-pro"
-        }
-
-    }
-
     testOptions {
         unitTests.includeAndroidResources = true
     }
@@ -107,6 +91,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.3.0-beta02")
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation 'androidx.activity:activity:1.8.0'
 
 /*
              androidX jetpack library dependancies

@@ -170,6 +170,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lacinia metus nec
     <string name="liked_by">Liked by</string>
     <string name="add_new_event">Add new event</string>
     <string name="event_participants">event participants</string>
+    <string name="forgot_password_msg">Don\'t worry, it happens to the best of us. Simply enter the email address you signed in with and you will receive a link to reset.</string>
 
 
 </resources>

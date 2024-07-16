@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.simbiri.equityjamii" />
+                  <option name="mobileSdkAppId" value="1:302682895449:android:c890e2afdf8c1551cbad48" />
+                  <option name="projectId" value="equityjamii-live-page" />
+                  <option name="projectNumber" value="302682895449" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
