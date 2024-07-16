@@ -14,16 +14,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.NetworkAdapter
-import com.simbiri.equityjamii.databinding.DialogLikesBinding
+import com.simbiri.equityjamii.databinding.DialogJamiiDetailBinding
 
-class LikesDialogFragment : BottomSheetDialogFragment() {
+class JamiiDetailDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARGS_USER_IDS = "user_ids"
-        fun newInstance(likedUserIds: ArrayList<String>): LikesDialogFragment {
-            val frag = LikesDialogFragment()
+        private const val ARGS_TITLE = "dialog_title"
+        fun newInstance(likedUserIds: ArrayList<String>, dialogTitle : String): JamiiDetailDialogFragment {
+            val frag = JamiiDetailDialogFragment()
             val args = Bundle()
             args.putStringArrayList(ARGS_USER_IDS, likedUserIds)
+            args.putString(ARGS_TITLE, dialogTitle)
 
             frag.arguments = args
             return frag
@@ -31,20 +33,22 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
 
     }
 
-    private lateinit var dialogLikesBinding: DialogLikesBinding
+    private lateinit var dialogLikesBinding: DialogJamiiDetailBinding
     private val viewModel: LikesViewModel = LikesViewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialogLikesBinding = DialogLikesBinding.inflate(inflater, container, false)
+        dialogLikesBinding = DialogJamiiDetailBinding.inflate(inflater, container, false)
 
         val listIds = arguments?.getStringArrayList(ARGS_USER_IDS)
+        val dialogTitle = arguments?.getString(ARGS_TITLE)
 
         viewModel.fetchLikesList(listIds)
 
         dialogLikesBinding.let { binding ->
 
+            binding.titleText.text = dialogTitle
             binding.likesPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             setUpObservers()
 
@@ -74,7 +78,7 @@ class LikesDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.dialog_likes)
+        dialog.setContentView(R.layout.dialog_jamii_detail)
         dialog.setCanceledOnTouchOutside(true)
         val displayMetrics = DisplayMetrics()
         val windowManager =

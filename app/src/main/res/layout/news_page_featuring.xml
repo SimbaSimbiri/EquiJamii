@@ -107,15 +107,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Tap to reveal more about"
+                        android:text="Who is"
                         android:textColor="@color/logoColour"
                         style="@style/titleTab"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         android:textStyle="bold"
                         android:gravity="center"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/contentMagicText" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/contentMagicText"
@@ -126,13 +124,22 @@
                         android:layout_marginBottom="15dp"
                         android:fontFamily="sans-serif-medium"
                         android:justificationMode="inter_word"
-                        app:layout_constraintBottom_toTopOf="@id/titleMagicText"
                         android:text="All text goes here"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/titleMagicText" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:id="@+id/nextSlide"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/contentMagicText"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/next_icon"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

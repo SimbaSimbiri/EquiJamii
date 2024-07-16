@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.adapters
 
 import android.content.Context
+import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +32,7 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddPostFragment
-import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiDetailDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -79,6 +81,8 @@ class PostAdapter(
         var verifiedImage: ImageView = itemView.findViewById(R.id.verifiedPersonelImage)
         var editPost: ImageView = itemView.findViewById(R.id.editPost)
         var deletePost: ImageView = itemView.findViewById(R.id.deletePost)
+        var progressBar : ProgressBar =  itemView.findViewById(R.id.contentLoadingProgressBar)
+
         var likesCharText: TextView = itemView.findViewById(R.id.likesCharText)
         var currentPostLikes = 0
 
@@ -217,10 +221,12 @@ class PostAdapter(
             }
 
             editPost.setOnClickListener {
+                progressBar.visibility = View.VISIBLE
                 val editPostDialog = AddPostFragment.newInstance(postInstance)
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 editPostDialog.show(transaction, editPostDialog.tag)
+                Handler().postDelayed({progressBar.visibility = View.INVISIBLE}, 2500)
             }
 
 
@@ -288,9 +294,9 @@ class PostAdapter(
                 result.forEach { queryDocumentSnapshot ->
                     listIds.add(queryDocumentSnapshot.id)
                 }
-
+                listIds.shuffle()
                 this.likesCharText.setOnClickListener {
-                    val likesFrag = LikesDialogFragment.newInstance(listIds)
+                    val likesFrag = JamiiDetailDialogFragment.newInstance(listIds,"Post liked by")
                     val transaction =
                         (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                     likesFrag.show(transaction, likesFrag.tag)

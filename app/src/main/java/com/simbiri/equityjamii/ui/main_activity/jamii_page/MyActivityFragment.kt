@@ -2,6 +2,7 @@ package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,10 +57,15 @@ class MyActivityFragment : Fragment() {
                 setUpEventObservers(currPerson.userId)
                 setUpPostObservers(currPerson.userId)
 
-                binding.addEvent.setOnClickListener {
+                binding.cardAddEvent.setOnClickListener {
+                    binding.contentLoadingProgressBar.visibility = View.VISIBLE
                     val addNewEvent = AddEventsDialog()
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     addNewEvent.show(transaction, addNewEvent.tag)
+
+                    Handler().postDelayed({
+                        binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+                    },4000)
                 }
 
             }

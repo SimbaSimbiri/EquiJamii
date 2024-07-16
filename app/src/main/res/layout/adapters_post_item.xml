@@ -97,15 +97,27 @@
             android:id="@+id/captionExpandable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="7dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="sans-serif"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/imageUserPost"
             app:layout_constraintTop_toBottomOf="@id/viewDivider" />
+
+        <ProgressBar
+            android:id="@+id/contentLoadingProgressBar"
+            android:layout_width="28dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            android:layout_marginEnd="5dp"
+            android:background="@color/lighterMaroon"
+            app:layout_constraintBottom_toBottomOf="@id/editPost"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/editPost"
+            app:layout_constraintTop_toTopOf="@id/editPost" />
 
         <ImageView
             android:id="@+id/imagePosted"

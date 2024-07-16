@@ -155,7 +155,7 @@ class FeaturingFragment : Fragment() {
                 }
             binding.apply {
                 snapShotsTv.text = "Today's featuring snapshots"
-                titleMagicText.text = "Tap to reveal more about ${curNewsFeaturing.title}"
+                titleMagicText.text = "Who is ${curNewsFeaturing.title}?"
                 moreAboutTextView.text = "A better peek into the life of ${curNewsFeaturing.title}"
 
                 if (canPublishEdit) {
@@ -174,7 +174,7 @@ class FeaturingFragment : Fragment() {
                 titleMagicText.visibility = View.VISIBLE
                 snapShotsImageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
 
-                magicCardView.setOnClickListener {
+                nextSlide.setOnClickListener {
                     snapShotsImageSlider.startSliding()
                     animateCard(parts)
                 }
@@ -210,9 +210,6 @@ class FeaturingFragment : Fragment() {
                     val currentText = contentMagicText.text.toString()
                     val currentIndex = parts.indexOf(currentText)
                     val nextIndex = (currentIndex + 1) % parts.size
-
-                    if (nextIndex != 0) titleMagicText.visibility = View.GONE
-                    else titleMagicText.visibility = View.VISIBLE
 
                     contentMagicText.text = parts[nextIndex]
                     slideIn.start()

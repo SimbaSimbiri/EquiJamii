@@ -3,6 +3,7 @@ package com.simbiri.equityjamii.adapters
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +27,7 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
-import com.simbiri.equityjamii.ui.main_activity.jamii_page.LikesDialogFragment
+import com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiDetailDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -48,6 +50,7 @@ class EventsAdapter(
         var deleteEvent: ImageView = itemView.findViewById(R.id.deleteEvent)
         var registerEvent: ImageView = itemView.findViewById(R.id.regUnregForEvent)
         var eventLink: ImageView = itemView.findViewById(R.id.eventLocationLink)
+        var progressBar : ProgressBar =  itemView.findViewById(R.id.contentLoadingProgressBar)
 
         var numParticipants: TextView = itemView.findViewById(R.id.numParticipantsText)
         var imageParticipants: ImageView = itemView.findViewById(R.id.eventParticipantsImage)
@@ -96,10 +99,13 @@ class EventsAdapter(
                 deleteEvent.visibility = View.VISIBLE
 
                 editEvent.setOnClickListener {
+                    progressBar.visibility = View.VISIBLE
                     val editEventFrag = AddEventsDialog.newInstance(currentEvent)
                     val transaction =
                         (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                     editEventFrag.show(transaction, editEventFrag.tag)
+                    Handler().postDelayed({progressBar.visibility = View.INVISIBLE}, 4000)
+
                 }
 
                 deleteEvent.setOnClickListener {
@@ -138,9 +144,7 @@ class EventsAdapter(
                 eventOrganizerTv.setOnClickListener {
                     showOrganizer(organizerPerson)
                 }
-                eventDateTime.setOnClickListener {
-                    showOrganizer(organizerPerson)
-                }
+
             }
 
 
@@ -162,8 +166,8 @@ class EventsAdapter(
                 result.forEach { queryDocumentSnapshot ->
                     listIds.add(queryDocumentSnapshot.id)
                 }
-
-                val eventParticiPantsFrag = LikesDialogFragment.newInstance(listIds)
+                listIds.shuffle()
+                val eventParticiPantsFrag = JamiiDetailDialogFragment.newInstance(listIds, "${currentEvent?.title} participants")
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 eventParticiPantsFrag.show(transaction, eventParticiPantsFrag.tag)

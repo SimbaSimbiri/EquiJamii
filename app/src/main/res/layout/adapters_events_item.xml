@@ -33,14 +33,14 @@
             style="@style/titleTab"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="5dp"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
             android:contentDescription="Event link location"
             android:src="@drawable/virt_link"
             android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/viewDivider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewDivider" />
-
+            />
 
         <ImageView
             android:id="@+id/editEvent"
@@ -97,13 +97,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="Virtual, Thursday July 18, 8:00 - 12:00PM EAT"
             android:textColor="@color/white"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/eventLocationLink"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventOrganizerTv" />
 
+        <ProgressBar
+            android:id="@+id/contentLoadingProgressBar"
+            android:layout_width="28dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/lighterMaroon"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/editEvent"
+            app:layout_constraintEnd_toStartOf="@id/editEvent"
+            app:layout_constraintTop_toTopOf="@id/editEvent" />
 
         <View
             android:id="@+id/viewDivider"
@@ -120,13 +131,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
-            android:justificationMode="inter_word"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="7dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="sans-serif"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/eventsThumbNail"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/eventLocationLink"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewDivider" />
 

@@ -27,7 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import java.net.URL
+import java.net.UnknownHostException
 
 class DialogViewDocument : BottomSheetDialogFragment() {
 
@@ -61,25 +63,35 @@ class DialogViewDocument : BottomSheetDialogFragment() {
             pdfParceledMain = pdfParceled
             binding.apply {
                 lifecycleScope.launch(Dispatchers.IO) {
-                    val inputStream = URL(pdfParceled?.fileUri).openStream()
-
-                    withContext(Dispatchers.Main) {
-                        pdfViewer.fromStream(inputStream).onRender { pages ->
-                            if (pages >= 1) {
-                                progressBar.visibility = View.GONE
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Corrupted file, can't open pdf",
-                                    Toast.LENGTH_LONG
-                                ).show()
-
-                                dismiss()
-                            }
-                        }.load()
+                    try {
+                        val inputStream = URL(pdfParceled?.fileUri).openStream()
+                        withContext(Dispatchers.Main) {
+                            pdfViewer.fromStream(inputStream).onRender { pages ->
+                                if (pages >= 1) {
+                                    progressBar.visibility = View.GONE
+                                } else {
+                                    showError("Corrupted file, can't open PDF")
+                                    dismiss()
+                                }
+                            }.load()
+                        }
+                    } catch (e: UnknownHostException) {
+                        withContext(Dispatchers.Main) {
+                            showError("Network error. Please check your connection.")
+                            dismiss()
+                        }
+                    } catch (e: IOException) {
+                        withContext(Dispatchers.Main) {
+                            showError("Error opening PDF file: ${e.message}")
+                            dismiss()
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            showError("An unexpected error occurred: ${e.message}")
+                            dismiss()
+                        }
                     }
                 }
-
                 downloadPdf.setOnClickListener {
                     if (checkAndReqPermision()) {
                         downloadPdf(pdfParceled?.fileUri, pdfParceled?.fileTitle)
@@ -88,6 +100,10 @@ class DialogViewDocument : BottomSheetDialogFragment() {
             }
         }
         return binding.root
+    }
+
+    private fun showError(s: String) {
+        Toast.makeText(requireContext(), s, Toast.LENGTH_LONG).show()
     }
 
     private fun checkAndReqPermision(): Boolean {
