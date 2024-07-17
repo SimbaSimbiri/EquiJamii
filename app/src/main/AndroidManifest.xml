@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.simbiri.equityjamii"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EquityJamii"
         tools:targetApi="33">
+
         <activity
             android:name=".ui.authentications.ForgetPassActivity"
             android:exported="false" />
@@ -34,6 +36,10 @@
             android:name=".ui.authentications.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.google.android.gms.auth.api.signin.ServerClientId"
+            android:value="@string/default_web_client_id"/>
 
         <meta-data
             android:name="android.app.lib_name"

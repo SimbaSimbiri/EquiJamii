@@ -4,8 +4,152 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
 
-data class FileTitle(var fileUri: String, var fileTitle: String, var position : Int) : Parcelable {
-    constructor() : this("", "",0)
+
+data class Workspace(
+    var workspaceId: String? = null,
+    var titleImage: FileTitle?,
+    var todayImageQuote : FileTitle?,
+    var about: String,
+    var ownerId: String,
+    var passCode: Int,
+    var description: String,
+    var importantLinks: MutableList<FileTitle>,
+    var importantDocs: MutableList<FileTitle>
+) : Parcelable {
+
+    constructor() : this("", null,null, "", "",
+        0, "", mutableListOf(), mutableListOf())
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readParcelable(FileTitle::class.java.classLoader),
+        parcel.readParcelable(FileTitle::class.java.classLoader),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(workspaceId)
+        parcel.writeParcelable(titleImage, flags)
+        parcel.writeParcelable(todayImageQuote, flags)
+        parcel.writeString(about)
+        parcel.writeString(ownerId)
+        parcel.writeInt(passCode)
+        parcel.writeString(description)
+        parcel.writeTypedList(importantLinks)
+        parcel.writeTypedList(importantDocs)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Workspace> {
+        override fun createFromParcel(parcel: Parcel): Workspace {
+            return Workspace(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Workspace?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class Task(
+    var title: String,
+    var assignorId: String,
+    var collabAssigneesListIds: MutableList<String>,
+    var assigneeListIds: MutableList<String>,
+    val priority: Int,
+    var preAttachments: MutableList<FileTitle>,
+    var postAttachments: MutableList<FileTitle>,
+    var subTaskDue: MutableList<SubTaskDue>,
+    var finalDueDate: Timestamp? = null,
+    val complete : Boolean
+) : Parcelable {
+
+    constructor() : this(
+        "", "", mutableListOf(), mutableListOf(), 0, mutableListOf(),
+        mutableListOf(),mutableListOf(), null, false)
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.createStringArrayList()!!.toMutableList(),
+        parcel.createStringArrayList()!!.toMutableList(),
+        parcel.readInt(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
+        parcel.createTypedArrayList(SubTaskDue.CREATOR)!!.toMutableList(),
+        parcel.readParcelable(Timestamp::class.java.classLoader),
+        parcel.readByte() != 0.toByte()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeString(assignorId)
+        parcel.writeInt(priority)
+        parcel.writeParcelable(finalDueDate, flags)
+        parcel.writeByte(if (complete) 1 else 0)
+        parcel.writeTypedList(preAttachments)
+        parcel.writeTypedList(postAttachments)
+        parcel.writeStringList(assigneeListIds)
+        parcel.writeStringList(collabAssigneesListIds)
+        parcel.writeTypedList(subTaskDue)
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Task> {
+        override fun createFromParcel(parcel: Parcel): Task {
+            return Task(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Task?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class SubTaskDue(var title: String, var timeDue: Timestamp? = null, var complete: Boolean) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readParcelable(Timestamp::class.java.classLoader),
+        parcel.readByte() != 0.toByte()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeParcelable(timeDue, flags)
+        parcel.writeByte(if (complete) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<SubTaskDue> {
+        override fun createFromParcel(parcel: Parcel): SubTaskDue {
+            return SubTaskDue(parcel)
+        }
+
+        override fun newArray(size: Int): Array<SubTaskDue?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+data class FileTitle(var fileUri: String, var fileTitle: String, var position: Int) : Parcelable {
+    constructor() : this("", "", 0)
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -33,6 +177,7 @@ data class FileTitle(var fileUri: String, var fileTitle: String, var position : 
         }
     }
 }
+
 data class NewsText(
     var fileTitleList: MutableList<FileTitle>,
     var title: String,
@@ -40,11 +185,12 @@ data class NewsText(
     var author: String,
     var newsName: String,
     var newsTag: String,
-    var time : Timestamp?,
+    var time: Timestamp?,
     var documentId: String? = null
 ) : Parcelable {
 
-    constructor() : this(mutableListOf(), "", "", "", "", "",  null,"")
+    constructor() : this(mutableListOf(), "", "", "", "",
+        "", null, "")
 
     constructor(parcel: Parcel) : this(
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
@@ -57,7 +203,7 @@ data class NewsText(
         parcel.readString() ?: ""
 
 
-        )
+    )
 
     override fun describeContents(): Int {
         return 0
@@ -85,7 +231,6 @@ data class NewsText(
         }
     }
 }
-
 
 
 data class Post(
@@ -149,7 +294,7 @@ data class Event(
         parcel.readString()
     )
 
-    constructor():this("","","",null,"","","",)
+    constructor() : this("", "", "", null, "", "", "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)
@@ -269,7 +414,7 @@ data class Person(
     val network: Network = Network(mutableListOf(), mutableListOf()),
     val verified: Boolean,
     val role: String,
-    val newsTags : MutableList<String> = mutableListOf()
+    val newsTags: MutableList<String> = mutableListOf()
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -288,7 +433,7 @@ data class Person(
         ),
         parcel.readByte() != 0.toByte(),
         parcel.readString() ?: "",
-        parcel.createStringArrayList()?:ArrayList<String>()
+        parcel.createStringArrayList() ?: ArrayList<String>()
     ) {
     }
 
@@ -373,7 +518,7 @@ data class Video(
 }
 
 data class YouTubeResponse(val items: List<YouTubeItemList>)
-data class YouTubeVideoResponse(val items : List<YouTubeItem>)
+data class YouTubeVideoResponse(val items: List<YouTubeItem>)
 data class YouTubeItemList(val id: YouTubeVideoId, val snippet: YouTubeSnippet)
 data class YouTubeItem(val id: String, val snippet: YouTubeSnippet)
 data class YouTubeVideoId(val videoId: String?)

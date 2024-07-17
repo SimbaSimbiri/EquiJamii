@@ -73,9 +73,6 @@ android {
         // use the latest version compatible with your Kotlin version
     }
 
-    flavorDimensions "monetization"
-    //what will be the metric for the  different versions of my buildtype? If it is a release type, will it have a paid or unpaid version?
-
     testOptions {
         unitTests.includeAndroidResources = true
     }
@@ -96,7 +93,6 @@ dependencies {
 /*
              androidX jetpack library dependancies
 */
-    var fragment_version = "1.5.7"
     var ktor_version = "1.6.7"
     implementation 'com.codepath.libraries:asynchttpclient:2.2.0'
     implementation 'androidx.core:core-ktx:1.12.0'
@@ -128,9 +124,7 @@ dependencies {
 
     implementation 'com.github.ozcanalasalvar.picker:datepicker:2.0.7'
     implementation 'com.github.ozcanalasalvar.picker:wheelview:2.0.7'
-
-    var appcompat_version = "1.6.1"
-
+    
 /*
                 material design component dependancy
 */

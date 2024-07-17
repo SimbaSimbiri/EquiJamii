@@ -55,8 +55,15 @@ class SignInActivity : AppCompatActivity() {
             startActivity(Intent(this, ForgetPassActivity::class.java))
         }
 
+        Toast.makeText(
+            this,
+            "If you signed in with google, you cannot use the same email address to sign in with your email",
+            Toast.LENGTH_SHORT
+        )
+            .show()
+
         binding.signInGoogleButton.setOnClickListener {
-            binding.progressBar.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.VISIBLE
             lifecycleScope.launch {
                 val signInIntentSender = signIn()
                 resultLauncher.launch(
@@ -70,7 +77,7 @@ class SignInActivity : AppCompatActivity() {
         binding.signInButton.setOnClickListener {
             val email = binding.emailEt.text.toString().trim()
             val pass = binding.passET.text.toString().trim()
-            binding.progressBar.isVisible = true
+            binding.progressBar.visibility = View.VISIBLE
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 
@@ -82,7 +89,7 @@ class SignInActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             val intent = Intent(this, KaribuActivity::class.java)
                             startActivity(intent)
-                            binding.progressBar.isVisible = false
+                            binding.progressBar.visibility = View.INVISIBLE
 
                         } else {
                             Toast.makeText(
@@ -91,7 +98,7 @@ class SignInActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
-                            binding.progressBar.isVisible = false
+                            binding.progressBar.visibility = View.INVISIBLE
 
                         }
                     }
@@ -102,7 +109,7 @@ class SignInActivity : AppCompatActivity() {
                     this, "Empty Fields Are not Allowed !!",
                     Toast.LENGTH_SHORT
                 ).show()
-                binding.progressBar.isVisible = false
+                binding.progressBar.visibility = View.INVISIBLE
 
             }
         }
@@ -113,8 +120,8 @@ class SignInActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult())
         { result ->
             if (result.resultCode == RESULT_OK) {
+                binding.progressBar.visibility = View.VISIBLE
                 lifecycleScope.launch {
-                    binding.progressBar.visibility = View.VISIBLE
                     signInWithIntent(result.data ?: return@launch)
                 }
             }
@@ -143,6 +150,9 @@ class SignInActivity : AppCompatActivity() {
             oneTapClient.beginSignIn(buildSignInRequest()).await()
 
         } catch (e: Exception) {
+            binding.progressBar.visibility = View.INVISIBLE
+            Toast.makeText(this, "OneTap Failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+
             e.printStackTrace()
             if (e is CancellationException) throw e
             null
@@ -157,8 +167,8 @@ class SignInActivity : AppCompatActivity() {
                 GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(getString(R.string.default_web_client)).build()
-            ).setAutoSelectEnabled(true).build()
+                    .setServerClientId(getString(R.string.default_web_client_id)).build()
+            ).setAutoSelectEnabled(false).build()
 
     }
 
@@ -173,7 +183,7 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        finish()
+        if (auth.currentUser != null) finish()
     }
 
 }

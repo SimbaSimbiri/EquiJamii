@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.simbiri.equityjamii.databinding.ActivityForgetPassBinding
 
 class ForgetPassActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityForgetPassBinding
+    private lateinit var binding: ActivityForgetPassBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class ForgetPassActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         binding.btnForgotPasswordSubmit.setOnClickListener {
-            binding.progressBar.visibility =  View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
             resetPassword()
         }
 
@@ -41,21 +41,22 @@ class ForgetPassActivity : AppCompatActivity() {
             } else {
                 auth.sendPasswordResetEmail(email).addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        binding.textInputEmailLayout.visibility = View.GONE
-                        binding.textView2.text = "A link has been sent to your mailbox"
-                        binding.tvSubmitMsg.visibility = View.VISIBLE
-
-                        binding.progressBar.visibility =  View.INVISIBLE
+                        binding.textView3.text = "A link has been sent to your mailbox, try signing in again"
+                        binding.progressBar.visibility = View.INVISIBLE
 
                     } else {
-                        Toast.makeText(this, "Reset password failed, try again latter", Toast.LENGTH_SHORT).show()
-                        binding.progressBar.visibility =  View.INVISIBLE
+                        Toast.makeText(this,
+                            "Reset password failed, ${task.exception?.localizedMessage}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        binding.progressBar.visibility = View.INVISIBLE
 
                     }
                 }
             }
         }
     }
+
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
