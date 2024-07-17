@@ -14,11 +14,14 @@ data class Workspace(
     var passCode: Int,
     var description: String,
     var importantLinks: MutableList<FileTitle>,
-    var importantDocs: MutableList<FileTitle>
+    var importantDocs: MutableList<FileTitle>,
+    var adminsListIds : MutableList<String>,
+    var private : Boolean
 ) : Parcelable {
 
     constructor() : this("", null,null, "", "",
-        0, "", mutableListOf(), mutableListOf())
+        0, "", mutableListOf(), mutableListOf(), mutableListOf(), false
+    )
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readParcelable(FileTitle::class.java.classLoader),
@@ -28,7 +31,9 @@ data class Workspace(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
-        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList()
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
+        parcel.createStringArrayList()!!,
+        parcel.readByte() != 0.toByte()
     ) {
     }
 
@@ -42,6 +47,8 @@ data class Workspace(
         parcel.writeString(description)
         parcel.writeTypedList(importantLinks)
         parcel.writeTypedList(importantDocs)
+        parcel.writeStringList(adminsListIds)
+        parcel.writeByte(if (private) 1 else 0)
     }
 
     override fun describeContents(): Int {
@@ -67,13 +74,14 @@ data class Task(
     val priority: Int,
     var preAttachments: MutableList<FileTitle>,
     var postAttachments: MutableList<FileTitle>,
+    var importantLinks: MutableList<FileTitle>,
     var subTaskDue: MutableList<SubTaskDue>,
     var finalDueDate: Timestamp? = null,
     val complete : Boolean
 ) : Parcelable {
 
     constructor() : this(
-        "", "", mutableListOf(), mutableListOf(), 0, mutableListOf(),
+        "", "", mutableListOf(), mutableListOf(), 0, mutableListOf(), mutableListOf(),
         mutableListOf(),mutableListOf(), null, false)
 
     constructor(parcel: Parcel) : this(
@@ -82,6 +90,7 @@ data class Task(
         parcel.createStringArrayList()!!.toMutableList(),
         parcel.createStringArrayList()!!.toMutableList(),
         parcel.readInt(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(SubTaskDue.CREATOR)!!.toMutableList(),
@@ -97,6 +106,7 @@ data class Task(
         parcel.writeParcelable(finalDueDate, flags)
         parcel.writeByte(if (complete) 1 else 0)
         parcel.writeTypedList(preAttachments)
+        parcel.writeTypedList(importantLinks)
         parcel.writeTypedList(postAttachments)
         parcel.writeStringList(assigneeListIds)
         parcel.writeStringList(collabAssigneesListIds)

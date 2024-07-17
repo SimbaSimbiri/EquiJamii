@@ -1,12 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     tools:context=".ui.main_activity.workspace_page.MyWorkspace"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textKaribu"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom"
+            android:text="Karibu kazi Ray"
+            android:textColor="@color/logoColour"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/motivationalCard"
+            app:cardCornerRadius="16dp"
+            android:layout_margin="10dp"
+            app:layout_constraintTop_toBottomOf="@id/textKaribu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/good_profile"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageMotivational"
+                android:contentDescription="Motivational Image"/>
+        </androidx.cardview.widget.CardView>
 
 
+        <TextView
+            android:id="@+id/textMyWorkspace"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom"
+            android:text="My Workspaces"
+            android:textColor="@color/logoColour"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/motivationalCard" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/adapters_workspace_item"
+            android:id="@+id/myWorkspacesRecyclerView"
+            app:layout_constraintTop_toBottomOf="@id/textMyWorkspace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/textInvitedWorkspaces"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom"
+            android:text="Invited to Workspaces"
+            android:textColor="@color/logoColour"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/adapters_workspace_item"
+            android:id="@+id/invitedWorkspacesRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInvitedWorkspaces"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="0dp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/searchViewWorkspaces"
+            style="@style/titleTab2"
+            android:textSize="15sp"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:text="Search for workspace"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_stroke_rectangle"
+            android:textAppearance="@style/titleTab2"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/invitedWorkspacesRecyclerView"
+            />
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="24dp"
+            android:src="@drawable/search_icon"
+            android:layout_margin="15dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="@id/searchViewWorkspaces"
+            app:layout_constraintTop_toTopOf="@id/searchViewWorkspaces"
+            app:layout_constraintBottom_toBottomOf="@id/searchViewWorkspaces"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/createWorkspacesCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchViewWorkspaces"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/addIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="Google account logo"
+                    android:src="@drawable/square_plus_svgrepo_com"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/textCreateWorksp"
+                    android:layout_width="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:padding="5dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="Create workspace"
+                    android:textColor="@color/logoColour"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:gravity="start|center_vertical"
+                    app:layout_constraintStart_toEndOf="@id/addIcon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
