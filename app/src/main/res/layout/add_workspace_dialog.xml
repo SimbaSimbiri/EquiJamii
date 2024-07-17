@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.main_activity.workspace_page.AddWorkspaceDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/addWorkspThumbNail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Add workspace thumbnail"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imagePostUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:background="@drawable/shape_stroke_rectangle"
+            android:contentDescription="Picture Post"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="@id/addWorkspThumbNail"
+            app:layout_constraintStart_toStartOf="@id/addWorkspThumbNail"
+            app:layout_constraintTop_toBottomOf="@id/addWorkspThumbNail" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameWkspLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="100"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagePostUpload">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameWkspInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Workspace name"
+                android:textColorHighlight="@color/lighterMaroon" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/descriptionLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="900"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameWkspLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descriptionInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Workspace description e.g mission, goals etc"
+                android:inputType="textMultiLine"
+                android:textColorHighlight="@color/lighterMaroon" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/loginCodeLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="15"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/loginCodeInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Login code"
+                android:textColorHighlight="@color/lighterMaroon" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

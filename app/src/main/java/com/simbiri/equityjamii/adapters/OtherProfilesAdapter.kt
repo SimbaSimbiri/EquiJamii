@@ -9,25 +9,43 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.TASK_ASSIGNEES_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.TASK_COLLECTION
+import com.simbiri.equityjamii.constants.TASK_INVITED_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
-class OtherProfilesAdapter(var context: Context, var peopleList: List<Person>) :
+class OtherProfilesAdapter(
+    var context: Context, var peopleList: MutableList<Person>, var canDelete: Boolean = false,
+    var editingWksp: Boolean = false, var addingWkspAdmins: Boolean = false,
+    var editingTask: Boolean = false, var taskWorkspId: String? = null
+) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
+    private val firebaseStorage = FirebaseFirestore.getInstance()
+    private val workspaceCollection = firebaseStorage.collection(WORKSPACE_COLLECTION)
+    private val taskCollection = firebaseStorage.collection(TASK_COLLECTION)
+
+
     inner class OtherProfViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview),
         View.OnClickListener {
 
         private var positionItem = 1
         private var currentPerson: Person? = null
 
-        private var cardViewHolder:CardView = itemView.findViewById(R.id.cardViewOtherProfiles)
+        private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewOtherProfiles)
         private var profilePicImageView: ImageView = itemView.findViewById(R.id.imageOtherProfiles)
         private var namePersonTextView: TextView = itemView.findViewById(R.id.textNameOtherProfiles)
+        private var deleteIconView: ImageView = itemView.findViewById(R.id.deleteUserIcon)
 
 
         fun setOnClickListeners() {
@@ -35,13 +53,39 @@ class OtherProfilesAdapter(var context: Context, var peopleList: List<Person>) :
         }
 
         override fun onClick(v: View?) {
-            val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
-            val transaction =
-                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            personDialogFrag.show(transaction, personDialogFrag.tag)
+            if (editingTask) {
+                Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT).show()
+            } else if (editingWksp) {
+                Toast.makeText(context, "Added  ${currentPerson!!.name}  to workspace as member", Toast.LENGTH_SHORT).show()
+            } else if (addingWkspAdmins) {
+                Toast.makeText(context, "Added  ${currentPerson!!.name}  to workspace as admin", Toast.LENGTH_SHORT).show()
+            } else {
+                val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
+                val transaction =
+                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                personDialogFrag.show(transaction, personDialogFrag.tag)
+            }
+
         }
 
         fun setDatatoItem(personInstance: Person, position: Int) {
+            if (canDelete) {
+                deleteIconView.visibility = View.VISIBLE
+
+                deleteIconView.setOnClickListener {
+                    peopleList.remove(personInstance)
+                    notifyItemRemoved(position)
+                    if (editingTask) {
+                        uninviteToTask()
+                        removeMemberFromTask()
+                    }
+                    if (editingWksp) {
+                        uninviteToWksp()
+                        removeMemberFromWorkSpace()
+                    }
+                }
+            }
+
             this.positionItem = position
             this.currentPerson = personInstance
             adjustHolderSize()
@@ -53,6 +97,105 @@ class OtherProfilesAdapter(var context: Context, var peopleList: List<Person>) :
             namePersonTextView.text = currentPerson!!.name
         }
 
+        private fun uninviteToWksp() {
+
+            val currWkspSubCollection = workspaceCollection.document(taskWorkspId!!)
+                .collection(WORKSP_INVITED_SUB_COLLECTION)
+            val memberWkspDoc = currWkspSubCollection.document(currentPerson!!.userId)
+            memberWkspDoc.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        memberWkspDoc.delete()
+                            .addOnSuccessListener {
+                            }
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Error uninviting user to workspace",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        }
+
+        private fun uninviteToTask() {
+
+            val currTaskSubCollection = taskCollection.document(taskWorkspId!!).collection(
+                TASK_INVITED_SUB_COLLECTION
+            )
+            val memberTaskDoc = currTaskSubCollection.document(currentPerson!!.userId)
+            memberTaskDoc.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        memberTaskDoc.delete()
+                            .addOnSuccessListener {
+
+                            }
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Error uninviting user to task",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        private fun removeMemberFromWorkSpace() {
+
+            val currWkspSubCollection = workspaceCollection.document(taskWorkspId!!).collection(
+                WORKSP_MEMBERS_SUB_COLLECTION
+            )
+            val memberTaskDoc = currWkspSubCollection.document(currentPerson!!.userId)
+
+            memberTaskDoc.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        memberTaskDoc.delete()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error removing user from Workspace",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            }
+
+        }
+
+        private fun removeMemberFromTask() {
+
+            val currTaskSubCollection = taskCollection.document(taskWorkspId!!).collection(
+                TASK_ASSIGNEES_SUB_COLLECTION
+            )
+
+            val memberTaskDoc = currTaskSubCollection.document(currentPerson!!.userId)
+            memberTaskDoc.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        memberTaskDoc.delete()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error removing user from task",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            }
+        }
+
+
         private fun adjustHolderSize() {
             val layoutParamsHolder = cardViewHolder.layoutParams
             val displayMetrics = DisplayMetrics()
@@ -61,8 +204,8 @@ class OtherProfilesAdapter(var context: Context, var peopleList: List<Person>) :
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenWidth = displayMetrics.widthPixels
-            layoutParamsHolder.width = (screenWidth/3.5).toInt()
-            layoutParamsHolder.height = (screenWidth/3.5 + 50.0).toInt()
+            layoutParamsHolder.width = (screenWidth / 3.5).toInt()
+            layoutParamsHolder.height = (screenWidth / 3.5 + 50.0).toInt()
 
             cardViewHolder.layoutParams = layoutParamsHolder
 
@@ -86,7 +229,10 @@ class OtherProfilesAdapter(var context: Context, var peopleList: List<Person>) :
         val personInstance = peopleList[position]
 
         otherProfHolder.setDatatoItem(personInstance, position)
-        otherProfHolder.setOnClickListeners()
+
+        if (!editingTask || !editingWksp) {
+            otherProfHolder.setOnClickListeners()
+        }
     }
 
     override fun getItemCount(): Int = peopleList.size
