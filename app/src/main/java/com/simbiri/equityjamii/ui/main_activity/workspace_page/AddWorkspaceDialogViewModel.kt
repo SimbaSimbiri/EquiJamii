@@ -1,12 +1,15 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_IMAGE_STORE
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
@@ -14,6 +17,7 @@ import com.simbiri.equityjamii.constants.WORKSP_ADMIN_INVITED_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
+import com.simbiri.equityjamii.data.model.FileTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -52,7 +56,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
             val workspaceInstance = withContext(dispatchersIO) {
                 firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).get().await()
             }.toObject(Workspace::class.java)
-            _workspace.postValue(workspaceInstance)
+            _workspace.postValue(workspaceInstance!!)
             loadWorkspaceSubCollections(workspaceId)
         }
     }
@@ -135,5 +139,52 @@ class AddWorkspaceDialogViewModel : ViewModel() {
             _fullList.value?.filter { it.name.contains(text, ignoreCase = true) }?.toMutableList() ?: mutableListOf()
         }
         _searchList.postValue(filteredList)
+    }
+
+    suspend fun saveWorkspace(
+        workspaceId: String?,
+        name: String,
+        description: String,
+        passCode: Int,
+        ownerId: String,
+        links: List<FileTitle>,
+        documents: List<FileTitle>,
+        imageUri: Uri?
+    ) {
+        val workspaceData = hashMapOf(
+            "about" to name,
+            "description" to description,
+            "passCode" to passCode,
+            "ownerId" to ownerId,
+            "importantLinks" to links.map { it.toHashMap() },
+            "importantDocs" to documents.map { it.toHashMap() }
+        )
+
+        if (workspaceId == null) {
+            val newWorkspaceRef = firestore.collection(WORKSPACE_COLLECTION).document()
+            newWorkspaceRef.set(workspaceData).await()
+            uploadImageAndSaveWorkspace(newWorkspaceRef.id, imageUri)
+        } else {
+            val existingWorkspaceRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
+            existingWorkspaceRef.update(workspaceData).await()
+            uploadImageAndSaveWorkspace(workspaceId, imageUri)
+        }
+    }
+
+    private suspend fun uploadImageAndSaveWorkspace(workspaceId: String, imageUri: Uri?) {
+        if (imageUri != null) {
+            val storageRef = FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/$workspaceId")
+            storageRef.putFile(imageUri).await()
+            val downloadUrl = storageRef.downloadUrl.await().toString()
+            firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
+                .update("titleImage", downloadUrl).await()
+        }
+    }
+
+    private fun FileTitle.toHashMap(): HashMap<String, Any?> {
+        return hashMapOf(
+            "fileUri" to this.fileUri,
+            "fileTitle" to this.fileTitle
+        )
     }
 }

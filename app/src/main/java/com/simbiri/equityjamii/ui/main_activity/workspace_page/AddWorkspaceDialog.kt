@@ -1,31 +1,46 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import android.app.Dialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
-import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
-import com.simbiri.equityjamii.adapters.NetworkAdapter
-import com.simbiri.equityjamii.constants.WORKSPACE_IMAGE_STORE
+import com.simbiri.equityjamii.adapters.PdfDescAdapter
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_ADMIN_INVITED_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.AddWorkspaceDialogBinding
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
+class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextListener {
 
     companion object {
         private const val ARGS_WORKSP_INST = "WorksP"
@@ -41,7 +56,6 @@ class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var binding: AddWorkspaceDialogBinding
     private val viewModel: AddWorkspaceDialogViewModel by viewModels()
     private val firestore = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
     private var imageUri: Uri? = null
     private var workspaceId: String? = null
 
@@ -86,6 +100,14 @@ class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
         setupUI()
         observeViewModel()
         viewModel.fetchAllPeople()
+
+        binding.saveWorkspace.setOnClickListener {
+            saveWorkspace()
+        }
+
+        binding.cancelWorkspace.setOnClickListener {
+            dismiss()
+        }
         return binding.root
     }
 
@@ -124,7 +146,7 @@ class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
         }
 
         viewModel.searchList.observe(viewLifecycleOwner) { searchList ->
-            binding.searchPeopleRecyclerView.adapter = NetworkAdapter(requireContext(), searchList)
+            binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(requireContext(), searchList)
         }
     }
 
@@ -142,58 +164,68 @@ class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
     private fun saveWorkspace() {
         val name = binding.nameWkspInput.text.toString()
         val description = binding.descriptionInput.text.toString()
-        val passCode = binding.loginCodeInput.text.toString().toIntOrNull()
+        val passCode = binding.loginCodeInput.text.toString().toIntOrNull() ?: 0
+        val ownerId = AuthUtils.getCurrentUserId()!!
 
-        val workspace = Workspace(
-            workspaceId = workspaceId,
-            titleImage = null,
-            todayImageQuote = null,
-            about = name,
-            ownerId = "currentUserId", // Replace with actual current user ID
-            passCode = passCode ?: 0,
-            description = description,
-            importantLinks = mutableListOf(),
-            importantDocs = mutableListOf(),
-            adminsListIds = mutableListOf(),
-            private = false
-        )
+        val links = extractLinksFromRecyclerView(binding.linksRecyclerView)
+        val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
-        if (workspaceId == null) {
-            firestore.collection(WORKSPACE_COLLECTION).add(workspace).addOnSuccessListener { documentReference ->
-                val newWorkspaceId = documentReference.id
-                updateWorkspaceId(newWorkspaceId)
-                uploadImageAndSaveWorkspace(workspace, newWorkspaceId)
+        lifecycleScope.launch {
+            val workspaceId = if (workspaceId == null) {
+                firestore.collection(WORKSPACE_COLLECTION).document().id
+            } else {
+                workspaceId!!
             }
-        } else {
-            firestore.collection(WORKSPACE_COLLECTION).document(workspaceId!!).set(workspace).addOnSuccessListener {
-                uploadImageAndSaveWorkspace(workspace, workspaceId!!)
-            }
+
+            viewModel.saveWorkspace(
+                workspaceId,
+                name,
+                description,
+                passCode,
+                ownerId,
+                links,
+                documents,
+                imageUri
+            )
+
+            saveSubcollections(workspaceId)
         }
     }
 
-    private fun updateWorkspaceId(documentId: String) {
-        firestore.collection(WORKSPACE_COLLECTION).document(documentId)
-            .update("workspaceId", documentId)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Handle successful update
-                } else {
-                    // Handle failure
-                }
-            }
+    private suspend fun saveSubcollections(workspaceId: String) {
+        val admins = extractPeopleFromRecyclerView(binding.adminsRecyclerView)
+        val members = extractPeopleFromRecyclerView(binding.membersRecyclerView)
+        val invitedMembers = extractPeopleFromRecyclerView(binding.invitedRecyclerView)
+        val invitedAdmins = listOf<Person>()
+
+        savePeopleSubcollection(workspaceId, WORKSP_ADMINS_SUB_COLLECTION, admins)
+        savePeopleSubcollection(workspaceId, WORKSP_MEMBERS_SUB_COLLECTION, members)
+        savePeopleSubcollection(workspaceId, WORKSP_INVITED_SUB_COLLECTION, invitedMembers)
+        savePeopleSubcollection(workspaceId, WORKSP_ADMIN_INVITED_SUB_COLLECTION, invitedAdmins)
     }
 
-    private fun uploadImageAndSaveWorkspace(workspace: Workspace, workspaceId: String) {
-        imageUri?.let { uri ->
-            val storageRef = storage.reference.child("$WORKSPACE_IMAGE_STORE/$workspaceId")
-            storageRef.putFile(uri).addOnSuccessListener {
-                storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    workspace.titleImage = FileTitle(downloadUri.toString(), "Workspace Image", 0)
-                    firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).set(workspace)
-                }
-            }
-        } ?: firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).set(workspace)
+    private suspend fun savePeopleSubcollection(workspaceId: String, subcollection: String, people: List<Person>) {
+        val subcollectionRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).collection(subcollection)
+
+        people.forEach { person ->
+            subcollectionRef.document(person.userId).set(emptyMap<String, Any>()).await()
+        }
     }
+
+    private fun extractFileTitlesFromPdfRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
+        val adapter = recyclerView.adapter as PdfDescAdapter
+        return adapter.fileTitleList
+    }
+    private fun extractLinksFromRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
+        val adapter = recyclerView.adapter as LinksAdapter
+        return adapter.links
+    }
+
+    private fun extractPeopleFromRecyclerView(recyclerView: RecyclerView): List<Person> {
+        val adapter = recyclerView.adapter as OtherProfilesAdapter
+        return adapter.peopleList
+    }
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
@@ -202,5 +234,49 @@ class AddWorkspaceDialog : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextChange(newText: String?): Boolean {
         viewModel.filterPeople(newText ?: "")
         return true
+    }
+
+
+    private fun setupFullHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        bottomSheet.layoutParams = layoutParams
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.apply {
+
+            setContentView(R.layout.add_workspace_dialog)
+            setCanceledOnTouchOutside(true)
+
+            val displayMetrics = DisplayMetrics()
+            val windowManager =
+                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+
+            setOnShowListener { dialogInterface ->
+                val bottomSheetDialog = dialogInterface as BottomSheetDialog
+                val bottomSheet =
+                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                setupFullHeight(bottomSheet!!)
+                bottomSheet.let {
+                    val behavior = BottomSheetBehavior.from(bottomSheet)
+                    behavior.apply {
+                        isDraggable = true
+                        isHideable = true
+                        peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
+                        state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+
+                }
+            }
+        }
+
+        return dialog
     }
 }

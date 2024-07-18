@@ -8,7 +8,6 @@ import com.google.firebase.Timestamp
 data class Workspace(
     var workspaceId: String? = null,
     var titleImage: FileTitle?,
-    var todayImageQuote : FileTitle?,
     var about: String,
     var ownerId: String,
     var passCode: Int,
@@ -16,15 +15,14 @@ data class Workspace(
     var importantLinks: MutableList<FileTitle>,
     var importantDocs: MutableList<FileTitle>,
     var adminsListIds : MutableList<String>,
-    var private : Boolean
 ) : Parcelable {
 
-    constructor() : this("", null,null, "", "",
-        0, "", mutableListOf(), mutableListOf(), mutableListOf(), false
+    constructor() : this(
+        "", null, "", "", 0,
+        "", mutableListOf(), mutableListOf(), mutableListOf()
     )
     constructor(parcel: Parcel) : this(
         parcel.readString(),
-        parcel.readParcelable(FileTitle::class.java.classLoader),
         parcel.readParcelable(FileTitle::class.java.classLoader),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -32,15 +30,13 @@ data class Workspace(
         parcel.readString() ?: "",
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
-        parcel.createStringArrayList()!!,
-        parcel.readByte() != 0.toByte()
+        parcel.createStringArrayList()!!
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(workspaceId)
         parcel.writeParcelable(titleImage, flags)
-        parcel.writeParcelable(todayImageQuote, flags)
         parcel.writeString(about)
         parcel.writeString(ownerId)
         parcel.writeInt(passCode)
@@ -48,7 +44,6 @@ data class Workspace(
         parcel.writeTypedList(importantLinks)
         parcel.writeTypedList(importantDocs)
         parcel.writeStringList(adminsListIds)
-        parcel.writeByte(if (private) 1 else 0)
     }
 
     override fun describeContents(): Int {

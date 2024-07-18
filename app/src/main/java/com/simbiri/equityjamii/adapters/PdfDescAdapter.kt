@@ -16,7 +16,7 @@ import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogVi
 
 class PdfDescAdapter(
     private val context: Context,
-    private val fileTitleList: MutableList<FileTitle>, var editable: Boolean = false
+    val fileTitleList: MutableList<FileTitle>, var editable: Boolean = false
 ) : RecyclerView.Adapter<PdfDescAdapter.PdfDescViewHolder>() {
 
     inner class PdfDescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,15 +1,16 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import WorkspaceAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.databinding.MyWorkspacePageBinding
-
 
 class MyWorkspace : Fragment() {
 
@@ -17,8 +18,7 @@ class MyWorkspace : Fragment() {
         fun newInstance() = MyWorkspace()
     }
 
-    private var viewModel: WorkspaceViewModel =  WorkspaceViewModel()
-
+    private val viewModel: WorkspaceViewModel by viewModels()
     private lateinit var binding: MyWorkspacePageBinding
 
     override fun onCreateView(
@@ -26,7 +26,6 @@ class MyWorkspace : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = MyWorkspacePageBinding.inflate(layoutInflater)
-
 
         AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
             if (currentPerson == null) {
@@ -38,11 +37,32 @@ class MyWorkspace : Fragment() {
             }
         }
 
+        setupUI()
+        observeViewModel()
+
+        viewModel.fetchWorkspaces()
+        viewModel.fetchInvitedWorkspaces()
 
         return binding.root
     }
 
+    private fun setupUI() {
+        binding.myWorkspacesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.invitedWorkspacesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+        binding.createWorkspacesCard.setOnClickListener {
+            val addWorkspaceDialog = AddWorkspaceDialog.newInstance("")
+            addWorkspaceDialog.show(parentFragmentManager, "AddWorkspaceDialog")
+        }
+    }
 
+    private fun observeViewModel() {
+        viewModel.workspaces.observe(viewLifecycleOwner) { workspaces ->
+            binding.myWorkspacesRecyclerView.adapter = WorkspaceAdapter(requireContext(), workspaces)
+        }
+
+        viewModel.invitedWorkspaces.observe(viewLifecycleOwner) { invitedWorkspaces ->
+            binding.invitedWorkspacesRecyclerView.adapter = WorkspaceAdapter(requireContext(), invitedWorkspaces)
+        }
+    }
 }
-

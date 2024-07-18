@@ -256,13 +256,6 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         saveNewsToFireStore(newsText!!)
     }
 
-    fun extractYouTubeVideoId(youtubeUrl: String): String? {
-        val pattern = Regex(
-            pattern = "(?:youtube\\.com/(?:[^/\\n\\s]+/\\S+/|(?:v|e(?:mbed)?)/|\\S*?[?&]v=)|youtu\\.be/)([a-zA-Z0-9_-]{11})"
-        )
-        return pattern.find(youtubeUrl)?.groupValues?.get(1)
-    }
-
     private fun saveNewsToFireStore(newsText: NewsText) {
         val imageUploadsCount = newsText.fileTitleList.size
         var uploadCounter = 0
@@ -419,7 +412,12 @@ class AddNewsFragment : BottomSheetDialogFragment() {
     private fun updateDocWithId(docId: String) {
         firestoreInst.collection(NEWS_COLLECTION).document(docId).update("documentId", docId)
     }
-
+    fun extractYouTubeVideoId(youtubeUrl: String): String? {
+        val pattern = Regex(
+            pattern = "(?:youtube\\.com/(?:[^/\\n\\s]+/\\S+/|(?:v|e(?:mbed)?)/|\\S*?[?&]v=)|youtu\\.be/)([a-zA-Z0-9_-]{11})"
+        )
+        return pattern.find(youtubeUrl)?.groupValues?.get(1)
+    }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.add_news_dialog)

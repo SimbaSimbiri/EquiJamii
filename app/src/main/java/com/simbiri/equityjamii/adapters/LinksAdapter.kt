@@ -10,8 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.FileTitle
 
-class LinksAdapter(private var context: Context, private val links: List<String>) : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
+class LinksAdapter(private var context: Context, val links: List<FileTitle>) : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapters_item_links, parent, false)
@@ -20,11 +21,11 @@ class LinksAdapter(private var context: Context, private val links: List<String>
 
     override fun onBindViewHolder(holder: LinkViewHolder, position: Int) {
         val link = links[position]
-        holder.linkTextView.text = link
+        holder.linkTextView.text = link.fileTitle
         holder.itemView.setOnClickListener {
 
-            if (link.isNotEmpty()) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            if (link.fileUri.isNotEmpty()) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link.fileUri))
                 context.startActivity(intent)
             } else {
                 Toast.makeText(context, "No valid link found!", Toast.LENGTH_SHORT).show()

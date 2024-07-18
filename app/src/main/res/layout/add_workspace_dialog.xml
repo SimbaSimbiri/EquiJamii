@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backg_bottom"
     tools:context=".ui.main_activity.workspace_page.AddWorkspaceDialog">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -240,6 +241,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/documentsTextView" />
+
+
+        <Button
+            android:id="@+id/cancelWorkspace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@id/saveWorkspace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toBottomOf="@id/documentsRecyclerView" />
+
+        <Button
+            android:id="@+id/saveWorkspace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/cancelWorkspace"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Save workspace"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/documentsRecyclerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
