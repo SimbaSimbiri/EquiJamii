@@ -4,9 +4,9 @@
     android:id="@+id/cardViewOtherProfiles"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="10dp"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="7dp">
 
@@ -16,21 +16,21 @@
         android:background="@color/white">
 
         <ImageView
+            android:id="@+id/deleteUserIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/deleteUserIcon"
+            android:src="@drawable/cancel"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/cancel"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/innerCardProfile"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="3dp"
             app:cardCornerRadius="3dp"
             app:layout_constraintBottom_toTopOf="@id/textNameOtherProfiles"
-            android:layout_margin="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -49,17 +49,58 @@
             android:id="@+id/textNameOtherProfiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="3dp"
+            android:fontFamily="sans-serif"
             android:gravity="center_horizontal"
             android:text="Ray Simbiri"
             android:textColor="@color/logoColour"
-            android:layout_marginTop="5dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/innerCardProfile" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardInviteAdmin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="3dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/titleTab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="as admin" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardInviteMember"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
+            android:clickable="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardInviteAdmin">
+
+            <TextView
+                style="@style/titleTab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="as member" />
+        </androidx.cardview.widget.CardView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

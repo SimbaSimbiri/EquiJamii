@@ -13,9 +13,11 @@ val NEWS_TAGS_COLLECTION = "NewsTags"
 
 val WORKSPACE_COLLECTION = "Workspaces"
 val WORKSP_MEMBERS_SUB_COLLECTION ="WorkspaceMembers"
-val WORKSP_INVITED_SUB_COLLECTION ="WorkspaceInvites"
+val WORKSP_ADMINS_SUB_COLLECTION ="WorkspaceAdmins"
+val WORKSP_INVITED_SUB_COLLECTION ="WorkspaceInvitedMembers"
+val WORKSP_ADMIN_INVITED_SUB_COLLECTION = "WorkspaceInvitedAdmins"
+val WORKSPACE_IMAGE_STORE = "WorkspaceImageStore"
 
 val TASK_COLLECTION = "Tasks"
 val TASK_ASSIGNEES_SUB_COLLECTION = "TaskAssignees"
 val TASK_INVITED_SUB_COLLECTION = "TaskInvites"
-val WORKSPACE_IMAGE_STORE = "WorkspaceImageStore"

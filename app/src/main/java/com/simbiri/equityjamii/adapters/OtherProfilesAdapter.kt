@@ -28,7 +28,7 @@ import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 class OtherProfilesAdapter(
     var context: Context, var peopleList: MutableList<Person>, var canDelete: Boolean = false,
     var editingWksp: Boolean = false, var addingWkspAdmins: Boolean = false,
-    var editingTask: Boolean = false, var taskWorkspId: String? = null
+    var editingTask: Boolean = false, var taskWorkspId: String? = null, private val onPersonClick : (String)-> Unit = {}
 ) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
     private val firebaseStorage = FirebaseFirestore.getInstance()
@@ -41,11 +41,14 @@ class OtherProfilesAdapter(
 
         private var positionItem = 1
         private var currentPerson: Person? = null
+        private var isInviteVisible : Boolean = false
 
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewOtherProfiles)
         private var profilePicImageView: ImageView = itemView.findViewById(R.id.imageOtherProfiles)
         private var namePersonTextView: TextView = itemView.findViewById(R.id.textNameOtherProfiles)
         private var deleteIconView: ImageView = itemView.findViewById(R.id.deleteUserIcon)
+        private var cardInviteMember : CardView =  itemView.findViewById(R.id.cardInviteMember)
+        private var cardInviteAdmin : CardView =  itemView.findViewById(R.id.cardInviteAdmin)
 
 
         fun setOnClickListeners() {
@@ -55,15 +58,47 @@ class OtherProfilesAdapter(
         override fun onClick(v: View?) {
             if (editingTask) {
                 Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT).show()
-            } else if (editingWksp) {
-                Toast.makeText(context, "Added  ${currentPerson!!.name}  to workspace as member", Toast.LENGTH_SHORT).show()
-            } else if (addingWkspAdmins) {
-                Toast.makeText(context, "Added  ${currentPerson!!.name}  to workspace as admin", Toast.LENGTH_SHORT).show()
+
+            } else if (editingWksp || addingWkspAdmins) {
+                !isInviteVisible
+                inviteMemberOrAdmin()
+
             } else {
                 val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 personDialogFrag.show(transaction, personDialogFrag.tag)
+
+            }
+
+        }
+
+        private fun inviteAdmin() {
+            cardInviteAdmin.visibility  =  View.VISIBLE
+            cardInviteAdmin.setOnClickListener {
+                onPersonClick(currentPerson!!.userId)
+                !isInviteVisible
+                cardInviteAdmin.visibility  =  View.INVISIBLE
+                Toast.makeText(context, "Added  ${currentPerson!!.name} to workspace as member", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        private fun inviteMemberOrAdmin() {
+
+            cardInviteAdmin.visibility  =  View.VISIBLE
+            cardInviteAdmin.setOnClickListener {
+                onPersonClick(currentPerson!!.userId)
+                !isInviteVisible
+                cardInviteAdmin.visibility  =  View.INVISIBLE
+                Toast.makeText(context, "Added ${currentPerson!!.name} to admin invitations", Toast.LENGTH_SHORT).show()
+            }
+
+            cardInviteMember.visibility  =  View.VISIBLE
+            cardInviteMember.setOnClickListener {
+                onPersonClick(currentPerson!!.userId)
+                !isInviteVisible
+                cardInviteMember.visibility  =  View.INVISIBLE
+                Toast.makeText(context, "Added  ${currentPerson!!.name} to member invitations", Toast.LENGTH_SHORT).show()
             }
 
         }
