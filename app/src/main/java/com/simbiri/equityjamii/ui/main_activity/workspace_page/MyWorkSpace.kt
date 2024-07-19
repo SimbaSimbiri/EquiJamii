@@ -39,9 +39,6 @@ class MyWorkspace : Fragment() {
 
                 setupUI()
                 observeViewModel()
-
-                viewModel.fetchWorkspaces()
-                viewModel.fetchInvitedWorkspaces()
             }
         }
 

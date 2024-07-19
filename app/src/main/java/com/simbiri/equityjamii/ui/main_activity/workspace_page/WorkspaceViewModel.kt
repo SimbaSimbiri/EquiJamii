@@ -26,50 +26,59 @@ class WorkspaceViewModel : ViewModel() {
     private val _invitedWorkspaces = MutableLiveData<List<Workspace>>()
     val invitedWorkspaces: LiveData<List<Workspace>> get() = _invitedWorkspaces
 
-    fun fetchWorkspaces() {
+    init {
         viewModelScope.launch {
-            val workspaces = withContext(Dispatchers.IO) {
-                firestore.collection(WORKSPACE_COLLECTION)
+            fetchWorkspaces()
+            fetchInvitedWorkspaces()
+        }
+    }
+
+    suspend fun fetchWorkspaces() {
+        val workspaces = withContext(Dispatchers.IO) {
+            firestore.collection(WORKSPACE_COLLECTION)
+                .get()
+                .await()
+                .toObjects(Workspace::class.java)
+        }
+        _workspaces.postValue(workspaces)
+    }
+
+
+    suspend fun fetchInvitedWorkspaces() {
+        val currentUserId = AuthUtils.getCurrentUserId()!!
+
+        val invitedWorkspaces = withContext(Dispatchers.IO) {
+            val workspaces = firestore.collection(WORKSPACE_COLLECTION).get().await()
+                .toObjects(Workspace::class.java)
+            val invitedWorkspacesList = mutableListOf<Workspace>()
+            for (workspace in workspaces) {
+                val workspaceId = workspace.workspaceId ?: continue
+
+
+                val invitedMembers = firestore.collection(WORKSPACE_COLLECTION)
+                    .document(workspaceId)
+                    .collection(WORKSP_MEMBERS_SUB_COLLECTION)
+                    .document(currentUserId)
                     .get()
                     .await()
-                    .toObjects(Workspace::class.java)
-            }
-            _workspaces.postValue(workspaces)
-        }
-    }
 
-    fun fetchInvitedWorkspaces() {
-        viewModelScope.launch {
-            val currentUserId = AuthUtils.getCurrentUserId() ?: return@launch
+                val invitedAdmins = firestore.collection(WORKSPACE_COLLECTION)
+                    .document(workspaceId)
+                    .collection(WORKSP_ADMINS_SUB_COLLECTION)
+                    .document(currentUserId)
+                    .get()
+                    .await()
 
-            val invitedWorkspaces = withContext(Dispatchers.IO) {
-                val workspaces = firestore.collection(WORKSPACE_COLLECTION).get().await().toObjects(Workspace::class.java)
-                val invitedWorkspacesList = mutableListOf<Workspace>()
-                for (workspace in workspaces) {
-                    val workspaceId = workspace.workspaceId ?: continue
-
-
-                    val invitedMembers = firestore.collection(WORKSPACE_COLLECTION)
-                        .document(workspaceId)
-                        .collection(WORKSP_MEMBERS_SUB_COLLECTION)
-                        .document(currentUserId)
-                        .get()
-                        .await()
-
-                    val invitedAdmins = firestore.collection(WORKSPACE_COLLECTION)
-                        .document(workspaceId)
-                        .collection(WORKSP_ADMINS_SUB_COLLECTION)
-                        .document(currentUserId)
-                        .get()
-                        .await()
-
-                    if (invitedMembers.exists() || invitedAdmins.exists() || workspace.ownerId.contentEquals(currentUserId)) {
-                        invitedWorkspacesList.add(workspace)
-                    }
+                if (invitedMembers.exists() || invitedAdmins.exists() || workspace.ownerId.contentEquals(
+                        currentUserId
+                    )
+                ) {
+                    invitedWorkspacesList.add(workspace)
                 }
-                invitedWorkspacesList
             }
-            _invitedWorkspaces.postValue(invitedWorkspaces)
+            invitedWorkspacesList
         }
+        _invitedWorkspaces.value = invitedWorkspaces
     }
+
 }

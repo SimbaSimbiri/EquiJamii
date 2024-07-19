@@ -181,7 +181,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.documentsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
 
@@ -225,23 +225,23 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
 
         viewModel.adminsList.observe(viewLifecycleOwner) { admins ->
-            invitedAdminsList = admins
+            invitedAdminsList.addAll(admins)
             binding.invitedAdminsRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
 
         viewModel.membersList.observe(viewLifecycleOwner) { members ->
-            invitedMembersList = members
+            invitedMembersList.addAll(members)
             binding.invitedRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
         viewModel.links.observe(viewLifecycleOwner) { links ->
-            linksList = links
+            linksList.addAll(links)
             binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
-            documentsList = docs
+            documentsList.addAll(docs)
             binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
@@ -285,6 +285,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         workspace.titleImage?.fileUri?.let {
             Glide.with(requireContext()).load(it).into(binding.imagePostUpload)
             binding.imagePostUpload.visibility = View.VISIBLE
+            imageUri = Uri.parse(it)
         }
     }
 
@@ -300,24 +301,39 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
         lifecycleScope.launch {
-            val workspaceId = if (workspaceId == null) {
-                firestore.collection(WORKSPACE_COLLECTION).document().id
+            if (workspaceId == null) {
+                workspaceId = firestore.collection(WORKSPACE_COLLECTION).document().id
+
+                viewModel.saveWorkspace(
+                    workspaceId,
+                    name,
+                    description,
+                    passCode,
+                    ownerId,
+                    links,
+                    documents,
+                    imageUri
+                )
+                Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT).show()
+                saveSubcollections(workspaceId!!)
+
             } else {
-                workspaceId!!
+
+                viewModel.saveWorkspace(
+                    workspaceId,
+                    name,
+                    description,
+                    passCode,
+                    ownerId,
+                    links,
+                    documents,
+                    imageUri, false
+                )
+                Toast.makeText(requireContext(), "Updating changes in workspace", Toast.LENGTH_SHORT).show()
+                saveSubcollections(workspaceId!!)
             }
 
-            viewModel.saveWorkspace(
-                workspaceId,
-                name,
-                description,
-                passCode,
-                ownerId,
-                links,
-                documents,
-                imageUri
-            )
 
-            saveSubcollections(workspaceId)
         }.invokeOnCompletion {
             binding.contentLoadingProgressBar.visibility = View.INVISIBLE
             dismiss()

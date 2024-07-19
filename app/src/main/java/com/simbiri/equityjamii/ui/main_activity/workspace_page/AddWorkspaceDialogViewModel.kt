@@ -27,6 +27,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val userCollection = firestore.collection(USERS_COLLECTION)
+
     val dispatchersIO = Dispatchers.IO
     val currentId = AuthUtils.getCurrentUserId()
 
@@ -53,13 +54,14 @@ class AddWorkspaceDialogViewModel : ViewModel() {
 
     fun loadWorkspace(workspaceId: String) {
         viewModelScope.launch {
-            val workspaceInstance = withContext(dispatchersIO) {
+            val currentDoc = withContext(dispatchersIO) {
                 firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).get().await()
-            }.toObject(Workspace::class.java)
-
+            }
+            val workspaceInstance = currentDoc.toObject(Workspace::class.java)
             _workspace.postValue(workspaceInstance!!)
-            _documents.value = workspaceInstance.importantDocs
-            _links.value = workspaceInstance.importantLinks
+
+            _documents.postValue(workspaceInstance.importantDocs)
+            _links.postValue(workspaceInstance.importantLinks)
 
             loadWorkspaceSubCollections(workspaceId)
         }
@@ -73,27 +75,32 @@ class AddWorkspaceDialogViewModel : ViewModel() {
     }
 
     private suspend fun loadAdmins(workspaceId: String) {
+        val listIds = mutableListOf<String>()
         val admins = withContext(dispatchersIO) {
             firestore.collection(WORKSPACE_COLLECTION)
                 .document(workspaceId)
                 .collection(WORKSP_ADMINS_SUB_COLLECTION)
                 .get()
                 .await()
-                .documents.mapNotNull { it.toObject(Person::class.java) }
-                .toMutableList()
+                .documents.forEach { doc -> listIds.add(doc.id) }
+            UserNetworkUtils.narrowDownUsers(listIds).toMutableList()
+
         }
         _adminsList.postValue(admins)
     }
 
     private suspend fun loadMembers(workspaceId: String) {
+        val listIds = mutableListOf<String>()
+
         val members = withContext(dispatchersIO) {
             firestore.collection(WORKSPACE_COLLECTION)
                 .document(workspaceId)
                 .collection(WORKSP_MEMBERS_SUB_COLLECTION)
                 .get()
                 .await()
-                .documents.mapNotNull { it.toObject(Person::class.java) }
-                .toMutableList()
+                .documents.forEach { doc -> listIds.add(doc.id) }
+            UserNetworkUtils.narrowDownUsers(listIds).toMutableList()
+
         }
         _membersList.postValue(members)
     }
@@ -125,11 +132,21 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         val uploadedFileTitles = mutableListOf<FileTitle>()
 
         for (document in documents) {
+            if (document.fileUri.contains("https")){
+                uploadedFileTitles.add(document)
+                continue
+            }
             val fileRef = storageRef.child("$WORKSPACE_DOCUMENTS_STORE/${document.fileTitle}")
             val fileUri = Uri.parse(document.fileUri)
             fileRef.putFile(fileUri).await()
             val downloadUrl = fileRef.downloadUrl.await().toString()
-            uploadedFileTitles.add(FileTitle(downloadUrl, document.fileTitle, documents.indexOf(document)))
+            uploadedFileTitles.add(
+                FileTitle(
+                    downloadUrl,
+                    document.fileTitle,
+                    documents.indexOf(document)
+                )
+            )
         }
 
         return uploadedFileTitles
@@ -143,13 +160,20 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         ownerId: String,
         links: List<FileTitle>,
         documents: List<FileTitle>,
-        imageUri: Uri?
+        imageUri: Uri?, isNew : Boolean = true
     ) {
         val uploadedDocuments = uploadDocumentsAndGetFileTitles(documents)
 
+        val imageTitle = if (isNew){
+            FileTitle("", titleWorkspace, 0).toHashMap()
+        }
+        else{
+            FileTitle(imageUri.toString(), titleWorkspace,0).toHashMap()
+        }
+
         val workspaceData = hashMapOf(
             "workspaceId" to workspaceId,
-            "titleImage" to FileTitle("", titleWorkspace, 0).toHashMap(),
+            "titleImage" to imageTitle,
             "description" to description,
             "passCode" to passCode,
             "ownerId" to ownerId,
@@ -158,7 +182,11 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         )
 
         val newWorkspaceRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId!!)
-        newWorkspaceRef.set(workspaceData).await()
+        if (isNew){
+            newWorkspaceRef.set(workspaceData).await()
+        }else{
+            newWorkspaceRef.update(workspaceData).await()
+        }
         uploadImageAndSaveWorkspace(newWorkspaceRef.id, imageUri, titleWorkspace)
 
     }
@@ -169,6 +197,10 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         title: String
     ) {
         if (imageUri != null) {
+
+            if (imageUri.toString().contains("https")){
+                return
+            }
             val storageRef =
                 FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/$workspaceId")
             storageRef.putFile(imageUri).await()
@@ -182,7 +214,8 @@ class AddWorkspaceDialogViewModel : ViewModel() {
     private fun FileTitle.toHashMap(): HashMap<String, Any?> {
         return hashMapOf(
             "fileUri" to this.fileUri,
-            "fileTitle" to this.fileTitle
+            "fileTitle" to this.fileTitle,
+            "position" to 0
         )
     }
 }

@@ -9,13 +9,22 @@
     android:background="@color/clear"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/add_news_icon"
+        android:id="@+id/editWorkspace"/>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/workspaceHeaderCard"
         app:cardCornerRadius="10dp"
         android:layout_margin="10dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editWorkspace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +33,6 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/good_profile"
                 android:scaleType="centerCrop"
                 android:id="@+id/imageMotivational"
                 android:contentDescription="Motivational Image"/>
@@ -135,7 +143,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Enter workspace password"
-                    android:inputType="numberDecimal"
                     android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
