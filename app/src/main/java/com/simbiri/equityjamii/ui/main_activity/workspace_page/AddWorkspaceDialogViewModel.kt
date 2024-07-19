@@ -112,8 +112,10 @@ class AddWorkspaceDialogViewModel : ViewModel() {
             allPeoples.addAll(UserNetworkUtils.following(person.network.followingList))
             allPeoples.addAll(UserNetworkUtils.followers(person.network.followerList))
 
-            _fullList.postValue(allPeoples)
-            _searchList.postValue(allPeoples)
+            val peopleSet = allPeoples.toSet()
+
+            _fullList.postValue(peopleSet.toMutableList())
+            _searchList.postValue(peopleSet.toMutableList())
         }
     }
 

@@ -67,10 +67,10 @@ class WorkspaceAdapter(
         private val loginLayout: TextInputLayout = itemView.findViewById(R.id.passwordLayout)
         private val loginInput: TextInputEditText = itemView.findViewById(R.id.passET)
         private val submitCode: CardView = itemView.findViewById(R.id.submitPassCardView)
-        private var currentPerson : Person? = null
+        private var currentPerson: Person? = null
 
         fun bind(workspace: Workspace) {
-            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()){person: Person? ->
+            AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
                 currentPerson = person
             }
             loadImage(workspace)
@@ -97,30 +97,39 @@ class WorkspaceAdapter(
         }
 
         private fun setMembersCount(workspace: Workspace) {
-            if (textPeople.text.isNotEmpty()){
-                return
-            }
-
             firestore.collection(WORKSPACE_COLLECTION)
                 .document(workspace.workspaceId ?: "")
                 .collection(WORKSP_MEMBERS_SUB_COLLECTION)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-
-                    val friendUserInWorksp = querySnapshot.documents.shuffled()
-                        .filter{ doc-> currentPerson?.network?.followerList?.contains(
-                        doc.id
-                    ) == true || currentPerson?.network?.followingList?.contains(
-                        doc.id
-                    ) == true }[0].id
-
-                    viewModel.viewModelScope.launch {
-                        val onePerson =
-                            UserNetworkUtils.narrowDownUsers(mutableListOf(friendUserInWorksp)).first()
-                        val memberCount = querySnapshot.size()
-                        textPeople.text = "${onePerson!!.name} and ${memberCount - 1} others"
+                    if (querySnapshot.isEmpty) {
+                        textPeople.text = "No members found"
+                        return@addOnSuccessListener
                     }
 
+                    val friendUserInWorksp = querySnapshot.documents.shuffled()
+                        .filter { doc ->
+                            currentPerson?.network?.followerList?.contains(doc.id) == true ||
+                                    currentPerson?.network?.followingList?.contains(doc.id) == true
+                        }
+
+                    viewModel.viewModelScope.launch {
+                        val onePerson = if (friendUserInWorksp.isNotEmpty()) {
+                            UserNetworkUtils.narrowDownUsers(mutableListOf(friendUserInWorksp[0].id))
+                                .firstOrNull()
+                        } else {
+                            UserNetworkUtils.narrowDownUsers(
+                                mutableListOf(querySnapshot.documents.shuffled().firstOrNull()?.id ?: return@launch)
+                            ).firstOrNull() ?: return@launch
+                        }
+
+                        val memberCount = querySnapshot.size()
+                        textPeople.text = if (onePerson != null) {
+                            "${onePerson.name} and ${memberCount - 1} others"
+                        } else {
+                            "No valid members found"
+                        }
+                    }
                 }
         }
 
@@ -165,7 +174,7 @@ class WorkspaceAdapter(
                     loginLayout.visibility = View.GONE
                     submitCode.visibility = View.GONE
                     signIn(code, workspace.passCode)
-                }else{
+                } else {
                     Toast.makeText(
                         context,
                         "Empty fields are not allowed!",
@@ -187,7 +196,7 @@ class WorkspaceAdapter(
 
                 Handler().postDelayed({
                     progressBar.visibility = View.GONE
-                },3000)
+                }, 3000)
             }
         }
 

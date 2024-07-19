@@ -48,7 +48,7 @@ class MyWorkspace : Fragment() {
 
     private fun setupUI() {
         binding.myWorkspacesRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.createWorkspacesCard.setOnClickListener {
             val addWorkspaceDialog = AddWorkspaceDialog()
