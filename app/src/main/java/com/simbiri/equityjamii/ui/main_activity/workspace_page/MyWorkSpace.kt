@@ -34,35 +34,39 @@ class MyWorkspace : Fragment() {
                     "Set up profile to access EquiJamii features",
                     Toast.LENGTH_LONG
                 ).show()
+            } else {
+                binding.textKaribu.text = "Karibu kazi ${currentPerson.name}"
+
+                setupUI()
+                observeViewModel()
+
+                viewModel.fetchWorkspaces()
+                viewModel.fetchInvitedWorkspaces()
             }
         }
 
-        setupUI()
-        observeViewModel()
-
-        viewModel.fetchWorkspaces()
-        viewModel.fetchInvitedWorkspaces()
 
         return binding.root
     }
 
     private fun setupUI() {
-        binding.myWorkspacesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.invitedWorkspacesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.myWorkspacesRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         binding.createWorkspacesCard.setOnClickListener {
-            val addWorkspaceDialog = AddWorkspaceDialog.newInstance("")
-            addWorkspaceDialog.show(parentFragmentManager, "AddWorkspaceDialog")
+            val addWorkspaceDialog = AddWorkspaceDialog()
+            addWorkspaceDialog.show(parentFragmentManager, addWorkspaceDialog.tag)
         }
     }
 
     private fun observeViewModel() {
         viewModel.workspaces.observe(viewLifecycleOwner) { workspaces ->
-            binding.myWorkspacesRecyclerView.adapter = WorkspaceAdapter(requireContext(), workspaces)
+
         }
 
         viewModel.invitedWorkspaces.observe(viewLifecycleOwner) { invitedWorkspaces ->
-            binding.invitedWorkspacesRecyclerView.adapter = WorkspaceAdapter(requireContext(), invitedWorkspaces)
+            binding.myWorkspacesRecyclerView.adapter =
+                WorkspaceAdapter(requireContext(), invitedWorkspaces)
         }
     }
 }

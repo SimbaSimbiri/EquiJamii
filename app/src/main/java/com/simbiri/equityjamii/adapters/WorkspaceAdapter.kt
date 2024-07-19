@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,6 +18,11 @@ import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.data.model.UserNetworkUtils
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.WorkspaceViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WorkspaceAdapter(
     private val context: Context,
@@ -41,11 +47,15 @@ class WorkspaceAdapter(
         private val workspaceHeaderCard: CardView = itemView.findViewById(R.id.workspaceHeaderCard)
         private val imageMotivational: ImageView = itemView.findViewById(R.id.imageMotivational)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
-        private val textKaribu: TextView = itemView.findViewById(R.id.textKaribu)
+        private val textTitle: TextView = itemView.findViewById(R.id.textKaribu)
+        private val aboutTextHead : TextView = itemView.findViewById(R.id.aboutTextHead)
+        private val textAbout: TextView = itemView.findViewById(R.id.aboutTextContent)
         private val notificationsImage: ImageView = itemView.findViewById(R.id.notificationsImage)
         private val signInWorkspace: TextView = itemView.findViewById(R.id.signInWorkspace)
         private val textPeople: TextView = itemView.findViewById(R.id.textPeople)
         private val adminsRecyclerView: RecyclerView = itemView.findViewById(R.id.adminProfileRecyclerView)
+        private val ioDispatchers= Dispatchers.IO
+        private val viewModel = WorkspaceViewModel()
 
         fun bind(workspace: Workspace) {
             loadImage(workspace)
@@ -64,7 +74,10 @@ class WorkspaceAdapter(
         }
 
         private fun setAboutText(workspace: Workspace) {
-            textKaribu.text = workspace.about
+            aboutTextHead.text = "About ${workspace.titleImage!!.fileTitle}"
+            textAbout.text = workspace.description
+            textTitle.text = workspace.titleImage!!.fileTitle
+
         }
 
         private fun setMembersCount(workspace: Workspace) {
@@ -73,9 +86,12 @@ class WorkspaceAdapter(
                 .collection(WORKSP_MEMBERS_SUB_COLLECTION)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    val onePerson = querySnapshot.documents.first().toObject(Person::class.java)
-                    val memberCount = querySnapshot.size()
-                    textPeople.text = "${onePerson!!.name} and $memberCount others"
+
+                    viewModel.viewModelScope.launch {
+                            val onePerson = UserNetworkUtils.narrowDownUsers(mutableListOf( querySnapshot!!.documents.first().id)).first()
+                            val memberCount = querySnapshot.size()
+                            textPeople.text = "${onePerson!!.name} and ${memberCount - 1} others"}
+
                 }
         }
 
@@ -86,17 +102,19 @@ class WorkspaceAdapter(
             adminsRecyclerView.adapter = adapter
 
             firestore.collection(WORKSPACE_COLLECTION)
-                .document(workspace.workspaceId ?: "")
+                .document(workspace.workspaceId!!)
                 .collection(WORKSP_ADMINS_SUB_COLLECTION)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    for (document in querySnapshot.documents) {
-                        val person = document.toObject(Person::class.java)
-                        if (person != null) {
-                            adminsList.add(person)
+                    viewModel.viewModelScope.launch {
+                        val listIds = mutableListOf<String>()
+                        querySnapshot.documents.forEach{doc->
+                            listIds.add(doc.id)
                         }
+                        adminsList.addAll(UserNetworkUtils.narrowDownUsers(listIds))
+                        adapter.notifyDataSetChanged()
+
                     }
-                    adapter.notifyDataSetChanged()
                 }
         }
 

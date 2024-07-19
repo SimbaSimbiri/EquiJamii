@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +33,6 @@ import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_ADMIN_INVITED_SUB_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
@@ -58,6 +60,15 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private val firestore = FirebaseFirestore.getInstance()
     private var imageUri: Uri? = null
     private var workspaceId: String? = null
+    private var membersList = mutableListOf<Person>()
+    private var adminList = mutableListOf<Person>()
+    private var invitedMembersList = mutableListOf<Person>()
+    private var invitedAdminsList = mutableListOf<Person>()
+    private var documentsList = mutableListOf<FileTitle>()
+    private var linksList = mutableListOf<FileTitle>()
+    private lateinit var pdfLauncher: ActivityResultLauncher<String>
+    private var isLinkInputVisible = false
+    private var currPerson : Person? = null
 
     private val openImagePicker = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -67,29 +78,11 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
     }
 
-    private val cropImageOptions = CropImageContractOptions(
-        null, CropImageOptions(
-            true,
-            false,
-            CropImageView.CropShape.RECTANGLE,
-            cropCornerRadius = 8.0F,
-            cropMenuCropButtonTitle = "Done",
-            showCropLabel = true,
-            activityTitle = "Crop workspace image",
-            activityBackgroundColor = requireContext().resources.getColor(R.color.black),
-            toolbarColor = requireContext().resources.getColor(R.color.black),
-            progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
-            guidelines = CropImageView.Guidelines.OFF,
-            aspectRatioX = 1,
-            aspectRatioY = 1,
-            fixAspectRatio = false
-        )
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         workspaceId = arguments?.getString(ARGS_WORKSP_INST)
         workspaceId?.let { viewModel.loadWorkspace(it) }
+
     }
 
     override fun onCreateView(
@@ -99,7 +92,28 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         binding = AddWorkspaceDialogBinding.inflate(inflater, container, false)
         setupUI()
         observeViewModel()
-        viewModel.fetchAllPeople()
+
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
+            viewModel.fetchAllPeople(person!!)
+            currPerson = person
+        }
+
+
+        pdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            val filename = uri?.let { DocumentFile.fromSingleUri(requireContext(), it)?.name }
+
+            if (filename != null) {
+                val fileTitle = FileTitle(uri.toString(), filename,0)
+                documentsList.add(fileTitle)
+                binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
+            }
+
+        }
+
+        binding.addPdfButton.setOnClickListener{
+                pdfLauncher.launch("application/pdf")
+
+        }
 
         binding.saveWorkspace.setOnClickListener {
             saveWorkspace()
@@ -108,20 +122,101 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         binding.cancelWorkspace.setOnClickListener {
             dismiss()
         }
+
+        binding.addLinkButton.setOnClickListener {
+            toggleVisibility()
+        }
+
+        binding.confirmLinkButton.setOnClickListener {
+            addLink()
+        }
+
         return binding.root
+    }
+
+    private fun toggleVisibility(){
+        isLinkInputVisible = !isLinkInputVisible
+        if (isLinkInputVisible){
+            binding.confirmLinkButton.visibility = View.VISIBLE
+            binding.linkLayout.visibility = View.VISIBLE
+            binding.titleLayout.visibility = View.VISIBLE
+        }
+        else{
+            binding.confirmLinkButton.visibility = View.GONE
+            binding.linkLayout.visibility = View.GONE
+            binding.titleLayout.visibility = View.GONE
+        }
     }
 
     private fun setupUI() {
         binding.addWorkspThumbNail.setOnClickListener {
+            val cropImageOptions = CropImageContractOptions(
+                null, CropImageOptions(
+                    true,
+                    false,
+                    CropImageView.CropShape.RECTANGLE,
+                    cropCornerRadius = 8.0F,
+                    cropMenuCropButtonTitle = "Done",
+                    showCropLabel = true,
+                    activityTitle = "Crop workspace image",
+                    activityBackgroundColor = requireContext().resources.getColor(R.color.black),
+                    toolbarColor = requireContext().resources.getColor(R.color.black),
+                    progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
+                    guidelines = CropImageView.Guidelines.OFF,
+                    aspectRatioX = 1,
+                    aspectRatioY = 1,
+                    fixAspectRatio = false
+                )
+            )
+
             openImagePicker.launch(cropImageOptions)
         }
 
-        binding.adminsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.membersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.invitedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.searchPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.invitedRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.invitedAdminsRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.searchPeopleRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.linksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.documentsRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+
+
+        binding.invitedAdminsRecyclerView.adapter = OtherProfilesAdapter(
+            requireContext(),
+            invitedAdminsList,
+            true
+        )
+        binding.invitedRecyclerView.adapter = OtherProfilesAdapter(
+            requireContext(),
+            invitedMembersList,
+            true
+        )
+
+        binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList)
+        binding.documentsRecyclerView.adapter = PdfDescAdapter(requireContext(), documentsList,true)
         binding.searchViewAll.setOnQueryTextListener(this)
+    }
+
+    private fun addLink() {
+        val title = binding.titleInput.text.toString()
+        val link = binding.linkInput.text.toString()
+
+        if (title.isBlank() || link.isBlank()) {
+            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val fileTitle = FileTitle(link, title, 0)
+        linksList.add(fileTitle)
+        binding.linksRecyclerView.adapter?.notifyDataSetChanged()
+
+        binding.titleInput.text?.clear()
+        binding.linkInput.text?.clear()
+        toggleVisibility()
     }
 
     private fun observeViewModel() {
@@ -130,28 +225,60 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
 
         viewModel.adminsList.observe(viewLifecycleOwner) { admins ->
-            binding.adminsRecyclerView.adapter = OtherProfilesAdapter(requireContext(), admins)
+            invitedAdminsList = admins
+            binding.invitedAdminsRecyclerView.adapter!!.notifyDataSetChanged()
+
         }
 
         viewModel.membersList.observe(viewLifecycleOwner) { members ->
-            binding.membersRecyclerView.adapter = OtherProfilesAdapter(requireContext(), members)
+            invitedMembersList = members
+            binding.invitedRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
-        viewModel.invitedMembersList.observe(viewLifecycleOwner) { invitedMembers ->
-            binding.invitedRecyclerView.adapter = OtherProfilesAdapter(requireContext(), invitedMembers)
-        }
+        viewModel.links.observe(viewLifecycleOwner) { links ->
+            linksList = links
+            binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
 
-        viewModel.invitedAdminsList.observe(viewLifecycleOwner) { invitedAdmins ->
-            // Setup adapter for invited admins (if there's another RecyclerView for it)
+        }
+        viewModel.documents.observe(viewLifecycleOwner) { docs ->
+            documentsList = docs
+            binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
+
         }
 
         viewModel.searchList.observe(viewLifecycleOwner) { searchList ->
-            binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(requireContext(), searchList)
+            binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(
+                requireContext(),
+                searchList,
+                editingWksp = true,
+                addingWkspAdmins = true,
+            ) { person, flag ->
+                if (invitedAdminsList.contains(person) || invitedMembersList.contains(person) ||
+                    membersList.contains(person) || adminList.contains(person)
+                ) {
+                    Toast.makeText(
+                        requireContext(),
+                        "${person.name} already invited or present in workspace",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (flag == 1) {
+                        invitedAdminsList.add(person)
+                        binding.invitedAdminsRecyclerView.adapter!!.notifyDataSetChanged()
+                    } else {
+                        invitedMembersList.add(person)
+                        binding.invitedRecyclerView.adapter!!.notifyDataSetChanged()
+
+                    }
+                }
+
+            }
+
         }
     }
 
     private fun populateUI(workspace: Workspace) {
-        binding.nameWkspInput.setText(workspace.about)
+        binding.nameWkspInput.setText(workspace.titleImage!!.fileTitle)
         binding.descriptionInput.setText(workspace.description)
         binding.loginCodeInput.setText(workspace.passCode.toString())
 
@@ -162,9 +289,11 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     }
 
     private fun saveWorkspace() {
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
+
         val name = binding.nameWkspInput.text.toString()
         val description = binding.descriptionInput.text.toString()
-        val passCode = binding.loginCodeInput.text.toString().toIntOrNull() ?: 0
+        val passCode = binding.loginCodeInput.text.toString()
         val ownerId = AuthUtils.getCurrentUserId()!!
 
         val links = extractLinksFromRecyclerView(binding.linksRecyclerView)
@@ -189,23 +318,28 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             )
 
             saveSubcollections(workspaceId)
+        }.invokeOnCompletion {
+            binding.contentLoadingProgressBar.visibility = View.INVISIBLE
+            dismiss()
         }
     }
 
     private suspend fun saveSubcollections(workspaceId: String) {
-        val admins = extractPeopleFromRecyclerView(binding.adminsRecyclerView)
-        val members = extractPeopleFromRecyclerView(binding.membersRecyclerView)
         val invitedMembers = extractPeopleFromRecyclerView(binding.invitedRecyclerView)
-        val invitedAdmins = listOf<Person>()
+        val invitedAdmins : MutableList<Person> = extractPeopleFromRecyclerView(binding.invitedAdminsRecyclerView)
+        invitedAdmins.add(currPerson!!)
 
-        savePeopleSubcollection(workspaceId, WORKSP_ADMINS_SUB_COLLECTION, admins)
-        savePeopleSubcollection(workspaceId, WORKSP_MEMBERS_SUB_COLLECTION, members)
-        savePeopleSubcollection(workspaceId, WORKSP_INVITED_SUB_COLLECTION, invitedMembers)
-        savePeopleSubcollection(workspaceId, WORKSP_ADMIN_INVITED_SUB_COLLECTION, invitedAdmins)
+        savePeopleSubcollection(workspaceId, WORKSP_MEMBERS_SUB_COLLECTION, invitedMembers)
+        savePeopleSubcollection(workspaceId, WORKSP_ADMINS_SUB_COLLECTION, invitedAdmins)
     }
 
-    private suspend fun savePeopleSubcollection(workspaceId: String, subcollection: String, people: List<Person>) {
-        val subcollectionRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId).collection(subcollection)
+    private suspend fun savePeopleSubcollection(
+        workspaceId: String,
+        subcollection: String,
+        people: MutableList<Person>
+    ) {
+        val subcollectionRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
+            .collection(subcollection)
 
         people.forEach { person ->
             subcollectionRef.document(person.userId).set(emptyMap<String, Any>()).await()
@@ -216,12 +350,13 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val adapter = recyclerView.adapter as PdfDescAdapter
         return adapter.fileTitleList
     }
+
     private fun extractLinksFromRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
         val adapter = recyclerView.adapter as LinksAdapter
         return adapter.links
     }
 
-    private fun extractPeopleFromRecyclerView(recyclerView: RecyclerView): List<Person> {
+    private fun extractPeopleFromRecyclerView(recyclerView: RecyclerView): MutableList<Person> {
         val adapter = recyclerView.adapter as OtherProfilesAdapter
         return adapter.peopleList
     }
@@ -239,7 +374,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT

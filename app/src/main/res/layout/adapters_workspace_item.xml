@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginVertical="0dp"
-    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginEnd="5dp"
     android:background="@color/clear"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -47,7 +48,6 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="bottom"
-                android:text="ELP Workspace"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +88,6 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="bottom"
-                android:text="Ray Simbiri and 26 others"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
@@ -99,8 +98,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/workspaceHeaderCard">
@@ -189,7 +187,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="About ELP Workspace"
+                        android:text="About Workspace"
                         android:textColor="@color/primaryColor"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -199,11 +197,11 @@
                     <TextView
                         android:id="@+id/aboutTextContent"
                         style="@style/titleTab2"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
                         android:justificationMode="inter_word"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -221,6 +219,8 @@
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/white"
                 android:elevation="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/aboutCardInfo"
@@ -245,14 +245,11 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/adminProfileRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="0dp"
-                        android:layout_marginBottom="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

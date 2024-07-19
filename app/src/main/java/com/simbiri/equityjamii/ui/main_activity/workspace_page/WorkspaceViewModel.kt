@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_ADMIN_INVITED_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Workspace
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +21,7 @@ class WorkspaceViewModel : ViewModel() {
 
     private val _workspaces = MutableLiveData<List<Workspace>>()
     val workspaces: LiveData<List<Workspace>> get() = _workspaces
+
 
     private val _invitedWorkspaces = MutableLiveData<List<Workspace>>()
     val invitedWorkspaces: LiveData<List<Workspace>> get() = _invitedWorkspaces
@@ -40,27 +41,29 @@ class WorkspaceViewModel : ViewModel() {
     fun fetchInvitedWorkspaces() {
         viewModelScope.launch {
             val currentUserId = AuthUtils.getCurrentUserId() ?: return@launch
+
             val invitedWorkspaces = withContext(Dispatchers.IO) {
                 val workspaces = firestore.collection(WORKSPACE_COLLECTION).get().await().toObjects(Workspace::class.java)
                 val invitedWorkspacesList = mutableListOf<Workspace>()
                 for (workspace in workspaces) {
                     val workspaceId = workspace.workspaceId ?: continue
 
+
                     val invitedMembers = firestore.collection(WORKSPACE_COLLECTION)
                         .document(workspaceId)
-                        .collection(WORKSP_INVITED_SUB_COLLECTION)
+                        .collection(WORKSP_MEMBERS_SUB_COLLECTION)
                         .document(currentUserId)
                         .get()
                         .await()
 
                     val invitedAdmins = firestore.collection(WORKSPACE_COLLECTION)
                         .document(workspaceId)
-                        .collection(WORKSP_ADMIN_INVITED_SUB_COLLECTION)
+                        .collection(WORKSP_ADMINS_SUB_COLLECTION)
                         .document(currentUserId)
                         .get()
                         .await()
 
-                    if (invitedMembers.exists() || invitedAdmins.exists()) {
+                    if (invitedMembers.exists() || invitedAdmins.exists() || workspace.ownerId.contentEquals(currentUserId)) {
                         invitedWorkspacesList.add(workspace)
                     }
                 }

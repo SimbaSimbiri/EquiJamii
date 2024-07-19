@@ -18,17 +18,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.TASK_ASSIGNEES_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.TASK_COLLECTION
-import com.simbiri.equityjamii.constants.TASK_INVITED_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_INVITED_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
 class OtherProfilesAdapter(
-    var context: Context, var peopleList: MutableList<Person>, var canDelete: Boolean = false,
-    var editingWksp: Boolean = false, var addingWkspAdmins: Boolean = false,
-    var editingTask: Boolean = false, var taskWorkspId: String? = null, private val onPersonClick : (String)-> Unit = {}
+    var context: Context,
+    var peopleList: MutableList<Person>,
+    var canDelete: Boolean = false,
+    var editingWksp: Boolean = false,
+    var addingWkspAdmins: Boolean = false,
+    var editingTask: Boolean = false,
+    var taskWorkspId: String? = null,
+    private val onInviteClick: (person: Person, flag : Int) -> Unit = { _, _ -> }
+
 ) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
     private val firebaseStorage = FirebaseFirestore.getInstance()
@@ -41,14 +45,14 @@ class OtherProfilesAdapter(
 
         private var positionItem = 1
         private var currentPerson: Person? = null
-        private var isInviteVisible : Boolean = false
+        private var isInviteVisible: Boolean = false
 
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewOtherProfiles)
         private var profilePicImageView: ImageView = itemView.findViewById(R.id.imageOtherProfiles)
         private var namePersonTextView: TextView = itemView.findViewById(R.id.textNameOtherProfiles)
         private var deleteIconView: ImageView = itemView.findViewById(R.id.deleteUserIcon)
-        private var cardInviteMember : CardView =  itemView.findViewById(R.id.cardInviteMember)
-        private var cardInviteAdmin : CardView =  itemView.findViewById(R.id.cardInviteAdmin)
+        var cardInviteMember: CardView = itemView.findViewById(R.id.cardInviteMember)
+        var cardInviteAdmin: CardView = itemView.findViewById(R.id.cardInviteAdmin)
 
 
         fun setOnClickListeners() {
@@ -57,11 +61,21 @@ class OtherProfilesAdapter(
 
         override fun onClick(v: View?) {
             if (editingTask) {
-                Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT)
+                    .show()
 
             } else if (editingWksp || addingWkspAdmins) {
-                !isInviteVisible
-                inviteMemberOrAdmin()
+
+                isInviteVisible = !isInviteVisible
+
+                if (isInviteVisible){
+                    cardInviteAdmin.visibility = View.VISIBLE
+                    cardInviteMember.visibility = View.VISIBLE
+                }else{
+                    cardInviteAdmin.visibility = View.INVISIBLE
+                    cardInviteMember.visibility = View.INVISIBLE
+                }
+
 
             } else {
                 val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
@@ -73,37 +87,13 @@ class OtherProfilesAdapter(
 
         }
 
-        private fun inviteAdmin() {
-            cardInviteAdmin.visibility  =  View.VISIBLE
-            cardInviteAdmin.setOnClickListener {
-                onPersonClick(currentPerson!!.userId)
-                !isInviteVisible
-                cardInviteAdmin.visibility  =  View.INVISIBLE
-                Toast.makeText(context, "Added  ${currentPerson!!.name} to workspace as member", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        private fun inviteMemberOrAdmin() {
-
-            cardInviteAdmin.visibility  =  View.VISIBLE
-            cardInviteAdmin.setOnClickListener {
-                onPersonClick(currentPerson!!.userId)
-                !isInviteVisible
-                cardInviteAdmin.visibility  =  View.INVISIBLE
-                Toast.makeText(context, "Added ${currentPerson!!.name} to admin invitations", Toast.LENGTH_SHORT).show()
-            }
-
-            cardInviteMember.visibility  =  View.VISIBLE
-            cardInviteMember.setOnClickListener {
-                onPersonClick(currentPerson!!.userId)
-                !isInviteVisible
-                cardInviteMember.visibility  =  View.INVISIBLE
-                Toast.makeText(context, "Added  ${currentPerson!!.name} to member invitations", Toast.LENGTH_SHORT).show()
-            }
-
-        }
 
         fun setDatatoItem(personInstance: Person, position: Int) {
+
+            this.positionItem = position
+            this.currentPerson = personInstance
+            adjustHolderSize()
+
             if (canDelete) {
                 deleteIconView.visibility = View.VISIBLE
 
@@ -111,74 +101,33 @@ class OtherProfilesAdapter(
                     peopleList.remove(personInstance)
                     notifyItemRemoved(position)
                     if (editingTask) {
-                        uninviteToTask()
                         removeMemberFromTask()
                     }
                     if (editingWksp) {
-                        uninviteToWksp()
                         removeMemberFromWorkSpace()
                     }
                 }
             }
 
-            this.positionItem = position
-            this.currentPerson = personInstance
-            adjustHolderSize()
+            cardInviteAdmin.setOnClickListener {
+                onInviteClick(personInstance, 1)
+                cardInviteAdmin.visibility = View.INVISIBLE
+                cardInviteMember.visibility = View.INVISIBLE
+
+            }
+
+            cardInviteMember.setOnClickListener {
+                onInviteClick(personInstance,2)
+                cardInviteAdmin.visibility = View.INVISIBLE
+                cardInviteMember.visibility = View.INVISIBLE
+
+            }
 
             Glide.with(itemView)
                 .load(Uri.parse(currentPerson!!.profileUri))
                 .fitCenter().into(profilePicImageView)
 
             namePersonTextView.text = currentPerson!!.name
-        }
-
-        private fun uninviteToWksp() {
-
-            val currWkspSubCollection = workspaceCollection.document(taskWorkspId!!)
-                .collection(WORKSP_INVITED_SUB_COLLECTION)
-            val memberWkspDoc = currWkspSubCollection.document(currentPerson!!.userId)
-            memberWkspDoc.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document.exists()) {
-                        memberWkspDoc.delete()
-                            .addOnSuccessListener {
-                            }
-                    }
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Error uninviting user to workspace",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-        }
-
-        private fun uninviteToTask() {
-
-            val currTaskSubCollection = taskCollection.document(taskWorkspId!!).collection(
-                TASK_INVITED_SUB_COLLECTION
-            )
-            val memberTaskDoc = currTaskSubCollection.document(currentPerson!!.userId)
-            memberTaskDoc.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document.exists()) {
-                        memberTaskDoc.delete()
-                            .addOnSuccessListener {
-
-                            }
-                    }
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Error uninviting user to task",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
         }
 
         private fun removeMemberFromWorkSpace() {
@@ -244,9 +193,7 @@ class OtherProfilesAdapter(
 
             cardViewHolder.layoutParams = layoutParamsHolder
 
-
         }
-
 
     }
 
@@ -264,10 +211,10 @@ class OtherProfilesAdapter(
         val personInstance = peopleList[position]
 
         otherProfHolder.setDatatoItem(personInstance, position)
+        otherProfHolder.setOnClickListeners()
 
-        if (!editingTask || !editingWksp) {
-            otherProfHolder.setOnClickListeners()
-        }
+
+
     }
 
     override fun getItemCount(): Int = peopleList.size

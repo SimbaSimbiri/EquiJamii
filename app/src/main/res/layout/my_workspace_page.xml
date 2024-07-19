@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textKaribu"
@@ -65,32 +65,7 @@
             app:layout_constraintTop_toBottomOf="@id/textMyWorkspace"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="10dp"/>
-
-        <TextView
-            android:id="@+id/textInvitedWorkspaces"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:gravity="bottom"
-            android:text="Invited to Workspaces"
-            android:textColor="@color/logoColour"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/adapters_workspace_item"
-            android:id="@+id/invitedWorkspacesRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInvitedWorkspaces"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="0dp"/>
+            android:layout_marginVertical="5dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/searchViewWorkspaces"
@@ -107,7 +82,7 @@
             android:padding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/invitedWorkspacesRecyclerView"
+            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
             />
 
         <ImageView
