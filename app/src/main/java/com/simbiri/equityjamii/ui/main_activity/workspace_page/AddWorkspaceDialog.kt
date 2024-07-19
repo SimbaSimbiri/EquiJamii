@@ -68,7 +68,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private var linksList = mutableListOf<FileTitle>()
     private lateinit var pdfLauncher: ActivityResultLauncher<String>
     private var isLinkInputVisible = false
-    private var currPerson : Person? = null
+    private var currPerson: Person? = null
 
     private val openImagePicker = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -103,15 +103,15 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             val filename = uri?.let { DocumentFile.fromSingleUri(requireContext(), it)?.name }
 
             if (filename != null) {
-                val fileTitle = FileTitle(uri.toString(), filename,0)
+                val fileTitle = FileTitle(uri.toString(), filename, 0)
                 documentsList.add(fileTitle)
                 binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
             }
 
         }
 
-        binding.addPdfButton.setOnClickListener{
-                pdfLauncher.launch("application/pdf")
+        binding.addPdfButton.setOnClickListener {
+            pdfLauncher.launch("application/pdf")
 
         }
 
@@ -134,14 +134,13 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         return binding.root
     }
 
-    private fun toggleVisibility(){
+    private fun toggleVisibility() {
         isLinkInputVisible = !isLinkInputVisible
-        if (isLinkInputVisible){
+        if (isLinkInputVisible) {
             binding.confirmLinkButton.visibility = View.VISIBLE
             binding.linkLayout.visibility = View.VISIBLE
             binding.titleLayout.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             binding.confirmLinkButton.visibility = View.GONE
             binding.linkLayout.visibility = View.GONE
             binding.titleLayout.visibility = View.GONE
@@ -163,9 +162,9 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     toolbarColor = requireContext().resources.getColor(R.color.black),
                     progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                     guidelines = CropImageView.Guidelines.OFF,
-                    aspectRatioX = 1,
-                    aspectRatioY = 1,
-                    fixAspectRatio = false
+                    aspectRatioX = 16,
+                    aspectRatioY = 9,
+                    fixAspectRatio = true
                 )
             )
 
@@ -173,15 +172,15 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
 
         binding.invitedRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.invitedAdminsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.linksRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.documentsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
 
@@ -197,7 +196,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         )
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList)
-        binding.documentsRecyclerView.adapter = PdfDescAdapter(requireContext(), documentsList,true)
+        binding.documentsRecyclerView.adapter =
+            PdfDescAdapter(requireContext(), documentsList, true)
         binding.searchViewAll.setOnQueryTextListener(this)
     }
 
@@ -206,7 +206,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val link = binding.linkInput.text.toString()
 
         if (title.isBlank() || link.isBlank()) {
-            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -265,9 +266,11 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     if (flag == 1) {
                         invitedAdminsList.add(person)
                         binding.invitedAdminsRecyclerView.adapter!!.notifyDataSetChanged()
+                        binding.invitedAdminsRecyclerView.scrollToPosition(invitedAdminsList.size - 1)
                     } else {
                         invitedMembersList.add(person)
                         binding.invitedRecyclerView.adapter!!.notifyDataSetChanged()
+                        binding.invitedRecyclerView.scrollToPosition(invitedMembersList.size - 1)
 
                     }
                 }
@@ -314,7 +317,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     documents,
                     imageUri
                 )
-                Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT)
+                    .show()
                 saveSubcollections(workspaceId!!)
 
             } else {
@@ -329,7 +333,11 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     documents,
                     imageUri, false
                 )
-                Toast.makeText(requireContext(), "Updating changes in workspace", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Updating changes in workspace",
+                    Toast.LENGTH_SHORT
+                ).show()
                 saveSubcollections(workspaceId!!)
             }
 
@@ -342,7 +350,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
     private suspend fun saveSubcollections(workspaceId: String) {
         val invitedMembers = extractPeopleFromRecyclerView(binding.invitedRecyclerView)
-        val invitedAdmins : MutableList<Person> = extractPeopleFromRecyclerView(binding.invitedAdminsRecyclerView)
+        val invitedAdmins: MutableList<Person> =
+            extractPeopleFromRecyclerView(binding.invitedAdminsRecyclerView)
         invitedAdmins.add(currPerson!!)
 
         savePeopleSubcollection(workspaceId, WORKSP_MEMBERS_SUB_COLLECTION, invitedMembers)
