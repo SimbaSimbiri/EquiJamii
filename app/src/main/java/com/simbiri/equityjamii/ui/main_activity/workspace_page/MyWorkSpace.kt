@@ -47,6 +47,7 @@ class MyWorkspace : Fragment() {
     }
 
     private fun setupUI() {
+        binding.contentLoadingProgressBar.visibility =  View.VISIBLE
         binding.myWorkspacesRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -64,6 +65,8 @@ class MyWorkspace : Fragment() {
         viewModel.invitedWorkspaces.observe(viewLifecycleOwner) { invitedWorkspaces ->
             binding.myWorkspacesRecyclerView.adapter =
                 WorkspaceAdapter(requireContext(), invitedWorkspaces)
+            binding.contentLoadingProgressBar.visibility =  View.INVISIBLE
+
         }
     }
 }

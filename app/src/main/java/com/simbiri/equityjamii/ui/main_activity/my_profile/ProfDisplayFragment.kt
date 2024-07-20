@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,8 +50,14 @@ class ProfDisplayFragment : Fragment() {
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var isAboutExpanded = false
     private val MAX_CHAR_COLLAPSED_ABOUT = 200
+    private lateinit var navHostFrag : NavHostFragment
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        navHostFrag = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -89,9 +94,6 @@ class ProfDisplayFragment : Fragment() {
 
         AuthUtils.getCurrentPerson(getCurrentUserId()) { person ->
             if (person != null) {
-
-                val navHostFrag =
-                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
                 binding.myJamiiTv.setOnClickListener {
                     progressBarToggle()

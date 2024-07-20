@@ -195,7 +195,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             true
         )
 
-        binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList)
+        binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, true)
         binding.documentsRecyclerView.adapter =
             PdfDescAdapter(requireContext(), documentsList, true)
         binding.searchViewAll.setOnQueryTextListener(this)

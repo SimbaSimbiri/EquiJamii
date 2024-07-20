@@ -10,6 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/contentLoadingProgressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/logoColour"
+            android:visibility="gone"
+            android:layout_marginTop="500dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textKaribu"
             style="@style/titleTab"

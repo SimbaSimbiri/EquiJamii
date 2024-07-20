@@ -13,7 +13,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.adapters.ImageDescAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.databinding.DialogDocumentsBinding
