@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.main_activity.workspace_page.AddMentionFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/keyWordLayout"
+        style="@style/FirebaseUI.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="100"
+        app:cursorColor="@color/logoColour"
+        app:hintTextColor="@color/logoColour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameTaskInput"
+            style="@style/titleTab2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="keyword e.g wishes, congratulates, accolades"
+            android:textColorHighlight="@color/lighterMaroon" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/mentionMainTextLayout"
+        style="@style/FirebaseUI.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="900"
+        app:cursorColor="@color/logoColour"
+        app:hintTextColor="@color/logoColour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyWordLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/mentionMainTextInput"
+            style="@style/titleTab2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task short description e.g mission, goals etc"
+            android:inputType="textMultiLine"
+            android:textColorHighlight="@color/lighterMaroon" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchViewAll"
+        style="@style/Widget.AppCompat.SearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_stroke_rectangle"
+        android:textAppearance="@style/titleTab2"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mentionMainTextLayout"
+        app:queryHint="Search for task assignees from your network" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchPeopleRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:elevation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchViewAll" />
+
+    <TextView
+        android:id="@+id/mentionAssigneesTextView"
+        style="@style/titleTab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Mentioned teammates"
+        android:textColor="@color/logoColour"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mentionAssigneesRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mentionAssigneesTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
