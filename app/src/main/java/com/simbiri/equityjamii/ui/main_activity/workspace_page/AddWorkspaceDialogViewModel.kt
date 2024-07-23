@@ -43,6 +43,10 @@ class AddWorkspaceDialogViewModel : ViewModel() {
     private val _searchList = MutableLiveData<MutableList<Person>>()
     val searchList: LiveData<MutableList<Person>> get() = _searchList
 
+
+    private val _searchWorkspList = MutableLiveData<MutableList<Person>>()
+    val searchWorkspList: LiveData<MutableList<Person>> get() = _searchWorkspList
+
     private val _links = MutableLiveData<MutableList<FileTitle>>()
     val links: LiveData<MutableList<FileTitle>> = _links
 
@@ -51,6 +55,10 @@ class AddWorkspaceDialogViewModel : ViewModel() {
 
     private val _fullList = MutableLiveData<MutableList<Person>>()
     val fullList: LiveData<MutableList<Person>> get() = _fullList
+
+
+    private val _workspaceList = MutableLiveData<MutableList<Person>>()
+    val workspaceList: LiveData<MutableList<Person>> get() = _workspaceList
 
     fun loadWorkspace(workspaceId: String) {
         viewModelScope.launch {
@@ -87,6 +95,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
 
         }
         _adminsList.postValue(admins)
+        fetchWorkspacePeople(admins)
     }
 
     private suspend fun loadMembers(workspaceId: String) {
@@ -103,6 +112,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
 
         }
         _membersList.postValue(members)
+        fetchWorkspacePeople(members)
     }
 
     fun fetchAllPeople(person: Person) {
@@ -117,6 +127,23 @@ class AddWorkspaceDialogViewModel : ViewModel() {
             _fullList.postValue(peopleSet.toMutableList())
             _searchList.postValue(peopleSet.toMutableList())
         }
+    }
+
+    fun fetchWorkspacePeople(admins: MutableList<Person>) {
+        _workspaceList.value?.addAll(admins)
+        _searchWorkspList.value?.addAll(admins)
+
+    }
+
+    fun filterWorkspacePeople(text: String) {
+        val filteredList = if (text.isEmpty()) {
+            _workspaceList.value ?: mutableListOf()
+        } else {
+            _workspaceList.value?.filter { it.name.contains(text, ignoreCase = true) }
+                ?.toMutableList()
+                ?: mutableListOf()
+        }
+        _searchWorkspList.postValue(filteredList)
     }
 
     fun filterPeople(text: String) {
@@ -134,7 +161,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         val uploadedFileTitles = mutableListOf<FileTitle>()
 
         for (document in documents) {
-            if (document.fileUri.contains("https")){
+            if (document.fileUri.contains("https")) {
                 uploadedFileTitles.add(document)
                 continue
             }
@@ -162,20 +189,26 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         ownerId: String,
         links: List<FileTitle>,
         documents: List<FileTitle>,
-        imageUri: Uri?, isNew : Boolean = true
+        imageUri: Uri?, imageQuoteUri: Uri?, isNew: Boolean = true
     ) {
         val uploadedDocuments = uploadDocumentsAndGetFileTitles(documents)
 
-        val imageTitle = if (isNew){
+        val imageTitle = if (isNew) {
             FileTitle("", titleWorkspace, 0).toHashMap()
+        } else {
+            FileTitle(imageUri.toString(), titleWorkspace, 0).toHashMap()
         }
-        else{
-            FileTitle(imageUri.toString(), titleWorkspace,0).toHashMap()
+
+        val imageQuoteTitle = if (isNew) {
+            FileTitle("", "ImageQuote", 0).toHashMap()
+        } else {
+            FileTitle(imageQuoteUri.toString(), "ImageQuote", 0).toHashMap()
         }
 
         val workspaceData = hashMapOf(
             "workspaceId" to workspaceId,
             "titleImage" to imageTitle,
+            "imageQuote" to imageQuoteTitle,
             "description" to description,
             "passCode" to passCode,
             "ownerId" to ownerId,
@@ -184,13 +217,32 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         )
 
         val newWorkspaceRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId!!)
-        if (isNew){
+        if (isNew) {
             newWorkspaceRef.set(workspaceData).await()
-        }else{
+        } else {
             newWorkspaceRef.update(workspaceData).await()
         }
-        uploadImageAndSaveWorkspace(newWorkspaceRef.id, imageUri, titleWorkspace)
 
+        uploadImageAndSaveWorkspace(newWorkspaceRef.id, imageUri, titleWorkspace)
+        uploadImageQuote(newWorkspaceRef.id, imageQuoteUri)
+
+    }
+
+    private suspend fun uploadImageQuote(workspaceId: String, imageQuoteUri: Uri?) {
+        if (imageQuoteUri != null) {
+
+            if (imageQuoteUri.toString().contains("https")) {
+                return
+            }
+
+            val storageRef =
+                FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/ImageQuote${workspaceId}")
+            storageRef.putFile(imageQuoteUri).await()
+            val downloadUrl = storageRef.downloadUrl.await().toString()
+            val fileTitle = FileTitle(downloadUrl, "ImageQuote", 0)
+            firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
+                .update("imageQuote", fileTitle.toHashMap()).await()
+        }
     }
 
     private suspend fun uploadImageAndSaveWorkspace(
@@ -200,7 +252,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
     ) {
         if (imageUri != null) {
 
-            if (imageUri.toString().contains("https")){
+            if (imageUri.toString().contains("https")) {
                 return
             }
             val storageRef =
@@ -211,6 +263,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
             firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
                 .update("titleImage", fileTitle.toHashMap()).await()
         }
+
     }
 
     private fun FileTitle.toHashMap(): HashMap<String, Any?> {

@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp
 data class Workspace(
     var workspaceId: String? = null,
     var titleImage: FileTitle?,
+    var imageQuote : FileTitle?,
     var description: String,
     var ownerId: String,
     var passCode: String,
@@ -17,11 +18,12 @@ data class Workspace(
 ) : Parcelable {
 
     constructor() : this(
-        "", null, "", "",
+        "", null, null, "", "",
         "", mutableListOf(), mutableListOf(), mutableListOf()
     )
     constructor(parcel: Parcel) : this(
         parcel.readString(),
+        parcel.readParcelable(FileTitle::class.java.classLoader),
         parcel.readParcelable(FileTitle::class.java.classLoader),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -35,6 +37,7 @@ data class Workspace(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(workspaceId)
         parcel.writeParcelable(titleImage, flags)
+        parcel.writeParcelable(imageQuote, flags)
         parcel.writeString(ownerId)
         parcel.writeString(passCode)
         parcel.writeString(description)

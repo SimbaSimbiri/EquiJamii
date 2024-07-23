@@ -26,8 +26,8 @@ import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.UserNetworkUtils
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddWorkspaceDialog
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewWorkspFragment
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.WorkspaceViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WorkspaceAdapter(
@@ -173,7 +173,7 @@ class WorkspaceAdapter(
                     loginInput.text?.clear()
                     loginLayout.visibility = View.GONE
                     submitCode.visibility = View.GONE
-                    signIn(code, workspace.passCode)
+                    signIn(code, workspace.passCode, workspace.workspaceId!!)
                 } else {
                     Toast.makeText(
                         context,
@@ -200,11 +200,13 @@ class WorkspaceAdapter(
             }
         }
 
-        private fun signIn(code: String, loginCode: String) {
+        private fun signIn(code: String, loginCode: String, id: String) {
             progressBar.visibility = View.VISIBLE
             if (code.contentEquals(loginCode)) {
                 progressBar.visibility = View.GONE
-                // fragment to view workspace
+                val frag = ViewWorkspFragment.newInstance(id)
+                val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                frag.show(transaction, frag.tag)
 
             } else {
                 progressBar.visibility = View.GONE

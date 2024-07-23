@@ -38,7 +38,7 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
-import com.simbiri.equityjamii.databinding.AddWorkspaceDialogBinding
+import com.simbiri.equityjamii.databinding.DialogAddWorkspaceBinding
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -55,10 +55,11 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
     }
 
-    private lateinit var binding: AddWorkspaceDialogBinding
+    private lateinit var binding: DialogAddWorkspaceBinding
     private val viewModel: AddWorkspaceDialogViewModel by viewModels()
     private val firestore = FirebaseFirestore.getInstance()
     private var imageUri: Uri? = null
+    private var imageQuoteUri: Uri? = null
     private var workspaceId: String? = null
     private var membersList = mutableListOf<Person>()
     private var adminList = mutableListOf<Person>()
@@ -70,13 +71,23 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private var isLinkInputVisible = false
     private var currPerson: Person? = null
 
-    private val openImagePicker = registerForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            imageUri = result.uriContent
-            Glide.with(requireContext()).load(imageUri).into(binding.imagePostUpload)
-            binding.imagePostUpload.visibility = View.VISIBLE
+    var clickedThumbnail = false
+    var clickedImQuote = false
+
+    private val openImagePicker =
+        registerForActivityResult(CropImageContract()) { result ->
+            if (result.isSuccessful) {
+                if (clickedThumbnail) {
+                    imageUri = result.uriContent
+                    Glide.with(requireContext()).load(imageUri).into(binding.imagePostUpload)
+                    binding.imagePostUpload.visibility = View.VISIBLE
+                } else if (clickedImQuote) {
+                    imageQuoteUri = result.uriContent
+                    Glide.with(requireContext()).load(imageQuoteUri).into(binding.imagePostQuote)
+                    binding.imagePostQuote.visibility = View.VISIBLE
+                }
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +100,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AddWorkspaceDialogBinding.inflate(inflater, container, false)
+        binding = DialogAddWorkspaceBinding.inflate(inflater, container, false)
         setupUI()
         observeViewModel()
 
@@ -148,7 +159,12 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     }
 
     private fun setupUI() {
+
+
         binding.addWorkspThumbNail.setOnClickListener {
+            clickedThumbnail = true
+            clickedImQuote = false
+
             val cropImageOptions = CropImageContractOptions(
                 null, CropImageOptions(
                     true,
@@ -167,8 +183,33 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     fixAspectRatio = true
                 )
             )
-
             openImagePicker.launch(cropImageOptions)
+        }
+
+        binding.addImageQuote.setOnClickListener {
+            clickedThumbnail = false
+            clickedImQuote = true
+
+            val cropImageOptions = CropImageContractOptions(
+                null, CropImageOptions(
+                    true,
+                    false,
+                    CropImageView.CropShape.RECTANGLE,
+                    cropCornerRadius = 8.0F,
+                    cropMenuCropButtonTitle = "Done",
+                    showCropLabel = true,
+                    activityTitle = "Crop image quote",
+                    activityBackgroundColor = requireContext().resources.getColor(R.color.black),
+                    toolbarColor = requireContext().resources.getColor(R.color.black),
+                    progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
+                    guidelines = CropImageView.Guidelines.OFF,
+                    aspectRatioX = 1,
+                    aspectRatioY = 1,
+                    fixAspectRatio = true
+                )
+            )
+            openImagePicker.launch(cropImageOptions)
+
         }
 
         binding.invitedRecyclerView.layoutManager =
@@ -290,6 +331,12 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             binding.imagePostUpload.visibility = View.VISIBLE
             imageUri = Uri.parse(it)
         }
+
+        workspace.imageQuote?.fileUri?.let {
+            Glide.with(requireContext()).load(it).into(binding.imagePostQuote)
+            binding.imagePostQuote.visibility = View.VISIBLE
+            imageQuoteUri = Uri.parse(it)
+        }
     }
 
     private fun saveWorkspace() {
@@ -315,7 +362,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri
+                    imageUri, imageQuoteUri
                 )
                 Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT)
                     .show()
@@ -331,7 +378,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri, false
+                    imageUri, imageQuoteUri, false
                 )
                 Toast.makeText(
                     requireContext(),
@@ -411,7 +458,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.apply {
 
-            setContentView(R.layout.add_workspace_dialog)
+            setContentView(R.layout.dialog_add_workspace)
             setCanceledOnTouchOutside(true)
 
             val displayMetrics = DisplayMetrics()

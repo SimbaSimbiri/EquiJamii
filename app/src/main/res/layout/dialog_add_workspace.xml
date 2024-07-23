@@ -40,6 +40,36 @@
             app:layout_constraintStart_toStartOf="@id/addWorkspThumbNail"
             app:layout_constraintTop_toBottomOf="@id/addWorkspThumbNail" />
 
+
+        <Button
+            android:id="@+id/addImageQuote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Add new image-quote"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagePostUpload" />
+
+        <ImageView
+            android:id="@+id/imagePostQuote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_stroke_rectangle"
+            android:contentDescription="Picture Post"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/addImageQuote"
+            app:layout_constraintStart_toStartOf="@id/addImageQuote"
+            app:layout_constraintTop_toBottomOf="@id/addImageQuote" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameWkspLayout"
             style="@style/FirebaseUI.TextInputLayout"
@@ -52,7 +82,7 @@
             app:hintTextColor="@color/logoColour"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imagePostUpload">
+            app:layout_constraintTop_toBottomOf="@id/imagePostQuote">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameWkspInput"
