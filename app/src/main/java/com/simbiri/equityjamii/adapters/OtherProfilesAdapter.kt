@@ -16,10 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.constants.TASK_ASSIGNEES_SUB_COLLECTION
-import com.simbiri.equityjamii.constants.TASK_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
@@ -30,15 +27,11 @@ class OtherProfilesAdapter(
     var editingWksp: Boolean = false,
     var addingWkspAdmins: Boolean = false,
     var editingTask: Boolean = false,
-    var taskWorkspId: String? = null,
+    var editingMention : Boolean = false,
     private val onInviteClick: (person: Person, flag : Int) -> Unit = { _, _ -> }
 
 ) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
-    private val firebaseStorage = FirebaseFirestore.getInstance()
-    private val workspaceCollection = firebaseStorage.collection(WORKSPACE_COLLECTION)
-    private val taskCollection = firebaseStorage.collection(TASK_COLLECTION)
-
 
     inner class OtherProfViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview),
         View.OnClickListener {
@@ -100,12 +93,16 @@ class OtherProfilesAdapter(
                 deleteIconView.setOnClickListener {
                     peopleList.remove(personInstance)
                     notifyItemRemoved(position)
-                    if (editingTask) {
+                    /*if (editingTask) {
                         removeMemberFromTask()
                     }
                     if (editingWksp) {
                         removeMemberFromWorkSpace()
                     }
+
+                    if (editingMention){
+                        removeMentionFromSpace()
+                    }*/
                 }
             }
 
@@ -129,6 +126,28 @@ class OtherProfilesAdapter(
 
             namePersonTextView.text = currentPerson!!.name
         }
+
+/*
+        private fun removeMentionFromSpace() {
+
+            val memberTaskDoc = workspaceMentionCollection.document(currentPerson!!.userId)
+            memberTaskDoc.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        memberTaskDoc.delete()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error removing user from task",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            }
+        }
+
 
         private fun removeMemberFromWorkSpace() {
 
@@ -178,7 +197,7 @@ class OtherProfilesAdapter(
 
             }
         }
-
+*/
 
         private fun adjustHolderSize() {
             val layoutParamsHolder = cardViewHolder.layoutParams

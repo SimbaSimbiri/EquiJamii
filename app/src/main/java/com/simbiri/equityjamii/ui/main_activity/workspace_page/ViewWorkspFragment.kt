@@ -2,39 +2,28 @@ package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
 import android.app.Dialog
 import android.content.Context
-import android.net.Uri
-import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.SearchView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
-import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.DialogViewWorkspBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ViewWorkspFragment : BottomSheetDialogFragment(),
     androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -56,8 +45,6 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
     private lateinit var binding: DialogViewWorkspBinding
     private var documentsList = mutableListOf<FileTitle>()
     private var linksList = mutableListOf<FileTitle>()
-    private val dispatchersIO =  Dispatchers.IO
-    private val firestore = FirebaseFirestore.getInstance()
     private var workspaceList = mutableListOf<Person>()
     private var adminsList = mutableListOf<Person>()
     private var membersList = mutableListOf<Person>()
@@ -86,6 +73,22 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         }
 
         viewModel.adminsList.observe(viewLifecycleOwner){people->
+
+            if (people.any { person -> person.userId.contentEquals(AuthUtils.getCurrentUserId()) }){
+                binding.editWorkspace.visibility = View.VISIBLE
+                binding.editWorkspace.setOnClickListener {
+                    binding.progressBar.visibility = View.VISIBLE
+                    val addWorkspaceDialog = AddWorkspaceDialog.newInstance(workspaceId!!)
+                    val transaction =
+                        (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    addWorkspaceDialog.show(transaction, addWorkspaceDialog.tag)
+
+                    Handler().postDelayed({
+                        binding.progressBar.visibility = View.GONE
+                    }, 3000)
+                }
+            }
+
             adminsList.addAll(people)
             workspaceList.addAll(people)
             binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
@@ -103,9 +106,15 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
     private fun populateUI(workspace: Workspace) {
 
-        workspace.imageQuote?.fileUri?.let {
-            Glide.with(requireContext()).load(it).into(binding.imagePostQuote)
+        workspace.imageQuote?.let {
             binding.imagePostQuote.visibility = View.VISIBLE
+            binding.cardPostQuote.visibility = View.VISIBLE
+
+            Glide.with(requireContext()).load(it.fileUri).into(binding.imagePostQuote)
+
+            binding.textQuote.visibility = View.VISIBLE
+
+            binding.textQuote.text = it.fileTitle
         }
     }
 
@@ -172,7 +181,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.documentsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
@@ -195,11 +204,12 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
     }
 
     fun filterWorkspacePeople(text: String) {
+        val fullList = membersList + adminsList
 
         val filteredList = if (text.isEmpty()) {
-            membersList + adminsList
+            fullList
         } else {
-            workspaceList.filter { it.name.contains(text, ignoreCase = true) }
+            fullList.filter { it.name.contains(text, ignoreCase = true) }
                 .toMutableList()
         }
 

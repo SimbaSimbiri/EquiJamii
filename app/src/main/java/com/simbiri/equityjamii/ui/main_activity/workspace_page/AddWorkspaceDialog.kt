@@ -85,6 +85,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     imageQuoteUri = result.uriContent
                     Glide.with(requireContext()).load(imageQuoteUri).into(binding.imagePostQuote)
                     binding.imagePostQuote.visibility = View.VISIBLE
+                    binding.motivationQuoteLayout.visibility = View.VISIBLE
+
                 }
             }
         }
@@ -203,8 +205,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     toolbarColor = requireContext().resources.getColor(R.color.black),
                     progressBarColor = requireContext().resources.getColor(R.color.karbBackgrndtint),
                     guidelines = CropImageView.Guidelines.OFF,
-                    aspectRatioX = 1,
-                    aspectRatioY = 1,
+                    aspectRatioX = 16,
+                    aspectRatioY = 9,
                     fixAspectRatio = true
                 )
             )
@@ -326,16 +328,19 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         binding.descriptionInput.setText(workspace.description)
         binding.loginCodeInput.setText(workspace.passCode.toString())
 
-        workspace.titleImage?.fileUri?.let {
-            Glide.with(requireContext()).load(it).into(binding.imagePostUpload)
+        workspace.titleImage?.let {
+            Glide.with(requireContext()).load(it.fileUri).into(binding.imagePostUpload)
             binding.imagePostUpload.visibility = View.VISIBLE
-            imageUri = Uri.parse(it)
+            imageUri = Uri.parse(it.fileUri)
         }
 
-        workspace.imageQuote?.fileUri?.let {
-            Glide.with(requireContext()).load(it).into(binding.imagePostQuote)
+        workspace.imageQuote?.let {
+            Glide.with(requireContext()).load(it.fileUri).into(binding.imagePostQuote)
             binding.imagePostQuote.visibility = View.VISIBLE
-            imageQuoteUri = Uri.parse(it)
+            binding.motivationQuoteLayout.visibility = View.VISIBLE
+            imageQuoteUri = Uri.parse(it.fileUri)
+
+            binding.motivationQuoteInput.setText(it.fileTitle)
         }
     }
 
@@ -346,6 +351,13 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val description = binding.descriptionInput.text.toString()
         val passCode = binding.loginCodeInput.text.toString()
         val ownerId = AuthUtils.getCurrentUserId()!!
+        val quote = binding.motivationQuoteInput.text.toString()
+
+        if (name.isEmpty() || description.isEmpty() || passCode.isEmpty()) {
+            Toast.makeText(requireContext(), "All text inputs must be filled", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val links = extractLinksFromRecyclerView(binding.linksRecyclerView)
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
@@ -362,7 +374,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri, imageQuoteUri
+                    imageUri, imageQuoteUri,quote
                 )
                 Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT)
                     .show()
@@ -378,7 +390,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri, imageQuoteUri, false
+                    imageUri, imageQuoteUri,quote, false
                 )
                 Toast.makeText(
                     requireContext(),

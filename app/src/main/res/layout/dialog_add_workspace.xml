@@ -71,6 +71,28 @@
             app:layout_constraintTop_toBottomOf="@id/addImageQuote" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/motivationQuoteLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagePostQuote">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/motivationQuoteInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Quote or birthday wish"
+                android:textColorHighlight="@color/lighterMaroon" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameWkspLayout"
             style="@style/FirebaseUI.TextInputLayout"
             android:layout_width="0dp"
@@ -82,7 +104,7 @@
             app:hintTextColor="@color/logoColour"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imagePostQuote">
+            app:layout_constraintTop_toBottomOf="@id/motivationQuoteLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameWkspInput"

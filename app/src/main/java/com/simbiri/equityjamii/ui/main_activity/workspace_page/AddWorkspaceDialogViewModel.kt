@@ -189,7 +189,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         ownerId: String,
         links: List<FileTitle>,
         documents: List<FileTitle>,
-        imageUri: Uri?, imageQuoteUri: Uri?, isNew: Boolean = true
+        imageUri: Uri?, imageQuoteUri: Uri?, quote : String, isNew: Boolean = true
     ) {
         val uploadedDocuments = uploadDocumentsAndGetFileTitles(documents)
 
@@ -200,9 +200,9 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         }
 
         val imageQuoteTitle = if (isNew) {
-            FileTitle("", "ImageQuote", 0).toHashMap()
+            FileTitle("", quote, 0).toHashMap()
         } else {
-            FileTitle(imageQuoteUri.toString(), "ImageQuote", 0).toHashMap()
+            FileTitle(imageQuoteUri.toString(), quote, 0).toHashMap()
         }
 
         val workspaceData = hashMapOf(
@@ -224,11 +224,11 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         }
 
         uploadImageAndSaveWorkspace(newWorkspaceRef.id, imageUri, titleWorkspace)
-        uploadImageQuote(newWorkspaceRef.id, imageQuoteUri)
+        uploadImageQuote(newWorkspaceRef.id, imageQuoteUri, quote)
 
     }
 
-    private suspend fun uploadImageQuote(workspaceId: String, imageQuoteUri: Uri?) {
+    private suspend fun uploadImageQuote(workspaceId: String, imageQuoteUri: Uri?, quote: String) {
         if (imageQuoteUri != null) {
 
             if (imageQuoteUri.toString().contains("https")) {
@@ -239,7 +239,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
                 FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/ImageQuote${workspaceId}")
             storageRef.putFile(imageQuoteUri).await()
             val downloadUrl = storageRef.downloadUrl.await().toString()
-            val fileTitle = FileTitle(downloadUrl, "ImageQuote", 0)
+            val fileTitle = FileTitle(downloadUrl, quote, 0)
             firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
                 .update("imageQuote", fileTitle.toHashMap()).await()
         }

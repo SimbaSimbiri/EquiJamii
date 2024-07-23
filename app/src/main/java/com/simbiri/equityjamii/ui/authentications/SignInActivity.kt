@@ -33,7 +33,18 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var oneTapClient: SignInClient
-
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult())
+        { result ->
+            if (result.resultCode == RESULT_OK) {
+                binding.progressBar.visibility = View.VISIBLE
+                lifecycleScope.launch {
+                    signInWithIntent(result.data ?: return@launch)
+                }
+            } else if (result.resultCode == RESULT_CANCELED){
+                binding.progressBar.visibility = View.INVISIBLE
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +105,7 @@ class SignInActivity : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this,
-                                it.exception?.message.toString(),
+                                "Wrong password, try resetting or signing in via your google account",
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
@@ -115,17 +126,6 @@ class SignInActivity : AppCompatActivity() {
         }
 
     }
-
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult())
-        { result ->
-            if (result.resultCode == RESULT_OK) {
-                binding.progressBar.visibility = View.VISIBLE
-                lifecycleScope.launch {
-                    signInWithIntent(result.data ?: return@launch)
-                }
-            }
-        }
 
     private fun signInWithIntent(intent: Intent) {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)

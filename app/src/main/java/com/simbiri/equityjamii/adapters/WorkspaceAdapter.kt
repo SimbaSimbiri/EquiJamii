@@ -1,5 +1,4 @@
 import android.content.Context
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.UserNetworkUtils
-import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddWorkspaceDialog
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewWorkspFragment
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.WorkspaceViewModel
 import kotlinx.coroutines.launch
@@ -62,7 +60,6 @@ class WorkspaceAdapter(
         private val textPeople: TextView = itemView.findViewById(R.id.textPeople)
         private val adminsRecyclerView: RecyclerView =
             itemView.findViewById(R.id.adminProfileRecyclerView)
-        private val editWksp: ImageView = itemView.findViewById(R.id.editWorkspace)
         private val viewModel = WorkspaceViewModel()
         private val loginLayout: TextInputLayout = itemView.findViewById(R.id.passwordLayout)
         private val loginInput: TextInputEditText = itemView.findViewById(R.id.passET)
@@ -150,9 +147,7 @@ class WorkspaceAdapter(
                         querySnapshot.documents.forEach { doc ->
                             listIds.add(doc.id)
                         }
-                        if (listIds.contains(AuthUtils.getCurrentUserId())) {
-                            editWksp.visibility = View.VISIBLE
-                        }
+
                         adminsList.addAll(UserNetworkUtils.narrowDownUsers(listIds))
                         adapter.notifyDataSetChanged()
 
@@ -187,17 +182,6 @@ class WorkspaceAdapter(
                 // Handle Notifications click
             }
 
-            editWksp.setOnClickListener {
-                progressBar.visibility = View.VISIBLE
-                val addWorkspaceDialog = AddWorkspaceDialog.newInstance(workspace.workspaceId!!)
-                val transaction =
-                    (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                addWorkspaceDialog.show(transaction, addWorkspaceDialog.tag)
-
-                Handler().postDelayed({
-                    progressBar.visibility = View.GONE
-                }, 3000)
-            }
         }
 
         private fun signIn(code: String, loginCode: String, id: String) {
