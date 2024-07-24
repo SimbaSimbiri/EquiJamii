@@ -7,6 +7,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main_activity.workspace_page.AddMentionFragment">
 
+    <ProgressBar
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/contentLoadingProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/logoColour"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/saveMention"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/keyWordLayout"
         style="@style/FirebaseUI.TextInputLayout"
@@ -87,17 +98,31 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="15dp"
-        android:text="Mentioned teammates"
+        android:text="Mentioned teammate"
         android:textColor="@color/logoColour"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mentionAssigneesRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mentionAssigneesTextView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Save mention"
+        android:background="@drawable/background_corner"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/saveMention"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

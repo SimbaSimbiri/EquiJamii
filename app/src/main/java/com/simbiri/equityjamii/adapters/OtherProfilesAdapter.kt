@@ -46,6 +46,8 @@ class OtherProfilesAdapter(
         private var deleteIconView: ImageView = itemView.findViewById(R.id.deleteUserIcon)
         var cardInviteMember: CardView = itemView.findViewById(R.id.cardInviteMember)
         var cardInviteAdmin: CardView = itemView.findViewById(R.id.cardInviteAdmin)
+        var cardAddMention: CardView = itemView.findViewById(R.id.cardAddMention)
+
 
 
         fun setOnClickListeners() {
@@ -70,7 +72,16 @@ class OtherProfilesAdapter(
                 }
 
 
-            } else {
+            } else if (editingMention){
+                isInviteVisible = !isInviteVisible
+
+                if (isInviteVisible){
+                    cardAddMention.visibility = View.VISIBLE
+                } else{
+                    cardAddMention.visibility = View.VISIBLE
+                }
+            }
+            else {
                 val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
@@ -118,6 +129,11 @@ class OtherProfilesAdapter(
                 cardInviteAdmin.visibility = View.INVISIBLE
                 cardInviteMember.visibility = View.INVISIBLE
 
+            }
+
+            cardAddMention.setOnClickListener {
+                onInviteClick(personInstance, 3)
+                cardAddMention.visibility = View.INVISIBLE
             }
 
             Glide.with(itemView)

@@ -72,9 +72,9 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         }
 
-        viewModel.adminsList.observe(viewLifecycleOwner){people->
+        viewModel.adminsList.observe(viewLifecycleOwner) { people ->
 
-            if (people.any { person -> person.userId.contentEquals(AuthUtils.getCurrentUserId()) }){
+            if (people.any { person -> person.userId.contentEquals(AuthUtils.getCurrentUserId()) }) {
                 binding.editWorkspace.visibility = View.VISIBLE
                 binding.editWorkspace.setOnClickListener {
                     binding.progressBar.visibility = View.VISIBLE
@@ -95,7 +95,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         }
 
-        viewModel.membersList.observe(viewLifecycleOwner){people->
+        viewModel.membersList.observe(viewLifecycleOwner) { people ->
             membersList.addAll(people)
             workspaceList.addAll(people)
             binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
@@ -115,9 +115,15 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             binding.textQuote.visibility = View.VISIBLE
 
             binding.textQuote.text = it.fileTitle
+
+            binding.addMention.setOnClickListener {
+                val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                frag.show(transaction, frag.tag)
+            }
         }
     }
-
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
@@ -128,7 +134,6 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
     }
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)

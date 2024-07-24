@@ -121,14 +121,15 @@ data class Task(
 }
 
 data class WorkspaceMention(
+    var mentionId : String?,
     var workspaceId: String?,
-    var appreciatorName: String?,
+    var appreciatorId: String?,
     var recipientId: String,
     var timeMentioned: Timestamp? = null,
     var keyWordMention: String,
     var mentionMainText: String
 ){
-    constructor():this("","","",null,"","")
+    constructor():this("","","","",null,"","")
 }
 
 data class MileStone(var titleMilestone: String, var timeDueString: String, var complete: Boolean, var inProgress: Boolean) :
