@@ -117,6 +117,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                 val fileTitle = FileTitle(uri.toString(), filename, 0)
                 documentsList.add(fileTitle)
                 binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
+                binding.documentsRecyclerView.scrollToPosition(documentsList.size-1)
             }
 
         }
@@ -149,7 +150,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.taskAssigneesRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.documentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.documentsRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, true)
         binding.milestonesRecyclerView.adapter =
@@ -164,13 +166,15 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             editingTask = true
         ) { person, flag ->
             if (flag == 4) {
-                if (!assigneesList.contains(person)) assigneesList.add(person)
-                else Toast.makeText(
+                if (!assigneesList.contains(person)) {
+                    assigneesList.add(person)
+                    binding.taskAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
+                    binding.taskAssigneesRecyclerView.scrollToPosition(assigneesList.size - 1)
+                } else Toast.makeText(
                     requireContext(),
                     "${person.name} already added as an assignee",
                     Toast.LENGTH_SHORT
                 ).show()
-                binding.taskAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
             }
 
         }
@@ -220,6 +224,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         val milestone = MileStone(titleMilestone, duedatemileston, false, false)
         milestonesList.add(milestone)
         binding.milestonesRecyclerView.adapter?.notifyDataSetChanged()
+        binding.milestonesRecyclerView.scrollToPosition(milestonesList.size - 1)
 
         binding.nameMilestoneInput.text?.clear()
         binding.dueDateMilestoneInput.text?.clear()
@@ -239,6 +244,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         val fileTitle = FileTitle(link, title, 0)
         linksList.add(fileTitle)
         binding.linksRecyclerView.adapter?.notifyDataSetChanged()
+        binding.linksRecyclerView.scrollToPosition(linksList.size - 1)
 
         binding.titleInput.text?.clear()
         binding.linkInput.text?.clear()
@@ -319,7 +325,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
 
         }.invokeOnCompletion {
             binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-
+            dismiss()
         }
     }
 
