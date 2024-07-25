@@ -3,13 +3,17 @@ package com.simbiri.equityjamii.ui.main_activity.workspace_page
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,17 +21,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
+import com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.MilestoneAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
+import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.databinding.AddTaskFragBinding
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListener {
 
@@ -47,6 +59,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         }
     }
 
+    private val firestore = FirebaseFirestore.getInstance()
     private val viewModel: AddTaskViewModel by viewModels()
     private lateinit var binding: AddTaskFragBinding
     private var workspaceId: String? = null
@@ -57,12 +70,21 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     private var documentsList = mutableListOf<FileTitle>()
     private var isLinkInputVisible = false
     private var isMilestoneInputVisible = false
+    private var membersList = mutableListOf<Person>()
+    private var adminList = mutableListOf<Person>()
+    private val viewModelWorksp = AddWorkspaceDialogViewModel()
+    private val listPeopleAll = mutableListOf<Person>()
+    private var finalDate: Calendar = Calendar.getInstance()
+    private var taskCur: Task? = null
+    private lateinit var pdfLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         workspaceId = arguments?.getString(ARGS_WORKSP_ID)
         taskId = arguments?.getString(ARGS_TASK_ID)
         taskId?.let { viewModel.loadTask(workspaceId!!, it) }
+        workspaceId?.let { viewModelWorksp.loadWorkspace(it) }
+
     }
 
     override fun onCreateView(
@@ -88,8 +110,19 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             addLink()
         }
 
+        pdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            val filename = uri?.let { DocumentFile.fromSingleUri(requireContext(), it)?.name }
+
+            if (filename != null) {
+                val fileTitle = FileTitle(uri.toString(), filename, 0)
+                documentsList.add(fileTitle)
+                binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
+            }
+
+        }
+
         binding.addPdfButton.setOnClickListener {
-            // Handle PDF addition
+            pdfLauncher.launch("application/pdf")
         }
 
         binding.saveTask.setOnClickListener {
@@ -102,17 +135,37 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
 
         binding.searchViewAll.setOnQueryTextListener(this)
 
-        // Setup RecyclerViews
         binding.linksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.milestonesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.searchPeopleRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.taskAssigneesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.searchPeopleRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.taskAssigneesRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.documentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, true)
-        binding.milestonesRecyclerView.adapter = MilestoneAdapter(requireContext(), milestonesList, true)
-        binding.taskAssigneesRecyclerView.adapter = OtherProfilesAdapter(requireContext(), assigneesList, true)
-        binding.documentsRecyclerView.adapter = PdfDescAdapter(requireContext(), documentsList, true)
+        binding.milestonesRecyclerView.adapter =
+            MilestoneAdapter(requireContext(), milestonesList, true)
+        binding.taskAssigneesRecyclerView.adapter =
+            OtherProfilesAdapter(requireContext(), assigneesList, true)
+        binding.documentsRecyclerView.adapter =
+            PdfDescAdapter(requireContext(), documentsList, true)
+        binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(
+            requireContext(),
+            listPeopleAll,
+            editingTask = true
+        ) { person, flag ->
+            if (flag == 4) {
+                if (!assigneesList.contains(person)) assigneesList.add(person)
+                else Toast.makeText(
+                    requireContext(),
+                    "${person.name} already added as an assignee",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.taskAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
+            }
+
+        }
     }
 
     private fun toggleLinkVisibility() {
@@ -144,7 +197,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         val link = binding.linkInput.text.toString()
 
         if (title.isBlank() || link.isBlank()) {
-            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -160,50 +214,161 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     private fun saveTask() {
         val taskTitle = binding.nameTaskInput.text.toString()
         val taskDescription = binding.descriptionInput.text.toString()
-        val finalDueDate = "" //TODO // Replace with actual date and time
-        val taskOwnerId = "someOwnerId" // Replace with actual owner ID
+        val finalDueDate = Timestamp(finalDate.time)
+        val taskOwnerId = AuthUtils.getCurrentUserId()
         val isComplete = false
 
         if (taskTitle.isBlank() || taskDescription.isBlank()) {
-            Toast.makeText(requireContext(), "Title and Description are required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Title and Description are required",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         val milestones = extractMilestonesFromRecyclerView(binding.milestonesRecyclerView)
         val links = extractLinksFromRecyclerView(binding.linksRecyclerView)
-        val assignees = extractPeopleFromRecyclerView(binding.taskAssigneesRecyclerView).map { it.userId }
+        val assignees =
+            extractPeopleFromRecyclerView(binding.taskAssigneesRecyclerView).map { it.userId }
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
         lifecycleScope.launch {
-            viewModel.saveTaskToFirebase(
-                taskOwnerId,
-                taskTitle,
-                taskDescription,
-                assignees.toMutableList(),
-                documents.toMutableList(),
-                documents.toMutableList(), // Pre and post attachments are the same for now
-                milestones.toMutableList(),
-                links.toMutableList(),
-                workspaceId!!,
-                finalDueDate,
-                taskId ?: "",
-                isComplete,
-                taskId == null
-            )
-            dismiss()
+
+            if (taskId == null) {
+                taskId =
+                    firestore.collection(WORKSPACE_COLLECTION).document(workspaceId!!).collection(
+                        TASK_SUB_COLLECTION
+                    ).id
+
+                viewModel.saveTaskToFirebase(
+                    taskOwnerId,
+                    taskTitle,
+                    taskDescription,
+                    assignees.toMutableList(),
+                    documents.toMutableList(),
+                    taskCur?.postAttachments ?: mutableListOf(),
+                    milestones.toMutableList(),
+                    links.toMutableList(),
+                    workspaceId!!,
+                    finalDueDate,
+                    taskId!!,
+                    isComplete,
+                    true
+                )
+                Toast.makeText(requireContext(), "Registering new task", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                viewModel.saveTaskToFirebase(
+                    taskOwnerId,
+                    taskTitle,
+                    taskDescription,
+                    assignees.toMutableList(),
+                    documents.toMutableList(),
+                    taskCur?.postAttachments ?: mutableListOf(),
+                    milestones.toMutableList(),
+                    links.toMutableList(),
+                    workspaceId!!,
+                    finalDueDate,
+                    taskId!!,
+                    isComplete,
+                    false
+                )
+
+                Toast.makeText(
+                    requireContext(),
+                    "Updating task changes",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         }
     }
 
     private fun observeViewModel() {
         viewModel.task.observe(viewLifecycleOwner) { task ->
             task?.let { populateUI(it) }
+            taskCur = task
         }
+
+        viewModelWorksp.adminsList.observe(viewLifecycleOwner) { admins ->
+            adminList.addAll(admins)
+            listPeopleAll.addAll(admins)
+            binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+
+        }
+
+        viewModelWorksp.membersList.observe(viewLifecycleOwner) { members ->
+            membersList.addAll(members)
+            listPeopleAll.addAll(members)
+            binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+        }
+
+
     }
 
     private fun populateUI(task: Task) {
-        binding.nameTaskInput.setText(task.title)
-        binding.descriptionInput.setText(task.taskDescription)
-        // Set other UI components based on the task data
+        binding.apply {
+            nameTaskInput.setText(task.title)
+            descriptionInput.setText(task.taskDescription)
+            milestonesList.addAll(task.milestonesTask)
+            milestonesRecyclerView.adapter!!.notifyDataSetChanged()
+            task.assigneeListIds.forEach {
+                AuthUtils.getCurrentPerson(it) { person ->
+                    assigneesList.add(
+                        person!!
+                    )
+                }
+            }
+            taskAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
+            linksList.addAll(task.importantLinks)
+            linksRecyclerView.adapter!!.notifyDataSetChanged()
+            documentsList.addAll(task.preAttachments)
+            documentsRecyclerView.adapter!!.notifyDataSetChanged()
+            setupDateTimePickers(task)
+
+        }
+    }
+
+    private fun setupDateTimePickers(task: Task) {
+        val initialDateMillis = task.finalDueDate?.toDate()?.time ?: System.currentTimeMillis()
+
+        binding.datePicker.apply {
+            setDate(initialDateMillis)
+            setDateChangeListener(object : DatePicker.DateChangeListener {
+                override fun onDateChanged(date: Long, day: Int, month: Int, year: Int) {
+                    finalDate.set(Calendar.YEAR, year)
+                    finalDate.set(Calendar.MONTH, month)
+                    finalDate.set(Calendar.DAY_OF_MONTH, day)
+                }
+            })
+
+            setOnTouchListener { v, event ->
+                v.parent.requestDisallowInterceptTouchEvent(true)
+                v.onTouchEvent(event)
+                true
+            }
+        }
+
+
+        binding.timePicker.apply {
+            finalDate.timeInMillis = initialDateMillis
+            Handler().postDelayed({
+                setTime(finalDate.get(Calendar.HOUR_OF_DAY), finalDate.get(Calendar.MINUTE))
+            }, 600)
+            setTimeChangeListener(object : TimePicker.TimeChangeListener {
+                override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
+                    finalDate.set(Calendar.HOUR_OF_DAY, hour)
+                    finalDate.set(Calendar.MINUTE, minute)
+                }
+            })
+            setOnTouchListener { v, event ->
+                v.parent.requestDisallowInterceptTouchEvent(true)
+                v.onTouchEvent(event)
+                true
+            }
+        }
+
     }
 
     private fun extractFileTitlesFromPdfRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
@@ -231,7 +396,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        viewModel.filterPeople(newText ?: "")
+        viewModelWorksp.filterPeople(newText ?: "")
         return true
     }
 
@@ -242,12 +407,14 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             setCanceledOnTouchOutside(true)
 
             val displayMetrics = DisplayMetrics()
-            val windowManager = requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val windowManager =
+                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             setOnShowListener { dialogInterface ->
                 val bottomSheetDialog = dialogInterface as BottomSheetDialog
-                val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                val bottomSheet =
+                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
                 setupFullHeight(bottomSheet!!)
                 bottomSheet.let {
                     val behavior = BottomSheetBehavior.from(bottomSheet)
@@ -266,7 +433,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT

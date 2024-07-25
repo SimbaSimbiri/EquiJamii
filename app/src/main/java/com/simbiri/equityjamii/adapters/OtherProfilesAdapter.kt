@@ -47,7 +47,7 @@ class OtherProfilesAdapter(
         var cardInviteMember: CardView = itemView.findViewById(R.id.cardInviteMember)
         var cardInviteAdmin: CardView = itemView.findViewById(R.id.cardInviteAdmin)
         var cardAddMention: CardView = itemView.findViewById(R.id.cardAddMention)
-
+        var cardAddTask: CardView = itemView.findViewById(R.id.cardAddTask)
 
 
         fun setOnClickListeners() {
@@ -58,6 +58,14 @@ class OtherProfilesAdapter(
             if (editingTask) {
                 Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT)
                     .show()
+                cardAddTask.visibility =  View.VISIBLE
+                isInviteVisible = !isInviteVisible
+
+                if (isInviteVisible){
+                    cardAddTask.visibility = View.VISIBLE
+                }else{
+                    cardAddTask.visibility = View.INVISIBLE
+                }
 
             } else if (editingWksp || addingWkspAdmins) {
 
@@ -134,6 +142,11 @@ class OtherProfilesAdapter(
             cardAddMention.setOnClickListener {
                 onInviteClick(personInstance, 3)
                 cardAddMention.visibility = View.INVISIBLE
+            }
+
+            cardAddTask.setOnClickListener {
+                onInviteClick(personInstance, 4)
+                cardAddTask.visibility = View.INVISIBLE
             }
 
             Glide.with(itemView)
