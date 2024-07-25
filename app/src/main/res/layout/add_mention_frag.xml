@@ -117,7 +117,6 @@
         android:layout_height="50dp"
         android:text="Save mention"
         android:backgroundTint="@color/logoColour"
-        android:background="@drawable/background_corner"
         android:textColor="@color/white"
         android:layout_marginBottom="10dp"
         android:textAllCaps="false"

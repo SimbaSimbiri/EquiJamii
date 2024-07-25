@@ -178,7 +178,6 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                 editingMention = true
             ) { person, flag ->
                 if (flag == 3) {
-                    mentionPerson = person
                     listMentioned.clear()
                     listMentioned.add(person)
                     mentionAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
@@ -205,56 +204,71 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             }
 
             saveMention.setOnClickListener {
-                contentLoadingProgressBar.visibility = View.VISIBLE
-                val keyword = nameTaskInput.text.toString()
-                val mainText = mentionMainTextInput.text.toString()
-                val recipientId = mentionPerson?.userId
-                val appreciatorId = AuthUtils.getCurrentUserId()
-
-                val workspDoc = workspCollection.document(workspId!!)
-
-                if (keyword.isNotEmpty() || mainText.isNotEmpty() || recipientId != null) {
-                    lifecycleScope.launch {
-                        if (mentionId == null) {
-                            mentionId = workspDoc.collection(WORKSPACE_MENTIONS_SUB_COLLECTIONS).document().id
-
-                            viewModel.saveMentionToFirebase(
-                                keyword,
-                                mainText,
-                                recipientId,
-                                appreciatorId, workspId!!, mentionId!!, true
-                            )
-                            Toast.makeText(
-                                requireContext(),
-                                "Registering mention",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            viewModel.saveMentionToFirebase(
-                                keyword,
-                                mainText,
-                                recipientId,
-                                appreciatorId, workspId!!, mentionId!!, false
-                            )
-                            Toast.makeText(requireContext(), "Updating mention", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }.invokeOnCompletion {
-                        contentLoadingProgressBar.visibility = View.INVISIBLE
-                        dismiss()
-
-                    }
-                }else{
-                    Toast.makeText(requireContext(), "Please include all fields or select teammate", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
+                mentionPerson = listMentioned.firstOrNull()
+                saveMentionFirebase()
             }
 
         }
         binding.searchViewAll.setOnQueryTextListener(this)
 
         return binding.root
+    }
+
+    private fun saveMentionFirebase() {
+
+        binding.apply {
+            contentLoadingProgressBar.visibility = View.VISIBLE
+            val keyword = nameTaskInput.text.toString()
+            val mainText = mentionMainTextInput.text.toString()
+            val recipientId = mentionPerson?.userId
+            val appreciatorId = AuthUtils.getCurrentUserId()
+
+            val workspDoc = workspCollection.document(workspId!!)
+
+            if (keyword.isNotEmpty() && mainText.isNotEmpty() && recipientId != null) {
+                lifecycleScope.launch {
+                    if (mentionId == null) {
+                        mentionId =
+                            workspDoc.collection(WORKSPACE_MENTIONS_SUB_COLLECTIONS).document().id
+
+                        viewModel.saveMentionToFirebase(
+                            keyword,
+                            mainText,
+                            recipientId,
+                            appreciatorId, workspId!!, mentionId!!, true
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Registering mention",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        viewModel.saveMentionToFirebase(
+                            keyword,
+                            mainText,
+                            recipientId,
+                            appreciatorId, workspId!!, mentionId!!, false
+                        )
+                        Toast.makeText(requireContext(), "Updating mention", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }.invokeOnCompletion {
+                    contentLoadingProgressBar.visibility = View.INVISIBLE
+                    dismiss()
+
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Please include all fields or select teammate",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                binding.contentLoadingProgressBar.visibility =  View.INVISIBLE
+            }
+
+
+        }
     }
 
 

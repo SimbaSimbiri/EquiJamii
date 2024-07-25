@@ -65,21 +65,25 @@ data class Workspace(
 data class Task(
     var title: String,
     var assignorId: String,
+    var taskDescription : String,
+    var taskId : String?,
     var assigneeListIds: MutableList<String>,
     var preAttachments: MutableList<FileTitle>,
     var postAttachments: MutableList<FileTitle>,
     var importantLinks: MutableList<FileTitle>,
     var milestonesTask: MutableList<MileStone>,
     var finalDueDate: Timestamp? = null,
-    val complete: Boolean
+    val isComplete: Boolean
 ) : Parcelable {
 
     constructor() : this(
-        "", "", mutableListOf(), mutableListOf(), mutableListOf(),
+        "", "", "", null, mutableListOf(), mutableListOf(), mutableListOf(),
         mutableListOf(), mutableListOf(), null, false
     )
 
     constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.createStringArrayList()!!.toMutableList(),
@@ -95,8 +99,10 @@ data class Task(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)
         parcel.writeString(assignorId)
+        parcel.writeString(taskDescription)
+        parcel.writeString(taskId)
         parcel.writeParcelable(finalDueDate, flags)
-        parcel.writeByte(if (complete) 1 else 0)
+        parcel.writeByte(if (isComplete) 1 else 0)
         parcel.writeTypedList(preAttachments)
         parcel.writeTypedList(importantLinks)
         parcel.writeTypedList(postAttachments)
