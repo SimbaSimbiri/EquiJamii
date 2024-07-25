@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.DisplayMetrics
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,13 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.constants.WORKSPACE_MENTIONS
+import com.simbiri.equityjamii.constants.WORKSPACE_MENTIONS_SUB_COLLECTIONS
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.WorkspaceMention
 import com.simbiri.equityjamii.databinding.AddMentionFragBinding
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListener {
 
@@ -64,6 +63,7 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private val workspCollection = firebaseStorage.collection(WORKSPACE_COLLECTION)
     private var adminsList = mutableListOf<Person>()
     private var membersList = mutableListOf<Person>()
+    private var listMentioned = mutableListOf<Person>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -112,11 +112,12 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private fun observeViewModel() {
 
         viewModelWorkspace.workspace.observe(viewLifecycleOwner) {
-            workspId = it.workspaceId
 
             viewModelWorkspace.membersList.observe(viewLifecycleOwner) { members ->
                 membersList.addAll(members)
                 listPeople.addAll(members)
+                Log.i("listmemmbers", listPeople.toString())
+
                 binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
             }
 
@@ -124,6 +125,8 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             viewModelWorkspace.adminsList.observe(viewLifecycleOwner) { admins ->
                 adminsList.addAll(admins)
                 listPeople.addAll(admins)
+                Log.i("listadmins", listPeople.toString())
+
                 binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
             }
 
@@ -145,9 +148,7 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
             AuthUtils.getCurrentPerson(mention.recipientId) { person ->
                 mentionPerson = person
-                val listMentioned = mutableListOf(person!!)
-                mentionAssigneesRecyclerView.adapter =
-                    OtherProfilesAdapter(requireContext(), listMentioned, canDelete = true)
+                listMentioned.add(person!!)
 
             }
 
@@ -155,11 +156,6 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -171,6 +167,8 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
             mentionAssigneesRecyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            mentionAssigneesRecyclerView.adapter =
+                OtherProfilesAdapter(requireContext(), listMentioned, canDelete = true)
 
             searchPeopleRecyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -181,11 +179,14 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             ) { person, flag ->
                 if (flag == 3) {
                     mentionPerson = person
-                    mentionAssigneesRecyclerView.adapter!!.notifyItemChanged(0, person)
+                    listMentioned.clear()
+                    listMentioned.add(person)
+                    mentionAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
                 }
             }
 
             lifecycleScope.launch {
+
                 arguments.let {
                     workspId = it?.getString(ARGS_WORKSP_ID)
                     mentionId = it?.getString(ARGS_MENTION_ID)
@@ -196,7 +197,10 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                                 it2
                             )
                         }
+                        viewModelWorkspace.loadWorkspace(it1)
                     }
+                    observeViewModel()
+
                 }
             }
 
@@ -209,10 +213,10 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
                 val workspDoc = workspCollection.document(workspId!!)
 
-                if (keyword.isNotEmpty() || mainText.isNotEmpty()) {
+                if (keyword.isNotEmpty() || mainText.isNotEmpty() || recipientId != null) {
                     lifecycleScope.launch {
                         if (mentionId == null) {
-                            mentionId = workspDoc.collection(WORKSPACE_MENTIONS).document().id
+                            mentionId = workspDoc.collection(WORKSPACE_MENTIONS_SUB_COLLECTIONS).document().id
 
                             viewModel.saveMentionToFirebase(
                                 keyword,
@@ -237,8 +241,12 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                         }
                     }.invokeOnCompletion {
                         contentLoadingProgressBar.visibility = View.INVISIBLE
+                        dismiss()
 
                     }
+                }else{
+                    Toast.makeText(requireContext(), "Please include all fields or select teammate", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
             }
@@ -271,6 +279,8 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
         listPeople.clear()
         listPeople.addAll(filteredList)
+        Log.i("list after filtered", listPeople.toString())
+
         binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
 
     }

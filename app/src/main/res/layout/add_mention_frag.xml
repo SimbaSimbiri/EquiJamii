@@ -60,7 +60,7 @@
             style="@style/titleTab2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task short description e.g mission, goals etc"
+            android:hint="reason for mention e.g for exemplary decision making"
             android:inputType="textMultiLine"
             android:textColorHighlight="@color/lighterMaroon" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -116,6 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="Save mention"
+        android:backgroundTint="@color/logoColour"
         android:background="@drawable/background_corner"
         android:textColor="@color/white"
         android:layout_marginBottom="10dp"

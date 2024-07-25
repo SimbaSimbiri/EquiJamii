@@ -17,7 +17,7 @@ val WORKSP_ADMINS_SUB_COLLECTION ="WorkspaceAdmins"
 val WORKSPACE_IMAGE_STORE = "WorkspaceImageStore"
 val WORKSPACE_DOCUMENTS_STORE = "WorkspaceDocumentsStore"
 
-val WORKSPACE_MENTIONS = "Mentions"
+val WORKSPACE_MENTIONS_SUB_COLLECTIONS = "Mentions"
 
 val TASK_SUB_COLLECTION = "Tasks"
 val TASK_ASSIGNEES_SUB_COLLECTION = "TaskAssignees"

@@ -16,7 +16,7 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="100dp"
             android:background="@color/karbBackgrndtint"
             android:theme="@style/FirebaseUI.TopProgressBar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,14 +89,16 @@
         <Button
             android:id="@+id/addMention"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/background_corner"
+            android:backgroundTint="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/workspaceMentionsTv"
             android:text="Add"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/workspaceMentionsTv" />
+            />
 
 
         <androidx.recyclerview.widget.RecyclerView
