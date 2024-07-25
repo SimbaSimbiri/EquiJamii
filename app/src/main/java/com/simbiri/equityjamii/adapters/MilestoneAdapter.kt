@@ -40,12 +40,10 @@ class MilestoneAdapter(
 
         holder.checkBoxInProgress.setOnCheckedChangeListener { _, isChecked ->
             milestone.inProgress = isChecked
-            // Additional logic can be added here if needed
         }
 
         holder.checkBoxComplete.setOnCheckedChangeListener { _, isChecked ->
             milestone.complete = isChecked
-            // Additional logic can be added here if needed
         }
 
         if (canDelete) {

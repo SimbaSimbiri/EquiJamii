@@ -54,6 +54,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         workspaceId = arguments?.getString(ARGS_WORKSP_ID)
         workspaceId?.let { viewModel.loadWorkspace(it) }
+
     }
 
     private fun observeViewModel() {
@@ -193,6 +194,12 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, false)
         binding.documentsRecyclerView.adapter =
             PdfDescAdapter(requireContext(), documentsList, false)
+
+        binding.createTasksCard.setOnClickListener {
+            val frag = AddTaskFragment.newInstance(workspaceId!!, null)
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            frag.show(transaction, frag.tag)
+        }
 
         binding.searchViewAll.setOnQueryTextListener(this)
 

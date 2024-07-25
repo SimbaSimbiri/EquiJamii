@@ -178,6 +178,18 @@
                     android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ProgressBar
+                android:id="@+id/contentLoadingProgressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="30dp"
+                android:background="@color/logoColour"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dueDateMilestoneLayout"
                 style="@style/FirebaseUI.TextInputLayout"
@@ -369,6 +381,21 @@
                     android:hint="Appropriate link"
                     android:textColorHighlight="@color/lighterMaroon" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/confirmMilestoneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:backgroundTint="@color/logoColour"
+                android:text="Submit"
+                android:visibility="gone"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dueDateMilestoneLayout" />
 
             <Button
                 android:id="@+id/confirmLinkButton"

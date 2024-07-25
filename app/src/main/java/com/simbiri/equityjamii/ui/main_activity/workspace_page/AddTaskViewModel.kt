@@ -1,13 +1,16 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Task
@@ -43,6 +46,7 @@ class AddTaskViewModel : ViewModel() {
     ) {
 
         val workspDoc = workspCollection.document(workspId)
+        val prelist = uploadDocumentsAndGetFileTitles(prelistAttachments)
 
         val hashMention = HashMap<String, Any?>()
         hashMention["title"] = taskTitle
@@ -50,10 +54,10 @@ class AddTaskViewModel : ViewModel() {
         hashMention["taskDescription"] = taskDescription
         hashMention["taskId"] = taskId
         hashMention["assigneeListIds"] = listAssignees
-        hashMention["preAttachments"] = prelistAttachments
-        hashMention["postAttachments"] = postAttachments
-        hashMention["importantLinks"] = listLinks
-        hashMention["milestonesTask"] = listMilestones
+        hashMention["preAttachments"] = prelist.map { it.toHashMap() }
+        hashMention["postAttachments"] = postAttachments.map { it.toHashMap() }
+        hashMention["importantLinks"] = listLinks.map { it.toHashMap() }
+        hashMention["milestonesTask"] = listMilestones.map { it.toHash() }
         hashMention["isComplete"] = isComplete
         hashMention["finalDueDate"] = finalDueDate
 
@@ -64,4 +68,45 @@ class AddTaskViewModel : ViewModel() {
         }
     }
 
+    private suspend fun uploadDocumentsAndGetFileTitles(documents: List<FileTitle>): List<FileTitle> {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val uploadedFileTitles = mutableListOf<FileTitle>()
+
+        for (document in documents) {
+            if (document.fileUri.contains("https")) {
+                uploadedFileTitles.add(document)
+                continue
+            }
+            val fileRef = storageRef.child("$WORKSPACE_DOCUMENTS_STORE/${document.fileTitle}")
+            val fileUri = Uri.parse(document.fileUri)
+            fileRef.putFile(fileUri).await()
+            val downloadUrl = fileRef.downloadUrl.await().toString()
+            uploadedFileTitles.add(
+                FileTitle(
+                    downloadUrl,
+                    document.fileTitle,
+                    documents.indexOf(document)
+                )
+            )
+        }
+
+        return uploadedFileTitles
+    }
+
+    private fun FileTitle.toHashMap(): HashMap<String, Any?> {
+        return hashMapOf(
+            "fileUri" to this.fileUri,
+            "fileTitle" to this.fileTitle,
+            "position" to 0
+        )
+    }
+
+    private fun MileStone.toHash(): HashMap<String, Any?> {
+        return hashMapOf(
+            "titleMilestone" to this.titleMilestone,
+            "timeDueString" to this.timeDueString,
+            "complete" to this.complete,
+            "inProgress" to this.inProgress
+        )
+    }
 }

@@ -133,10 +133,18 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             dismiss()
         }
 
+        binding.confirmMilestoneButton.setOnClickListener {
+            addMilestone()
+        }
+
         binding.searchViewAll.setOnQueryTextListener(this)
 
-        binding.linksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.milestonesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.linksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        binding.milestonesRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.taskAssigneesRecyclerView.layoutManager =
@@ -186,10 +194,36 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         if (isMilestoneInputVisible) {
             binding.nameMilestoneLayout.visibility = View.VISIBLE
             binding.dueDateMilestoneLayout.visibility = View.VISIBLE
+            binding.confirmMilestoneButton.visibility = View.VISIBLE
         } else {
             binding.nameMilestoneLayout.visibility = View.GONE
             binding.dueDateMilestoneLayout.visibility = View.GONE
+            binding.confirmMilestoneButton.visibility = View.GONE
+
         }
+    }
+
+    private fun addMilestone() {
+        val titleMilestone = binding.nameMilestoneInput.text.toString()
+        val duedatemileston = binding.dueDateMilestoneInput.text.toString()
+
+        if (titleMilestone.isBlank() || duedatemileston.isBlank()) {
+            Toast.makeText(
+                requireContext(),
+                "Both title and due date are required",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+            return
+        }
+
+        val milestone = MileStone(titleMilestone, duedatemileston, false, false)
+        milestonesList.add(milestone)
+        binding.milestonesRecyclerView.adapter?.notifyDataSetChanged()
+
+        binding.nameMilestoneInput.text?.clear()
+        binding.dueDateMilestoneInput.text?.clear()
+        toggleMilestoneVisibility()
     }
 
     private fun addLink() {
@@ -234,12 +268,13 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
         lifecycleScope.launch {
+            binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
             if (taskId == null) {
                 taskId =
                     firestore.collection(WORKSPACE_COLLECTION).document(workspaceId!!).collection(
                         TASK_SUB_COLLECTION
-                    ).id
+                    ).document().id
 
                 viewModel.saveTaskToFirebase(
                     taskOwnerId,
@@ -281,6 +316,9 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+        }.invokeOnCompletion {
+            binding.contentLoadingProgressBar.visibility = View.INVISIBLE
 
         }
     }
@@ -419,8 +457,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                 bottomSheet.let {
                     val behavior = BottomSheetBehavior.from(bottomSheet)
                     behavior.apply {
-                        isDraggable = true
-                        isHideable = true
+                        isDraggable = false
+                        isHideable = false
                         peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
                         state = BottomSheetBehavior.STATE_EXPANDED
                     }
