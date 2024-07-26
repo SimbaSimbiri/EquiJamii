@@ -182,7 +182,6 @@
                 android:id="@+id/contentLoadingProgressBar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginBottom="30dp"
                 android:background="@color/logoColour"
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
@@ -234,7 +233,7 @@
                 app:iconifiedByDefault="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/confirmMilestoneButton"
+                app:layout_constraintTop_toBottomOf="@id/milestonesRecyclerView"
                 app:queryHint="Search for task assignees from your network" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -392,9 +391,9 @@
                 android:visibility="gone"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/searchViewAll"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dueDateMilestoneLayout" />
 
             <Button
@@ -432,20 +431,21 @@
             android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/saveTask" />
+            />
 
         <Button
             android:id="@+id/saveTask"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:backgroundTint="@color/logoColour"
             android:text="Save Task"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@id/cancelTask"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 

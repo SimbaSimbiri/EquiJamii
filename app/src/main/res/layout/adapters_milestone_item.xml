@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/deleteUserIcon"
+            android:id="@+id/deleteMilestoneIcon"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/cancel_fab_icon"
@@ -24,12 +24,12 @@
 
         <TextView
             android:id="@+id/textTaskMentionView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textColor="@color/black"
             android:layout_margin="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deleteMilestoneIcon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

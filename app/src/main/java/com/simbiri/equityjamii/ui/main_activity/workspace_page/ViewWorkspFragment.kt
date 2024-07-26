@@ -117,12 +117,14 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
             binding.textQuote.text = it.fileTitle
 
-            binding.addMention.setOnClickListener {
-                val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        }
 
-                frag.show(transaction, frag.tag)
-            }
+        binding.textTitle.text =  workspace.titleImage?.fileTitle
+        binding.addMention.setOnClickListener {
+            val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+            frag.show(transaction, frag.tag)
         }
     }
 

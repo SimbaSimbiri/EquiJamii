@@ -20,7 +20,7 @@ class MilestoneAdapter(
     inner class MilestoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textTaskMentionView: TextView = itemView.findViewById(R.id.textTaskMentionView)
         val dueMilestoneTv: TextView = itemView.findViewById(R.id.dueMilestoneTv)
-        val deleteUserIcon: ImageView = itemView.findViewById(R.id.deleteUserIcon)
+        val deleteMilestoneIcon: ImageView = itemView.findViewById(R.id.deleteMilestoneIcon)
         val checkBoxInProgress: CheckBox = itemView.findViewById(R.id.checkBoxInProgress)
         val checkBoxComplete: CheckBox = itemView.findViewById(R.id.checkBoxComplete)
     }
@@ -47,17 +47,17 @@ class MilestoneAdapter(
         }
 
         if (canDelete) {
-            holder.deleteUserIcon.visibility = View.VISIBLE
+            holder.deleteMilestoneIcon.visibility = View.VISIBLE
             holder.checkBoxComplete.visibility = View.GONE
             holder.checkBoxInProgress.visibility = View.GONE
 
-            holder.deleteUserIcon.setOnClickListener {
+            holder.deleteMilestoneIcon.setOnClickListener {
                 milestones.removeAt(position)
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, itemCount)
             }
         } else {
-            holder.deleteUserIcon.visibility = View.GONE
+            holder.deleteMilestoneIcon.visibility = View.GONE
         }
     }
 

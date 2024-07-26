@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -21,7 +20,7 @@
             android:theme="@style/FirebaseUI.TopProgressBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
             android:id="@+id/editWorkspace"
@@ -30,17 +29,16 @@
             android:src="@drawable/add_news_icon"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPostQuote"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_margin="10dp"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editWorkspace">
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,6 +65,19 @@
                     android:textSize="19sp"
                     app:layout_constraintBottom_toBottomOf="@id/imagePostQuote"
                     app:layout_constraintEnd_toEndOf="@id/imagePostQuote"
+                    app:layout_constraintStart_toStartOf="@id/imagePostQuote" />
+
+                <TextView
+                    android:id="@+id/textTitle"
+                    style="@style/titleTab"
+                    android:layout_margin="5dp"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:gravity="start"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="@id/imagePostQuote"
                     app:layout_constraintStart_toStartOf="@id/imagePostQuote" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
