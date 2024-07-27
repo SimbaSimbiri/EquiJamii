@@ -9,6 +9,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:id="@+id/editTask"
+        android:visibility="gone"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,7 +18,7 @@
         app:tint="@color/logoColour"/>
 
     <ImageView
-        android:id="@+id/deleteUserIcon"
+        android:id="@+id/deleteIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/delete_maroon"

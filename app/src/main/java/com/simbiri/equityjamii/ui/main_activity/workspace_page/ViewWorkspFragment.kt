@@ -12,6 +12,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.app.adapters.TaskAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,6 +20,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
+import com.simbiri.equityjamii.adapters.WorkspaceMentionAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
@@ -42,6 +44,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
     private var workspaceId: String? = null
     private val viewModel = AddWorkspaceDialogViewModel()
+    private lateinit var viewModelView: ViewWorkspViewModel
     private lateinit var binding: DialogViewWorkspBinding
     private var documentsList = mutableListOf<FileTitle>()
     private var linksList = mutableListOf<FileTitle>()
@@ -54,10 +57,33 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         workspaceId = arguments?.getString(ARGS_WORKSP_ID)
         workspaceId?.let { viewModel.loadWorkspace(it) }
+        viewModelView = ViewWorkspViewModel(workspaceId)
+
 
     }
 
-    private fun observeViewModel() {
+    private fun observeViewModelView() {
+        viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
+            binding.workspMentionsRecyclerView.adapter =
+                WorkspaceMentionAdapter(mentions, workspaceId!!)
+            binding.workspMentionsRecyclerView.adapter!!.notifyDataSetChanged()
+        }
+
+        viewModelView.mytasks.observe(viewLifecycleOwner) { myTasks ->
+            binding.myTasksRecyclerView.adapter = TaskAdapter(myTasks, workspaceId!!)
+            binding.myTasksRecyclerView.adapter!!.notifyDataSetChanged()
+        }
+
+        viewModelView.myDelegatedtasks.observe(viewLifecycleOwner) { myDelegatedTasks ->
+            binding.myDelegatedTasksRecyclerView.adapter =
+                TaskAdapter(myDelegatedTasks, workspaceId!!)
+            binding.myDelegatedTasksRecyclerView.adapter!!.notifyDataSetChanged()
+        }
+
+
+    }
+
+    private fun observeViewModelAdd() {
         viewModel.workspace.observe(viewLifecycleOwner) { workspace ->
             workspace?.let { populateUI(it) }
         }
@@ -119,7 +145,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         }
 
-        binding.textTitle.text =  workspace.titleImage?.fileTitle
+        binding.textTitle.text = workspace.titleImage?.fileTitle
         binding.addMention.setOnClickListener {
             val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -178,7 +204,8 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         savedInstanceState: Bundle?
     ): View {
         binding = DialogViewWorkspBinding.inflate(layoutInflater)
-        observeViewModel()
+        observeViewModelAdd()
+        observeViewModelView()
 
         binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(
             requireContext(),
@@ -192,6 +219,13 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.myTasksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.myDelegatedTasksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.workspMentionsRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, false)
         binding.documentsRecyclerView.adapter =

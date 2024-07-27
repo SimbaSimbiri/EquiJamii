@@ -1,55 +1,81 @@
-package com.simbiri.equityjamii.adapters
-import android.content.Context
+package com.example.app.adapters
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.model.Task
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddTaskFragment
 
-
-class TaskDataAdapter(
-    var context: Context,
-    var listTitleTask: ArrayList<String>,
-    var listDescription: ArrayList<String>,
-    var listAssignedName: ArrayList<String>
-) :
-    RecyclerView.Adapter<TaskDataAdapter.TaskViewHolder>() {
-
-    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var positionItemTask: Int = 0
-
-        private var titleText: TextView = itemView.findViewById(R.id.taskText)
-        private var descriptionText: TextView = itemView.findViewById(R.id.descriptionTaskText)
-        private var assignedNameText: TextView = itemView.findViewById(R.id.assignedToText)
-
-        fun setTasktoItem(position: Int) {
-
-            this.positionItemTask = position
-
-            titleText.text = listTitleTask[positionItemTask]
-            descriptionText.text = listDescription[positionItemTask]
-            assignedNameText.text = listAssignedName[positionItemTask]
-
-        }
-
-    }
+class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
+    RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view =
-            LayoutInflater.from(context).inflate(R.layout.adapters_tasks_item, parent, false)
-
-        return TaskViewHolder(view)
+            LayoutInflater.from(parent.context).inflate(R.layout.adapter_tasks_item, parent, false)
+        return TaskViewHolder(view, workspaceId)
     }
 
-    override fun onBindViewHolder(taskViewHolder: TaskViewHolder, position: Int) {
-        taskViewHolder.setTasktoItem(position)
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        val task = taskList[position]
+        holder.bind(task)
     }
 
     override fun getItemCount(): Int {
+        return taskList.size
+    }
 
-        return this.listTitleTask.size
+    class TaskViewHolder(itemView: View, val workspaceId: String) :
+        RecyclerView.ViewHolder(itemView) {
+        private val textTaskMentionView: TextView = itemView.findViewById(R.id.textTaskMentionView)
+        private val progressMilestoneTv: TextView = itemView.findViewById(R.id.progressMilestoneTv)
+        private val progressTask: LinearProgressIndicator = itemView.findViewById(R.id.progressTask)
+        private val editTask: ImageView = itemView.findViewById(R.id.editTask)
+        private val imageMyProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
+        private val textNameProfile: TextView = itemView.findViewById(R.id.textNameMyProfile)
+
+        fun bind(task: Task) {
+            textTaskMentionView.text = task.title
+            progressMilestoneTv.text =
+                "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"
+            progressTask.progress =
+                task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
+
+            editTask.setOnClickListener {
+                val frag = AddTaskFragment.newInstance(workspaceId, task.taskId)
+                val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                frag.show(transaction, frag.tag)
+            }
+
+            val currentUserId = AuthUtils.getCurrentUserId()
+            val assigneeIdToShow = if (task.assigneeListIds.contains(currentUserId)) {
+                currentUserId
+            } else {
+                task.assigneeListIds.firstOrNull()
+            }
+
+            if (assigneeIdToShow != null) {
+                AuthUtils.getCurrentPerson(assigneeIdToShow) { person ->
+                    person?.let {
+                        Glide.with(itemView.context)
+                            .load(it.profileUri)
+                            .placeholder(R.drawable.account_box)
+                            .into(imageMyProfile)
+                        textNameProfile.text = it.name
+
+                    }
+                }
+            } else {
+                imageMyProfile.setImageResource(R.drawable.account_box)
+            }
+        }
 
     }
 }
