@@ -64,17 +64,22 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
     private fun observeViewModelView() {
         viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
+            if (mentions.isEmpty()) binding.workspaceMentionsTv.visibility = View.GONE
             binding.workspMentionsRecyclerView.adapter =
                 WorkspaceMentionAdapter(mentions, workspaceId!!)
             binding.workspMentionsRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
         viewModelView.mytasks.observe(viewLifecycleOwner) { myTasks ->
+            if (myTasks.isEmpty()) binding.myTasksTv.visibility = View.GONE
+
             binding.myTasksRecyclerView.adapter = TaskAdapter(myTasks, workspaceId!!)
             binding.myTasksRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
         viewModelView.myDelegatedtasks.observe(viewLifecycleOwner) { myDelegatedTasks ->
+            if (myDelegatedTasks.isEmpty()) binding.myDelegatedTasksTv.visibility = View.GONE
+
             binding.myDelegatedTasksRecyclerView.adapter =
                 TaskAdapter(myDelegatedTasks, workspaceId!!)
             binding.myDelegatedTasksRecyclerView.adapter!!.notifyDataSetChanged()
@@ -89,11 +94,13 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         }
 
         viewModel.links.observe(viewLifecycleOwner) { links ->
+            if (links.isNotEmpty()) binding.linksTextView.visibility = View.VISIBLE
             linksList.addAll(links)
             binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
+            if (docs.isNotEmpty()) binding.linksTextView.visibility = View.VISIBLE
             documentsList.addAll(docs)
             binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
 

@@ -43,8 +43,9 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
         private val progressTask: LinearProgressIndicator = itemView.findViewById(R.id.progressTask)
         private val editTask: ImageView = itemView.findViewById(R.id.editTask)
         private val imageMyProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
-        private val textNameProfile: TextView = itemView.findViewById(R.id.textNameMyProfile)
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewMyProfile)
+        private var taskAssignorTv: TextView = itemView.findViewById(R.id.assignorTaskTv)
+
 
         fun bind(task: Task) {
             adjustHolderSize()
@@ -67,6 +68,10 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
                 task.assigneeListIds.firstOrNull()
             }
 
+            AuthUtils.getCurrentPerson(task.assignorId){person ->
+                taskAssignorTv.text = "assigned by ${person?.name}"
+            }
+
             if (assigneeIdToShow != null) {
                 AuthUtils.getCurrentPerson(assigneeIdToShow) { person ->
                     person?.let {
@@ -74,7 +79,6 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
                             .load(it.profileUri)
                             .placeholder(R.drawable.account_box)
                             .into(imageMyProfile)
-                        textNameProfile.text = it.name
 
                     }
                 }
@@ -91,8 +95,8 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenWidth = displayMetrics.widthPixels
-            layoutParamsHolder.width = (screenWidth / 3.5).toInt()
-            layoutParamsHolder.height = (screenWidth / 3.5 + 50.0).toInt()
+            layoutParamsHolder.width = (screenWidth / 5.5).toInt()
+            layoutParamsHolder.height = (screenWidth / 5.5).toInt()
 
             cardViewHolder.layoutParams = layoutParamsHolder
 

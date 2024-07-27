@@ -11,25 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:background="@color/karbBackgrndtint"
-            android:theme="@style/FirebaseUI.TopProgressBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
         <ImageView
             android:id="@+id/editWorkspace"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@drawable/add_news_icon"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPostQuote"
@@ -70,15 +59,15 @@
                 <TextView
                     android:id="@+id/textTitle"
                     style="@style/titleTab"
-                    android:layout_margin="5dp"
                     android:layout_width="wrap_content"
-                    android:padding="5dp"
-                    android:gravity="start"
                     android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="start"
+                    android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="@id/imagePostQuote"
-                    app:layout_constraintStart_toStartOf="@id/imagePostQuote" />
+                    app:layout_constraintStart_toStartOf="@id/imagePostQuote"
+                    app:layout_constraintTop_toTopOf="@id/imagePostQuote" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -91,33 +80,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="Workspace mentions"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardPostQuote" />
 
-        <Button
+        <androidx.cardview.widget.CardView
             android:id="@+id/addMention"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="60dp"
+            android:background="@color/white"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/logoColour"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/workspaceMentionsTv"
-            android:text="Add"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/documentsRecyclerView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/addMentionIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="Google account logo"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/square_plus_svgrepo_com"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textCreateMention"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="start|center_vertical"
+                    android:padding="5dp"
+                    android:text="Add mention"
+                    android:textAllCaps="false"
+                    android:textColor="@color/logoColour"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/addMentionIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/workspMentionsRecyclerView"
             android:layout_width="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/workspaceMentionsTv" />
 
@@ -128,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="My tasks"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="My delegated tasks"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
@@ -160,48 +186,27 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myDelegatedTasksRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksTv" />
 
-
-        <TextView
-            android:id="@+id/celebratingCompleteTasksTv"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Celebrating complete tasks"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksRecyclerView" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/celebCompleteTasksRecyclerView"
-            android:layout_width="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/celebratingCompleteTasksTv" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/createTasksCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="60dp"
             android:background="@color/white"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/celebCompleteTasksRecyclerView">
+            app:layout_constraintTop_toBottomOf="@id/addMention">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -227,7 +232,7 @@
                     android:layout_marginEnd="8dp"
                     android:gravity="start|center_vertical"
                     android:padding="5dp"
-                    android:text="Create task"
+                    android:text="Add task"
                     android:textAllCaps="false"
                     android:textColor="@color/logoColour"
                     android:textStyle="bold"
@@ -240,20 +245,20 @@
 
         </androidx.cardview.widget.CardView>
 
-
+25
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewAll"
             style="@style/Widget.AppCompat.SearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/shape_stroke_rectangle"
             android:textAppearance="@style/titleTab2"
             app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/createTasksCard"
+            app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksRecyclerView"
             app:queryHint="Search for teammate in workspace" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -273,7 +278,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            android:layout_marginTop="25dp"
             android:text="Workspace's links and documents"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
@@ -281,24 +287,12 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/linksRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linksTextView" />
-
-        <TextView
-            android:id="@+id/documentsTextView"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Important Documents"
-            android:textColor="@color/logoColour"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -310,6 +304,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
 
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@color/karbBackgrndtint"
+            android:theme="@style/FirebaseUI.TopProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/createTasksCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

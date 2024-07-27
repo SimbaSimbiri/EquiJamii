@@ -44,7 +44,6 @@ class WorkspaceMentionAdapter(
         private val textTaskMentionView: TextView = itemView.findViewById(R.id.textTaskMentionView)
         private val editTask: ImageView = itemView.findViewById(R.id.editTask)
         private val imageProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
-        private val textNameProfile: TextView = itemView.findViewById(R.id.textNameMyProfile)
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewMyProfile)
 
         fun bind(mention: WorkspaceMention) {
@@ -63,7 +62,6 @@ class WorkspaceMentionAdapter(
             AuthUtils.getCurrentPerson(mention.recipientId) { personRecipent ->
                 personRecipent?.let {
                     Glide.with(itemView.context).load(it.profileUri).into(imageProfile)
-                    textNameProfile.text = it.name
                 }
 
 
@@ -85,8 +83,8 @@ class WorkspaceMentionAdapter(
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenWidth = displayMetrics.widthPixels
-            layoutParamsHolder.width = (screenWidth / 3.5).toInt()
-            layoutParamsHolder.height = (screenWidth / 3.5 + 50.0).toInt()
+            layoutParamsHolder.width = (screenWidth / 5.5).toInt()
+            layoutParamsHolder.height = (screenWidth / 5.5).toInt()
 
             cardViewHolder.layoutParams = layoutParamsHolder
 
