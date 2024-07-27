@@ -1,11 +1,15 @@
 package com.simbiri.equityjamii.adapters
 
+import android.content.Context
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
@@ -41,8 +45,10 @@ class WorkspaceMentionAdapter(
         private val editTask: ImageView = itemView.findViewById(R.id.editTask)
         private val imageProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
         private val textNameProfile: TextView = itemView.findViewById(R.id.textNameMyProfile)
+        private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewMyProfile)
 
         fun bind(mention: WorkspaceMention) {
+            adjustHolderSize()
             editTask.setOnClickListener {
                 val frag = AddMentionFragment.newInstance(
                     this.worskpaceId,
@@ -70,5 +76,21 @@ class WorkspaceMentionAdapter(
                 }
             }
         }
+
+        private fun adjustHolderSize() {
+            val layoutParamsHolder = cardViewHolder.layoutParams
+            val displayMetrics = DisplayMetrics()
+
+            val windowManager = itemView.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenWidth = displayMetrics.widthPixels
+            layoutParamsHolder.width = (screenWidth / 3.5).toInt()
+            layoutParamsHolder.height = (screenWidth / 3.5 + 50.0).toInt()
+
+            cardViewHolder.layoutParams = layoutParamsHolder
+
+        }
+
     }
 }

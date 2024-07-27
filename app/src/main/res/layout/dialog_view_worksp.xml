@@ -114,7 +114,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/workspMentionsRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -136,9 +137,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myTasksRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/myTasksTv" />
 
@@ -180,7 +182,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/celebCompleteTasksRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             app:layout_constraintStart_toStartOf="parent"
