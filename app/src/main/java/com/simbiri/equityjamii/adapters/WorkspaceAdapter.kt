@@ -49,7 +49,6 @@ class WorkspaceAdapter(
     override fun getItemCount(): Int = workspaces.size
 
     inner class WorkspaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val workspaceHeaderCard: CardView = itemView.findViewById(R.id.workspaceHeaderCard)
         private val imageMotivational: ImageView = itemView.findViewById(R.id.imageMotivational)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         private val textTitle: TextView = itemView.findViewById(R.id.textKaribu)
@@ -65,6 +64,8 @@ class WorkspaceAdapter(
         private val loginInput: TextInputEditText = itemView.findViewById(R.id.passET)
         private val submitCode: CardView = itemView.findViewById(R.id.submitPassCardView)
         private var currentPerson: Person? = null
+        private var textPeopleInWorksp: String? = null
+        private var membersCount: Int? = null
 
         fun bind(workspace: Workspace) {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
@@ -94,6 +95,11 @@ class WorkspaceAdapter(
         }
 
         private fun setMembersCount(workspace: Workspace) {
+            if (membersCount != null || !textPeopleInWorksp.isNullOrEmpty()) {
+                textPeople.text = textPeopleInWorksp
+                return
+            }
+
             firestore.collection(WORKSPACE_COLLECTION)
                 .document(workspace.workspaceId ?: "")
                 .collection(WORKSP_MEMBERS_SUB_COLLECTION)
@@ -116,16 +122,21 @@ class WorkspaceAdapter(
                                 .firstOrNull()
                         } else {
                             UserNetworkUtils.narrowDownUsers(
-                                mutableListOf(querySnapshot.documents.shuffled().firstOrNull()?.id ?: return@launch)
+                                mutableListOf(
+                                    querySnapshot.documents.shuffled().firstOrNull()?.id
+                                        ?: return@launch
+                                )
                             ).firstOrNull() ?: return@launch
                         }
 
                         val memberCount = querySnapshot.size()
+                        membersCount = memberCount
                         textPeople.text = if (onePerson != null) {
                             "${onePerson.name} and ${memberCount - 1} others"
                         } else {
                             "No valid members found"
                         }
+                        textPeopleInWorksp = textPeople.text.toString()
                     }
                 }
         }
@@ -156,9 +167,15 @@ class WorkspaceAdapter(
         }
 
         private fun setupClickListeners(workspace: Workspace) {
+
             signInWorkspace.setOnClickListener {
-                loginLayout.visibility = View.VISIBLE
-                submitCode.visibility = View.VISIBLE
+                val frag = ViewWorkspFragment.newInstance(workspace.workspaceId!!)
+                val transaction =
+                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                frag.show(transaction, frag.tag)
+
+                /*loginLayout.visibility = View.VISIBLE
+                submitCode.visibility = View.VISIBLE*/
             }
 
             submitCode.setOnClickListener {
@@ -189,7 +206,8 @@ class WorkspaceAdapter(
             if (code.contentEquals(loginCode)) {
                 progressBar.visibility = View.GONE
                 val frag = ViewWorkspFragment.newInstance(id)
-                val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                val transaction =
+                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 frag.show(transaction, frag.tag)
 
             } else {

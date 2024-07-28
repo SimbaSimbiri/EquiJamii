@@ -27,21 +27,8 @@ class MyWorkspace : Fragment() {
     ): View {
         binding = MyWorkspacePageBinding.inflate(layoutInflater)
 
-        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { currentPerson ->
-            if (currentPerson == null) {
-                Toast.makeText(
-                    requireContext(),
-                    "Set up profile to access EquiJamii features",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                binding.textKaribu.text = "Karibu kazi ${currentPerson.name}"
-
-                setupUI()
-                observeViewModel()
-            }
-        }
-
+        setupUI()
+        observeViewModel()
 
         return binding.root
     }

@@ -26,6 +26,7 @@ import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.DialogViewWorkspBinding
+import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
 
 class ViewWorkspFragment : BottomSheetDialogFragment(),
     androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -94,15 +95,36 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         }
 
         viewModel.links.observe(viewLifecycleOwner) { links ->
-            if (links.isNotEmpty()) binding.linksTextView.visibility = View.VISIBLE
+            if (links.isNotEmpty()) {
+                binding.linksTextView.visibility = View.VISIBLE
+                binding.viewLinksImage.visibility = View.VISIBLE
+            }
             linksList.addAll(links)
             binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
-            if (docs.isNotEmpty()) binding.linksTextView.visibility = View.VISIBLE
+            if (docs.isNotEmpty()) {
+                binding.docsTextView.visibility = View.VISIBLE
+                binding.viewAttachmentsImage.visibility = View.VISIBLE
+
+                binding.docsTextView.setOnClickListener {
+                    val frag = DialogDocumentsFragment.newInstance(ArrayList(docs))
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                    frag.show(transaction, frag.tag)
+                }
+
+                binding.viewAttachmentsImage.setOnClickListener {
+                    val frag = DialogDocumentsFragment.newInstance(ArrayList(docs))
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                    frag.show(transaction, frag.tag)
+                }
+            }
+
             documentsList.addAll(docs)
-            binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
+
 
         }
 
@@ -192,9 +214,9 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
                 bottomSheet.let {
                     val behavior = BottomSheetBehavior.from(bottomSheet)
                     behavior.apply {
-                        isDraggable = true
+                        isDraggable = false
                         isHideable = true
-                        peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
+                        peekHeight = displayMetrics.heightPixels
                         state = BottomSheetBehavior.STATE_EXPANDED
                     }
 
@@ -222,8 +244,8 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         )
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.documentsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        /*      binding.documentsRecyclerView.layoutManager =
+                  LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)*/
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.myTasksRecyclerView.layoutManager =
@@ -235,8 +257,8 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, false)
-        binding.documentsRecyclerView.adapter =
-            PdfDescAdapter(requireContext(), documentsList, false)
+        /*      binding.documentsRecyclerView.adapter =
+                  PdfDescAdapter(requireContext(), documentsList, false)*/
 
         binding.createTasksCard.setOnClickListener {
             val frag = AddTaskFragment.newInstance(workspaceId!!, null)

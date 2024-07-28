@@ -110,7 +110,7 @@ class ProfDisplayFragment : Fragment() {
                 binding.myAssistant.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace(1)
                     navHostFrag.findNavController().navigate(action)
 
                 }
@@ -118,7 +118,7 @@ class ProfDisplayFragment : Fragment() {
                 binding.myWorkspaces.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace()
+                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace(0)
                     navHostFrag.findNavController().navigate(action)
 
                 }

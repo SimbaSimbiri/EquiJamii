@@ -21,81 +21,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textKaribu"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:visibility="gone"
-            android:layout_marginTop="15dp"
-            android:gravity="bottom"
-            android:text="Karibu kazi Ray"
-            android:textColor="@color/logoColour"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/motivationalCard"
-            app:cardCornerRadius="16dp"
-            android:visibility="gone"
-            android:layout_margin="10dp"
-            app:layout_constraintTop_toBottomOf="@id/textKaribu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/good_profile"
-                android:scaleType="centerCrop"
-                android:id="@+id/imageMotivational"
-                android:contentDescription="Motivational Image"/>
-        </androidx.cardview.widget.CardView>
-
-
-        <TextView
-            android:id="@+id/textMyWorkspace"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:gravity="bottom"
-            android:text="My Workspaces"
-            android:textColor="@color/logoColour"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/motivationalCard" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/adapters_workspace_item"
-            android:id="@+id/myWorkspacesRecyclerView"
-            app:layout_constraintTop_toBottomOf="@id/textMyWorkspace"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginVertical="5dp"/>
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/searchViewWorkspaces"
             style="@style/titleTab2"
             android:textSize="15sp"
             android:layout_width="match_parent"
+            android:padding="15dp"
             android:clickable="true"
             android:text="Search for workspace"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_stroke_rectangle"
             android:textAppearance="@style/titleTab2"
-            android:padding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
         <ImageView
@@ -108,18 +49,27 @@
             app:layout_constraintTop_toTopOf="@id/searchViewWorkspaces"
             app:layout_constraintBottom_toBottomOf="@id/searchViewWorkspaces"
             />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/adapters_workspace_item"
+            android:id="@+id/myWorkspacesRecyclerView"
+            app:layout_constraintTop_toBottomOf="@id/searchViewWorkspaces"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/createWorkspacesCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchViewWorkspaces"
+            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
             app:cardElevation="4dp"
             app:cardCornerRadius="8dp"
             android:background="@color/white">

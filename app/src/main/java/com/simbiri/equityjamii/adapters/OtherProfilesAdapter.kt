@@ -56,8 +56,6 @@ class OtherProfilesAdapter(
 
         override fun onClick(v: View?) {
             if (editingTask) {
-                Toast.makeText(context, "Added ${currentPerson!!.name} to task", Toast.LENGTH_SHORT)
-                    .show()
                 cardAddTask.visibility =  View.VISIBLE
                 isInviteVisible = !isInviteVisible
 

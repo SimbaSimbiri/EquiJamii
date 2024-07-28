@@ -50,10 +50,18 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
         fun bind(task: Task) {
             adjustHolderSize()
             textTaskMentionView.text = task.title
-            progressMilestoneTv.text =
-                "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"
-            progressTask.progress =
+            progressMilestoneTv.text = if (task.milestonesTask.isNotEmpty()) {
+                "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"}
+            else{
+                ""
+            }
+
+            progressTask.progress = if (task.milestonesTask.isNotEmpty()){
                 task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
+            } else{
+                if (task.isComplete) 100
+                else 0
+            }
 
             editTask.setOnClickListener {
                 val frag = AddTaskFragment.newInstance(workspaceId, task.taskId)
@@ -68,8 +76,12 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
                 task.assigneeListIds.firstOrNull()
             }
 
-            AuthUtils.getCurrentPerson(task.assignorId){person ->
-                taskAssignorTv.text = "assigned by ${person?.name}"
+            if (task.assignorId.contentEquals(AuthUtils.getCurrentUserId())){
+                taskAssignorTv.text = "assigned by me"
+            }else {
+                AuthUtils.getCurrentPerson(task.assignorId) { person ->
+                    taskAssignorTv.text = "assigned by ${person?.name}"
+                }
             }
 
             if (assigneeIdToShow != null) {

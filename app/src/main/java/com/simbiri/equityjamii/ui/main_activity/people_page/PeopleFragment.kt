@@ -75,8 +75,6 @@ class PeopleFragment : Fragment() {
 
         }
 
-
-
         return view
 
     }
@@ -87,7 +85,6 @@ class PeopleFragment : Fragment() {
 
         val fragmentTransactionExit = parentFragmentManager.beginTransaction()
         val fragmentTransactionEnter = parentFragmentManager.beginTransaction()
-
 
         fragmentTransactionExit.detach(this).commitNow()
         fragmentTransactionEnter.attach(this).commitNow()

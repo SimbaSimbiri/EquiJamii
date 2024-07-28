@@ -37,9 +37,14 @@
 
     <fragment
         android:id="@+id/myWorkspace"
-        android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.MyWorkspace"
+        android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.MainWorkspFragment"
         android:label="My Workspace"
-        tools:layout="@layout/my_workspace_page" />
+        tools:layout="@layout/my_workspace_page" >
+        <argument
+            android:name="initial_tab_index"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 
     <action
         android:id="@+id/action_open_Jamii"
