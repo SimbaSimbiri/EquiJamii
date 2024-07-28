@@ -47,7 +47,7 @@ class ViewWorkspViewModel(val workspaceId: String?) : ViewModel() {
             val taskFirebaseResult = mentionCollection.get().await()
 
             val mentionsRes = taskFirebaseResult.toObjects(WorkspaceMention::class.java)
-            _mentions.value = mentionsRes
+            _mentions.value = mentionsRes.sortedByDescending { it.timeMentioned }.toMutableList()
 
 
         }
@@ -65,10 +65,10 @@ class ViewWorkspViewModel(val workspaceId: String?) : ViewModel() {
             val allTasks = taskFirebaseResult.toObjects(Task::class.java)
 
             val myTasksRes = allTasks.filter { task: Task? -> task?.assigneeListIds?.contains(AuthUtils.getCurrentUserId()) == true }
-            _mytasks.value = myTasksRes.toMutableList()
+            _mytasks.value = myTasksRes.sortedBy { it.finalDueDate }.toMutableList()
 
             val delegatedTasks = allTasks.filter { task: Task? -> task?.assignorId.contentEquals(AuthUtils.getCurrentUserId()) }
-            _myDelegatedtasks.value = delegatedTasks.toMutableList()
+            _myDelegatedtasks.value = delegatedTasks.sortedBy { it.finalDueDate }.toMutableList()
 
         }
     }

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main_activity.workspace_page.AddMentionFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     <ProgressBar
         android:layout_width="24dp"
@@ -33,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameTaskInput"
+            android:id="@+id/keyWordInput"
             style="@style/titleTab2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +82,7 @@
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mentionMainTextLayout"
+        app:layout_constraintTop_toBottomOf="@id/mentionActualTv"
         app:queryHint="Search for task assignees from your network" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -103,6 +108,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
 
+
+    <TextView
+        android:id="@+id/mentionApperanceTv"
+        style="@style/titleTab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="15dp"
+        android:text="How your mention will appear"
+        android:textColor="@color/logoColour"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mentionMainTextLayout" />
+
+    <TextView
+        android:id="@+id/mentionActualTv"
+        android:layout_width="0dp"
+        android:fontFamily="sans-serif-light"
+        android:textStyle="italic"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mentionApperanceTv" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mentionAssigneesRecyclerView"
         android:layout_width="match_parent"
@@ -119,10 +149,12 @@
         android:backgroundTint="@color/logoColour"
         android:textColor="@color/white"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="50dp"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mentionAssigneesRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/saveMention"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -64,6 +66,8 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     private var adminsList = mutableListOf<Person>()
     private var membersList = mutableListOf<Person>()
     private var listMentioned = mutableListOf<Person>()
+    private var currentPerson: Person? = null
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -76,7 +80,6 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             val windowManager =
                 requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.defaultDisplay.getMetrics(displayMetrics)
-
 
             setOnShowListener { dialogInterface ->
                 val bottomSheetDialog = dialogInterface as BottomSheetDialog
@@ -143,7 +146,7 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
     private fun populateUI(mention: WorkspaceMention) {
         binding.apply {
-            nameTaskInput.setText(mention.keyWordMention)
+            keyWordInput.setText(mention.keyWordMention)
             mentionMainTextInput.setText(mention.mentionMainText)
 
             AuthUtils.getCurrentPerson(mention.recipientId) { person ->
@@ -162,6 +165,9 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         savedInstanceState: Bundle?
     ): View {
         binding = AddMentionFragBinding.inflate(layoutInflater)
+        AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person ->
+            currentPerson = person
+        }
 
         binding.apply {
 
@@ -181,6 +187,7 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     listMentioned.clear()
                     listMentioned.add(person)
                     mentionAssigneesRecyclerView.adapter!!.notifyDataSetChanged()
+                    updateMentionPreview()
                 }
             }
 
@@ -210,15 +217,64 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
         }
         binding.searchViewAll.setOnQueryTextListener(this)
+        setupTextChangedListeners()
+
 
         return binding.root
+    }
+
+    private fun setupTextChangedListeners() {
+        binding.apply {
+            keyWordInput.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateMentionPreview()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
+
+            mentionMainTextInput.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateMentionPreview()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
+        }
+    }
+
+    private fun updateMentionPreview() {
+
+        binding.apply {
+            mentionActualTv.text =
+                "${currentPerson?.name ?: ""} ${keyWordInput.text.toString()} ${listMentioned.firstOrNull()?.name ?: ""} ${mentionMainTextInput.text.toString()}"
+        }
+
     }
 
     private fun saveMentionFirebase() {
 
         binding.apply {
             contentLoadingProgressBar.visibility = View.VISIBLE
-            val keyword = nameTaskInput.text.toString()
+            val keyword = keyWordInput.text.toString()
             val mainText = mentionMainTextInput.text.toString()
             val recipientId = mentionPerson?.userId
             val appreciatorId = AuthUtils.getCurrentUserId()
@@ -264,7 +320,7 @@ class AddMentionFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     Toast.LENGTH_SHORT
                 )
                     .show()
-                binding.contentLoadingProgressBar.visibility =  View.INVISIBLE
+                binding.contentLoadingProgressBar.visibility = View.INVISIBLE
             }
 
 
