@@ -9,7 +9,7 @@ The app will have:
   4. A people section with  Equileaders and EquiJamaa.
 
 ## Current progress
-[Video Demo Album, toggle HD quality for better experience](https://photos.app.goo.gl/788d8TE2sTFapxSy9)
+[MVP Demo Album, toggle HD quality for better experience](https://photos.app.goo.gl/788d8TE2sTFapxSy9)
 
 ## License
 
