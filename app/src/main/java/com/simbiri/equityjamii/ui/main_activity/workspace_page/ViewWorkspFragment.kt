@@ -63,6 +63,14 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
     }
 
+    private fun refreshFragment() {
+
+        requireActivity().supportFragmentManager.beginTransaction().detach(this).attach(this)
+            .commit()
+        binding.swipeRefresh.isRefreshing = false
+
+    }
+
     private fun observeViewModelView() {
         viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
             if (mentions.isEmpty()) binding.workspaceMentionsTv.visibility = View.GONE
@@ -256,6 +264,9 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             editingWksp = false,
             addingWkspAdmins = false,
         )
+        binding.swipeRefresh.setOnRefreshListener {
+            refreshFragment()
+        }
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         /*      binding.documentsRecyclerView.layoutManager =

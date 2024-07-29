@@ -1,355 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:id="@+id/swipeRefresh"
+    android:layout_height="match_parent"
     android:background="@drawable/backg_bottom"
     tools:context=".ui.main_activity.workspace_page.ViewWorkspFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/editWorkspace"
-            android:layout_width="28dp"
-            android:layout_height="32dp"
-            android:src="@drawable/add_news_icon"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardPostQuote"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:cardCornerRadius="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/editWorkspace"
+                android:layout_width="28dp"
+                android:layout_height="32dp"
+                android:src="@drawable/add_news_icon"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardPostQuote"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="250dp"
+                app:cardCornerRadius="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/imagePostQuote"
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:contentDescription="Picture Post"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/equityjamiibackground" />
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/textQuote"
-                    style="@style/titleTab"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginVertical="5dp"
-                    android:text="The best form of leadership is mentorship"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@id/imagePostQuote"
-                    app:layout_constraintEnd_toEndOf="@id/imagePostQuote"
-                    app:layout_constraintStart_toStartOf="@id/imagePostQuote" />
+                    <ImageView
+                        android:id="@+id/imagePostQuote"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Picture Post"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/equityjamiibackground"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textTitle"
-                    style="@style/titleTab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="start"
-                    android:padding="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@id/imagePostQuote"
-                    app:layout_constraintTop_toTopOf="@id/imagePostQuote" />
+                    <TextView
+                        android:id="@+id/textQuote"
+                        style="@style/titleTab"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:text="The best form of leadership is mentorship"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="@id/imagePostQuote"
+                        app:layout_constraintEnd_toEndOf="@id/imagePostQuote"
+                        app:layout_constraintStart_toStartOf="@id/imagePostQuote" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/textTitle"
+                        style="@style/titleTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:gravity="start"
+                        android:padding="5dp"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="@id/imagePostQuote"
+                        app:layout_constraintTop_toTopOf="@id/imagePostQuote" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/workspaceMentionsTv"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="25dp"
-            android:text="Workspace mentions"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardPostQuote" />
+            <TextView
+                android:id="@+id/workspaceMentionsTv"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="25dp"
+                android:text="Workspace mentions"
+                android:textColor="@color/logoColour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardPostQuote" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/addMention"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="60dp"
-            android:background="@color/white"
-            android:layout_marginHorizontal="10dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/docsTextView">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/addMention"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="60dp"
+                android:background="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/docsTextView">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/addMentionIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:contentDescription="Google account logo"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/square_plus_svgrepo_com"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textCreateMention"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start|center_vertical"
+                        android:padding="5dp"
+                        android:text="Add mention"
+                        android:textAllCaps="false"
+                        android:textColor="@color/logoColour"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/addMentionIcon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/workspMentionsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/addMentionIcon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:contentDescription="Google account logo"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/square_plus_svgrepo_com"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textCreateMention"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="start|center_vertical"
-                    android:padding="5dp"
-                    android:text="Add mention"
-                    android:textAllCaps="false"
-                    android:textColor="@color/logoColour"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/addMentionIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/workspaceMentionsTv" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/workspMentionsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/workspaceMentionsTv" />
+            <TextView
+                android:id="@+id/myTasksTv"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="25dp"
+                android:text="My tasks"
+                android:textColor="@color/logoColour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/workspMentionsRecyclerView" />
 
 
-        <TextView
-            android:id="@+id/myTasksTv"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="25dp"
-            android:text="My tasks"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/workspMentionsRecyclerView" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/myTasksRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myTasksTv" />
-
-
-        <TextView
-            android:id="@+id/myDelegatedTasksTv"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="25dp"
-            android:text="My delegated tasks"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myTasksRecyclerView" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/myDelegatedTasksRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksTv" />
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/createTasksCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="60dp"
-            android:background="@color/white"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addMention">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/myTasksRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/addIcon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:contentDescription="Google account logo"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/square_plus_svgrepo_com"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textCreateWorksp"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="start|center_vertical"
-                    android:padding="5dp"
-                    android:text="Add task"
-                    android:textAllCaps="false"
-                    android:textColor="@color/logoColour"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/addIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewAll"
-            style="@style/Widget.AppCompat.SearchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/shape_stroke_rectangle"
-            android:textAppearance="@style/titleTab2"
-            app:iconifiedByDefault="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksRecyclerView"
-            app:queryHint="Search for teammate in workspace" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchPeopleRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:elevation="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchViewAll" />
-
-        <TextView
-            android:id="@+id/linksTextView"
-            style="@style/titleTab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:visibility="gone"
-            android:layout_marginTop="25dp"
-            android:text="Workspace's links"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myTasksTv" />
 
 
-        <ImageView
-            android:id="@+id/viewLinksImage"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:contentDescription="View all attachments"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            android:layout_marginStart="0dp"
-            android:src="@drawable/attachments_icon"
-            app:layout_constraintStart_toEndOf="@id/linksTextView"
-            app:layout_constraintBottom_toBottomOf="@id/linksTextView"
-            app:layout_constraintTop_toTopOf="@id/linksTextView" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/linksRecyclerView"
-            android:layout_width="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linksTextView" />
-
-        <TextView
-            android:id="@+id/docsTextView"
-            style="@style/titleTab"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:visibility="gone"
-            android:layout_marginTop="25dp"
-            android:text="View workspace's documents"
-            android:textColor="@color/logoColour"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
+            <TextView
+                android:id="@+id/myDelegatedTasksTv"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="25dp"
+                android:text="My delegated tasks"
+                android:textColor="@color/logoColour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myTasksRecyclerView" />
 
 
-        <ImageView
-            android:id="@+id/viewAttachmentsImage"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:contentDescription="View all attachments"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            android:layout_marginStart="0dp"
-            android:src="@drawable/pdf_present"
-            app:layout_constraintStart_toEndOf="@id/docsTextView"
-            app:layout_constraintBottom_toBottomOf="@id/docsTextView"
-            app:layout_constraintTop_toTopOf="@id/docsTextView" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/myDelegatedTasksRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksTv" />
 
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@color/karbBackgrndtint"
-            android:theme="@style/FirebaseUI.TopProgressBar"
-            app:layout_constraintTop_toBottomOf="@id/createTasksCard"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/createTasksCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="60dp"
+                android:background="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addMention">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/addIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:contentDescription="Google account logo"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/square_plus_svgrepo_com"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textCreateWorksp"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start|center_vertical"
+                        android:padding="5dp"
+                        android:text="Add task"
+                        android:textAllCaps="false"
+                        android:textColor="@color/logoColour"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/addIcon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchViewAll"
+                style="@style/Widget.AppCompat.SearchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/shape_stroke_rectangle"
+                android:textAppearance="@style/titleTab2"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myDelegatedTasksRecyclerView"
+                app:queryHint="Search for teammate in workspace" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchPeopleRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchViewAll" />
+
+            <TextView
+                android:id="@+id/linksTextView"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="25dp"
+                android:text="Workspace's links"
+                android:textColor="@color/logoColour"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
+
+
+            <ImageView
+                android:id="@+id/viewLinksImage"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="0dp"
+                android:contentDescription="View all attachments"
+                android:scaleType="fitCenter"
+                android:src="@drawable/attachments_icon"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/linksTextView"
+                app:layout_constraintStart_toEndOf="@id/linksTextView"
+                app:layout_constraintTop_toTopOf="@id/linksTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/linksRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linksTextView" />
+
+            <TextView
+                android:id="@+id/docsTextView"
+                style="@style/titleTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:clickable="true"
+                android:text="View workspace's documents"
+                android:textColor="@color/logoColour"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
+
+
+            <ImageView
+                android:id="@+id/viewAttachmentsImage"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="0dp"
+                android:contentDescription="View all attachments"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pdf_present"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/docsTextView"
+                app:layout_constraintStart_toEndOf="@id/docsTextView"
+                app:layout_constraintTop_toTopOf="@id/docsTextView" />
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:background="@color/karbBackgrndtint"
+                android:theme="@style/FirebaseUI.TopProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/createTasksCard" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
