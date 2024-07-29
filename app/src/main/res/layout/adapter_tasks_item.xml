@@ -6,27 +6,6 @@
     android:layout_marginBottom="5dp"
     >
 
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:id="@+id/editTask"
-        android:visibility="gone"
-        android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardViewTaskMention"
-        android:src="@drawable/edit"
-        app:tint="@color/logoColour"/>
-
-    <ImageView
-        android:id="@+id/deleteTaskIcon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/delete_maroon"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewMyProfile"
@@ -98,6 +77,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/editTask"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:padding="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/progressTask"
+                android:src="@drawable/edit"
+                app:tint="@color/logoColour"/>
+
+            <ImageView
+                android:id="@+id/deleteTaskIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/delete_maroon"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressTask"

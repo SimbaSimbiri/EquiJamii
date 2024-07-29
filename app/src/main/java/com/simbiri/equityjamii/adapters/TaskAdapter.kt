@@ -8,12 +8,16 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddTaskFragment
@@ -36,6 +40,9 @@ class TaskAdapter(var context: Context, var taskList: MutableList<Task>, val wor
     override fun getItemCount(): Int {
         return taskList.size
     }
+
+    private val firebaseFirestore = FirebaseFirestore.getInstance()
+    private val workspaceDoc = firebaseFirestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
 
     inner class TaskViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -84,6 +91,8 @@ class TaskAdapter(var context: Context, var taskList: MutableList<Task>, val wor
                 deleteTask.setOnClickListener {
                     taskList.remove(task)
                     notifyItemRemoved(position)
+                    workspaceDoc.collection(TASK_SUB_COLLECTION).document(task.taskId!!).delete()
+                    Toast.makeText(context, "${task.title} task deleted permanently", Toast.LENGTH_LONG).show()
                 }
             }
 
