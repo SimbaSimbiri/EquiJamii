@@ -1,7 +1,9 @@
 import android.content.Context
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -49,6 +51,7 @@ class WorkspaceAdapter(
     override fun getItemCount(): Int = workspaces.size
 
     inner class WorkspaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val workspHeaderCard : CardView =  itemView.findViewById(R.id.workspaceHeaderCard)
         private val imageMotivational: ImageView = itemView.findViewById(R.id.imageMotivational)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         private val textTitle: TextView = itemView.findViewById(R.id.textKaribu)
@@ -71,11 +74,27 @@ class WorkspaceAdapter(
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
                 currentPerson = person
             }
+            adjustParams()
             loadImage(workspace)
             setAboutText(workspace)
             setMembersCount(workspace)
             setupAdminsRecyclerView(workspace)
             setupClickListeners(workspace)
+        }
+
+        private fun adjustParams() {
+
+            val layoutParams  =  workspHeaderCard.layoutParams
+            val displayMetrics = DisplayMetrics()
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenHeight = displayMetrics.heightPixels
+            layoutParams.height = screenHeight/3
+            layoutParams.width = layoutParams.width
+
+            workspHeaderCard.layoutParams =  layoutParams
+
         }
 
         private fun loadImage(workspace: Workspace) {

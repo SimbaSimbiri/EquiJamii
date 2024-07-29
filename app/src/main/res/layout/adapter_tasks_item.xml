@@ -19,7 +19,7 @@
         app:tint="@color/logoColour"/>
 
     <ImageView
-        android:id="@+id/deleteIcon"
+        android:id="@+id/deleteTaskIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/delete_maroon"

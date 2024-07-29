@@ -74,7 +74,8 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         viewModelView.mytasks.observe(viewLifecycleOwner) { myTasks ->
             if (myTasks.isEmpty()) binding.myTasksTv.visibility = View.GONE
 
-            binding.myTasksRecyclerView.adapter = TaskAdapter(myTasks, workspaceId!!)
+            binding.myTasksRecyclerView.adapter =
+                TaskAdapter(requireContext(), myTasks, workspaceId!!, false)
             binding.myTasksRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
@@ -82,7 +83,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             if (myDelegatedTasks.isEmpty()) binding.myDelegatedTasksTv.visibility = View.GONE
 
             binding.myDelegatedTasksRecyclerView.adapter =
-                TaskAdapter(myDelegatedTasks, workspaceId!!)
+                TaskAdapter(requireContext(), myDelegatedTasks, workspaceId!!, true)
             binding.myDelegatedTasksRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
@@ -166,7 +167,20 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             binding.imagePostQuote.visibility = View.VISIBLE
             binding.cardPostQuote.visibility = View.VISIBLE
 
-            Glide.with(requireContext()).load(it.fileUri).into(binding.imagePostQuote)
+            val layoutParams = binding.cardPostQuote.layoutParams
+            val displayMetrics = DisplayMetrics()
+            val windowManager =
+                requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+            val screenHeight = displayMetrics.heightPixels
+            layoutParams.height = (screenHeight / 3.5).toInt()
+            layoutParams.width = layoutParams.width
+
+            binding.cardPostQuote.layoutParams = layoutParams
+
+
+            Glide.with(requireContext()).load(it.fileUri).fitCenter().into(binding.imagePostQuote)
 
             binding.textQuote.visibility = View.VISIBLE
 

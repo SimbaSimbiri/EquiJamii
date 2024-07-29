@@ -14,7 +14,7 @@ import com.simbiri.equityjamii.data.model.MileStone
 class MilestoneAdapter(
     private val context: Context,
     var milestones: MutableList<MileStone>,
-    private val canDelete: Boolean
+    private val canDelete: Boolean, private val candEditProgess : Boolean = false
 ) : RecyclerView.Adapter<MilestoneAdapter.MilestoneViewHolder>() {
 
     inner class MilestoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,17 +34,9 @@ class MilestoneAdapter(
         val milestone = milestones[position]
 
         holder.textTaskMentionView.text = milestone.titleMilestone
-        holder.dueMilestoneTv.text = milestone.timeDueString
+        holder.dueMilestoneTv.text = "due ${milestone.timeDueString}"
         holder.checkBoxInProgress.isChecked = milestone.inProgress
         holder.checkBoxComplete.isChecked = milestone.complete
-
-        holder.checkBoxInProgress.setOnCheckedChangeListener { _, isChecked ->
-            milestone.inProgress = isChecked
-        }
-
-        holder.checkBoxComplete.setOnCheckedChangeListener { _, isChecked ->
-            milestone.complete = isChecked
-        }
 
         if (canDelete) {
             holder.deleteMilestoneIcon.visibility = View.VISIBLE
@@ -58,6 +50,21 @@ class MilestoneAdapter(
             }
         } else {
             holder.deleteMilestoneIcon.visibility = View.GONE
+        }
+
+        if (candEditProgess){
+
+            holder.deleteMilestoneIcon.visibility = View.GONE
+            holder.checkBoxComplete.visibility = View.VISIBLE
+            holder.checkBoxInProgress.visibility = View.VISIBLE
+
+            holder.checkBoxInProgress.setOnCheckedChangeListener { _, isChecked ->
+                milestone.inProgress = isChecked
+            }
+
+            holder.checkBoxComplete.setOnCheckedChangeListener { _, isChecked ->
+                milestone.complete = isChecked
+            }
         }
     }
 

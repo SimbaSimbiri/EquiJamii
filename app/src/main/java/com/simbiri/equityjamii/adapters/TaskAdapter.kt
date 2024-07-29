@@ -17,26 +17,27 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddTaskFragment
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewTaskFragment
 
-class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
+class TaskAdapter(var context: Context, var taskList: MutableList<Task>, val workspaceId: String, val canEdit: Boolean) :
     RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.adapter_tasks_item, parent, false)
-        return TaskViewHolder(view, workspaceId)
+            LayoutInflater.from(context).inflate(R.layout.adapter_tasks_item, parent, false)
+        return TaskViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
-        holder.bind(task)
+        holder.bind(task, position)
     }
 
     override fun getItemCount(): Int {
         return taskList.size
     }
 
-    class TaskViewHolder(itemView: View, val workspaceId: String) :
+    inner class TaskViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val textTaskMentionView: TextView = itemView.findViewById(R.id.textTaskMentionView)
         private val progressMilestoneTv: TextView = itemView.findViewById(R.id.progressMilestoneTv)
@@ -45,29 +46,47 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
         private val imageMyProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewMyProfile)
         private var taskAssignorTv: TextView = itemView.findViewById(R.id.assignorTaskTv)
+        private var deleteTask: ImageView = itemView.findViewById(R.id.deleteTaskIcon)
 
 
-        fun bind(task: Task) {
+        fun bind(task: Task, position: Int) {
             adjustHolderSize()
             textTaskMentionView.text = task.title
-            progressMilestoneTv.text = if (task.milestonesTask.isNotEmpty()) {
-                "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"}
-            else{
-                ""
-            }
-
-            progressTask.progress = if (task.milestonesTask.isNotEmpty()){
-                task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
-            } else{
-                if (task.isComplete) 100
-                else 0
-            }
-
-            editTask.setOnClickListener {
-                val frag = AddTaskFragment.newInstance(workspaceId, task.taskId)
+            textTaskMentionView.setOnClickListener {
+                val frag = ViewTaskFragment.newInstance(task, workspaceId)
                 val transaction = (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 frag.show(transaction, frag.tag)
             }
+            progressMilestoneTv.text = if (task.milestonesTask.isNotEmpty()) {
+                "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"
+            } else {
+                ""
+            }
+
+            progressTask.progress = if (task.milestonesTask.isNotEmpty()) {
+                if (task.isComplete) 100
+                else task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
+            } else {
+                0
+            }
+
+            if (canEdit) {
+                editTask.visibility = View.VISIBLE
+                deleteTask.visibility = View.VISIBLE
+
+                editTask.setOnClickListener {
+                    val frag = AddTaskFragment.newInstance(workspaceId, task.taskId)
+                    val transaction =
+                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    frag.show(transaction, frag.tag)
+                }
+
+                deleteTask.setOnClickListener {
+                    taskList.remove(task)
+                    notifyItemRemoved(position)
+                }
+            }
+
 
             val currentUserId = AuthUtils.getCurrentUserId()
             val assigneeIdToShow = if (task.assigneeListIds.contains(currentUserId)) {
@@ -76,9 +95,9 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
                 task.assigneeListIds.firstOrNull()
             }
 
-            if (task.assignorId.contentEquals(AuthUtils.getCurrentUserId())){
+            if (task.assignorId.contentEquals(AuthUtils.getCurrentUserId())) {
                 taskAssignorTv.text = "assigned by me"
-            }else {
+            } else {
                 AuthUtils.getCurrentPerson(task.assignorId) { person ->
                     taskAssignorTv.text = "assigned by ${person?.name}"
                 }
@@ -103,7 +122,8 @@ class TaskAdapter(val taskList: MutableList<Task>, val workspaceId: String) :
             val layoutParamsHolder = cardViewHolder.layoutParams
             val displayMetrics = DisplayMetrics()
 
-            val windowManager = itemView.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val windowManager =
+                itemView.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenWidth = displayMetrics.widthPixels

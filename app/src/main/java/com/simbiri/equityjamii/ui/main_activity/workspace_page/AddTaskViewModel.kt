@@ -44,6 +44,9 @@ class AddTaskViewModel : ViewModel() {
         workspId: String, finalDueDate: Timestamp,
         taskId: String, isComplete: Boolean, isNew: Boolean
     ) {
+        if (listMilestones.isEmpty()) {
+            listMilestones.add(MileStone("Mark as complete", "task end date", false, false))
+        }
 
         val workspDoc = workspCollection.document(workspId)
         val prelist = uploadDocumentsAndGetFileTitles(prelistAttachments)
