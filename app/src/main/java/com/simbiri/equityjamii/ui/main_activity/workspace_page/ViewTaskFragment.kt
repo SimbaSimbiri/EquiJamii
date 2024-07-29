@@ -94,9 +94,9 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 bottomSheet.let {
                     val behavior = BottomSheetBehavior.from(bottomSheet)
                     behavior.apply {
-                        isDraggable = true
+                        isDraggable = false
                         isHideable = true
-                        peekHeight = displayMetrics.heightPixels / 2
+                        peekHeight = displayMetrics.heightPixels
                         state = BottomSheetBehavior.STATE_EXPANDED
                     }
 

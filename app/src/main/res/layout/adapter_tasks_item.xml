@@ -79,21 +79,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:id="@+id/editTask"
                 android:visibility="gone"
                 android:layout_margin="5dp"
                 android:padding="1dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/progressTask"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/edit"
                 app:tint="@color/logoColour"/>
 
             <ImageView
                 android:id="@+id/deleteTaskIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/delete_maroon"
                 android:visibility="gone"

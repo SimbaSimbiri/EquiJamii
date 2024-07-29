@@ -415,9 +415,9 @@ class EditProfileFragment : BottomSheetDialogFragment() {
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.isDraggable = true
+                behavior.isDraggable = false
                 behavior.isHideable = true
-                behavior.peekHeight = (displayMetrics.heightPixels * 0.9).toInt()
+                behavior.peekHeight = displayMetrics.heightPixels
 
             }
         }
