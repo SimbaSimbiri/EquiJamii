@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="15dp"
-            android:text="Task assignees"
+            android:text="Task collaborators"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/taskDetailsCardView" />

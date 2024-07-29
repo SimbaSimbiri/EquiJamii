@@ -339,16 +339,6 @@
             app:layout_constraintBottom_toBottomOf="@id/docsTextView"
             app:layout_constraintTop_toTopOf="@id/docsTextView" />
 
-<!--
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/documentsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />-->
-
 
         <ProgressBar
             android:id="@+id/progressBar"
