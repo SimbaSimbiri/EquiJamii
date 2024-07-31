@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
@@ -38,6 +39,8 @@ import com.simbiri.equityjamii.databinding.ViewTaskFragBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ViewTaskFragment : BottomSheetDialogFragment() {
     companion object {
@@ -107,8 +110,57 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
+    private fun displayDate(timestamp: Timestamp?): String? {
+        val fullDateFormat = SimpleDateFormat("MMM dd, yyyy HHmm", Locale.getDefault())
+        return try {
+
+            val dueDate = timestamp?.toDate()
+            val currentDate = java.util.Date()
+
+            val timeDifference = dueDate!!.time - currentDate.time
+            val daysDifference = timeDifference / (1000 * 60 * 60 * 24)
+            val hoursDifference = (timeDifference / (1000 * 60 * 60)) % 24
+            val minutesDifference = (timeDifference / (1000 * 60)) % 60
+
+            when {
+                timeDifference > 0 -> {
+                    val timeLeft = StringBuilder().apply {
+                        if (daysDifference > 0) append("$daysDifference days ")
+                        if (hoursDifference > 0) append("$hoursDifference hours ")
+                        if (minutesDifference > 0) append("$minutesDifference minutes ")
+                    }.toString().trim()
+
+                    "Due on ${fullDateFormat.format(dueDate)} hrs\n$timeLeft left"
+                }
+
+                timeDifference == 0L -> "Due right now"
+                else -> "task overdue - was due on ${fullDateFormat.format(dueDate)} hrs"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Couldn't display date"
+        }
+    }
+
+
     private fun populateUI(task: Task) {
         binding.apply {
+            if (curTask?.assignorId.contentEquals(AuthUtils.getCurrentUserId()) && curTask?.assigneeListIds?.contains(
+                    AuthUtils.getCurrentUserId()
+                ) == false
+            ) {
+                Handler().postDelayed({
+                    Toast.makeText(
+                        requireContext(),
+                        "You can only view assignee's task's progress here",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }, 2000)
+
+                submitProgress.visibility = View.INVISIBLE
+                progressBar.visibility = View.GONE
+            }
+
             documentsTextView.setOnClickListener {
                 openDocumentsList(task)
             }
@@ -121,13 +173,23 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             taskDescriptionTextView.text = task.taskDescription
 
             AuthUtils.getCurrentPerson(task.assignorId) { person ->
-                assignorTextView.text = "assigned by ${person?.name}"
+                assignorTextView.text = if (AuthUtils.getCurrentUserId() == person?.userId) {
+                    "assigned by me"
+                } else "assigned by ${person?.name}"
             }
+
+            taskDueTextView.text = if (task.milestonesTask.all { it.complete }) {
+                "task completed"
+            } else {
+                displayDate(task.finalDueDate)
+            }
+
 
         }
 
         lifecycleScope.launch {
             val assignees = UserNetworkUtils.narrowDownUsers(task.assigneeListIds)
+            if (assignees.count() == 1) binding.taskAssigneesTextView.text = "Task assignee"
             setupAssigneesRecyclerView(assignees)
         }
 
@@ -265,7 +327,6 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
     private fun submitProgress() {
         lifecycleScope.launch {
-
 
             if (workspaceId != null && curTask?.taskId != null) {
                 val milestones =

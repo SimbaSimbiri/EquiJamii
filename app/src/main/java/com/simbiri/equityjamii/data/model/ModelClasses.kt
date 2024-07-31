@@ -65,20 +65,20 @@ data class Workspace(
 data class Task(
     var title: String,
     var assignorId: String,
-    var taskDescription : String,
-    var taskId : String?,
+    var taskDescription: String,
+    var taskId: String?,
     var assigneeListIds: MutableList<String>,
     var preAttachments: MutableList<FileTitle>,
     var postAttachments: MutableList<FileTitle>,
     var importantLinks: MutableList<FileTitle>,
     var milestonesTask: MutableList<MileStone>,
+    val isComplete: Boolean,
     var finalDueDate: Timestamp? = null,
-    val isComplete: Boolean
 ) : Parcelable {
 
     constructor() : this(
         "", "", "", null, mutableListOf(), mutableListOf(), mutableListOf(),
-        mutableListOf(), mutableListOf(), null, false
+        mutableListOf(), mutableListOf(), false, null
     )
 
     constructor(parcel: Parcel) : this(
@@ -91,8 +91,8 @@ data class Task(
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(MileStone.CREATOR)!!.toMutableList(),
-        parcel.readParcelable(Timestamp::class.java.classLoader),
-        parcel.readByte() != 0.toByte()
+        parcel.readByte() != 0.toByte(),
+        parcel.readParcelable(Timestamp::class.java.classLoader)
     ) {
     }
 
@@ -127,18 +127,23 @@ data class Task(
 }
 
 data class WorkspaceMention(
-    var mentionId : String?,
+    var mentionId: String?,
     var workspaceId: String?,
     var appreciatorId: String?,
     var recipientId: String,
     var timeMentioned: Timestamp? = null,
     var keyWordMention: String,
     var mentionMainText: String
-){
-    constructor():this("","","","",null,"","")
+) {
+    constructor() : this("", "", "", "", null, "", "")
 }
 
-data class MileStone(var titleMilestone: String, var timeDueString: String, var complete: Boolean, var inProgress: Boolean) :
+data class MileStone(
+    var titleMilestone: String,
+    var timeDueString: String,
+    var complete: Boolean,
+    var inProgress: Boolean
+) :
     Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -148,7 +153,8 @@ data class MileStone(var titleMilestone: String, var timeDueString: String, var 
 
     ) {
     }
-    constructor():this("","",false,false)
+
+    constructor() : this("", "", false, false)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(titleMilestone)

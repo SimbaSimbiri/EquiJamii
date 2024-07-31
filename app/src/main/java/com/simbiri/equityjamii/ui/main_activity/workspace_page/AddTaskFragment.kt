@@ -46,14 +46,16 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     companion object {
         private const val ARGS_WORKSP_ID = "workspid"
         private const val ARGS_TASK_ID = "taskId"
+        private const val ARGS_TASK = "CurTask"
         fun newInstance(
             workspId: String?,
-            taskId: String?
+            taskId: String?, task: Task?
         ): AddTaskFragment {
             val frag = AddTaskFragment()
             val bundle = Bundle()
             bundle.putString(ARGS_WORKSP_ID, workspId)
             bundle.putString(ARGS_TASK_ID, taskId)
+            bundle.putParcelable(ARGS_TASK, task)
             frag.arguments = bundle
             return frag
         }
@@ -78,15 +80,6 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     private var taskCur: Task? = null
     private lateinit var pdfLauncher: ActivityResultLauncher<String>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        workspaceId = arguments?.getString(ARGS_WORKSP_ID)
-        taskId = arguments?.getString(ARGS_TASK_ID)
-        taskId?.let { viewModel.loadTask(workspaceId!!, it) }
-        workspaceId?.let { viewModelWorksp.loadWorkspace(it) }
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -94,6 +87,14 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         binding = AddTaskFragBinding.inflate(layoutInflater)
         setupUI()
         observeViewModel()
+
+        workspaceId = arguments?.getString(ARGS_WORKSP_ID)
+        taskId = arguments?.getString(ARGS_TASK_ID)
+        taskId?.let { viewModel.loadTask(workspaceId!!, it) }
+        workspaceId?.let { viewModelWorksp.loadWorkspace(it) }
+        taskCur = arguments?.getParcelable<Task>(ARGS_TASK)
+        taskCur?.let { populateUI(it) }
+
         return binding.root
     }
 
@@ -117,7 +118,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                 val fileTitle = FileTitle(uri.toString(), filename, 0)
                 documentsList.add(fileTitle)
                 binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
-                binding.documentsRecyclerView.scrollToPosition(documentsList.size-1)
+                binding.documentsRecyclerView.scrollToPosition(documentsList.size - 1)
             }
 
         }
@@ -137,6 +138,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         binding.confirmMilestoneButton.setOnClickListener {
             addMilestone()
         }
+
 
         binding.searchViewAll.setOnQueryTextListener(this)
 
@@ -330,10 +332,6 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     }
 
     private fun observeViewModel() {
-        viewModel.task.observe(viewLifecycleOwner) { task ->
-            task?.let { populateUI(it) }
-            taskCur = task
-        }
 
         viewModelWorksp.adminsList.observe(viewLifecycleOwner) { admins ->
             adminList.addAll(admins)
@@ -352,6 +350,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     }
 
     private fun populateUI(task: Task) {
+        setupDateTimePickers(task)
+
         binding.apply {
             nameTaskInput.setText(task.title)
             descriptionInput.setText(task.taskDescription)
@@ -369,7 +369,6 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             linksRecyclerView.adapter!!.notifyDataSetChanged()
             documentsList.addAll(task.preAttachments)
             documentsRecyclerView.adapter!!.notifyDataSetChanged()
-            setupDateTimePickers(task)
 
         }
     }
@@ -387,6 +386,8 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                 }
             })
 
+            invalidate()
+
             setOnTouchListener { v, event ->
                 v.parent.requestDisallowInterceptTouchEvent(true)
                 v.onTouchEvent(event)
@@ -399,6 +400,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             finalDate.timeInMillis = initialDateMillis
             Handler().postDelayed({
                 setTime(finalDate.get(Calendar.HOUR_OF_DAY), finalDate.get(Calendar.MINUTE))
+                invalidate()
             }, 600)
             setTimeChangeListener(object : TimePicker.TimeChangeListener {
                 override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
@@ -406,6 +408,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                     finalDate.set(Calendar.MINUTE, minute)
                 }
             })
+
             setOnTouchListener { v, event ->
                 v.parent.requestDisallowInterceptTouchEvent(true)
                 v.onTouchEvent(event)
@@ -440,8 +443,24 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        viewModelWorksp.filterPeople(newText ?: "")
+        filterWorkspacePeople(newText ?: "")
         return true
+    }
+
+    fun filterWorkspacePeople(text: String) {
+        val fullList = membersList + adminList
+
+        val filteredList = if (text.isEmpty()) {
+            fullList
+        } else {
+            fullList.filter { it.name.contains(text, ignoreCase = true) }
+                .toMutableList()
+        }
+
+        listPeopleAll.clear()
+        listPeopleAll.addAll(filteredList)
+        binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

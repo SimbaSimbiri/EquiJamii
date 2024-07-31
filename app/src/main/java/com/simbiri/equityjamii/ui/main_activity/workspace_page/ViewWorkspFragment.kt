@@ -24,6 +24,7 @@ import com.simbiri.equityjamii.adapters.WorkspaceMentionAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.DialogViewWorkspBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
@@ -286,7 +287,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
                   PdfDescAdapter(requireContext(), documentsList, false)*/
 
         binding.createTasksCard.setOnClickListener {
-            val frag = AddTaskFragment.newInstance(workspaceId!!, null)
+            val frag = AddTaskFragment.newInstance(workspaceId!!, null, null)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             frag.show(transaction, frag.tag)
         }

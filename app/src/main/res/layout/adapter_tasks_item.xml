@@ -90,6 +90,18 @@
                 android:src="@drawable/edit"
                 app:tint="@color/logoColour"/>
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                app:layout_constraintStart_toEndOf="@id/editTask"
+                android:background="@color/karbBackgrndtint"
+                android:theme="@style/FirebaseUI.TopProgressBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/deleteTaskIcon"
                 android:layout_width="22dp"
