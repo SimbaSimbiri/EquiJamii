@@ -159,6 +159,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
                 submitProgress.visibility = View.INVISIBLE
                 progressBar.visibility = View.GONE
+                addPdfButton.visibility = View.GONE
             }
 
             documentsTextView.setOnClickListener {
@@ -235,7 +236,11 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private fun setupDocumentsRecyclerView(documents: MutableList<FileTitle>) {
         binding.postDocumentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         pdfFiles.addAll(documents)
-        pdfAdapter = PdfDescAdapter(requireContext(), pdfFiles, true)
+        val canEditPostAttachments = (curTask?.assigneeListIds?.contains(
+                AuthUtils.getCurrentUserId()
+            ) == true)
+
+        pdfAdapter = PdfDescAdapter(requireContext(), pdfFiles, canEditPostAttachments)
         binding.postDocumentsRecyclerView.adapter = pdfAdapter
         binding.postDocumentsRecyclerView.adapter!!.notifyDataSetChanged()
     }
