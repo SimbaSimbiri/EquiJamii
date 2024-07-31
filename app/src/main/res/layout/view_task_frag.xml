@@ -41,6 +41,7 @@
                 <TextView
                     android:id="@+id/taskDescriptionTextView"
                     android:layout_width="0dp"
+                    android:textSize="13sp"
                     android:layout_height="wrap_content"
                     android:justificationMode="inter_word"
                     android:text="Task description here."
@@ -52,7 +53,7 @@
                 <TextView
                     android:id="@+id/assignorTextView"
                     android:layout_width="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
                     android:text="Assignor Name"
@@ -64,15 +65,15 @@
                 <TextView
                     android:id="@+id/taskDueTextView"
                     android:layout_width="0dp"
-                    android:layout_marginEnd="20dp"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toStartOf="@id/assignorTextView"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:textColor="@color/logoColour"
                     android:layout_height="wrap_content"
                     android:text="task due"
                     android:textStyle="italic"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/taskDescriptionTextView"
+                    app:layout_constraintTop_toBottomOf="@id/assignorTextView"
                     app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

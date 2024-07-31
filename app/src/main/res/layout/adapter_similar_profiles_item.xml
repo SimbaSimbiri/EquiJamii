@@ -65,7 +65,7 @@
             android:gravity="center_horizontal"
             android:text="Ray Simbiri"
             android:textColor="@color/logoColour"
-            android:textStyle="bold"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -72,11 +72,11 @@
                 android:textColor="@color/logoColour"
                 android:gravity="center"
                 style="@style/titleTab"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="10dp"
                 app:layout_constraintBottom_toTopOf="@id/progressTask"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/editTask" />
 
             <ImageView
                 android:layout_width="22dp"
@@ -100,7 +100,7 @@
                 android:background="@color/karbBackgrndtint"
                 android:theme="@style/FirebaseUI.TopProgressBar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="parent" />
 
             <ImageView
                 android:id="@+id/deleteTaskIcon"

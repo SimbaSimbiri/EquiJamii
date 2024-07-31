@@ -60,8 +60,12 @@ class MainWorkspFragment : Fragment() {
     }
 
     private fun setupViewPager() {
-        val adapter = WorkspacePagerAdapter(this)
-        binding.viewPagerWorksp.adapter = adapter
+        val adapterPager = WorkspacePagerAdapter(this)
+        binding.viewPagerWorksp.apply{
+            adapter = adapterPager
+            isUserInputEnabled = false
+        }
+
 
         TabLayoutMediator(binding.tabLayoutWorksp, binding.viewPagerWorksp,true,
             false) { tab, position ->

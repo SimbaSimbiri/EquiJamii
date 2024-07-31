@@ -49,6 +49,10 @@ class MyWorkspace : Fragment() {
 
         }
 
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+        }
+
         viewModel.invitedWorkspaces.observe(viewLifecycleOwner) { invitedWorkspaces ->
             binding.myWorkspacesRecyclerView.adapter =
                 WorkspaceAdapter(requireContext(), invitedWorkspaces)
