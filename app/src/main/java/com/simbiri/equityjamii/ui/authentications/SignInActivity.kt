@@ -66,12 +66,6 @@ class SignInActivity : AppCompatActivity() {
             startActivity(Intent(this, ForgetPassActivity::class.java))
         }
 
-        Toast.makeText(
-            this,
-            "If you signed in with google, you cannot use the same email address to sign in with your email",
-            Toast.LENGTH_SHORT
-        )
-            .show()
 
         binding.signInGoogleButton.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE

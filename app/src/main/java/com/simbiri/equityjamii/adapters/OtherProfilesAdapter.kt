@@ -14,24 +14,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
 class OtherProfilesAdapter(
     var context: Context,
-    var peopleList: MutableList<Person>,
+    var peopleList: MutableList<Person>, var workspId: String? = null, var taskId : String? = null,
     var canDelete: Boolean = false,
     var editingWksp: Boolean = false,
     var addingWkspAdmins: Boolean = false,
     var editingTask: Boolean = false,
-    var editingMention : Boolean = false,
-    private val onInviteClick: (person: Person, flag : Int) -> Unit = { _, _ -> }
+    var editingMention: Boolean = false,
+    private val onInviteClick: (person: Person, flag: Int) -> Unit = { _, _ -> }
 
 ) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
+    val workspaceCollection = FirebaseFirestore.getInstance().collection(
+        WORKSPACE_COLLECTION
+    )
 
     inner class OtherProfViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview),
         View.OnClickListener {
@@ -56,12 +63,12 @@ class OtherProfilesAdapter(
 
         override fun onClick(v: View?) {
             if (editingTask) {
-                cardAddTask.visibility =  View.VISIBLE
+                cardAddTask.visibility = View.VISIBLE
                 isInviteVisible = !isInviteVisible
 
-                if (isInviteVisible){
+                if (isInviteVisible) {
                     cardAddTask.visibility = View.VISIBLE
-                }else{
+                } else {
                     cardAddTask.visibility = View.INVISIBLE
                 }
 
@@ -69,25 +76,24 @@ class OtherProfilesAdapter(
 
                 isInviteVisible = !isInviteVisible
 
-                if (isInviteVisible){
+                if (isInviteVisible) {
                     cardInviteAdmin.visibility = View.VISIBLE
                     cardInviteMember.visibility = View.VISIBLE
-                }else{
+                } else {
                     cardInviteAdmin.visibility = View.INVISIBLE
                     cardInviteMember.visibility = View.INVISIBLE
                 }
 
 
-            } else if (editingMention){
+            } else if (editingMention) {
                 isInviteVisible = !isInviteVisible
 
-                if (isInviteVisible){
+                if (isInviteVisible) {
                     cardAddMention.visibility = View.VISIBLE
-                } else{
+                } else {
                     cardAddMention.visibility = View.VISIBLE
                 }
-            }
-            else {
+            } else {
                 val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
@@ -108,18 +114,14 @@ class OtherProfilesAdapter(
                 deleteIconView.visibility = View.VISIBLE
 
                 deleteIconView.setOnClickListener {
-                    peopleList.remove(personInstance)
-                    notifyItemRemoved(position)
-                    /*if (editingTask) {
+                    if (editingTask) {
                         removeMemberFromTask()
                     }
                     if (editingWksp) {
                         removeMemberFromWorkSpace()
                     }
-
-                    if (editingMention){
-                        removeMentionFromSpace()
-                    }*/
+                    peopleList.remove(personInstance)
+                    notifyItemRemoved(position)
                 }
             }
 
@@ -131,7 +133,7 @@ class OtherProfilesAdapter(
             }
 
             cardInviteMember.setOnClickListener {
-                onInviteClick(personInstance,2)
+                onInviteClick(personInstance, 2)
                 cardInviteAdmin.visibility = View.INVISIBLE
                 cardInviteMember.visibility = View.INVISIBLE
 
@@ -154,77 +156,67 @@ class OtherProfilesAdapter(
             namePersonTextView.text = currentPerson!!.name
         }
 
-/*
-        private fun removeMentionFromSpace() {
-
-            val memberTaskDoc = workspaceMentionCollection.document(currentPerson!!.userId)
-            memberTaskDoc.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document.exists()) {
-                        memberTaskDoc.delete()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Error removing user from task",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-            }
-        }
-
 
         private fun removeMemberFromWorkSpace() {
+            workspId?.let { workspId ->
 
-            val currWkspSubCollection = workspaceCollection.document(taskWorkspId!!).collection(
-                WORKSP_MEMBERS_SUB_COLLECTION
-            )
-            val memberTaskDoc = currWkspSubCollection.document(currentPerson!!.userId)
+                val adminsCollection = workspaceCollection.document(workspId).collection(
+                    WORKSP_ADMINS_SUB_COLLECTION
+                )
 
-            memberTaskDoc.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document.exists()) {
-                        memberTaskDoc.delete()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Error removing user from Workspace",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+                val membersCollection = workspaceCollection.document(workspId).collection(
+                    WORKSP_MEMBERS_SUB_COLLECTION
+                )
+
+                membersCollection.document(currentPerson!!.userId).delete()
+                adminsCollection.document(currentPerson!!.userId).delete()
 
             }
+            /*
+                        memberTaskDoc.get().addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val document = task.result
+                                if (document.exists()) {
+                                    memberTaskDoc.delete()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Error removing user from Workspace",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                        }
+            */
 
         }
 
         private fun removeMemberFromTask() {
+            workspId?.let { workspaceId ->
+                val taskCollection = workspaceCollection.document(workspaceId).collection(
+                    TASK_SUB_COLLECTION
+                )
 
-            val currTaskSubCollection = taskCollection.document(taskWorkspId!!).collection(
-                TASK_ASSIGNEES_SUB_COLLECTION
-            )
+                taskId?.let {taskId->
 
-            val memberTaskDoc = currTaskSubCollection.document(currentPerson!!.userId)
-            memberTaskDoc.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document.exists()) {
-                        memberTaskDoc.delete()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Error removing user from task",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    val currTaskDocument = taskCollection.document(taskId)
+
+                    currTaskDocument.update(
+                        "assigneeListIds",
+                        FieldValue.arrayRemove(currentPerson!!.userId)
+                    ).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Toast.makeText(
+                                itemView.context,
+                                "Removed ${currentPerson!!.name} from task",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-
             }
         }
-*/
 
         private fun adjustHolderSize() {
             val layoutParamsHolder = cardViewHolder.layoutParams
@@ -258,7 +250,6 @@ class OtherProfilesAdapter(
 
         otherProfHolder.setDatatoItem(personInstance, position)
         otherProfHolder.setOnClickListeners()
-
 
 
     }

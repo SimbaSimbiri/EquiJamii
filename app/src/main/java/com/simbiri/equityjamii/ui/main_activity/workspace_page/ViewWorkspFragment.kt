@@ -19,12 +19,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
-import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.adapters.WorkspaceMentionAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
-import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.DialogViewWorkspBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
@@ -76,7 +74,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
             if (mentions.isEmpty()) binding.workspaceMentionsTv.visibility = View.GONE
             binding.workspMentionsRecyclerView.adapter =
-                WorkspaceMentionAdapter(mentions, workspaceId!!)
+                WorkspaceMentionAdapter( requireContext(), mentions, workspaceId!!)
             binding.workspMentionsRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
@@ -283,8 +281,6 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, false)
-        /*      binding.documentsRecyclerView.adapter =
-                  PdfDescAdapter(requireContext(), documentsList, false)*/
 
         binding.createTasksCard.setOnClickListener {
             val frag = AddTaskFragment.newInstance(workspaceId!!, null, null)

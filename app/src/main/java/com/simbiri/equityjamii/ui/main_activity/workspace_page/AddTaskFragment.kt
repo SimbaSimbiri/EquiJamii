@@ -159,7 +159,12 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         binding.milestonesRecyclerView.adapter =
             MilestoneAdapter(requireContext(), milestonesList, true)
         binding.taskAssigneesRecyclerView.adapter =
-            OtherProfilesAdapter(requireContext(), assigneesList, true)
+            OtherProfilesAdapter(
+                requireContext(),
+                assigneesList, workspaceId, taskId,
+                canDelete = true,
+                editingTask = true
+            )
         binding.documentsRecyclerView.adapter =
             PdfDescAdapter(requireContext(), documentsList, true)
         binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(
@@ -275,6 +280,15 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             extractPeopleFromRecyclerView(binding.taskAssigneesRecyclerView).map { it.userId }
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
+        if (assignees.isEmpty()){
+            Toast.makeText(
+                requireContext(),
+                "At least one assignee is required",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
         lifecycleScope.launch {
             binding.contentLoadingProgressBar.visibility = View.VISIBLE
 
@@ -346,11 +360,22 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
-
     }
 
     private fun populateUI(task: Task) {
         setupDateTimePickers(task)
+
+        workspaceId?.let { workspId ->
+            binding.taskAssigneesRecyclerView.adapter =
+                OtherProfilesAdapter(
+                    requireContext(),
+                    assigneesList,
+                    workspId = workspId,
+                    taskId = task.taskId,
+                    canDelete = true,
+                    editingTask = true
+                )
+        }
 
         binding.apply {
             nameTaskInput.setText(task.title)

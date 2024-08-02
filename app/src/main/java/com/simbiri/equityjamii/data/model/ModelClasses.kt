@@ -72,7 +72,7 @@ data class Task(
     var postAttachments: MutableList<FileTitle>,
     var importantLinks: MutableList<FileTitle>,
     var milestonesTask: MutableList<MileStone>,
-    val isComplete: Boolean,
+    var complete: Boolean,
     var finalDueDate: Timestamp? = null,
 ) : Parcelable {
 
@@ -102,7 +102,7 @@ data class Task(
         parcel.writeString(taskDescription)
         parcel.writeString(taskId)
         parcel.writeParcelable(finalDueDate, flags)
-        parcel.writeByte(if (isComplete) 1 else 0)
+        parcel.writeByte(if (complete) 1 else 0)
         parcel.writeTypedList(preAttachments)
         parcel.writeTypedList(importantLinks)
         parcel.writeTypedList(postAttachments)

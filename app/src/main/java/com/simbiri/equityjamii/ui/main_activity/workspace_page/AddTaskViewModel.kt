@@ -61,7 +61,7 @@ class AddTaskViewModel : ViewModel() {
         hashMention["postAttachments"] = postAttachments.map { it.toHashMap() }
         hashMention["importantLinks"] = listLinks.map { it.toHashMap() }
         hashMention["milestonesTask"] = listMilestones.map { it.toHash() }
-        hashMention["isComplete"] = isComplete
+        hashMention["complete"] = isComplete
         hashMention["finalDueDate"] = finalDueDate
 
         if (isNew) {

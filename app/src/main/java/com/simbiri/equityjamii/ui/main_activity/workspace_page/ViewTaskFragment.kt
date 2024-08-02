@@ -111,7 +111,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     }
 
     private fun displayDate(timestamp: Timestamp?): String? {
-        val fullDateFormat = SimpleDateFormat("MMM dd, yyyy HHmm", Locale.getDefault())
+        val fullDateFormat = SimpleDateFormat("MMM dd, HHmm", Locale.getDefault())
         return try {
 
             val dueDate = timestamp?.toDate()
@@ -125,12 +125,12 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             when {
                 timeDifference > 0 -> {
                     val timeLeft = StringBuilder().apply {
-                        if (daysDifference > 0) append("$daysDifference days ")
-                        if (hoursDifference > 0) append("$hoursDifference hours ")
-                        if (minutesDifference > 0) append("$minutesDifference minutes ")
+                        if (daysDifference > 0) append("$daysDifference d ")
+                        if (hoursDifference > 0) append("$hoursDifference h ")
+                        if (minutesDifference >= 0) append("$minutesDifference m ")
                     }.toString().trim()
 
-                    "Due on ${fullDateFormat.format(dueDate)} hrs\n$timeLeft left"
+                    "Due on ${fullDateFormat.format(dueDate)} hrs - $timeLeft left"
                 }
 
                 timeDifference == 0L -> "Due right now"
@@ -149,14 +149,6 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                     AuthUtils.getCurrentUserId()
                 ) == false
             ) {
-                Handler().postDelayed({
-                    Toast.makeText(
-                        requireContext(),
-                        "You can only view assignee's task's progress here",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }, 2000)
-
                 submitProgress.visibility = View.INVISIBLE
                 progressBar.visibility = View.GONE
                 addPdfButton.visibility = View.GONE
@@ -179,7 +171,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 } else "assigned by ${person?.name}"
             }
 
-            taskDueTextView.text = if (task.milestonesTask.all { it.complete }) {
+            taskDueTextView.text = if (task.complete) {
                 "task completed"
             } else {
                 displayDate(task.finalDueDate)
@@ -237,8 +229,8 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         binding.postDocumentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         pdfFiles.addAll(documents)
         val canEditPostAttachments = (curTask?.assigneeListIds?.contains(
-                AuthUtils.getCurrentUserId()
-            ) == true)
+            AuthUtils.getCurrentUserId()
+        ) == true)
 
         pdfAdapter = PdfDescAdapter(requireContext(), pdfFiles, canEditPostAttachments)
         binding.postDocumentsRecyclerView.adapter = pdfAdapter
@@ -270,8 +262,19 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         }
 
         binding.submitProgress.setOnClickListener {
+
+            if (curTask?.finalDueDate!! < Timestamp.now()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Task overdue, can't submit progress",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            }else{
+
             binding.progressBar.visibility = View.VISIBLE
             submitProgress()
+            }
         }
 
         return binding.root
@@ -293,6 +296,11 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     }
 
     private suspend fun uploadDocumentsAndGetFileTitles(documents: List<FileTitle>): List<FileTitle> {
+
+        if (documents.isEmpty()){
+            return listOf()
+        }
+
         val storageRef = FirebaseStorage.getInstance().reference
         val uploadedFileTitles = mutableListOf<FileTitle>()
 
@@ -342,16 +350,17 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
                 val updates = hashMapOf<String, Any>(
                     "milestonesTask" to milestoneMap,
-                    "isComplete" to allMilestonesComplete,
+                    "complete" to allMilestonesComplete,
                     "postAttachments" to pdfFileTitles
                 )
-                Toast.makeText(
-                    context,
-                    "Updating task's progress.",
-                    Toast.LENGTH_SHORT
-                ).show()
 
                 viewModel.updateTaskFields(workspaceId!!, curTask?.taskId!!, updates)
+
+                Toast.makeText(
+                    context,
+                    "Updated task's progress.",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else {
                 Toast.makeText(context, "Workspace ID or Task ID not found.", Toast.LENGTH_SHORT)
@@ -359,7 +368,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             }
         }.invokeOnCompletion {
             binding.progressBar.visibility = View.GONE
-            Handler().postDelayed({ dismiss() }, 5000)
+            Handler().postDelayed({ dismiss() }, 2000)
         }
     }
 

@@ -81,7 +81,7 @@ class TaskAdapter(
             }
 
             progressTask.progress = if (task.milestonesTask.isNotEmpty()) {
-                if (task.isComplete) 100
+                if (task.complete) 100
                 else task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
             } else {
                 0

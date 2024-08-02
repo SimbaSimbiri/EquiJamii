@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,12 +27,14 @@ class MainWorkspFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = MainWorkspBinding.inflate(inflater, container, false)
-        val view = binding.root
 
+        return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         checkAuthentication()
 
-
-        return view
     }
 
     private fun checkAuthentication() {
@@ -43,6 +46,7 @@ class MainWorkspFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else{
+                
                 setupViewPager()
 
                 val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0

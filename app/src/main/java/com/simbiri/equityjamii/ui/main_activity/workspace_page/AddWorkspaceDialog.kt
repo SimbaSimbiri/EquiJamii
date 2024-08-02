@@ -229,13 +229,12 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
         binding.invitedAdminsRecyclerView.adapter = OtherProfilesAdapter(
             requireContext(),
-            invitedAdminsList,
-            true
+            invitedAdminsList, workspaceId, canDelete = true, editingWksp = true
         )
         binding.invitedRecyclerView.adapter = OtherProfilesAdapter(
             requireContext(),
-            invitedMembersList,
-            true
+            invitedMembersList, workspaceId,
+            canDelete = true, editingWksp = true
         )
 
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, true)
@@ -328,6 +327,17 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         binding.descriptionInput.setText(workspace.description)
         binding.loginCodeInput.setText(workspace.passCode.toString())
 
+        binding.invitedAdminsRecyclerView.adapter = OtherProfilesAdapter(
+            requireContext(),
+            invitedAdminsList, workspace.workspaceId, canDelete = true, editingWksp = true
+        )
+
+        binding.invitedRecyclerView.adapter = OtherProfilesAdapter(
+            requireContext(),
+            invitedMembersList, workspace.workspaceId,
+            canDelete = true, editingWksp = true
+        )
+
         workspace.titleImage?.let {
             Glide.with(requireContext()).load(it.fileUri).into(binding.imagePostUpload)
             binding.imagePostUpload.visibility = View.VISIBLE
@@ -354,7 +364,8 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val quote = binding.motivationQuoteInput.text.toString()
 
         if (name.isEmpty() || description.isEmpty() || passCode.isEmpty()) {
-            Toast.makeText(requireContext(), "All text inputs must be filled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "All text inputs must be filled", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -374,7 +385,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri, imageQuoteUri,quote
+                    imageUri, imageQuoteUri, quote
                 )
                 Toast.makeText(requireContext(), "Registering new workspace", Toast.LENGTH_SHORT)
                     .show()
@@ -390,7 +401,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
                     ownerId,
                     links,
                     documents,
-                    imageUri, imageQuoteUri,quote, false
+                    imageUri, imageQuoteUri, quote, false
                 )
                 Toast.makeText(
                     requireContext(),
