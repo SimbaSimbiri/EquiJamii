@@ -73,24 +73,28 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
     private fun observeViewModelView() {
         viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
             if (mentions.isEmpty()) binding.workspaceMentionsTv.visibility = View.GONE
+            else binding.workspaceMentionsTv.visibility = View.VISIBLE
+
             binding.workspMentionsRecyclerView.adapter =
-                WorkspaceMentionAdapter( requireContext(), mentions, workspaceId!!)
+                WorkspaceMentionAdapter( requireContext(), mentions.toMutableList(), workspaceId!!)
             binding.workspMentionsRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
         viewModelView.mytasks.observe(viewLifecycleOwner) { myTasks ->
             if (myTasks.isEmpty()) binding.myTasksTv.visibility = View.GONE
+            else binding.myTasksTv.visibility = View.VISIBLE
 
             binding.myTasksRecyclerView.adapter =
-                TaskAdapter(requireContext(), myTasks, workspaceId!!, false)
+                TaskAdapter(requireContext(), myTasks.toMutableList(), workspaceId!!, false)
             binding.myTasksRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
         viewModelView.myDelegatedtasks.observe(viewLifecycleOwner) { myDelegatedTasks ->
             if (myDelegatedTasks.isEmpty()) binding.myDelegatedTasksTv.visibility = View.GONE
+            else binding.myDelegatedTasksTv.visibility = View.VISIBLE
 
             binding.myDelegatedTasksRecyclerView.adapter =
-                TaskAdapter(requireContext(), myDelegatedTasks, workspaceId!!, true)
+                TaskAdapter(requireContext(), myDelegatedTasks.toMutableList(), workspaceId!!, true)
             binding.myDelegatedTasksRecyclerView.adapter!!.notifyDataSetChanged()
         }
 

@@ -95,6 +95,10 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         taskCur = arguments?.getParcelable<Task>(ARGS_TASK)
         taskCur?.let { populateUI(it) }
 
+        if (taskCur == null){
+            setupDateTimePickers(Task())
+        }
+
         return binding.root
     }
 
@@ -509,7 +513,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                     behavior.apply {
                         isDraggable = false
                         isHideable = false
-                        peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
+                        peekHeight = (displayMetrics.heightPixels).toInt()
                         state = BottomSheetBehavior.STATE_EXPANDED
                     }
                 }
