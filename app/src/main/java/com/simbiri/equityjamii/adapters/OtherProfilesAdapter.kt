@@ -172,23 +172,6 @@ class OtherProfilesAdapter(
                 adminsCollection.document(currentPerson!!.userId).delete()
 
             }
-            /*
-                        memberTaskDoc.get().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val document = task.result
-                                if (document.exists()) {
-                                    memberTaskDoc.delete()
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        "Error removing user from Workspace",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-
-                        }
-            */
 
         }
 

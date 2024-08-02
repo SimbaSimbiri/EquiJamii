@@ -11,39 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-object AvailableSlots {
-
-    private val availableTimeList = arrayOf(
-        "9:00am",
-        "9:30am",
-        "10:00am",
-        "10:30am",
-        "11:00am",
-        "11:30am",
-        "12:00pm",
-        "2:00pm",
-        "2:30pm",
-        "3:00pm",
-        "3:30pm",
-        "4:00pm",
-        "4:30am"
-
-    )
-    var timeSlotToday: ArrayList<TimeSlot>? = null
-        get() {
-            if (field != null) return field
-            field = ArrayList()
-
-            for (timeslot in availableTimeList) {
-                val timeAvailable = TimeSlot(timeslot)
-
-                field!!.add(timeAvailable)
-            }
-
-            return field
-
-        }
-}
 
 object SocialMedia {
 
@@ -159,10 +126,13 @@ object UserNetworkUtils {
 
         }
 
-        return recommendListFollow
+        return recommendListFollow.filter { person ->
+            !person.userId.contentEquals(
+                personalID
+            )
+        }
     }
 }
-
 
 
 object YoutubeKeyProvider {
