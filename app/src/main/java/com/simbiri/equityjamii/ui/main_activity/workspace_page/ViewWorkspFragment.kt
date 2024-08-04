@@ -76,7 +76,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             else binding.workspaceMentionsTv.visibility = View.VISIBLE
 
             binding.workspMentionsRecyclerView.adapter =
-                WorkspaceMentionAdapter( requireContext(), mentions.toMutableList(), workspaceId!!)
+                WorkspaceMentionAdapter(requireContext(), mentions.toMutableList(), workspaceId!!)
             binding.workspMentionsRecyclerView.adapter!!.notifyDataSetChanged()
         }
 
@@ -110,9 +110,10 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
             if (links.isNotEmpty()) {
                 binding.linksTextView.visibility = View.VISIBLE
                 binding.viewLinksImage.visibility = View.VISIBLE
+
+                linksList.addAll(links.reversed())
+                binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
             }
-            linksList.addAll(links)
-            binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
@@ -121,14 +122,16 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
                 binding.viewAttachmentsImage.visibility = View.VISIBLE
 
                 binding.docsTextView.setOnClickListener {
-                    val frag = DialogDocumentsFragment.newInstance(ArrayList(docs))
+                    val frag =
+                        DialogDocumentsFragment.newInstance(ArrayList(docs.sortedBy { it.fileTitle }))
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
                     frag.show(transaction, frag.tag)
                 }
 
                 binding.viewAttachmentsImage.setOnClickListener {
-                    val frag = DialogDocumentsFragment.newInstance(ArrayList(docs))
+                    val frag =
+                        DialogDocumentsFragment.newInstance(ArrayList(docs.sortedBy { it.fileTitle }))
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
                     frag.show(transaction, frag.tag)
@@ -272,8 +275,6 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         }
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        /*      binding.documentsRecyclerView.layoutManager =
-                  LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)*/
         binding.searchPeopleRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.myTasksRecyclerView.layoutManager =
