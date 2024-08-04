@@ -10,6 +10,7 @@ import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,14 @@ class WorkspaceViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    val currentUserId = AuthUtils.getCurrentUserId()!!
+    var person: Person? = null
+
     init {
+        AuthUtils.getCurrentPerson(currentUserId) {
+            person = it
+        }
+
         viewModelScope.launch {
             try {
                 fetchWorkspaces()
@@ -56,39 +64,18 @@ class WorkspaceViewModel : ViewModel() {
 
     suspend fun fetchInvitedWorkspaces() {
         try {
-            val currentUserId = AuthUtils.getCurrentUserId()!!
-
             val invitedWorkspaces = withContext(Dispatchers.IO) {
+                val invitedWorkspacesList = mutableListOf<Workspace>()
                 val workspaces = firestore.collection(WORKSPACE_COLLECTION).get().await()
                     .toObjects(Workspace::class.java)
-                val invitedWorkspacesList = mutableListOf<Workspace>()
-                for (workspace in workspaces) {
-                    val workspaceId = workspace.workspaceId ?: continue
+                    .filter { workspace -> person?.workspaces?.contains(workspace.workspaceId) == true }
 
-                    val invitedMembers = firestore.collection(WORKSPACE_COLLECTION)
-                        .document(workspaceId)
-                        .collection(WORKSP_MEMBERS_SUB_COLLECTION)
-                        .document(currentUserId)
-                        .get()
-                        .await()
-
-                    val invitedAdmins = firestore.collection(WORKSPACE_COLLECTION)
-                        .document(workspaceId)
-                        .collection(WORKSP_ADMINS_SUB_COLLECTION)
-                        .document(currentUserId)
-                        .get()
-                        .await()
-
-                    if (invitedMembers.exists() || invitedAdmins.exists() || workspace.ownerId.contentEquals(
-                            currentUserId
-                        )
-                    ) {
-                        invitedWorkspacesList.add(workspace)
-                    }
-                }
+                invitedWorkspacesList.addAll(workspaces)
                 invitedWorkspacesList
             }
             _invitedWorkspaces.value = invitedWorkspaces
+
+
         } catch (e: FirebaseFirestoreException) {
             throw Exception("Failed to fetch invited workspaces: ${e.message}")
         }

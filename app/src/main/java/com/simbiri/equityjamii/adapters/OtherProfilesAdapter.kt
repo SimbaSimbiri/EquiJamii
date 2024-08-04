@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
@@ -26,7 +27,7 @@ import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
 class OtherProfilesAdapter(
     var context: Context,
-    var peopleList: MutableList<Person>, var workspId: String? = null, var taskId : String? = null,
+    var peopleList: MutableList<Person>, var workspId: String? = null, var taskId: String? = null,
     var canDelete: Boolean = false,
     var editingWksp: Boolean = false,
     var addingWkspAdmins: Boolean = false,
@@ -36,7 +37,8 @@ class OtherProfilesAdapter(
 
 ) :
     RecyclerView.Adapter<OtherProfilesAdapter.OtherProfViewHolder>() {
-    val workspaceCollection = FirebaseFirestore.getInstance().collection(
+    val firestore = FirebaseFirestore.getInstance()
+    val workspaceCollection = firestore.collection(
         WORKSPACE_COLLECTION
     )
 
@@ -168,6 +170,9 @@ class OtherProfilesAdapter(
                     WORKSP_MEMBERS_SUB_COLLECTION
                 )
 
+                firestore.collection(USERS_COLLECTION).document(currentPerson!!.userId)
+                    .update("workspaces", FieldValue.arrayRemove(workspId))
+
                 membersCollection.document(currentPerson!!.userId).delete()
                 adminsCollection.document(currentPerson!!.userId).delete()
 
@@ -181,7 +186,7 @@ class OtherProfilesAdapter(
                     TASK_SUB_COLLECTION
                 )
 
-                taskId?.let {taskId->
+                taskId?.let { taskId ->
 
                     val currTaskDocument = taskCollection.document(taskId)
 

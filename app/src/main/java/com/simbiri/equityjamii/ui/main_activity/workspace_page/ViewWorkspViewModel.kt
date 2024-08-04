@@ -39,10 +39,9 @@ class ViewWorkspViewModel(private val workspaceId: String?) : ViewModel() {
             taskListenerRegistration = workspaceRef.collection(TASK_SUB_COLLECTION)
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) {
-                        // Handle error, e.g., log to console or show user error message
                         return@addSnapshotListener
                     }
-                    val tasks = snapshot?.toObjects(Task::class.java)
+                    val tasks = snapshot?.toObjects(Task::class.java)?.sortedByDescending { it.finalDueDate }
                     _mytasks.postValue(tasks?.filter { it.assigneeListIds.contains(AuthUtils.getCurrentUserId()) })
                     _myDelegatedtasks.postValue(tasks?.filter { it.assignorId == AuthUtils.getCurrentUserId() })
                 }

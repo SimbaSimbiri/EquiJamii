@@ -34,7 +34,7 @@ class MyWorkspace : Fragment() {
     }
 
     private fun setupUI() {
-        binding.contentLoadingProgressBar.visibility =  View.VISIBLE
+        binding.contentLoadingProgressBar.visibility = View.VISIBLE
         binding.myWorkspacesRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -54,9 +54,16 @@ class MyWorkspace : Fragment() {
         }
 
         viewModel.invitedWorkspaces.observe(viewLifecycleOwner) { invitedWorkspaces ->
+            if (invitedWorkspaces.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "No invited or created workspace found",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             binding.myWorkspacesRecyclerView.adapter =
                 WorkspaceAdapter(requireContext(), invitedWorkspaces)
-            binding.contentLoadingProgressBar.visibility =  View.INVISIBLE
+            binding.contentLoadingProgressBar.visibility = View.INVISIBLE
 
         }
     }

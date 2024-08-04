@@ -26,11 +26,13 @@ import com.canhub.cropper.CropImageView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
@@ -435,6 +437,12 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
     ) {
         val subcollectionRef = firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
             .collection(subcollection)
+
+        people.forEach {
+            firestore.collection(USERS_COLLECTION).document(it.userId)
+                .update("workspaces", FieldValue.arrayUnion(workspaceId))
+
+        }
 
         people.forEach { person ->
             subcollectionRef.document(person.userId).set(emptyMap<String, Any>()).await()

@@ -447,7 +447,8 @@ data class Person(
     val network: Network = Network(mutableListOf(), mutableListOf()),
     val verified: Boolean,
     val role: String,
-    val newsTags: MutableList<String> = mutableListOf()
+    val newsTags: MutableList<String> = mutableListOf(),
+    val workspaces : MutableList<String> = mutableListOf()
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -466,6 +467,7 @@ data class Person(
         ),
         parcel.readByte() != 0.toByte(),
         parcel.readString() ?: "",
+        parcel.createStringArrayList() ?: ArrayList<String>(),
         parcel.createStringArrayList() ?: ArrayList<String>()
     ) {
     }
@@ -480,7 +482,7 @@ data class Person(
         "",
         "",
         Social("", "", "", "", "", ""), false,
-        Network(mutableListOf(), mutableListOf()), false, "", mutableListOf()
+        Network(mutableListOf(), mutableListOf()), false, "", mutableListOf(), mutableListOf()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -498,6 +500,7 @@ data class Person(
         parcel.writeByte(if (verified) 1 else 0)
         parcel.writeString(role)
         parcel.writeStringList(newsTags)
+        parcel.writeStringList(workspaces)
 
     }
 

@@ -373,6 +373,8 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         mapToFirestore["leader"] = person.leader
         mapToFirestore["role"] = person.role
         mapToFirestore["newsTags"] = person.newsTags
+        mapToFirestore["workspaces"] = person.workspaces
+
 
 
         firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)
