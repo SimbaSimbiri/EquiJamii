@@ -26,8 +26,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
-import com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.MilestoneAdapter

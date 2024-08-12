@@ -25,7 +25,7 @@
             android:linksClickable="true"
             app:layout_constraintEnd_toStartOf="@id/deleteLink"
             android:padding="7dp"
-            android:textColor="@color/blue"
+            android:textColor="@color/light_blue_600"
             android:textSize="13sp"
             android:textStyle="normal" />
 
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:id="@+id/deleteLink"
             android:src="@drawable/cancel_fab_icon"
-            app:tint="@color/blue"
+            app:tint="@color/light_blue_600"
             android:visibility="gone"
             android:layout_marginEnd="4dp"
             app:layout_constraintTop_toTopOf="parent"

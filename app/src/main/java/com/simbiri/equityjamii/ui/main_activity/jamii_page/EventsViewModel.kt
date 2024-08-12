@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
@@ -39,7 +40,7 @@ class EventsViewModel : ViewModel() {
 
             _eventList.value =
                 taskResult.toObjects(Event::class.java).sortedBy { event -> event.dateTime }
-                    .reversed().toMutableList()
+                    .reversed().filter { it.dateTime!! > Timestamp.now() }.toMutableList()
 
             eventList.value?.forEach { checkIfregistered(it, AuthUtils.getCurrentUserId()) }
 

@@ -26,8 +26,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.ozcanalasalvar.datepicker.view.datepicker.DatePicker
-import com.ozcanalasalvar.datepicker.view.timepicker.TimePicker
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
 import com.simbiri.equityjamii.constants.POST_STORAGE_REF

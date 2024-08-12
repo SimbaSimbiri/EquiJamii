@@ -122,9 +122,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
 
-    implementation 'com.github.ozcanalasalvar.picker:datepicker:2.0.7'
-    implementation 'com.github.ozcanalasalvar.picker:wheelview:2.0.7'
-    
 /*
                 material design component dependancy
 */
