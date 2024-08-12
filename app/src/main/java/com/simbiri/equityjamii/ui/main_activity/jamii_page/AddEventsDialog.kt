@@ -120,16 +120,20 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                 descriptionInput.setText(it.description)
                 typeInput.setText(it.eventType)
 
-                if (it.imageUrl != null){
+                if (it.imageUrl != null) {
                     binding.eventImage.visibility = View.VISIBLE
-                    Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
+                    Glide.with(requireActivity()).load(event?.imageUrl).fitCenter()
+                        .into(this.eventImage)
                 }
 
                 val eventDateTime = it.dateTime?.toDate() ?: Calendar.getInstance().time
-                val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).toString()
+
+                val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(eventDateTime).toString()
                 val formattedTime = DateFormat.format("HHmm", eventDateTime).toString()
+
                 binding.selectedDateDisplayTv.text = formattedDate
-                binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+                binding.selectedTimeDisplayTv.text = formattedTime + " hrs"
 
                 locationInput.setText(it.location)
             }
@@ -143,87 +147,48 @@ class AddEventsDialog : BottomSheetDialogFragment() {
     }
 
     private fun setUpEventDateTimeDialogs() {
+
+        if (event?.dateTime != null) {
+            eventDate.time = event?.dateTime?.toDate() ?: Calendar.getInstance().time
+        } else {
+            eventDate = Calendar.getInstance()
+        }
+
         binding.selectDateTv.setOnClickListener {
-            val calendar = Calendar.getInstance()
             DatePickerDialog(
-                requireContext(),R.style.CustomDatePickerTheme,
+                requireContext(), R.style.CustomDatePickerTheme,
                 { _, year, monthOfYear, dayOfMonth ->
                     eventDate.set(Calendar.YEAR, year)
                     eventDate.set(Calendar.MONTH, monthOfYear)
                     eventDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                    val formattedDate = dateFormat.format(eventDate.time)
+                    val formattedDate = dateFormat.format(eventDate.time).toString()
                     binding.selectedDateDisplayTv.text = formattedDate
                 },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                eventDate.get(Calendar.YEAR),
+                eventDate.get(Calendar.MONTH),
+                eventDate.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
         binding.selectTimeTv.setOnClickListener {
-            val calendar = Calendar.getInstance()
             TimePickerDialog(
-                requireContext(),R.style.CustomTimePickerTheme,
+                requireContext(), R.style.CustomTimePickerTheme,
                 { _, hourOfDay, minute ->
                     eventDate.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     eventDate.set(Calendar.MINUTE, minute)
 
                     val formattedTime = DateFormat.format("HHmm", eventDate).toString()
-                    binding.selectedTimeDisplayTv.text = formattedTime +"hrs"
+                    binding.selectedTimeDisplayTv.text = formattedTime + " hrs"
                 },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
+                eventDate.get(Calendar.HOUR_OF_DAY),
+                eventDate.get(Calendar.MINUTE),
                 true
             ).show()
         }
 
     }
-
-/*
-    private fun setupDateTimePickers() {
-
-        val initialDateMillis = event?.dateTime?.toDate()?.time ?: System.currentTimeMillis()
-
-        binding.datePicker.apply {
-            setDate(initialDateMillis)
-            setDateChangeListener(object : DatePicker.DateChangeListener {
-                override fun onDateChanged(date: Long, day: Int, month: Int, year: Int) {
-                    eventDate.set(Calendar.YEAR, year)
-                    eventDate.set(Calendar.MONTH, month)
-                    eventDate.set(Calendar.DAY_OF_MONTH, day)
-                }
-            })
-
-            setOnTouchListener { v, event ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                v.onTouchEvent(event)
-                true
-            }
-        }
-
-
-        binding.timePicker.apply {
-            eventDate.timeInMillis = initialDateMillis
-            Handler().postDelayed({
-                setTime(eventDate.get(Calendar.HOUR_OF_DAY), eventDate.get(Calendar.MINUTE))
-            }, 600)
-            setTimeChangeListener(object : TimePicker.TimeChangeListener {
-                override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
-                    eventDate.set(Calendar.HOUR_OF_DAY, hour)
-                    eventDate.set(Calendar.MINUTE, minute)
-                }
-            })
-            setOnTouchListener { v, event ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                v.onTouchEvent(event)
-                true
-            }
-        }
-
-    }
-*/
 
 
     private fun postEvent() {

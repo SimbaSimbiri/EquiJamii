@@ -100,7 +100,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         taskCur = arguments?.getParcelable<Task>(ARGS_TASK)
         taskCur?.let { populateUI(it) }
 
-        if (taskCur == null){
+        if (taskCur == null) {
             setUpEventDateTimeDialogs()
         }
 
@@ -289,7 +289,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             extractPeopleFromRecyclerView(binding.taskAssigneesRecyclerView).map { it.userId }
         val documents = extractFileTitlesFromPdfRecyclerView(binding.documentsRecyclerView)
 
-        if (assignees.isEmpty()){
+        if (assignees.isEmpty()) {
             Toast.makeText(
                 requireContext(),
                 "At least one assignee is required",
@@ -405,17 +405,26 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             documentsRecyclerView.adapter!!.notifyDataSetChanged()
 
             val eventDateTime = task.finalDueDate?.toDate() ?: Calendar.getInstance().time
-            val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).toString()
+
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val formattedDate = dateFormat.format(eventDateTime).toString()
             val formattedTime = DateFormat.format("HHmm", eventDateTime).toString()
+
             binding.selectedDateDisplayTv.text = formattedDate
-            binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+            binding.selectedTimeDisplayTv.text = formattedTime + " hrs"
 
         }
     }
 
     private fun setUpEventDateTimeDialogs() {
+
+        if (taskCur?.finalDueDate != null) {
+            finalDate.time = taskCur?.finalDueDate?.toDate() ?: Calendar.getInstance().time
+        } else {
+            finalDate = Calendar.getInstance()
+        }
+
         binding.selectDateTv.setOnClickListener {
-            val calendar = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(), R.style.CustomDatePickerTheme,
                 { _, year, monthOfYear, dayOfMonth ->
@@ -427,76 +436,28 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
                     val formattedDate = dateFormat.format(finalDate.time)
                     binding.selectedDateDisplayTv.text = formattedDate
                 },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                finalDate.get(Calendar.YEAR),
+                finalDate.get(Calendar.MONTH),
+                finalDate.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
         binding.selectTimeTv.setOnClickListener {
-            val calendar = Calendar.getInstance()
             TimePickerDialog(
-                requireContext(),R.style.CustomTimePickerTheme,
+                requireContext(), R.style.CustomTimePickerTheme,
                 { _, hourOfDay, minute ->
                     finalDate.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     finalDate.set(Calendar.MINUTE, minute)
 
                     val formattedTime = DateFormat.format("HHmm", finalDate).toString()
-                    binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+                    binding.selectedTimeDisplayTv.text = formattedTime + " hrs"
                 },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
+                finalDate.get(Calendar.HOUR_OF_DAY),
+                finalDate.get(Calendar.MINUTE),
                 true
             ).show()
         }
     }
-
-/*
-    private fun setupDateTimePickers(task: Task) {
-        val initialDateMillis = task.finalDueDate?.toDate()?.time ?: System.currentTimeMillis()
-
-        binding.datePicker.apply {
-            setDate(initialDateMillis)
-            setDateChangeListener(object : DatePicker.DateChangeListener {
-                override fun onDateChanged(date: Long, day: Int, month: Int, year: Int) {
-                    finalDate.set(Calendar.YEAR, year)
-                    finalDate.set(Calendar.MONTH, month)
-                    finalDate.set(Calendar.DAY_OF_MONTH, day)
-                }
-            })
-
-            invalidate()
-
-            setOnTouchListener { v, event ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                v.onTouchEvent(event)
-                true
-            }
-        }
-
-
-        binding.timePicker.apply {
-            finalDate.timeInMillis = initialDateMillis
-            Handler().postDelayed({
-                setTime(finalDate.get(Calendar.HOUR_OF_DAY), finalDate.get(Calendar.MINUTE))
-                invalidate()
-            }, 600)
-            setTimeChangeListener(object : TimePicker.TimeChangeListener {
-                override fun onTimeChanged(hour: Int, minute: Int, timeFormat: String?) {
-                    finalDate.set(Calendar.HOUR_OF_DAY, hour)
-                    finalDate.set(Calendar.MINUTE, minute)
-                }
-            })
-
-            setOnTouchListener { v, event ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                v.onTouchEvent(event)
-                true
-            }
-        }
-
-    }
-*/
 
     private fun extractFileTitlesFromPdfRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
         val adapter = recyclerView.adapter as PdfDescAdapter
