@@ -32,10 +32,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/currentlyAiringLiveRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentTextV"
+        tools:listitem="@layout/adapters_news_item" />
+
+<!--
     <androidx.cardview.widget.CardView
         android:id="@+id/airingCurrentCardView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:clickable="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="5dp"
         android:visibility="gone"
@@ -51,9 +65,9 @@
             <com.denzcoskun.imageslider.ImageSlider
                 android:id="@+id/airingImageSwitcher"
                 style="@style/titleTab"
+                android:clickable="false"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
+                android:layout_height="match_parent"
                 android:tooltipText="Image switcher for live events"
                 app:iss_auto_cycle="true"
                 app:iss_delay="5000"
@@ -71,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/logoColour"
                 app:cardCornerRadius="5dp"
+                android:clickable="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +100,7 @@
 
 
     </androidx.cardview.widget.CardView>
+-->
 
     <TextView
         android:id="@+id/prevTextV"
@@ -92,12 +108,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:text="@string/previous_virtual_events"
         android:textColor="@color/primareColor"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/airingCurrentCardView" />
+        app:layout_constraintTop_toBottomOf="@id/currentlyAiringLiveRecyclerView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewYoutubeLive"

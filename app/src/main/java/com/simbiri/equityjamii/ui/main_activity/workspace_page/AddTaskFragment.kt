@@ -1,9 +1,12 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +42,9 @@ import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.databinding.AddTaskFragBinding
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListener {
 
@@ -96,7 +101,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         taskCur?.let { populateUI(it) }
 
         if (taskCur == null){
-            setupDateTimePickers(Task())
+            setUpEventDateTimeDialogs()
         }
 
         return binding.root
@@ -367,7 +372,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
     }
 
     private fun populateUI(task: Task) {
-        setupDateTimePickers(task)
+        setUpEventDateTimeDialogs()
 
         workspaceId?.let { workspId ->
             binding.taskAssigneesRecyclerView.adapter =
@@ -399,9 +404,54 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             documentsList.addAll(task.preAttachments)
             documentsRecyclerView.adapter!!.notifyDataSetChanged()
 
+            val eventDateTime = task.finalDueDate?.toDate() ?: Calendar.getInstance().time
+            val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).toString()
+            val formattedTime = DateFormat.format("HHmm", eventDateTime).toString()
+            binding.selectedDateDisplayTv.text = formattedDate
+            binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+
         }
     }
 
+    private fun setUpEventDateTimeDialogs() {
+        binding.selectDateTv.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(
+                requireContext(), R.style.CustomDatePickerTheme,
+                { _, year, monthOfYear, dayOfMonth ->
+                    finalDate.set(Calendar.YEAR, year)
+                    finalDate.set(Calendar.MONTH, monthOfYear)
+                    finalDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(finalDate.time)
+                    binding.selectedDateDisplayTv.text = formattedDate
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        binding.selectTimeTv.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            TimePickerDialog(
+                requireContext(),R.style.CustomTimePickerTheme,
+                { _, hourOfDay, minute ->
+                    finalDate.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    finalDate.set(Calendar.MINUTE, minute)
+
+                    val formattedTime = DateFormat.format("HHmm", finalDate).toString()
+                    binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
+    }
+
+/*
     private fun setupDateTimePickers(task: Task) {
         val initialDateMillis = task.finalDueDate?.toDate()?.time ?: System.currentTimeMillis()
 
@@ -446,6 +496,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
         }
 
     }
+*/
 
     private fun extractFileTitlesFromPdfRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
         val adapter = recyclerView.adapter as PdfDescAdapter

@@ -1,10 +1,13 @@
 package com.simbiri.equityjamii.ui.main_activity.jamii_page
 
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +34,9 @@ import com.simbiri.equityjamii.constants.POST_STORAGE_REF
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.databinding.DialogAddEventsBinding
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddEventsDialog : BottomSheetDialogFragment() {
     private var _binding: DialogAddEventsBinding? = null
@@ -120,15 +125,63 @@ class AddEventsDialog : BottomSheetDialogFragment() {
                     Glide.with(requireActivity()).load(event?.imageUrl).fitCenter().into(this.eventImage)
                 }
 
+                val eventDateTime = it.dateTime?.toDate() ?: Calendar.getInstance().time
+                val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).toString()
+                val formattedTime = DateFormat.format("HHmm", eventDateTime).toString()
+                binding.selectedDateDisplayTv.text = formattedDate
+                binding.selectedTimeDisplayTv.text = formattedTime + "hrs"
+
                 locationInput.setText(it.location)
             }
 
-            setupDateTimePickers()
+
+
+            setUpEventDateTimeDialogs()
 
         }
 
     }
 
+    private fun setUpEventDateTimeDialogs() {
+        binding.selectDateTv.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(
+                requireContext(),R.style.CustomDatePickerTheme,
+                { _, year, monthOfYear, dayOfMonth ->
+                    eventDate.set(Calendar.YEAR, year)
+                    eventDate.set(Calendar.MONTH, monthOfYear)
+                    eventDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(eventDate.time)
+                    binding.selectedDateDisplayTv.text = formattedDate
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        binding.selectTimeTv.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            TimePickerDialog(
+                requireContext(),R.style.CustomTimePickerTheme,
+                { _, hourOfDay, minute ->
+                    eventDate.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    eventDate.set(Calendar.MINUTE, minute)
+
+                    val formattedTime = DateFormat.format("HHmm", eventDate).toString()
+                    binding.selectedTimeDisplayTv.text = formattedTime +"hrs"
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
+
+    }
+
+/*
     private fun setupDateTimePickers() {
 
         val initialDateMillis = event?.dateTime?.toDate()?.time ?: System.currentTimeMillis()
@@ -170,6 +223,7 @@ class AddEventsDialog : BottomSheetDialogFragment() {
         }
 
     }
+*/
 
 
     private fun postEvent() {

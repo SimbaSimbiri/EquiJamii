@@ -2,6 +2,7 @@ package com.simbiri.equityjamii.ui.main_activity.news_page.live_youtube
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.simbiri.equityjamii.adapters.LiveVideoAdapter
 import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.model.Video
 import com.simbiri.equityjamii.databinding.NewsPageLiveBinding
 import kotlinx.coroutines.launch
 
@@ -25,6 +28,7 @@ class LiveVideosFragment : Fragment() {
     private val viewModel = LiveVideosViewModel()
     private val slideModels = arrayListOf<SlideModel>()
     private lateinit var binding: NewsPageLiveBinding
+    private val liveListAll = mutableListOf<Video>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -32,6 +36,7 @@ class LiveVideosFragment : Fragment() {
             viewModel.fetchVideos(context)
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -44,49 +49,25 @@ class LiveVideosFragment : Fragment() {
         layoutManager.orientation = RecyclerView.VERTICAL
         binding.recyclerViewYoutubeLive.layoutManager = layoutManager
 
+        val layoutManagerLive = LinearLayoutManager(context)
+        layoutManager.orientation = RecyclerView.VERTICAL
+        binding.currentlyAiringLiveRecyclerView.layoutManager = layoutManagerLive
+
+        binding.currentlyAiringLiveRecyclerView.adapter =
+            LiveVideoAdapter(requireContext(), liveListAll)
+
         return binding.root
     }
 
     private fun setUpObservers(context: Context) {
 
         lifecycleScope.launch {
-
             viewModel.liveList.observe(viewLifecycleOwner) { liveList ->
+
                 if (liveList.isNotEmpty()) {
+                    liveListAll.addAll(liveList)
                     binding.currentTextV.visibility = View.VISIBLE
-                    binding.airingCurrentCardView.visibility = View.VISIBLE
-
-                    liveList.forEach { video ->
-                        slideModels.add(
-                            SlideModel(
-                                video.thumbnailUrl, video.title, ScaleTypes.CENTER_CROP
-                            )
-                        )
-                    }
-
-                    binding.airingImageSwitcher.setImageList(slideModels)
-                    binding.progressBar.visibility = View.INVISIBLE
-
-                }
-            }
-
-            viewModel.upcomingList.observe(viewLifecycleOwner) { upcomingList ->
-
-                if (upcomingList.isNotEmpty()) {
-                    binding.currentTextV.visibility = View.VISIBLE
-                    binding.airingCurrentCardView.visibility = View.VISIBLE
-
-                    upcomingList.forEach { video ->
-                        slideModels.add(
-                            SlideModel(
-                                video.thumbnailUrl,
-                                video.title,
-                                ScaleTypes.CENTER_CROP
-                            )
-                        )
-                    }
-
-                    binding.airingImageSwitcher.setImageList(slideModels)
+                    binding.currentlyAiringLiveRecyclerView.adapter!!.notifyDataSetChanged()
                     binding.progressBar.visibility = View.INVISIBLE
 
                 }
