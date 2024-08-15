@@ -45,7 +45,7 @@ class TagNewsAdapter(
             holder.tagTextView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.logoColour)
 
         } else {
-            holder.tagTextView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.darkGreyColor)
+            holder.tagTextView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.grey_font)
 
         }
     }

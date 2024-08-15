@@ -22,9 +22,8 @@
 
             <ProgressBar
                 android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/karbBackgrndtint"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:theme="@style/FirebaseUI.TopProgressBar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

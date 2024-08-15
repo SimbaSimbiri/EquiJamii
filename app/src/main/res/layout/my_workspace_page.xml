@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/constraintLayout"
-    tools:context=".ui.main_activity.workspace_page.MyWorkspace"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:context=".ui.main_activity.workspace_page.MyWorkspace">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,50 +15,36 @@
             android:id="@+id/contentLoadingProgressBar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/logoColour"
-            android:visibility="gone"
             android:layout_marginTop="150dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewWorkspaces"
-            style="@style/titleTab2"
-            android:textSize="15sp"
             android:layout_width="match_parent"
-            android:padding="15dp"
-            android:clickable="true"
-            android:text="Search for workspace"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_marginTop="10dp"
+            style="@style/SearchViewTextStyle"
             android:background="@drawable/shape_stroke_rectangle"
-            android:textAppearance="@style/titleTab2"
+            android:textAppearance="@style/SearchViewTextStyle"
+            android:textSize="12sp"
+            app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            app:queryHint="Search for invited workspace" />
 
-        <ImageView
-            android:id="@+id/searchIcon"
-            android:layout_width="24dp"
-            android:src="@drawable/search_icon"
-            android:layout_margin="15dp"
-            android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="@id/searchViewWorkspaces"
-            app:layout_constraintTop_toTopOf="@id/searchViewWorkspaces"
-            app:layout_constraintBottom_toBottomOf="@id/searchViewWorkspaces"
-            />
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myWorkspacesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/adapters_workspace_item"
-            android:id="@+id/myWorkspacesRecyclerView"
-            app:layout_constraintTop_toBottomOf="@id/searchViewWorkspaces"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/searchViewWorkspaces"
+            tools:listitem="@layout/adapters_workspace_item" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/createWorkspacesCard"
@@ -65,14 +52,14 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="60dp"
+            android:background="@color/white"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp"
-            android:background="@color/white">
+            app:layout_constraintTop_toBottomOf="@id/myWorkspacesRecyclerView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -82,31 +69,30 @@
                     android:id="@+id/addIcon"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="parent"
                     android:contentDescription="Google account logo"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/square_plus_svgrepo_com"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textCreateWorksp"
                     android:layout_width="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:padding="5dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="start|center_vertical"
+                    android:padding="5dp"
                     android:text="Create workspace"
+                    android:textAllCaps="false"
                     android:textColor="@color/logoColour"
                     android:textStyle="bold"
-                    android:textAllCaps="false"
-                    android:gravity="start|center_vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/addIcon"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

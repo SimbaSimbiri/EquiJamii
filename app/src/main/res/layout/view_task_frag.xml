@@ -223,14 +223,14 @@
             android:id="@+id/addPdfButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:layout_marginHorizontal="10dp"
             android:backgroundTint="@color/logoColour"
             android:text="Add pdf"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/postDocumentsTextView" />
+            app:layout_constraintTop_toBottomOf="@id/postLinksRecyclerView" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/postDocumentsRecyclerView"
@@ -239,7 +239,7 @@
             android:layout_marginHorizontal="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addPdfButton" />
+            app:layout_constraintTop_toBottomOf="@id/postDocumentsTextView" />
 
         <TextView
             android:id="@+id/postLinksTextView"
@@ -266,7 +266,7 @@
             android:id="@+id/addLinkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:layout_marginHorizontal="10dp"
             android:backgroundTint="@color/logoColour"
             android:text="Add link"
@@ -274,7 +274,7 @@
             android:textColor="@color/white"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@id/addPdfButton"
-            app:layout_constraintTop_toBottomOf="@id/postDocumentsTextView" />
+            app:layout_constraintTop_toBottomOf="@id/postLinksRecyclerView" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleLayout"
@@ -288,7 +288,7 @@
             app:hintTextColor="@color/logoColour"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/postLinksRecyclerView">
+            app:layout_constraintTop_toBottomOf="@id/addPdfButton">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titleInput"

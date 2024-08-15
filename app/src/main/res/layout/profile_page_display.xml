@@ -32,7 +32,6 @@
                     android:id="@+id/contentLoadingProgressBar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@color/logoColour"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@id/mysettingsCard"
                     app:layout_constraintEnd_toEndOf="parent"

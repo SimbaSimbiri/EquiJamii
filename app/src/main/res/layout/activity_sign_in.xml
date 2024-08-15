@@ -7,12 +7,11 @@
     tools:context=".ui.authentications.SignInActivity">
 
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:id="@+id/progressBar"
         android:theme="@style/FirebaseUI.TopProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/karbBackgrndtint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

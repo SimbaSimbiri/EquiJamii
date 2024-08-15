@@ -11,7 +11,6 @@
         android:id="@+id/contentLoadingProgressBar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@color/logoColour"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
