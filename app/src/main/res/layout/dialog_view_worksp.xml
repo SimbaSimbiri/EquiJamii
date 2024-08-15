@@ -53,6 +53,20 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <ImageView
+                        android:id="@+id/leaveWorkspaceImg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="Leave workspace"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+                        android:layout_marginHorizontal="5dp"
+                        android:clickable="true"
+                        app:tint="@color/white"
+                        android:src="@drawable/logout"
+                        app:layout_constraintEnd_toEndOf="@id/imagePostQuote"
+                        app:layout_constraintTop_toTopOf="@id/textTitle" />
+
                     <TextView
                         android:id="@+id/textQuote"
                         style="@style/titleTab"
@@ -70,10 +84,11 @@
                     <TextView
                         android:id="@+id/textTitle"
                         style="@style/titleTab"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="start"
+                        app:layout_constraintEnd_toStartOf="@id/leaveWorkspaceImg"
                         android:padding="5dp"
                         android:textColor="@color/white"
                         android:textSize="20sp"

@@ -51,7 +51,7 @@ class WorkspaceAdapter(
     override fun getItemCount(): Int = workspaces.size
 
     inner class WorkspaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val workspHeaderCard : CardView =  itemView.findViewById(R.id.workspaceHeaderCard)
+        private val workspHeaderCard: CardView = itemView.findViewById(R.id.workspaceHeaderCard)
         private val imageMotivational: ImageView = itemView.findViewById(R.id.imageMotivational)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         private val textTitle: TextView = itemView.findViewById(R.id.textKaribu)
@@ -69,6 +69,10 @@ class WorkspaceAdapter(
         private var currentPerson: Person? = null
         private var textPeopleInWorksp: String? = null
         private var membersCount: Int? = null
+        val firestore = FirebaseFirestore.getInstance()
+        val workspaceCollection = firestore.collection(
+            WORKSPACE_COLLECTION
+        )
 
         fun bind(workspace: Workspace) {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
@@ -84,16 +88,16 @@ class WorkspaceAdapter(
 
         private fun adjustParams() {
 
-            val layoutParams  =  workspHeaderCard.layoutParams
+            val layoutParams = workspHeaderCard.layoutParams
             val displayMetrics = DisplayMetrics()
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.defaultDisplay.getMetrics(displayMetrics)
 
             val screenHeight = displayMetrics.heightPixels
-            layoutParams.height = screenHeight/3
+            layoutParams.height = screenHeight / 3
             layoutParams.width = layoutParams.width
 
-            workspHeaderCard.layoutParams =  layoutParams
+            workspHeaderCard.layoutParams = layoutParams
 
         }
 

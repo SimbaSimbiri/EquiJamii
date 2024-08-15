@@ -24,6 +24,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_PDF_STORE
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.DialogAddOfficialBinding
@@ -59,7 +60,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
             val filename = uri?.let { DocumentFile.fromSingleUri(context, it)?.name }
 
             if (filename != null) {
-                val fileTitle = FileTitle(uri.toString(), filename,0)
+                val fileTitle = FileTitle(uri.toString(), filename,0, AuthUtils.getCurrentUserId())
                 fileTitleList.add(fileTitle)
                 pdfDescAdapter.notifyDataSetChanged()
             }
@@ -135,7 +136,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                 binding.recyclerPdfs.findViewHolderForAdapterPosition(i) as? PdfDescAdapter.PdfDescViewHolder
             viewHolder?.let {
                 uploadPdfList.add(
-                    FileTitle(fileTitleList[i].fileUri, it.textPdfName.text.toString(), i+1)
+                    FileTitle(fileTitleList[i].fileUri, it.textPdfName.text.toString(), i+1, AuthUtils.getCurrentUserId())
                 )
             }
         }
@@ -179,7 +180,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curPdfDesc.fileUri,
-                        curPdfDesc.fileTitle, i+1
+                        curPdfDesc.fileTitle, i+1, AuthUtils.getCurrentUserId()
                     )
                 )
 
@@ -211,7 +212,7 @@ class AddOfficialDialog : BottomSheetDialogFragment() {
                                 uploadedFileTitleList.add(
                                     FileTitle(
                                         newsImageUri.toString(),
-                                        curPdfDesc.fileTitle, i+1
+                                        curPdfDesc.fileTitle, i+1, AuthUtils.getCurrentUserId()
                                     )
                                 )
                                 uploadCounter++

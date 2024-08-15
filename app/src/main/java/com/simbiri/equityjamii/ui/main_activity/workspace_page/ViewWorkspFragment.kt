@@ -5,21 +5,31 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.app.adapters.TaskAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.WorkspaceMentionAdapter
+import com.simbiri.equityjamii.constants.USERS_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.Person
@@ -42,6 +52,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         }
     }
 
+    private var currentWorksp: Workspace? = null
     private var workspaceId: String? = null
     private val viewModel = AddWorkspaceDialogViewModel()
     private lateinit var viewModelView: ViewWorkspViewModel
@@ -103,6 +114,7 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
     private fun observeViewModelAdd() {
         viewModel.workspace.observe(viewLifecycleOwner) { workspace ->
+            currentWorksp = workspace
             workspace?.let { populateUI(it) }
         }
 
@@ -204,12 +216,115 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         binding.textTitle.text = workspace.titleImage?.fileTitle
         binding.addMention.setOnClickListener {
-            val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            if (adminsList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId()) || membersList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId())) {
 
-            frag.show(transaction, frag.tag)
+                val frag = AddMentionFragment.newInstance(workspace.workspaceId!!, null, null)
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                frag.show(transaction, frag.tag)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Only workspace members and admin can create mentions",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        val gestureDetectorCompat = GestureDetectorCompat(requireContext(),
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    leaveWorkSpace()
+                    return true
+                }
+
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    Toast.makeText(
+                        requireContext(), "Double tap to leave workspace", Toast.LENGTH_LONG
+                    ).show()
+                    return true
+                }
+            })
+
+        if (adminsList.map { it.userId }
+                .contains(AuthUtils.getCurrentUserId()) || membersList.map { it.userId }
+                .contains(AuthUtils.getCurrentUserId())) {
+            binding.leaveWorkspaceImg.setOnTouchListener { view, event ->
+                view.performClick()
+                gestureDetectorCompat.onTouchEvent(event)
+            }
         }
     }
+
+    private fun leaveWorkSpace() {
+        val firestore = FirebaseFirestore.getInstance()
+        val workspaceCollection = firestore.collection(
+            WORKSPACE_COLLECTION
+        )
+
+        if (adminsList.map { it.userId }.contains(AuthUtils.getCurrentUserId()!!)) {
+            if (adminsList.size == 1) {
+
+                if (membersList.isEmpty()) {
+                    workspaceCollection.document(workspaceId!!).delete()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Workspace ownership to be relinquished to existing member",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    workspaceCollection.document(workspaceId!!)
+                        .update("ownerId", membersList.random().userId)
+                }
+
+            } else {
+
+                if (currentWorksp!!.ownerId.contentEquals(AuthUtils.getCurrentUserId())) {
+                    val currentAdmins =
+                        adminsList.filter { !it.userId.contentEquals(currentWorksp!!.ownerId) }
+                    workspaceCollection.document(workspaceId!!)
+                        .update("ownerId", currentAdmins.random().userId)
+                    Toast.makeText(
+                        requireContext(),
+                        "Workspace ownership to be relinquished to existing admin",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+
+        }
+
+
+        workspaceId?.let { workspId ->
+
+            val adminsCollection = workspaceCollection.document(workspId).collection(
+                WORKSP_ADMINS_SUB_COLLECTION
+            )
+
+            val membersCollection = workspaceCollection.document(workspId).collection(
+                WORKSP_MEMBERS_SUB_COLLECTION
+            )
+
+            firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)
+                .update("workspaces", FieldValue.arrayRemove(workspId))
+
+            membersCollection.document(AuthUtils.getCurrentUserId()!!).delete()
+            adminsCollection.document(AuthUtils.getCurrentUserId()!!).delete()
+
+        }
+
+        Toast.makeText(
+            requireContext(),
+            "You left ${currentWorksp?.titleImage?.fileTitle} workspace",
+            Toast.LENGTH_LONG
+        ).show()
+
+        dismiss()
+    }
+
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
@@ -288,9 +403,19 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         binding.linksRecyclerView.adapter = LinksAdapter(requireContext(), linksList, false)
 
         binding.createTasksCard.setOnClickListener {
-            val frag = AddTaskFragment.newInstance(workspaceId!!, null, null)
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            frag.show(transaction, frag.tag)
+            if (adminsList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId()) || membersList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId())) {
+                val frag = AddTaskFragment.newInstance(workspaceId!!, null, null)
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                frag.show(transaction, frag.tag)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Only workspace members and admin can create tasks",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         binding.searchViewAll.setOnQueryTextListener(this)

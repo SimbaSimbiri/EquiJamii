@@ -85,8 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Task collaborators"
+            android:layout_marginTop="25dp"
+            android:text="Task collaborators/assignees"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/taskDetailsCardView" />
@@ -106,11 +106,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="Task milestones"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/taskAssigneesRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/taskMilestonesRecyclerView"
@@ -125,6 +125,7 @@
             android:id="@+id/submitProgress"
             android:layout_width="wrap_content"
             android:backgroundTint="@color/logoColour"
+            app:layout_constraintTop_toBottomOf="@id/linkLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="10dp"
             android:layout_height="40dp"
@@ -135,7 +136,7 @@
             android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/documentsTextView" />
+            />
 
         <TextView
             android:id="@+id/linksTextView"
@@ -144,10 +145,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="15dp"
-            android:text="Task's links"
+            android:text="Task's prelinks"
+            android:visibility="gone"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/postDocumentsRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@id/documentsTextView" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/linksRecyclerView"
@@ -164,11 +166,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Task preattachments"
+            android:layout_marginTop="25dp"
+            android:text="Assignor's attachments and links"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@id/taskAssigneesRecyclerView" />
 
 
         <TextView
@@ -177,12 +179,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Post completion documents"
+            android:layout_marginTop="25dp"
+            android:text="Assignees' attachments and links"
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/taskMilestonesRecyclerView" />
-
+        <ImageView
+            android:id="@+id/viewPostAttachmentsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:contentDescription="View all attachments"
+            android:scaleType="fitCenter"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/pdf_present"
+            app:layout_constraintStart_toEndOf="@id/postDocumentsTextView"
+            app:layout_constraintBottom_toBottomOf="@id/postDocumentsTextView"
+            app:layout_constraintTop_toTopOf="@id/postDocumentsTextView" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -211,12 +223,12 @@
             android:id="@+id/addPdfButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="10dp"
             android:backgroundTint="@color/logoColour"
-            android:text="Add pdf file"
+            android:text="Add pdf"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/postDocumentsTextView" />
 
@@ -228,6 +240,103 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addPdfButton" />
+
+        <TextView
+            android:id="@+id/postLinksTextView"
+            style="@style/titleTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
+            android:text="Post completion links"
+            android:textColor="@color/logoColour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/postDocumentsRecyclerView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postLinksRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/postLinksTextView" />
+
+        <Button
+            android:id="@+id/addLinkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Add link"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@id/addPdfButton"
+            app:layout_constraintTop_toBottomOf="@id/postDocumentsTextView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/titleLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
+            app:boxStrokeWidth="2dp"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/postLinksRecyclerView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/titleInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Link title"
+                android:textColorHighlight="@color/lighterMaroon" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/linkLayout"
+            style="@style/FirebaseUI.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
+            app:boxStrokeWidth="2dp"
+            app:cursorColor="@color/logoColour"
+            app:hintTextColor="@color/logoColour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/linkInput"
+                style="@style/titleTab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Appropriate link"
+                android:textColorHighlight="@color/lighterMaroon" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/confirmLinkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:backgroundTint="@color/logoColour"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linkLayout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

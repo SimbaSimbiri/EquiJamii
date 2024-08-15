@@ -11,6 +11,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Task
@@ -65,6 +66,7 @@ class AddTaskViewModel : ViewModel() {
         hashMention["finalDueDate"] = finalDueDate
 
         if (isNew) {
+            hashMention["postLinks"] = mutableListOf<FileTitle>()
             workspDoc.collection(TASK_SUB_COLLECTION).document(taskId).set(hashMention).await()
         } else {
             workspDoc.collection(TASK_SUB_COLLECTION).document(taskId).update(hashMention).await()
@@ -88,7 +90,7 @@ class AddTaskViewModel : ViewModel() {
                 FileTitle(
                     downloadUrl,
                     document.fileTitle,
-                    documents.indexOf(document)
+                    documents.indexOf(document), AuthUtils.getCurrentUserId()
                 )
             )
         }
@@ -100,7 +102,8 @@ class AddTaskViewModel : ViewModel() {
         return hashMapOf(
             "fileUri" to this.fileUri,
             "fileTitle" to this.fileTitle,
-            "position" to 0
+            "position" to 0,
+            "ownerId" to this.ownerId
         )
     }
 

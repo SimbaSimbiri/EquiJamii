@@ -70,7 +70,7 @@ data class Task(
     var assigneeListIds: MutableList<String>,
     var preAttachments: MutableList<FileTitle>,
     var postAttachments: MutableList<FileTitle>,
-    var importantLinks: MutableList<FileTitle>,
+    var importantLinks: MutableList<FileTitle>, var postLinks : MutableList<FileTitle>,
     var milestonesTask: MutableList<MileStone>,
     var complete: Boolean,
     var finalDueDate: Timestamp? = null,
@@ -78,7 +78,7 @@ data class Task(
 
     constructor() : this(
         "", "", "", null, mutableListOf(), mutableListOf(), mutableListOf(),
-        mutableListOf(), mutableListOf(), false, null
+        mutableListOf(), mutableListOf(), mutableListOf(),false, null
     )
 
     constructor(parcel: Parcel) : this(
@@ -87,6 +87,7 @@ data class Task(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.createStringArrayList()!!.toMutableList(),
+        parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
         parcel.createTypedArrayList(FileTitle.CREATOR)!!.toMutableList(),
@@ -105,6 +106,7 @@ data class Task(
         parcel.writeByte(if (complete) 1 else 0)
         parcel.writeTypedList(preAttachments)
         parcel.writeTypedList(importantLinks)
+        parcel.writeTypedList(postLinks)
         parcel.writeTypedList(postAttachments)
         parcel.writeStringList(assigneeListIds)
         parcel.writeTypedList(milestonesTask)
@@ -179,19 +181,21 @@ data class MileStone(
     }
 }
 
-data class FileTitle(var fileUri: String, var fileTitle: String, var position: Int) : Parcelable {
-    constructor() : this("", "", 0)
+data class FileTitle(var fileUri: String, var fileTitle: String, var position: Int, var ownerId: String?) : Parcelable {
+    constructor() : this("", "", 0,"")
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readInt()
-    )
+        parcel.readInt(),
+        parcel.readString() ?: ""
+        )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(fileUri)
         parcel.writeString(fileTitle)
         parcel.writeInt(position)
+        parcel.writeString(ownerId)
     }
 
     override fun describeContents(): Int {

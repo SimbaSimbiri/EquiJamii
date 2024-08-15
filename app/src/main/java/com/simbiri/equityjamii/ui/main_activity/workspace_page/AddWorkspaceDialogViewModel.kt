@@ -173,7 +173,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
                 FileTitle(
                     downloadUrl,
                     document.fileTitle,
-                    documents.indexOf(document)
+                    documents.indexOf(document), AuthUtils.getCurrentUserId()
                 )
             )
         }
@@ -194,15 +194,15 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         val uploadedDocuments = uploadDocumentsAndGetFileTitles(documents)
 
         val imageTitle = if (isNew) {
-            FileTitle("", titleWorkspace, 0).toHashMap()
+            FileTitle("", titleWorkspace, 0, AuthUtils.getCurrentUserId()).toHashMap()
         } else {
-            FileTitle(imageUri.toString(), titleWorkspace, 0).toHashMap()
+            FileTitle(imageUri.toString(), titleWorkspace, 0, AuthUtils.getCurrentUserId()).toHashMap()
         }
 
         val imageQuoteTitle = if (isNew) {
-            FileTitle("", quote, 0).toHashMap()
+            FileTitle("", quote, 0, AuthUtils.getCurrentUserId()).toHashMap()
         } else {
-            FileTitle(imageQuoteUri.toString(), quote, 0).toHashMap()
+            FileTitle(imageQuoteUri.toString(), quote, 0, AuthUtils.getCurrentUserId()).toHashMap()
         }
 
         val workspaceData = hashMapOf(
@@ -239,7 +239,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
                 FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/ImageQuote${workspaceId}")
             storageRef.putFile(imageQuoteUri).await()
             val downloadUrl = storageRef.downloadUrl.await().toString()
-            val fileTitle = FileTitle(downloadUrl, quote, 0)
+            val fileTitle = FileTitle(downloadUrl, quote, 0, AuthUtils.getCurrentUserId())
             firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
                 .update("imageQuote", fileTitle.toHashMap()).await()
         }
@@ -259,7 +259,7 @@ class AddWorkspaceDialogViewModel : ViewModel() {
                 FirebaseStorage.getInstance().reference.child("$WORKSPACE_IMAGE_STORE/$workspaceId")
             storageRef.putFile(imageUri).await()
             val downloadUrl = storageRef.downloadUrl.await().toString()
-            val fileTitle = FileTitle(downloadUrl, title, 0)
+            val fileTitle = FileTitle(downloadUrl, title, 0, AuthUtils.getCurrentUserId())
             firestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
                 .update("titleImage", fileTitle.toHashMap()).await()
         }
@@ -270,7 +270,8 @@ class AddWorkspaceDialogViewModel : ViewModel() {
         return hashMapOf(
             "fileUri" to this.fileUri,
             "fileTitle" to this.fileTitle,
-            "position" to 0
+            "position" to 0,
+            "ownerId" to this.ownerId
         )
     }
 }

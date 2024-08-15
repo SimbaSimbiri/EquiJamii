@@ -27,6 +27,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.ImageDescAdapter
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_STORAGE_REF
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.AddNewsDialogBinding
@@ -73,7 +74,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         openImagePicker = registerForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
                 result.uriContent?.let { uri ->
-                    val fileTitle = FileTitle(uri.toString(), "",0)
+                    val fileTitle = FileTitle(uri.toString(), "",0, AuthUtils.getCurrentUserId())
                     fileTitleList.add(fileTitle)
                     imageDescAdapter.notifyDataSetChanged()
                 }
@@ -226,7 +227,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 binding.recyclerViewImages.findViewHolderForAdapterPosition(i) as? ImageDescAdapter.ImageDescViewHolder
             viewHolder?.let {
                 uploadImageList.add(
-                    FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString(), i + 1)
+                    FileTitle(fileTitleList[i].fileUri, it.editTextDescription.text.toString(), i + 1, AuthUtils.getCurrentUserId())
                 )
             }
         }
@@ -234,7 +235,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
         if (featuringUri.contains("https://")) {
 
             val featuringFileTitle =
-                extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube",1000) }
+                extractYouTubeVideoId(featuringUri)?.let { FileTitle(it, "youTube",1000, AuthUtils.getCurrentUserId()) }
                 featuringFile = featuringFileTitle
         }
 
@@ -276,7 +277,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                 uploadedFileTitleList.add(
                     FileTitle(
                         curImageDesc.fileUri,
-                        curImageDesc.fileTitle,i + 1
+                        curImageDesc.fileTitle,i + 1, AuthUtils.getCurrentUserId()
                     )
                 )
 
@@ -310,7 +311,7 @@ class AddNewsFragment : BottomSheetDialogFragment() {
                                 uploadedFileTitleList.add(
                                     FileTitle(
                                         newsImageUri.toString(),
-                                        curImageDesc.fileTitle, i
+                                        curImageDesc.fileTitle, i, AuthUtils.getCurrentUserId()
                                     )
                                 )
                                 uploadCounter++

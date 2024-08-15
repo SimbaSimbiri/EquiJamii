@@ -57,6 +57,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         }
     }
 
+    private var currentWorkspace: Workspace? = null
     private lateinit var binding: DialogAddWorkspaceBinding
     private val viewModel: AddWorkspaceDialogViewModel by viewModels()
     private val firestore = FirebaseFirestore.getInstance()
@@ -118,7 +119,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             val filename = uri?.let { DocumentFile.fromSingleUri(requireContext(), it)?.name }
 
             if (filename != null) {
-                val fileTitle = FileTitle(uri.toString(), filename, 0)
+                val fileTitle = FileTitle(uri.toString(), filename, 0, AuthUtils.getCurrentUserId())
                 documentsList.add(fileTitle)
                 binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
             }
@@ -255,7 +256,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
             return
         }
 
-        val fileTitle = FileTitle(link, title, 0)
+        val fileTitle = FileTitle(link, title, 0, AuthUtils.getCurrentUserId())
         linksList.add(fileTitle)
         binding.linksRecyclerView.adapter?.notifyDataSetChanged()
 
@@ -266,6 +267,7 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
 
     private fun observeViewModel() {
         viewModel.workspace.observe(viewLifecycleOwner) { workspace ->
+            currentWorkspace = workspace
             workspace?.let { populateUI(it) }
         }
 
@@ -424,7 +426,17 @@ class AddWorkspaceDialog : BottomSheetDialogFragment(), SearchView.OnQueryTextLi
         val invitedMembers = extractPeopleFromRecyclerView(binding.invitedRecyclerView)
         val invitedAdmins: MutableList<Person> =
             extractPeopleFromRecyclerView(binding.invitedAdminsRecyclerView)
+
         invitedAdmins.add(currPerson!!)
+
+        if (!invitedAdmins.map { it.userId }.contains(currentWorkspace?.ownerId)){
+            Toast.makeText(
+                requireContext(),
+                "Workspace owner can't be removed",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
 
         savePeopleSubcollection(workspaceId, WORKSP_MEMBERS_SUB_COLLECTION, invitedMembers)
         savePeopleSubcollection(workspaceId, WORKSP_ADMINS_SUB_COLLECTION, invitedAdmins)

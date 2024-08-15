@@ -122,7 +122,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             val filename = uri?.let { DocumentFile.fromSingleUri(requireContext(), it)?.name }
 
             if (filename != null) {
-                val fileTitle = FileTitle(uri.toString(), filename, 0)
+                val fileTitle = FileTitle(uri.toString(), filename, 0, AuthUtils.getCurrentUserId())
                 documentsList.add(fileTitle)
                 binding.documentsRecyclerView.adapter!!.notifyDataSetChanged()
                 binding.documentsRecyclerView.scrollToPosition(documentsList.size - 1)
@@ -255,7 +255,7 @@ class AddTaskFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListe
             return
         }
 
-        val fileTitle = FileTitle(link, title, 0)
+        val fileTitle = FileTitle(link, title, 0, AuthUtils.getCurrentUserId())
         linksList.add(fileTitle)
         binding.linksRecyclerView.adapter?.notifyDataSetChanged()
         binding.linksRecyclerView.scrollToPosition(linksList.size - 1)

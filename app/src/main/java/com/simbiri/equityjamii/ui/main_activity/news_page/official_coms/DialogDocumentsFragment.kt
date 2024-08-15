@@ -55,7 +55,7 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
                         adapter!!.notifyDataSetChanged()
                     }
 
-                    Handler().postDelayed({
+                   /* Handler().postDelayed({
 
                         if (listFiles.count() == 1) {
                             val viewHolder =
@@ -63,7 +63,7 @@ class DialogDocumentsFragment : BottomSheetDialogFragment() {
                             viewHolder?.displayPdf(listFiles.first())
                         }
 
-                    }, 500)
+                    }, 500)*/
 
                 }
 

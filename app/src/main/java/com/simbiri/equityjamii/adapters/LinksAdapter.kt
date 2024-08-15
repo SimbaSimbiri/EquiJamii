@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
+import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 
 class LinksAdapter(private var context: Context, val links: MutableList<FileTitle>, val canDelete : Boolean = false) : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
@@ -37,8 +38,13 @@ class LinksAdapter(private var context: Context, val links: MutableList<FileTitl
         }
 
         holder.deleteLink.setOnClickListener {
-            links.remove(link)
-            notifyItemRemoved(position)
+            if (link.ownerId.contentEquals(AuthUtils.getCurrentUserId()) || link.ownerId.isNullOrEmpty()){
+                links.remove(link)
+                notifyItemRemoved(position)
+            }else{
+                Toast.makeText(context, "You cannot erase colleague's file!", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
     }

@@ -65,6 +65,9 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private var curTask: Task? = null
     private var workspaceId: String? = null
     private lateinit var pdfLauncher: ActivityResultLauncher<String>
+    private var isLinkInputVisible = false
+    private var postlinksList = mutableListOf<FileTitle>()
+
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
@@ -145,21 +148,35 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
     private fun populateUI(task: Task) {
         binding.apply {
-            if (curTask?.assignorId.contentEquals(AuthUtils.getCurrentUserId()) && curTask?.assigneeListIds?.contains(
-                    AuthUtils.getCurrentUserId()
-                ) == false
+            if (curTask?.assignorId.contentEquals(AuthUtils.getCurrentUserId()) &&
+                curTask?.assigneeListIds?.contains(AuthUtils.getCurrentUserId()) == false
             ) {
                 submitProgress.visibility = View.INVISIBLE
                 progressBar.visibility = View.GONE
                 addPdfButton.visibility = View.GONE
+                addLinkButton.visibility = View.GONE
+                binding.postLinksRecyclerView.adapter = LinksAdapter(requireContext(), postlinksList, false)
             }
+
+            if (task.importantLinks.isEmpty()){linksTextView.visibility = View.GONE}
 
             documentsTextView.setOnClickListener {
-                openDocumentsList(task)
+                openDocumentsList(task.preAttachments)
             }
 
+            postDocumentsTextView.setOnClickListener {
+                openDocumentsList(task.postAttachments)
+            }
+
+            postlinksList.addAll(task.postLinks)
+            binding.postLinksRecyclerView.adapter!!.notifyDataSetChanged()
+
             viewAttachmentsImage.setOnClickListener {
-                openDocumentsList(task)
+                openDocumentsList(task.preAttachments)
+            }
+
+            viewPostAttachmentsImage.setOnClickListener {
+                openDocumentsList(task.postAttachments)
             }
 
             taskTitleTextView.text = task.title
@@ -188,12 +205,12 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
         setupMilestonesRecyclerView(task.milestonesTask)
         setupLinksRecyclerView(task.importantLinks)
-        setupDocumentsRecyclerView(task.postAttachments)
+        setupDocumentsRecyclerView()
     }
 
-    private fun openDocumentsList(task: Task) {
-        if (task.preAttachments.size > 0) {
-            val frag = DialogDocumentsFragment.newInstance(ArrayList(task.preAttachments))
+    private fun openDocumentsList(attachments: MutableList<FileTitle>) {
+        if (attachments.size > 0) {
+            val frag = DialogDocumentsFragment.newInstance(ArrayList(attachments))
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             frag.show(transaction, frag.tag)
         } else {
@@ -225,9 +242,8 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun setupDocumentsRecyclerView(documents: MutableList<FileTitle>) {
+    private fun setupDocumentsRecyclerView() {
         binding.postDocumentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        pdfFiles.addAll(documents)
         val canEditPostAttachments = (curTask?.assigneeListIds?.contains(
             AuthUtils.getCurrentUserId()
         ) == true)
@@ -237,12 +253,48 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         binding.postDocumentsRecyclerView.adapter!!.notifyDataSetChanged()
     }
 
+    private fun toggleLinkVisibility() {
+        isLinkInputVisible = !isLinkInputVisible
+        if (isLinkInputVisible) {
+            binding.confirmLinkButton.visibility = View.VISIBLE
+            binding.linkLayout.visibility = View.VISIBLE
+            binding.titleLayout.visibility = View.VISIBLE
+        } else {
+            binding.confirmLinkButton.visibility = View.GONE
+            binding.linkLayout.visibility = View.GONE
+            binding.titleLayout.visibility = View.GONE
+        }
+    }
+
+    private fun addLink() {
+        val title = binding.titleInput.text.toString()
+        val link = binding.linkInput.text.toString()
+
+        if (title.isBlank() || link.isBlank()) {
+            Toast.makeText(requireContext(), "Both title and link are required", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        val fileTitle = FileTitle(link, title, 0, AuthUtils.getCurrentUserId())
+        postlinksList.add(fileTitle)
+        binding.postLinksRecyclerView.adapter?.notifyDataSetChanged()
+        binding.postLinksRecyclerView.scrollToPosition(postlinksList.size - 1)
+
+        binding.titleInput.text?.clear()
+        binding.linkInput.text?.clear()
+        toggleLinkVisibility()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = ViewTaskFragBinding.inflate(layoutInflater)
+
+        binding.postLinksRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.postLinksRecyclerView.adapter = LinksAdapter(requireContext(), postlinksList, true)
 
         arguments?.getParcelable<Task>(ARGS_TASK_ITEM)?.let { task ->
             curTask = task
@@ -261,6 +313,14 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             pdfLauncher.launch("application/pdf")
         }
 
+        binding.addLinkButton.setOnClickListener {
+            toggleLinkVisibility()
+        }
+
+        binding.confirmLinkButton.setOnClickListener {
+            addLink()
+        }
+
         binding.submitProgress.setOnClickListener {
 
             if (curTask?.finalDueDate!! < Timestamp.now()) {
@@ -270,10 +330,10 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-            }else{
+            } else {
 
-            binding.progressBar.visibility = View.VISIBLE
-            submitProgress()
+                binding.progressBar.visibility = View.VISIBLE
+                submitProgress()
             }
         }
 
@@ -289,7 +349,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private fun processSelectedPdf(uri: Uri?) {
         uri?.let {
             val fileName = DocumentFile.fromSingleUri(requireContext(), it)?.name ?: "New Document"
-            val fileTitle = FileTitle(uri.toString(), fileName, pdfFiles.size)
+            val fileTitle = FileTitle(uri.toString(), fileName, pdfFiles.size, AuthUtils.getCurrentUserId())
             pdfFiles.add(fileTitle)
             binding.postDocumentsRecyclerView.adapter!!.notifyDataSetChanged()
         }
@@ -297,7 +357,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
 
     private suspend fun uploadDocumentsAndGetFileTitles(documents: List<FileTitle>): List<FileTitle> {
 
-        if (documents.isEmpty()){
+        if (documents.isEmpty()) {
             return listOf()
         }
 
@@ -320,7 +380,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                     FileTitle(
                         downloadUrl,
                         document.fileTitle,
-                        documents.indexOf(document)
+                        documents.indexOf(document), AuthUtils.getCurrentUserId()
                     )
                 )
             } else {
@@ -338,6 +398,11 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         return uploadedFileTitles
     }
 
+    private fun extractLinksFromRecyclerView(recyclerView: RecyclerView): List<FileTitle> {
+        val adapter = recyclerView.adapter as LinksAdapter
+        return adapter.links
+    }
+
     private fun submitProgress() {
         lifecycleScope.launch {
 
@@ -347,11 +412,14 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 val milestoneMap = milestones.map { it.toHash() }
                 val allMilestonesComplete = milestones.all { it.complete }
                 val pdfFileTitles = uploadDocumentsAndGetFileTitles(pdfFiles).map { it.toHashMap() }
+                val postLinks =
+                    extractLinksFromRecyclerView(binding.postLinksRecyclerView).map { it.toHashMap() }
 
                 val updates = hashMapOf<String, Any>(
                     "milestonesTask" to milestoneMap,
                     "complete" to allMilestonesComplete,
-                    "postAttachments" to pdfFileTitles
+                    "postAttachments" to pdfFileTitles,
+                    "postLinks" to postLinks
                 )
 
                 viewModel.updateTaskFields(workspaceId!!, curTask?.taskId!!, updates)
@@ -377,7 +445,8 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
         return hashMapOf(
             "fileUri" to this.fileUri,
             "fileTitle" to this.fileTitle,
-            "position" to this.position
+            "position" to this.position,
+            "ownerId" to this.ownerId
         )
     }
 
