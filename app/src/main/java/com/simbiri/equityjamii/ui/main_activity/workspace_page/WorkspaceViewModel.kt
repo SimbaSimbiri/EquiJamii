@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
@@ -63,21 +64,26 @@ class WorkspaceViewModel : ViewModel() {
     suspend fun fetchInvitedWorkspaces() {
         try {
             val invitedWorkspaces = withContext(Dispatchers.IO) {
-                val invitedWorkspacesList = mutableListOf<Workspace>()
-                val workspaces = firestore.collection(WORKSPACE_COLLECTION).get().await()
-                    .toObjects(Workspace::class.java)
-                    .filter { workspace -> person?.workspaces?.contains(workspace.workspaceId) == true }
+                val workspaceIds = person?.workspaces.orEmpty()
 
-                invitedWorkspacesList.addAll(workspaces)
-                invitedWorkspacesList
+                if (workspaceIds.isEmpty()) {
+                    return@withContext emptyList<Workspace>()
+                }
+
+                val batchQuery = firestore.collection(WORKSPACE_COLLECTION)
+                    .whereIn(FieldPath.documentId(), workspaceIds)
+                    .get().await()
+
+                batchQuery.toObjects(Workspace::class.java)
             }
-            _invitedWorkspaces.value = invitedWorkspaces
 
+            _invitedWorkspaces.value = invitedWorkspaces
 
         } catch (e: FirebaseFirestoreException) {
             throw Exception("Failed to fetch invited workspaces: ${e.message}")
         }
     }
+
 
     private fun handleError(e: Exception) {
         if (e is FirebaseFirestoreException) {

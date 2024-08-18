@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -23,15 +25,19 @@ object UserNetworkUtils {
 
     suspend fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
         if (existingIds.isNullOrEmpty()) return emptyList()
-        existingIds.sort()
+        val idsCopy = existingIds.sorted().toList()
+
         val firestoreCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
 
-        val taskResult = withContext(ioDispatcher) {
-            firestoreCollection.whereIn(FieldPath.documentId(), existingIds)
-                .get()
-        }
+        return withContext(ioDispatcher) {
+                val taskResult = firestoreCollection
+                    .whereIn(FieldPath.documentId(), idsCopy)
+                    .get()
+                    .await()
 
-        return taskResult.await().documents.mapNotNull { it.toObject(Person::class.java) }
+                taskResult.documents.mapNotNull { it.toObject(Person::class.java) }
+
+        }
     }
 
     suspend fun following(followingList: MutableList<String>?): List<Person> {
