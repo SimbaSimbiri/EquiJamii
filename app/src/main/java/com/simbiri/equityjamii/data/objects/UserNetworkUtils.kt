@@ -1,37 +1,37 @@
 package com.simbiri.equityjamii.data.objects
 
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 object UserNetworkUtils {
 
     private var personalID: String? = null
+    private val ioDispatcher = Dispatchers.IO
 
     init {
         personalID = AuthUtils.getCurrentUserId()
     }
 
 
-    private val ioDispatcher = Dispatchers.IO
     suspend fun narrowDownUsers(existingIds: MutableList<String>?): List<Person> {
-        val narrowedUsers: MutableList<Person> = mutableListOf()
+        if (existingIds.isNullOrEmpty()) return emptyList()
+        existingIds.sort()
+        val firestoreCollection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
 
-        if (!existingIds.isNullOrEmpty()) {
-            val collection = FirebaseFirestore.getInstance().collection(USERS_COLLECTION)
-            val taskResult = withContext(ioDispatcher) { collection.get().await() }
-            taskResult.forEach {
-                val userResult = it.toObject(Person::class.java)
-                if (existingIds.contains(userResult.userId)) {
-                    narrowedUsers.add(userResult)
-                }
-            }
+        val taskResult = withContext(ioDispatcher) {
+            firestoreCollection.whereIn(FieldPath.documentId(), existingIds)
+                .get()
         }
 
-        return narrowedUsers
+        return taskResult.await().documents.mapNotNull { it.toObject(Person::class.java) }
     }
 
     suspend fun following(followingList: MutableList<String>?): List<Person> {
@@ -43,22 +43,19 @@ object UserNetworkUtils {
     }
 
     suspend fun followingFollowers(followingList: MutableList<String>?): List<Person> {
-        val followingIDSet: MutableSet<String> = mutableSetOf()
+        if (followingList.isNullOrEmpty()) return emptyList()
 
         val followingUsers = narrowDownUsers(followingList)
+        val followingIDSet = mutableSetOf<String>()
 
-        followingUsers.forEach { user ->
-            val userFollowerList: List<Person> =
-                narrowDownUsers(user.network.followerList).filter { person ->
-                    !person.userId.contentEquals(
-                        personalID
-                    )
+        coroutineScope {
+            followingUsers.map { user ->
+                async(ioDispatcher) {
+                    val userFollowerList = narrowDownUsers(user.network.followerList)
+                    followingIDSet.addAll(userFollowerList.filter { it.userId != personalID }
+                        .map { it.userId })
                 }
-
-            userFollowerList.forEach { person ->
-                followingIDSet.add(person.userId)
-            }
-
+            }.awaitAll()
         }
 
         return narrowDownUsers(followingIDSet.toMutableList())
@@ -67,26 +64,10 @@ object UserNetworkUtils {
     suspend fun recommendFollowing(
         followingList: MutableList<String>?, followerList: MutableList<String>?
     ): List<Person> {
-        val recommendListFollow: MutableList<Person> = mutableListOf()
+        val followingFollowers =
+            followingFollowers(followingList).filter { it.userId != personalID }
+        val followingSet = followingList?.toSet() ?: emptySet()
 
-        val followingFollowers = followingFollowers(followingList).filter { person ->
-            !person.userId.contentEquals(
-                personalID
-            )
-        }
-
-        followingFollowers.forEach { person ->
-
-            if (followingList?.contains(person.userId) == false) {
-                recommendListFollow.add(person)
-            }
-
-        }
-
-        return recommendListFollow.filter { person ->
-            !person.userId.contentEquals(
-                personalID
-            )
-        }
+        return followingFollowers.filter { !followingSet.contains(it.userId) }
     }
 }
