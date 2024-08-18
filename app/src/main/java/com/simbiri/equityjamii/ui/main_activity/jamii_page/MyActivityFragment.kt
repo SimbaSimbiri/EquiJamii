@@ -58,16 +58,16 @@ class MyActivityFragment : Fragment() {
                 setUpPostObservers(currPerson.userId)
 
                 binding.cardAddEvent.setOnClickListener {
-                    binding.cardAddEvent.visibility = View.INVISIBLE
+                    binding.addEvent.visibility = View.INVISIBLE
                     binding.contentLoadingProgressBar.visibility = View.VISIBLE
                     val addNewEvent = AddEventsDialog()
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     addNewEvent.show(transaction, addNewEvent.tag)
 
                     Handler().postDelayed({
-                        binding.cardAddEvent.visibility = View.VISIBLE
+                        binding.addEvent.visibility = View.VISIBLE
                         binding.contentLoadingProgressBar.visibility = View.INVISIBLE
-                    },4000)
+                    },2000)
                 }
 
             }

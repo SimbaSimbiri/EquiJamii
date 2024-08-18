@@ -9,7 +9,7 @@
         <item name="colorSecondary">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorAccent">@color/logoColour</item>
+        <item name="colorAccent">@color/grey_font</item>
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
