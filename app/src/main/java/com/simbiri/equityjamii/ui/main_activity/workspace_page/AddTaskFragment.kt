@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -33,7 +32,7 @@ import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Person

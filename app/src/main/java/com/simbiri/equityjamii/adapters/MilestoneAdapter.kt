@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.data.model.AuthUtils
 import com.simbiri.equityjamii.data.model.MileStone
 
 class MilestoneAdapter(

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.adapters.EventsAdapter
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.databinding.EventsFragBinding
 

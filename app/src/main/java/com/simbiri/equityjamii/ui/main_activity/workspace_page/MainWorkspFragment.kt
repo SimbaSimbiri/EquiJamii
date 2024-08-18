@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.databinding.MainWorkspBinding
 
 class MainWorkspFragment : Fragment() {

@@ -117,6 +117,7 @@ class NetworkFragment : BottomSheetDialogFragment() {
                 behavior.isDraggable = true
                 behavior.isHideable = true
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.peekHeight = displayMetrics.heightPixels
             }
         }
 

@@ -8,7 +8,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_MENTIONS_SUB_COLLECTIONS
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.data.model.WorkspaceMention
 

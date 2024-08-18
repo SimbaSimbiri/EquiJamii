@@ -11,7 +11,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Task

@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simbiri.equityjamii.adapters.NewsAdapter
 import com.simbiri.equityjamii.adapters.TagNewsAdapter
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.NewsPageForYouBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel

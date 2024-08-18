@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.simbiri.equityjamii.data.model.Person
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
+import com.simbiri.equityjamii.data.objects.UserNetworkUtils
 import kotlinx.coroutines.launch
 
 class LikesViewModel : ViewModel()  {

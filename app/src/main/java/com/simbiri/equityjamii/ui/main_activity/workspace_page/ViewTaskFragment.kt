@@ -29,12 +29,12 @@ import com.simbiri.equityjamii.adapters.MilestoneAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
 import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.MileStone
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Task
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
+import com.simbiri.equityjamii.data.objects.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.ViewTaskFragBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
 import kotlinx.coroutines.launch

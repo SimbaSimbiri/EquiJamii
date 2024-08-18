@@ -27,7 +27,7 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.ImageDescAdapter
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_STORAGE_REF
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.databinding.AddNewsDialogBinding

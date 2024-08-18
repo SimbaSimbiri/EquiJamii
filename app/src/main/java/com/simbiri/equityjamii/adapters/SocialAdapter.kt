@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.data.model.SocialMedia
+import com.simbiri.equityjamii.data.objects.SocialMedia
 
 class SocialAdapter(var context: Context, private var mediaLinkList: List<String>)  : RecyclerView.Adapter<SocialAdapter.SocialAdapterViewHolder>(){
 

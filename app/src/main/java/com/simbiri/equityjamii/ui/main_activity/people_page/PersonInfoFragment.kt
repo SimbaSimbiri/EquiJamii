@@ -27,10 +27,10 @@ import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Social
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
+import com.simbiri.equityjamii.data.objects.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.DialogPeopleDetailBinding
 import kotlinx.coroutines.launch
 

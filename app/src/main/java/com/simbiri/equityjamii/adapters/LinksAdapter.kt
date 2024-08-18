@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.simbiri.equityjamii.R
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 
 class LinksAdapter(private var context: Context, val links: MutableList<FileTitle>, val canDelete : Boolean = false) : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {

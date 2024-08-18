@@ -6,7 +6,6 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -29,7 +28,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
 import com.simbiri.equityjamii.constants.POST_STORAGE_REF
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.databinding.DialogAddEventsBinding
 import java.text.SimpleDateFormat

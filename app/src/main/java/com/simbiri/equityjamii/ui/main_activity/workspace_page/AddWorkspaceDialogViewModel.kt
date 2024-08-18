@@ -13,11 +13,11 @@ import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
 import com.simbiri.equityjamii.constants.WORKSPACE_IMAGE_STORE
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.data.model.FileTitle
-import com.simbiri.equityjamii.data.model.UserNetworkUtils
+import com.simbiri.equityjamii.data.objects.UserNetworkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await

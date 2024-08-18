@@ -8,7 +8,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.data.model.Video
-import com.simbiri.equityjamii.data.model.YouTubeVids
+import com.simbiri.equityjamii.data.objects.YouTubeVids
 import com.simbiri.equityjamii.databinding.NewsPageFeaturingBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.AddNewsFragment
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel

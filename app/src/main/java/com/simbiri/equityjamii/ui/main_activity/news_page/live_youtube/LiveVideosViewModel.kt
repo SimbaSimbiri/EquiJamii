@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.simbiri.equityjamii.data.model.Video
-import com.simbiri.equityjamii.data.model.YouTubeVids
-import kotlinx.coroutines.launch
+import com.simbiri.equityjamii.data.objects.YouTubeVids
 
 class LiveVideosViewModel : ViewModel() {
 

@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.TagNewsAdapter
 import com.simbiri.equityjamii.constants.USERS_COLLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.databinding.EditNewsPrefBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.NewsViewModel
 

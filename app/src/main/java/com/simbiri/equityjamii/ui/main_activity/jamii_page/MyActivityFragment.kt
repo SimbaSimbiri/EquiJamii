@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.adapters.EventsAdapter
 import com.simbiri.equityjamii.adapters.PostAdapter
 import com.simbiri.equityjamii.constants.EVENTS_C0LLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.model.Post

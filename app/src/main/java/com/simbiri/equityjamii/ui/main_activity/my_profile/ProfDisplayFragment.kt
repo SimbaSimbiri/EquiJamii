@@ -27,8 +27,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
-import com.simbiri.equityjamii.data.model.AuthUtils
-import com.simbiri.equityjamii.data.model.AuthUtils.getCurrentUserId
+import com.simbiri.equityjamii.data.objects.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding

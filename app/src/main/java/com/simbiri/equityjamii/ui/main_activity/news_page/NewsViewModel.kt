@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.simbiri.equityjamii.constants.NEWS_COLLECTION
 import com.simbiri.equityjamii.constants.NEWS_TAGS_COLLECTION
-import com.simbiri.equityjamii.data.model.AuthUtils
+import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.NewsText
 import com.simbiri.equityjamii.data.model.Tag
 import kotlinx.coroutines.Dispatchers
