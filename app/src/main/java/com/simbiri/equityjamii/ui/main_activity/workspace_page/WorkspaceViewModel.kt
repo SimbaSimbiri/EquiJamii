@@ -71,7 +71,7 @@ class WorkspaceViewModel : ViewModel() {
                 }
 
                 val batchQuery = firestore.collection(WORKSPACE_COLLECTION)
-                    .whereIn(FieldPath.documentId(), workspaceIds)
+                    .whereIn(FieldPath.documentId(), workspaceIds.sorted())
                     .get().await()
 
                 batchQuery.toObjects(Workspace::class.java)
