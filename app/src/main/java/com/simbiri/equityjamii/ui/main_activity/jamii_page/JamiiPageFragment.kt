@@ -135,11 +135,11 @@ class JamiiPageFragment : Fragment() {
         ) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "Discover"
+                    tab.text = "Feed"
                 }
 
                 1 -> {
-                    tab.text = "Feed"
+                    tab.text = "Discover"
                 }
 
                 2 -> {
@@ -165,11 +165,11 @@ class JamiiPageFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
-                    DiscoverFragment()
+                    FeedFragment()
                 }
 
                 1 -> {
-                    FeedFragment()
+                    DiscoverFragment()
                 }
 
                 2 -> {

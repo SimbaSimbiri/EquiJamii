@@ -222,6 +222,7 @@
                             android:id="@+id/aboutTextContent"
                             style="@style/titleTab2"
                             android:layout_width="0dp"
+                            android:paddingHorizontal="5dp"
                             android:layout_height="wrap_content"
                             android:justificationMode="inter_word"
                             android:textColor="@color/white"

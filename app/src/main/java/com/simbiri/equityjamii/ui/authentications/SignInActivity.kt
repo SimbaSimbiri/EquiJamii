@@ -94,6 +94,7 @@ class SignInActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             val intent = Intent(this, KaribuActivity::class.java)
                             startActivity(intent)
+                            Toast.makeText(this, "Sign In successful.", Toast.LENGTH_LONG).show()
                             binding.progressBar.visibility = View.INVISIBLE
 
                         } else {

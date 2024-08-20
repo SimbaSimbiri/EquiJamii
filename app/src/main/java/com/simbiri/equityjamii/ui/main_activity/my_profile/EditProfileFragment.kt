@@ -5,14 +5,12 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -50,33 +48,25 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
     private var imageProfileUri: Uri? = null
     private var imageBackgUri: Uri? = null
-    var storagePerms: Array<String>? = null
     var clickedProfile = false
     var clickedBackG = false
-    private lateinit var cropProfileContractOptions: CropImageContractOptions
-    private lateinit var cropBackGContractOptions: CropImageContractOptions
     private lateinit var storageReference: StorageReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var person: Person
     private var profileNotComplete = false
 
 
-    val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
-
+    private val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             if (clickedProfile) {
-                imageProfileUri = Uri.parse(result.uriContent.toString())
-                savePersonalProfileInfo()
+                imageProfileUri = result.uriContent
+                Glide.with(this).load(imageProfileUri).into(binding!!.profileImage)
             } else if (clickedBackG) {
                 imageBackgUri = result.uriContent
-                savePersonalProfileInfo()
+                Glide.with(this).load(imageBackgUri).into(binding!!.imageBackGround)
             }
         }
-
     }
-
-
-    private lateinit var viewModel: EditProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +80,6 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         adjustSize()
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
-        storagePerms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         retreiveAllInfo()
 
@@ -98,25 +87,22 @@ class EditProfileFragment : BottomSheetDialogFragment() {
             clickedProfile = true
             clickedBackG = false
             showImagePicker()
-
         }
 
         binding!!.backGEditCard.setOnClickListener {
             clickedBackG = true
             clickedProfile = false
             showImagePicker()
-
         }
 
         binding!!.saveProfileButton.setOnClickListener {
-
             profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
                     binding!!.designationProfileEdit.text.isNullOrEmpty() ||
                     binding!!.branchProfileEdit.text.isNullOrEmpty() ||
                     binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
                     binding!!.cityProfileEditText.text.isNullOrEmpty() ||
-                    imageProfileUri?.toString().isNullOrEmpty() ||
-                    imageBackgUri?.toString().isNullOrEmpty()
+                    imageProfileUri == null ||
+                    imageBackgUri == null
 
             if (profileNotComplete) {
                 Toast.makeText(
@@ -124,13 +110,11 @@ class EditProfileFragment : BottomSheetDialogFragment() {
                     "To save changes, complete the Personal information block",
                     Toast.LENGTH_LONG
                 ).show()
-
             } else {
                 binding!!.progressBar.isVisible = true
-                savePersonalProfileInfo()
+                uploadImagesAndSaveInfo()
             }
         }
-
 
         binding!!.exitButton.setOnClickListener {
             profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
@@ -138,8 +122,8 @@ class EditProfileFragment : BottomSheetDialogFragment() {
                     binding!!.branchProfileEdit.text.isNullOrEmpty() ||
                     binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
                     binding!!.cityProfileEditText.text.isNullOrEmpty() ||
-                    imageProfileUri?.toString().isNullOrEmpty() ||
-                    imageBackgUri?.toString().isNullOrEmpty()
+                    imageProfileUri == null ||
+                    imageBackgUri == null
 
             if (profileNotComplete) {
                 Toast.makeText(
@@ -147,16 +131,158 @@ class EditProfileFragment : BottomSheetDialogFragment() {
                     "Personal information block and user images must be uploaded",
                     Toast.LENGTH_LONG
                 ).show()
-
             } else {
                 dismiss()
             }
         }
 
-
         return view
     }
 
+    private fun uploadImagesAndSaveInfo() {
+        val imageProfileReference = storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+        val backGReference = storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+
+        val uploadProfileImage = imageProfileUri?.scheme != "https"
+        val uploadBackgroundImage = imageBackgUri?.scheme != "https"
+
+        if (uploadProfileImage && imageProfileUri != null) {
+            imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    imageProfileReference.downloadUrl.addOnSuccessListener { profileUri ->
+                        person.profileUri = profileUri.toString()
+                        Toast.makeText(
+                            requireContext(),
+                            "Uploaded new profile picture",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        if (uploadBackgroundImage && imageBackgUri != null) {
+                            uploadBackgroundImageAndSave(backGReference)
+                        } else {
+                            savePersonalProfileInfo()
+                        }
+                    }
+                } else {
+                    showError(task.exception)
+                }
+            }
+        } else if (uploadBackgroundImage && imageBackgUri != null) {
+            uploadBackgroundImageAndSave(backGReference)
+        } else {
+            savePersonalProfileInfo()
+        }
+    }
+
+    private fun uploadBackgroundImageAndSave(backGReference: StorageReference) {
+        backGReference.putFile(imageBackgUri!!).addOnCompleteListener { bgTask ->
+            if (bgTask.isSuccessful) {
+                backGReference.downloadUrl.addOnSuccessListener { backGUri ->
+                    person.backGUri = backGUri.toString()
+                    Toast.makeText(
+                        requireContext(),
+                        "Uploaded new background image",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    savePersonalProfileInfo()
+                }
+            } else {
+                showError(bgTask.exception)
+            }
+        }
+    }
+
+
+    private fun savePersonalProfileInfo() {
+        Toast.makeText(
+            requireContext(),
+            "Uploading all profile changes",
+            Toast.LENGTH_LONG
+        ).show()
+
+        val name = binding!!.nameProfileEdit.text!!.toString().trim()
+        val designation = binding!!.designationProfileEdit.text!!.toString().trim()
+        val branch = binding!!.branchProfileEdit.text!!.toString().trim()
+        val city = binding!!.cityProfileEditText.text!!.toString().trim()
+        val country = binding!!.countryEmojiEditText.text.toString().trim()
+        val aboutMe = binding!!.aboutMeEdit.text!!.toString()
+        val insta = binding!!.instaEdit.text!!.toString().trim()
+        val faceb = binding!!.facebookEdit.text!!.toString().trim()
+        val linkedIn = binding!!.linkedInEdit.text!!.toString().trim()
+        val webS = binding!!.websiteEdit.text!!.toString().trim()
+        val xAcc = binding!!.xEdit.text!!.toString().trim()
+
+        val social = Social(aboutMe, linkedIn, insta, faceb, webS, xAcc)
+
+        savePersonalToFireStore(
+            name, designation, branch, person.profileUri,
+            person.backGUri, city, country, social
+        )
+    }
+
+    private fun savePersonalToFireStore(
+        name: String,
+        designation: String,
+        branch: String,
+        profileUri: String,
+        imageBackgUri: String, city: String, country: String, social: Social
+    ) {
+        val mapToFirestore = HashMap<String, Any>().apply {
+            put("userId", AuthUtils.getCurrentUserId()!!)
+            put("name", name)
+            put("designation", designation)
+            put("branch", branch)
+            put("profileUri", profileUri)
+            put("backGUri", imageBackgUri)
+            put("city", city)
+            put("country", country)
+            put(
+                "social", hashMapOf(
+                    "about" to social.about,
+                    "insta" to social.insta,
+                    "linkedin" to social.linkedin,
+                    "faceb" to social.faceb,
+                    "webs" to social.webs,
+                    "xAcc" to social.xAcc
+                )
+            )
+            put(
+                "network", hashMapOf(
+                    "followingList" to person.network.followingList,
+                    "followerList" to person.network.followerList
+                )
+            )
+            put("verified", person.verified)
+            put("leader", person.leader)
+            put("role", person.role)
+            put("newsTags", person.newsTags)
+            put("workspaces", person.workspaces)
+        }
+
+        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)
+            .set(mapToFirestore)
+            .addOnCompleteListener { taskUpload ->
+                if (taskUpload.isSuccessful) {
+                    binding!!.progressBar.isVisible = false
+                    Toast.makeText(
+                        requireContext(),
+                        "Profile information updated",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    dismiss()
+                } else {
+                    showError(taskUpload.exception)
+                }
+            }
+    }
+
+    private fun showError(exception: Exception?) {
+        binding!!.progressBar.isVisible = false
+        Toast.makeText(
+            requireContext(),
+            exception?.message ?: "Error occurred",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
     private fun retreiveAllInfo() {
 
@@ -218,190 +344,6 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         binding!!.imageBackGround.layoutParams = layoutParamsBackG
     }
 
-    private fun savePersonalProfileInfo() {
-
-        val name = binding!!.nameProfileEdit.text!!.toString().trim()
-        val designation = binding!!.designationProfileEdit.text!!.toString().trim()
-        val branch = binding!!.branchProfileEdit.text!!.toString().trim()
-        val city = binding!!.cityProfileEditText.text!!.toString().trim()
-        val country = binding!!.countryEmojiEditText.text.toString().trim()
-        val imageProfileReference =
-            storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
-        val backGReference =
-            storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
-
-        val aboutMe = binding!!.aboutMeEdit.text!!.toString()
-        val insta = binding!!.instaEdit.text!!.toString().trim()
-        val faceb = binding!!.facebookEdit.text!!.toString().trim()
-        val linkedIn = binding!!.linkedInEdit.text!!.toString().trim()
-        val webS = binding!!.websiteEdit.text!!.toString().trim()
-        val xAcc = binding!!.xEdit.text!!.toString().trim()
-
-        val social = Social(aboutMe, linkedIn, insta, faceb, webS, xAcc)
-
-        if (clickedProfile) {
-            if (imageProfileUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
-
-                imageProfileReference.putFile(imageProfileUri!!).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        imageProfileReference.downloadUrl.addOnSuccessListener { profileUri ->
-                            savePersonalToFireStore(
-                                name,
-                                designation,
-                                branch,
-                                profileUri.toString(),
-                                person.backGUri,
-                                city,
-                                country, social
-                            )
-
-                            person.profileUri = profileUri.toString()
-                            Glide.with(this).load(person.profileUri).into(binding!!.profileImage)
-                        }
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Image uri uploaded to database",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            task.exception.toString(),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-                }
-            } else {
-                binding!!.progressBar.isVisible = false
-
-            }
-
-            clickedProfile = false
-
-        } else if (clickedBackG) {
-            if (imageBackgUri != null || name.isEmpty() || designation.isEmpty() || branch.isEmpty()) {
-
-                backGReference.putFile(imageBackgUri!!).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        backGReference.downloadUrl.addOnSuccessListener { backGUri ->
-                            savePersonalToFireStore(
-                                name,
-                                designation,
-                                branch,
-                                person.profileUri,
-                                backGUri.toString(),
-                                city,
-                                country, social
-                            )
-
-                            person.backGUri = backGUri.toString()
-                            Glide.with(this).load(person.backGUri).into(binding!!.imageBackGround)
-                        }
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Background uri uploaded to database",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            task.exception.toString(),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-                }
-            } else {
-                binding!!.progressBar.isVisible = false
-
-            }
-            clickedBackG = false
-        } else {
-            savePersonalToFireStore(
-                name,
-                designation,
-                branch,
-                person.profileUri,
-                person.backGUri,
-                city,
-                country, social
-            )
-
-        }
-
-        clickedProfile = false
-        clickedBackG = false
-
-    }
-
-    private fun savePersonalToFireStore(
-        name: String,
-        designation: String,
-        branch: String,
-        profileUri: String,
-        imageBackgUri: String, city: String, country: String, social: Social
-    ) {
-
-        val mapToFirestore = HashMap<String, Any>()
-        mapToFirestore["userId"] = AuthUtils.getCurrentUserId()!!
-        mapToFirestore["name"] = name
-        mapToFirestore["designation"] = designation
-        mapToFirestore["branch"] = branch
-        mapToFirestore["profileUri"] = profileUri
-        mapToFirestore["backGUri"] = imageBackgUri
-        mapToFirestore["city"] = city
-        mapToFirestore["country"] = country
-        mapToFirestore["social"] = hashMapOf(
-            "about" to social.about,
-            "insta" to social.insta,
-            "linkedin" to social.linkedin,
-            "faceb" to social.faceb,
-            "webs" to social.webs,
-            "xAcc" to social.xAcc
-        )
-        mapToFirestore["network"] = hashMapOf(
-            "followingList" to person.network.followingList,
-            "followerList" to person.network.followerList
-        )
-        mapToFirestore["verified"] = person.verified
-        mapToFirestore["leader"] = person.leader
-        mapToFirestore["role"] = person.role
-        mapToFirestore["newsTags"] = person.newsTags
-        mapToFirestore["workspaces"] = person.workspaces
-
-
-
-        firestore.collection(USERS_COLLECTION).document(AuthUtils.getCurrentUserId()!!)
-            .set(mapToFirestore)
-            .addOnCompleteListener { taskUpload ->
-                if (taskUpload.isSuccessful) {
-                    binding!!.progressBar.isVisible = false
-
-                    Toast.makeText(
-                        requireContext(),
-                        "Profile information updated",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        taskUpload.exception.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i("Error saving to firestore", taskUpload.exception.toString())
-                }
-            }
-
-
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.profile_page_edit)
@@ -428,70 +370,45 @@ class EditProfileFragment : BottomSheetDialogFragment() {
     }
 
     private fun showImagePicker() {
+        val options = CropImageOptions(
+            true,
+            false,
+            CropImageView.CropShape.RECTANGLE,
+            cropCornerRadius = 8.0F,
+            cropMenuCropButtonTitle = "Done",
+            showCropLabel = true,
+            activityBackgroundColor = resources.getColor(R.color.black),
+            toolbarColor = resources.getColor(R.color.black),
+            progressBarColor = resources.getColor(R.color.karbBackgrndtint),
+            guidelines = CropImageView.Guidelines.OFF,
+            fixAspectRatio = true
+        )
 
-        if (clickedProfile) {
-
-            cropProfileContractOptions = CropImageContractOptions(
-                null, CropImageOptions(
-                    true,
-                    false,
-                    CropImageView.CropShape.RECTANGLE,
-                    cropCornerRadius = 8.0F,
-                    cropMenuCropButtonTitle = "Done",
-                    showCropLabel = true,
+        val cropOptions = if (clickedProfile) {
+            CropImageContractOptions(
+                null, options.copy(
                     activityTitle = "Profile crop",
-                    activityBackgroundColor = this.resources.getColor(R.color.black),
-                    toolbarColor = this.resources.getColor(R.color.black),
-                    progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
-                    guidelines = CropImageView.Guidelines.OFF,
                     aspectRatioX = 1,
-                    aspectRatioY = 1,
-                    fixAspectRatio = true
-
+                    aspectRatioY = 1
+                )
+            )
+        } else {
+            CropImageContractOptions(
+                null, options.copy(
+                    activityTitle = "Background crop",
+                    aspectRatioX = 16,
+                    aspectRatioY = 9
                 )
             )
         }
 
-        cropBackGContractOptions = CropImageContractOptions(
-            null, CropImageOptions(
-                true,
-                false,
-                CropImageView.CropShape.RECTANGLE,
-                cropCornerRadius = 8.0F,
-                cropMenuCropButtonTitle = "Done",
-                showCropLabel = true,
-                activityTitle = "Background crop",
-                activityBackgroundColor = this.resources.getColor(R.color.black),
-                toolbarColor = this.resources.getColor(R.color.black),
-                progressBarColor = this.resources.getColor(R.color.karbBackgrndtint),
-                guidelines = CropImageView.Guidelines.OFF,
-                aspectRatioX = 16,
-                aspectRatioY = 9,
-                fixAspectRatio = true
-            )
-        )
-
-        if (clickedProfile) {
-            openLastPicker.launch(cropProfileContractOptions)
-
-        } else if (clickedBackG) {
-            openLastPicker.launch(cropBackGContractOptions)
-
-        }
-
-
+        openLastPicker.launch(cropOptions)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         _binding = null
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }

@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="Snapshots of Ray Simbiri"
                 android:textColor="@color/logoColour"

@@ -74,9 +74,9 @@
                 style="@style/titleTab"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constraintBottom_toTopOf="@id/progressTask"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editTask" />
+                app:layout_constraintEnd_toStartOf="@id/deleteTaskIcon"
+                app:layout_constraintStart_toEndOf="@id/editTask"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:layout_width="22dp"
