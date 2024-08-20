@@ -145,7 +145,7 @@ class PostAdapter(
                         override fun onClick(widget: View) {
                             toggleCaptionExpansion()
                         }
-                    }, spannable.length - 9, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }, spannable.length - 12, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                     captionText.text = spannable
                     captionText.movementMethod = LinkMovementMethod.getInstance()

@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,12 +23,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.MilestoneAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.PdfDescAdapter
+import com.simbiri.equityjamii.constants.TASK_SUB_COLLECTION
+import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSPACE_DOCUMENTS_STORE
 import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.FileTitle
@@ -67,7 +71,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private lateinit var pdfLauncher: ActivityResultLauncher<String>
     private var isLinkInputVisible = false
     private var postlinksList = mutableListOf<FileTitle>()
-
+    private val firebaseFirestore = FirebaseFirestore.getInstance()
 
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
@@ -137,7 +141,12 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 }
 
                 timeDifference == 0L -> "Due right now"
-                else -> "task overdue - was due on ${fullDateFormat.format(dueDate)} hrs"
+                else -> {
+                    if (curTask?.complete == true) "task completed - was due on " +
+                            "${fullDateFormat.format(dueDate)} hrs"
+                    else "task overdue - was due on ${fullDateFormat.format(dueDate)}"
+
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -155,10 +164,38 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 progressBar.visibility = View.GONE
                 addPdfButton.visibility = View.GONE
                 addLinkButton.visibility = View.GONE
-                binding.postLinksRecyclerView.adapter = LinksAdapter(requireContext(), postlinksList, false)
+                binding.postLinksRecyclerView.adapter =
+                    LinksAdapter(requireContext(), postlinksList, false)
+
+                editTask.visibility = View.VISIBLE
+                deleteTask.visibility = View.VISIBLE
+
+                editTask.setOnClickListener {
+                    progressBar.visibility = View.VISIBLE
+                    val frag = AddTaskFragment.newInstance(workspaceId, task.taskId, task)
+                    val transaction =
+                        requireActivity().supportFragmentManager.beginTransaction()
+                    frag.show(transaction, frag.tag)
+                    Handler().postDelayed({
+                        progressBar.visibility = View.GONE
+                    }, 2500)
+                }
+
+                deleteTask.setOnClickListener {
+                    val workspaceDoc =
+                        workspaceId?.let { it1 ->
+                            firebaseFirestore.collection(WORKSPACE_COLLECTION).document(it1)}
+
+                    workspaceDoc?.collection(TASK_SUB_COLLECTION)?.document(task.taskId!!)?.delete()
+                    Toast.makeText(context,"${task.title} task deleted permanently",
+                        Toast.LENGTH_LONG).show()
+                }
+
             }
 
-            if (task.importantLinks.isEmpty()){linksTextView.visibility = View.GONE}
+            if (task.importantLinks.isEmpty()) {
+                linksTextView.visibility = View.GONE
+            }
 
             documentsTextView.setOnClickListener {
                 openDocumentsList(task.preAttachments)
@@ -188,11 +225,7 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 } else "assigned by ${person?.name}"
             }
 
-            taskDueTextView.text = if (task.complete) {
-                "task completed"
-            } else {
-                displayDate(task.finalDueDate)
-            }
+            taskDueTextView.text = displayDate(task.finalDueDate)
 
 
         }
@@ -349,7 +382,8 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private fun processSelectedPdf(uri: Uri?) {
         uri?.let {
             val fileName = DocumentFile.fromSingleUri(requireContext(), it)?.name ?: "New Document"
-            val fileTitle = FileTitle(uri.toString(), fileName, pdfFiles.size, AuthUtils.getCurrentUserId())
+            val fileTitle =
+                FileTitle(uri.toString(), fileName, pdfFiles.size, AuthUtils.getCurrentUserId())
             pdfFiles.add(fileTitle)
             binding.postDocumentsRecyclerView.adapter!!.notifyDataSetChanged()
         }

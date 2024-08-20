@@ -9,7 +9,33 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/editTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/background_corner"
+            android:paddingVertical="4dp"
+            android:text="edit task"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/deleteTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/background_corner"
+            android:text="delete task"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/editTask" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/taskDetailsCardView"
@@ -18,9 +44,9 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="15dp"
             app:cardCornerRadius="8dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -29,52 +55,52 @@
 
                 <TextView
                     android:id="@+id/taskTitleTextView"
+                    style="@style/titleTab"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Task Title"
-                    style="@style/titleTab"
                     android:textSize="17sp"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/taskDescriptionTextView"
                     android:layout_width="0dp"
-                    android:textSize="13sp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:justificationMode="inter_word"
                     android:text="Task description here."
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/taskTitleTextView"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/taskTitleTextView" />
 
                 <TextView
                     android:id="@+id/assignorTextView"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:text="Assignor Name"
-                    android:textStyle="italic"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/taskDescriptionTextView"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:text="Assignor Name"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/taskDescriptionTextView" />
 
                 <TextView
                     android:id="@+id/taskDueTextView"
                     android:layout_width="0dp"
-                    android:layout_marginEnd="10dp"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:textColor="@color/logoColour"
                     android:layout_height="wrap_content"
-                    android:text="task due"
-                    android:textStyle="italic"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/assignorTextView"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:layout_marginEnd="10dp"
+                    android:text="task due"
+                    android:textColor="@color/logoColour"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/assignorTextView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -124,19 +150,18 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/submitProgress"
             android:layout_width="wrap_content"
-            android:backgroundTint="@color/logoColour"
-            app:layout_constraintTop_toBottomOf="@id/linkLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="10dp"
             android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/logoColour"
             android:padding="3dp"
             android:text="Update task progress"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:layout_marginTop="50dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linkLayout" />
 
         <TextView
             android:id="@+id/linksTextView"
@@ -146,8 +171,8 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="15dp"
             android:text="Task's prelinks"
-            android:visibility="gone"
             android:textColor="@color/logoColour"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/documentsTextView" />
 
@@ -184,16 +209,17 @@
             android:textColor="@color/logoColour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/taskMilestonesRecyclerView" />
+
         <ImageView
             android:id="@+id/viewPostAttachmentsImage"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginStart="0dp"
             android:contentDescription="View all attachments"
             android:scaleType="fitCenter"
-            android:layout_marginStart="0dp"
             android:src="@drawable/pdf_present"
-            app:layout_constraintStart_toEndOf="@id/postDocumentsTextView"
             app:layout_constraintBottom_toBottomOf="@id/postDocumentsTextView"
+            app:layout_constraintStart_toEndOf="@id/postDocumentsTextView"
             app:layout_constraintTop_toTopOf="@id/postDocumentsTextView" />
 
         <ProgressBar
@@ -211,20 +237,20 @@
             android:id="@+id/viewAttachmentsImage"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginStart="0dp"
             android:contentDescription="View all attachments"
             android:scaleType="fitCenter"
-            android:layout_marginStart="0dp"
             android:src="@drawable/pdf_present"
-            app:layout_constraintStart_toEndOf="@id/documentsTextView"
             app:layout_constraintBottom_toBottomOf="@id/documentsTextView"
+            app:layout_constraintStart_toEndOf="@id/documentsTextView"
             app:layout_constraintTop_toTopOf="@id/documentsTextView" />
 
         <Button
             android:id="@+id/addPdfButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
             android:backgroundTint="@color/logoColour"
             android:text="Add pdf"
             android:textAllCaps="false"
@@ -247,10 +273,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:visibility="gone"
             android:layout_marginTop="15dp"
             android:text="Post completion links"
             android:textColor="@color/logoColour"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/postDocumentsRecyclerView" />
 
@@ -266,8 +292,8 @@
             android:id="@+id/addLinkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="15dp"
             android:backgroundTint="@color/logoColour"
             android:text="Add link"
             android:textAllCaps="false"

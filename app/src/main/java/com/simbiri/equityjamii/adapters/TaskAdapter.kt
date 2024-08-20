@@ -48,21 +48,14 @@ class TaskAdapter(
         return taskList.size
     }
 
-    private val firebaseFirestore = FirebaseFirestore.getInstance()
-    private val workspaceDoc =
-        firebaseFirestore.collection(WORKSPACE_COLLECTION).document(workspaceId)
-
     inner class TaskViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val textTaskMentionView: TextView = itemView.findViewById(R.id.textTaskMentionView)
         private val progressMilestoneTv: TextView = itemView.findViewById(R.id.progressMilestoneTv)
         private val progressTask: LinearProgressIndicator = itemView.findViewById(R.id.progressTask)
-        private val editTask: ImageView = itemView.findViewById(R.id.editTask)
         private val imageMyProfile: ImageView = itemView.findViewById(R.id.imageMyProfile)
         private var cardViewHolder: CardView = itemView.findViewById(R.id.cardViewMyProfile)
         private var taskAssignorTv: TextView = itemView.findViewById(R.id.assignorTaskTv)
-        private var deleteTask: ImageView = itemView.findViewById(R.id.deleteTaskIcon)
-        private var progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
 
 
         fun bind(task: Task, position: Int) {
@@ -85,33 +78,6 @@ class TaskAdapter(
                 else task.milestonesTask.count { it.complete } * 100 / task.milestonesTask.size
             } else {
                 0
-            }
-
-            if (canEdit) {
-                editTask.visibility = View.VISIBLE
-                deleteTask.visibility = View.VISIBLE
-
-                editTask.setOnClickListener {
-                    progressBar.visibility = View.VISIBLE
-                    val frag = AddTaskFragment.newInstance(workspaceId, task.taskId, task)
-                    val transaction =
-                        (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    frag.show(transaction, frag.tag)
-                    Handler().postDelayed({
-                        progressBar.visibility = View.GONE
-                    }, 2500)
-                }
-
-                deleteTask.setOnClickListener {
-                    taskList.remove(task)
-                    notifyItemRemoved(position)
-                    workspaceDoc.collection(TASK_SUB_COLLECTION).document(task.taskId!!).delete()
-                    Toast.makeText(
-                        context,
-                        "${task.title} task deleted permanently",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             }
 
 

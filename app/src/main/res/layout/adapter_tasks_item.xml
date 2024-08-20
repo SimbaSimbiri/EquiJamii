@@ -74,44 +74,10 @@
                 style="@style/titleTab"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constraintBottom_toTopOf="@id/progressTask"
-                app:layout_constraintEnd_toStartOf="@id/deleteTaskIcon"
-                app:layout_constraintStart_toEndOf="@id/editTask"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:id="@+id/editTask"
-                android:visibility="gone"
-                android:layout_margin="5dp"
-                android:padding="1dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/edit"
-                app:tint="@color/logoColour"/>
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:visibility="gone"
-                android:layout_margin="5dp"
-                app:layout_constraintStart_toEndOf="@id/editTask"
-                android:background="@color/karbBackgrndtint"
-                android:theme="@style/FirebaseUI.TopProgressBar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
-
-            <ImageView
-                android:id="@+id/deleteTaskIcon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_margin="5dp"
-                android:src="@drawable/delete_maroon"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressTask"

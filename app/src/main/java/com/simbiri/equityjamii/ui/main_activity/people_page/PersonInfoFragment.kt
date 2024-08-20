@@ -194,10 +194,10 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
         if (aboutText != null) {
             if (aboutText.length > MAX_CHAR_COLLAPSED_ABOUT) {
                 if (isAboutExpanded) {
-                    spannable.append(" \n...read less")
+                    spannable.append(" ...read less")
                 } else {
                     spannable.delete(MAX_CHAR_COLLAPSED_ABOUT, aboutText.length)
-                    spannable.append("  ...read more")
+                    spannable.append(" ...read more")
                 }
 
                 spannable.setSpan(
@@ -206,7 +206,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                             toggleAboutExpansion()
                         }
                     },
-                    spannable.length - "  ...read more".length,
+                    spannable.length - 12,
                     spannable.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
