@@ -91,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="2dp"
+                android:visibility="invisible"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/shape_stroke_rectangle"
@@ -100,6 +101,17 @@
                 app:layout_constraintStart_toStartOf="@id/captionInputLayout"
                 app:layout_constraintTop_toBottomOf="@id/captionInputLayout" />
 
+
+            <ProgressBar
+                android:id="@+id/contentLoadingProgressBar"
+                android:layout_width="26dp"
+                android:layout_height="30dp"
+                android:layout_margin="25dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imagePostUpload" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,5 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.news_page
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,6 @@ class newsFragment : Fragment() {
     private var canPublishEdit = false
     private lateinit var binding: NewsPageBinding
     var fabVisible = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +59,47 @@ class newsFragment : Fragment() {
                         "Set up profile to access EquiJamii features",
                         Toast.LENGTH_LONG
                     ).show()
-                }else{
+                } else {
+
+                    if (this@newsFragment.isVisible){
+                        stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
+                        viewPagerNews.apply {
+                            isUserInputEnabled = false
+                            adapter = stateAdapter
+                        }
+
+                        TabLayoutMediator(tabLayout, viewPagerNews, true, false) { tab, position ->
+
+                            when (position) {
+
+                                0 -> {
+                                    tab.text = "Latest"
+                                }
+
+                                1 -> {
+                                    tab.text = "For You"
+
+                                }
+
+                                2 -> {
+                                    tab.text = "Live"
+
+                                }
+
+                                3 -> {
+                                    tab.text = "Official"
+
+                                }
+
+                                4 -> {
+                                    tab.text = "Featuring"
+                                }
+
+                            }
+
+                        }.attach()
+
+                    }
 
                     fabAdd.setOnClickListener {
 
@@ -88,52 +128,18 @@ class newsFragment : Fragment() {
 
                     fabAddNews.setOnClickListener {
                         val addNewsFrag = AddNewsFragment()
-                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
                         addNewsFrag.show(transaction, addNewsFrag.tag)
                     }
 
                     fabAddOfficial.setOnClickListener {
                         val addOfficialDialog = AddOfficialDialog()
-                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        val transaction =
+                            requireActivity().supportFragmentManager.beginTransaction()
                         addOfficialDialog.show(transaction, addOfficialDialog.tag)
                     }
 
-                    stateAdapter = ScreenSlidePageAdapter(this@newsFragment)
-                    viewPagerNews.apply {
-                        isUserInputEnabled = false
-                        adapter = stateAdapter
-                    }
-
-                    TabLayoutMediator(tabLayout, viewPagerNews, true, false) { tab, position ->
-
-                        when (position) {
-
-                            0 -> {
-                                tab.text = "Latest"
-                            }
-
-                            1 -> {
-                                tab.text = "For You"
-
-                            }
-
-                            2 -> {
-                                tab.text = "Live"
-
-                            }
-
-                            3 -> {
-                                tab.text = "Official"
-
-                            }
-
-                            4 -> {
-                                tab.text = "Featuring"
-                            }
-
-                        }
-
-                    }.attach()
 
                     swipeRefresh.setOnRefreshListener {
                         refreshNews()

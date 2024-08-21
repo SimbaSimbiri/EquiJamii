@@ -120,35 +120,22 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         viewModel.links.observe(viewLifecycleOwner) { links ->
             if (links.isNotEmpty()) {
-                binding.linksTextView.visibility = View.VISIBLE
-                binding.viewLinksImage.visibility = View.VISIBLE
-
                 linksList.addAll(links.reversed())
                 binding.linksRecyclerView.adapter!!.notifyDataSetChanged()
             }
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
-            if (docs.isNotEmpty()) {
-                binding.docsTextView.visibility = View.VISIBLE
+                binding.linksTextView.visibility = View.VISIBLE
                 binding.viewAttachmentsImage.visibility = View.VISIBLE
 
-                binding.docsTextView.setOnClickListener {
-                    val frag =
-                        DialogDocumentsFragment.newInstance(ArrayList(docs.sortedBy { it.fileTitle }))
-                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-
-                    frag.show(transaction, frag.tag)
+                binding.linksTextView.setOnClickListener {
+                    showDocs(docs)
                 }
 
                 binding.viewAttachmentsImage.setOnClickListener {
-                    val frag =
-                        DialogDocumentsFragment.newInstance(ArrayList(docs.sortedBy { it.fileTitle }))
-                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-
-                    frag.show(transaction, frag.tag)
+                    showDocs(docs)
                 }
-            }
 
             documentsList.addAll(docs)
 
@@ -185,6 +172,18 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
 
         }
 
+    }
+
+    private fun showDocs(docs: MutableList<FileTitle>?) {
+        if (docs?.isEmpty() == true){
+            Toast.makeText(requireContext(), "No documents available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val frag =
+            DialogDocumentsFragment.newInstance(ArrayList(docs!!.sortedBy { it.fileTitle }))
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        frag.show(transaction, frag.tag)
     }
 
     private fun populateUI(workspace: Workspace) {

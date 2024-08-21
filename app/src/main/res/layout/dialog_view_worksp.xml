@@ -122,7 +122,7 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/docsTextView">
+                app:layout_constraintTop_toBottomOf="@id/linksRecyclerView">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -302,25 +302,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="25dp"
-                android:text="Workspace's links"
+                android:text="Workspace's resources"
                 android:textColor="@color/logoColour"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/searchPeopleRecyclerView" />
 
-
-            <ImageView
-                android:id="@+id/viewLinksImage"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="0dp"
-                android:contentDescription="View all attachments"
-                android:scaleType="fitCenter"
-                android:src="@drawable/attachments_icon"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/linksTextView"
-                app:layout_constraintStart_toEndOf="@id/linksTextView"
-                app:layout_constraintTop_toTopOf="@id/linksTextView" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/linksRecyclerView"
@@ -331,21 +317,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linksTextView" />
 
-            <TextView
-                android:id="@+id/docsTextView"
-                style="@style/titleTab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="25dp"
-                android:clickable="true"
-                android:text="View workspace's documents"
-                android:textColor="@color/logoColour"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linksRecyclerView" />
-
-
             <ImageView
                 android:id="@+id/viewAttachmentsImage"
                 android:layout_width="wrap_content"
@@ -354,10 +325,9 @@
                 android:contentDescription="View all attachments"
                 android:scaleType="fitCenter"
                 android:src="@drawable/pdf_present"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/docsTextView"
-                app:layout_constraintStart_toEndOf="@id/docsTextView"
-                app:layout_constraintTop_toTopOf="@id/docsTextView" />
+                app:layout_constraintBottom_toBottomOf="@id/linksTextView"
+                app:layout_constraintStart_toEndOf="@id/linksTextView"
+                app:layout_constraintTop_toTopOf="@id/linksTextView" />
 
 
             <ProgressBar

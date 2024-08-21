@@ -58,6 +58,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
         super.onAttach(context)
         openPostPicker = registerForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
+                binding?.imagePostUpload?.visibility  =  View.VISIBLE
                 Glide.with(requireContext()).load(result.uriContent).into(binding!!.imagePostUpload)
                 imageUri = result.uriContent
             }
@@ -97,8 +98,13 @@ class AddPostFragment : BottomSheetDialogFragment() {
         currentPost = arguments?.getParcelable<Post>(ARGS_NEW_POST)
 
         currentPost?.let { parceledPost ->
+            if (parceledPost.image!=null){
+                binding!!.imagePostUpload.visibility = View.VISIBLE
+            }
+
             Glide.with(requireContext()).load(parceledPost.image)
                 .into(binding!!.imagePostUpload)
+
             binding!!.captionEditTv.setText(parceledPost.caption)
         }
 
@@ -133,6 +139,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
 
 
     private fun savePostToFirestore(captionPost: String, imageUri: String? = null) {
+        binding?.contentLoadingProgressBar?.visibility = View.VISIBLE
+
         val postHashMap: HashMap<String, Any?> = HashMap()
 
         val postItemRef = postStorageRef.child(POST_STORAGE_REF)
@@ -157,6 +165,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                 "Changes will be updated soon",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
 
                             dismiss()
 
@@ -178,6 +187,7 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                             "Successfully posted to feed",
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                        binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
 
                                         dismiss()
                                         val documentId = taskDocref.result.id
@@ -188,6 +198,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                             "Error posting, try again later",
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                        binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
+
                                         Log.i("PostHashMap Failed", postHashMap.toString())
                                     }
                                 }
@@ -202,6 +214,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
                     .update("caption", captionPost)
                 Toast.makeText(requireContext(), "Changes will be updated soon", Toast.LENGTH_SHORT)
                     .show()
+                binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
+
                 dismiss()
 
             } else {
@@ -224,6 +238,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                 "Successfully posted to feed",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
+
                             dismiss()
 
                             val documentId = taskDocref.result.id
@@ -235,6 +251,8 @@ class AddPostFragment : BottomSheetDialogFragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             Log.i("PostHashMap Failed", postHashMap.toString())
+                            binding?.contentLoadingProgressBar?.visibility = View.INVISIBLE
+
                         }
                     }
             }
