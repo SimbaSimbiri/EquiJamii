@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_nav_graph"
+    app:startDestination="@id/myProfileDisplay">
+
+    <fragment
+        android:id="@+id/myProfileDisplay"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfDisplayFragment"
+        android:label="My Profile"
+        tools:layout="@layout/profile_page_display"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/settings_frag"/>
+
+
+</navigation>

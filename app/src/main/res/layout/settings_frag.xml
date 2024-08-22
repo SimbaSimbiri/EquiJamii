@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main_activity.my_profile.SettingsFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Settings Title -->
+            <TextView
+                android:id="@+id/settingsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="26dp"
+                android:text="Settings"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Settings CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/settingsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/karbBackgrndtint"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Edit Profile -->
+                    <TextView
+                        android:id="@+id/editProfile"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Edit profile"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider1"
+                        app:layout_constraintEnd_toStartOf="@id/editProfileIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/editProfileIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/edit_person_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/editProfile"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/editProfile" />
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/editProfile" />
+
+                    <!-- Manage News Preferences -->
+                    <TextView
+                        android:id="@+id/manageNewsPreferences"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Manage news preferences"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider2"
+                        app:layout_constraintEnd_toStartOf="@id/manageNewsPreferencesIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                    <ImageView
+                        android:id="@+id/manageNewsPreferencesIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/news_page_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/manageNewsPreferences"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/manageNewsPreferences" />
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/manageNewsPreferences" />
+
+                    <!-- Appearance -->
+                    <TextView
+                        android:id="@+id/appearance"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Appearance"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider3"
+                        app:layout_constraintEnd_toStartOf="@id/appearanceIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                    <ImageView
+                        android:id="@+id/appearanceIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/theme_edit"
+                        app:layout_constraintBottom_toBottomOf="@id/appearance"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/appearance" />
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/appearance" />
+
+                    <!-- Logout -->
+                    <TextView
+                        android:id="@+id/logout"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Log out"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/logoutIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                    <ImageView
+                        android:id="@+id/logoutIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/logout"
+                        app:layout_constraintBottom_toBottomOf="@id/logout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/logout"
+                        app:tint="@color/white" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <ProgressBar
+                android:id="@+id/contentLoadingProgressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsCard" />
+
+            <!-- Account Security Title -->
+            <TextView
+                android:id="@+id/accountSecurityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="Account Security"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsCard" />
+
+            <!-- Account Security CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/accountSecurityCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/karbBackgrndtint"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountSecurityTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Email Address -->
+                    <TextView
+                        android:id="@+id/emailAddress"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Email address"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider4"
+                        app:layout_constraintEnd_toStartOf="@id/emailAddressIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/emailAddressIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/user_email_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/emailAddress"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/emailAddress"
+                        app:tint="@color/white" />
+
+                    <View
+                        android:id="@+id/divider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/emailAddress" />
+
+                    <!-- Change Password -->
+                    <TextView
+                        android:id="@+id/changePassword"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Change password"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider5"
+                        app:layout_constraintEnd_toStartOf="@id/changePasswordIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+                    <ImageView
+                        android:id="@+id/changePasswordIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/change_pass_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/changePassword"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/changePassword"
+                        app:tint="@color/white" />
+
+                    <View
+                        android:id="@+id/divider5"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/changePassword" />
+
+                    <!-- Google Auth -->
+                    <TextView
+                        android:id="@+id/googleAcc"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Google authentication"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/googleAuthIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider5" />
+
+                    <ImageView
+                        android:id="@+id/googleAuthIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        app:tint="@color/white"
+                        android:src="@drawable/google_acc_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/googleAcc"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/googleAcc" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <!-- Support Title -->
+            <TextView
+                android:id="@+id/supportTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="Support"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountSecurityCard" />
+
+            <!-- Support CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/supportCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/karbBackgrndtint"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/supportTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Call Support -->
+                    <TextView
+                        android:id="@+id/callSupport"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Call support"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider6"
+                        app:layout_constraintEnd_toStartOf="@id/callSupportIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/callSupportIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/call_support_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/callSupport"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/callSupport"
+                        app:tint="@color/white" />
+
+                    <View
+                        android:id="@+id/divider6"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/callSupport" />
+
+                    <!-- Email Us -->
+                    <TextView
+                        android:id="@+id/emailUs"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Email us"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/emailUsIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+                    <ImageView
+                        android:id="@+id/emailUsIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/email_us_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/emailUs"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/emailUs"
+                        app:tint="@color/white" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Social Title -->
+            <TextView
+                android:id="@+id/socialTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="Social"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/supportCard" />
+
+            <!-- Social CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/socialCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/karbBackgrndtint"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/socialTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Facebook -->
+                    <TextView
+                        android:id="@+id/facebook"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Facebook"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider7"
+                        app:layout_constraintEnd_toStartOf="@id/facebookIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/facebookIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/facebook"
+                        app:layout_constraintBottom_toBottomOf="@id/facebook"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/facebook" />
+
+                    <View
+                        android:id="@+id/divider7"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/facebook" />
+
+                    <!-- Twitter -->
+                    <TextView
+                        android:id="@+id/twitter"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Twitter"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider8"
+                        app:layout_constraintEnd_toStartOf="@id/twitterIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+                    <ImageView
+                        android:id="@+id/twitterIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/x_social_media_black_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/twitter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/twitter" />
+
+                    <View
+                        android:id="@+id/divider8"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/twitter" />
+
+                    <!-- Instagram -->
+                    <TextView
+                        android:id="@+id/instagram"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Instagram"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/instagramIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider8" />
+
+                    <ImageView
+                        android:id="@+id/instagramIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/insta"
+                        app:layout_constraintBottom_toBottomOf="@id/instagram"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/instagram" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- About Title -->
+            <TextView
+                android:id="@+id/aboutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="About"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/socialCard" />
+
+            <!-- About CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/aboutCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/karbBackgrndtint"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/aboutTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Rate Us -->
+                    <TextView
+                        android:id="@+id/rateUs"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Rate us"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider9"
+                        app:layout_constraintEnd_toStartOf="@id/rateUsIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/rateUsIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/rate_us_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/rateUs"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/rateUs"
+                        app:tint="@color/white" />
+
+                    <View
+                        android:id="@+id/divider9"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rateUs" />
+
+                    <!-- Terms and Conditions -->
+                    <TextView
+                        android:id="@+id/termsAndConditions"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Terms and conditions"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toTopOf="@id/divider10"
+                        app:layout_constraintEnd_toStartOf="@id/termsAndConditionsIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider9" />
+
+                    <ImageView
+                        android:id="@+id/termsAndConditionsIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/terms_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/termsAndConditions"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/termsAndConditions"
+                        app:tint="@color/white" />
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/termsAndConditions" />
+
+                    <!-- Privacy Policy -->
+                    <TextView
+                        android:id="@+id/privacyPolicy"
+                        style="@style/titleTab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="7dp"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="Privacy policy"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/privacyPolicyIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider10" />
+
+                    <ImageView
+                        android:id="@+id/privacyPolicyIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/privacy_policy_icon"
+                        app:layout_constraintBottom_toBottomOf="@id/privacyPolicy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/privacyPolicy"
+                        app:tint="@color/white" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

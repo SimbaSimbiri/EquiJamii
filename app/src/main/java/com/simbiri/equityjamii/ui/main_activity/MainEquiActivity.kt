@@ -83,10 +83,15 @@ class MainEquiActivity : AppCompatActivity() {
 
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (navControllerMain.currentDestination!!.id == R.id.newsFrag) {
+                val fragmentManager = supportFragmentManager
+
+                if (fragmentManager.backStackEntryCount > 0) {
+                    fragmentManager.popBackStack()
+                } else if (navControllerMain.currentDestination?.id == R.id.newsFrag) {
                     finish()
-                } else
+                } else {
                     navControllerMain.navigateUp()
+                }
             }
         }
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)

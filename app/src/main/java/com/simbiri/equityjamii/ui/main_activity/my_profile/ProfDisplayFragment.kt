@@ -1,7 +1,6 @@
 package com.simbiri.equityjamii.ui.main_activity.my_profile
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -10,21 +9,21 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.DisplayMetrics
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainer
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.simbiri.equityjamii.NavGraphDirections
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.SocialAdapter
 import com.simbiri.equityjamii.data.objects.AuthUtils
@@ -32,8 +31,7 @@ import com.simbiri.equityjamii.data.objects.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
-import com.simbiri.equityjamii.ui.authentications.SignInActivity
-import com.simbiri.equityjamii.ui.main_activity.news_page.for_you.EditNewsPrefFragment
+
 
 class ProfDisplayFragment : Fragment() {
 
@@ -47,17 +45,19 @@ class ProfDisplayFragment : Fragment() {
     private lateinit var binding: ProfilePageDisplayBinding
     private lateinit var listsSocials: ArrayList<String>
     private var myNetwork: Network? = Network()
-    private var firebaseAuth = FirebaseAuth.getInstance()
     private var isAboutExpanded = false
     private val MAX_CHAR_COLLAPSED_ABOUT = 200
-    private lateinit var navHostFrag : NavHostFragment
+    private lateinit var navHostFrag: NavHostFragment
+    private lateinit var nestedNavController: NavController
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        navHostFrag = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFrag =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -65,32 +65,7 @@ class ProfDisplayFragment : Fragment() {
         val view = binding.root
 
         adjustSize()
-
-        val gestureDetectorCompat = GestureDetectorCompat(requireContext(),
-            object : GestureDetector.SimpleOnGestureListener() {
-                override fun onDoubleTap(e: MotionEvent): Boolean {
-                    Toast.makeText(
-                        requireContext(),
-                        "You signed out\nCome back soon!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    signOutApp()
-                    return true
-                }
-
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                    Toast.makeText(
-                        requireContext(), "Double tap to confirm sign out", Toast.LENGTH_LONG
-                    ).show()
-                    return true
-                }
-            })
-
-        binding.logout.setOnTouchListener { view, event ->
-            view.performClick()
-            gestureDetectorCompat.onTouchEvent(event)
-        }
-
+        nestedNavController = findNavController()
 
         AuthUtils.getCurrentPerson(getCurrentUserId()) { person ->
             if (person != null) {
@@ -98,7 +73,7 @@ class ProfDisplayFragment : Fragment() {
                 binding.myJamiiTv.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfDisplayFragmentDirections.actionOpenJamii(3)
+                    val action = ProfMainFragmentDirections.actionOpenJamii()
                     navHostFrag.findNavController().navigate(action)
 
                 }
@@ -110,15 +85,32 @@ class ProfDisplayFragment : Fragment() {
                 binding.myAssistant.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace(1)
+                    val action = ProfMainFragmentDirections.actionOpenWorkspace()
                     navHostFrag.findNavController().navigate(action)
 
                 }
 
+                /*binding.mySettingsTv.setOnClickListener {
+                    progressBarToggle()
+                    val action =  ProfDisplayFragmentDirections.actionOpenSettings()
+                    navHostFrag.findNavController().navigate(action)
+                }*/
+
+                binding.mySettingsTv.setOnClickListener {
+                    progressBarToggle()
+                    nestedNavController.navigate(R.id.settingsFragment)
+
+                    /*val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                                        transaction.replace(R.id.myProfile, SettingsFragment())
+                                        transaction.addToBackStack(null)
+                                        transaction.commit()*/
+                }
+
+
                 binding.myWorkspaces.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfDisplayFragmentDirections.actionOpenWorkspace(0)
+                    val action = ProfMainFragmentDirections.actionOpenWorkspace()
                     navHostFrag.findNavController().navigate(action)
 
                 }
@@ -131,13 +123,6 @@ class ProfDisplayFragment : Fragment() {
 
             }
         }
-        binding.editProfileTv.setOnClickListener {
-            progressBarToggle()
-            val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            editProfileFragment.show(transaction, editProfileFragment.tag)
-        }
-
 
         return view
     }
@@ -184,12 +169,6 @@ class ProfDisplayFragment : Fragment() {
         setAboutText(currentPerson.social.about)
     }
 
-    private fun signOutApp() {
-        firebaseAuth.signOut()
-        val intent = Intent(requireActivity(), SignInActivity::class.java)
-        startActivity(intent)
-        requireActivity().finish()
-    }
 
     private fun refreshProfileInfo() {
         val fragmentTransactionExit = parentFragmentManager.beginTransaction()
@@ -245,23 +224,6 @@ class ProfDisplayFragment : Fragment() {
 
                     myNetwork = myProf.network
 
-                    it.myNewsPreferences.setOnClickListener {
-                        progressBarToggle()
-                        val editNews = EditNewsPrefFragment()
-                        val transaction =
-                            requireActivity().supportFragmentManager.beginTransaction()
-                        editNews.show(transaction, editNews.tag)
-                    }
-
-                    it.editPreferences.setOnClickListener {
-                        progressBarToggle()
-                        val editNews = EditNewsPrefFragment()
-                        val transaction =
-                            requireActivity().supportFragmentManager.beginTransaction()
-                        editNews.show(transaction, editNews.tag)
-                    }
-
-
                 }
             }
 
@@ -312,9 +274,7 @@ class ProfDisplayFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         retreiveDisplayInfo()
-
 
     }
 }

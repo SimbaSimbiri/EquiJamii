@@ -32,8 +32,8 @@
                     android:id="@+id/contentLoadingProgressBar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_margin="10dp"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toTopOf="@id/mysettingsCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/myEssentialsCard" />
@@ -222,9 +222,9 @@
                             android:id="@+id/aboutTextContent"
                             style="@style/titleTab2"
                             android:layout_width="0dp"
-                            android:paddingHorizontal="5dp"
                             android:layout_height="wrap_content"
                             android:justificationMode="inter_word"
+                            android:paddingHorizontal="5dp"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -422,10 +422,10 @@
                             android:layout_height="50dp"
                             android:layout_marginStart="7dp"
                             android:clickable="true"
-                            app:layout_constraintBottom_toBottomOf="@id/workspaceDivider"
                             android:gravity="center_vertical"
                             android:text="@string/my_workspaces"
                             android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="@id/workspaceDivider"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/jamiiDivider">
@@ -452,14 +452,14 @@
                             app:layout_constraintTop_toBottomOf="@id/myWorkspaces" />
 
                         <TextView
-                            android:id="@+id/myNewsPreferences"
+                            android:id="@+id/mySettingsTv"
                             style="@style/titleTab2"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_marginStart="7dp"
                             android:clickable="true"
                             android:gravity="center_vertical"
-                            android:text="My news preferences"
+                            android:text="Account and Settings"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -470,200 +470,19 @@
 
                         <ImageView
                             android:id="@+id/editPreferences"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="28dp"
+                            android:layout_height="match_parent"
                             android:layout_marginEnd="10dp"
                             android:clickable="true"
                             android:contentDescription="Edit news preferences"
-                            android:src="@drawable/news_page_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/myNewsPreferences"
-                            app:layout_constraintEnd_toEndOf="@id/myNewsPreferences"
-                            app:layout_constraintTop_toTopOf="@id/myNewsPreferences" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    android:id="@+id/settingsTextHead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="25dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="My customizations"
-                    android:textColor="@color/primaryColor"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/myEssentialsCard" />
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/mysettingsCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="5dp"
-                    android:backgroundTint="@color/logoColour"
-                    app:cardCornerRadius="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/settingsTextHead">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                        <TextView
-                            android:id="@+id/editProfileTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Edit profile"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="@id/editProfileDivider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                        </TextView>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/edit_person_icon"
-                            app:layout_constraintBottom_toBottomOf="@id/editProfileTv"
-                            app:layout_constraintEnd_toEndOf="@id/editProfileTv"
-                            app:layout_constraintTop_toTopOf="@id/editProfileTv" />
-
-                        <View
-                            android:id="@+id/editProfileDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-                            app:layout_constraintTop_toBottomOf="@id/editProfileTv" />
-
-                        <TextView
-                            android:id="@+id/mySettingsTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Settings and privacy"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toTopOf="@id/settingsDivider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/editProfileDivider">
-
-                        </TextView>
-
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="10dp"
                             android:src="@drawable/settings_icon"
                             app:layout_constraintBottom_toBottomOf="@id/mySettingsTv"
                             app:layout_constraintEnd_toEndOf="@id/mySettingsTv"
                             app:layout_constraintTop_toTopOf="@id/mySettingsTv" />
 
-                        <View
-                            android:id="@+id/settingsDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/mySettingsTv" />
-
-
-                        <TextView
-                            android:id="@+id/themesTv"
-                            style="@style/titleTab2"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="7dp"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:text="Themes and personalization"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/settingsDivider">
-
-                        </TextView>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/theme_edit"
-                            app:layout_constraintBottom_toBottomOf="@id/themesTv"
-                            app:layout_constraintEnd_toEndOf="@id/themesTv"
-                            app:layout_constraintTop_toTopOf="@id/themesTv" />
-
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="30dp"
-                    android:backgroundTint="@color/white"
-                    android:clickable="true"
-                    app:cardCornerRadius="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/mysettingsCard">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom">
-
-                        <ImageView
-                            android:id="@+id/imageViewSignOut"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="10dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/logout"
-                            app:layout_constraintBottom_toBottomOf="@id/signOut"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/signOut" />
-
-
-                        <TextView
-                            android:id="@+id/signOut"
-                            style="@style/titleTab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginHorizontal="7dp"
-                            android:layout_marginVertical="2dp"
-                            android:gravity="center_vertical"
-                            android:text="Log Out"
-                            android:textColor="@color/logoColour"
-                            android:textSize="14sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <View
@@ -673,7 +492,7 @@
                     android:layout_margin="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/logout" />
+                    app:layout_constraintTop_toBottomOf="@id/myEssentialsCard" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
