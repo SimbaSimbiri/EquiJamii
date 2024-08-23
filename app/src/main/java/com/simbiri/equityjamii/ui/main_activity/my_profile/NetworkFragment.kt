@@ -21,7 +21,7 @@ import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.DialogNetworkBinding
 
-class NetworkFragment : BottomSheetDialogFragment() {
+class NetworkFragment : Fragment() {
 
     companion object {
         private const val ARGS_NETWORK = "NETWORK_INFO"
@@ -87,7 +87,7 @@ class NetworkFragment : BottomSheetDialogFragment() {
             }
         }
     }
-
+/*
     private fun setupFullHeight(bottomSheet: View) {
         val layoutParams = bottomSheet.layoutParams
         val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -95,9 +95,10 @@ class NetworkFragment : BottomSheetDialogFragment() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
-    }
+    }*/
 
 
+/*
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.dialog_network)
@@ -123,5 +124,6 @@ class NetworkFragment : BottomSheetDialogFragment() {
 
         return dialog
     }
+*/
 
 }

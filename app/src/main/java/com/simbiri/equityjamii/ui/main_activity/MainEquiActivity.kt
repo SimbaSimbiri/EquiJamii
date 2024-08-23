@@ -86,7 +86,7 @@ class MainEquiActivity : AppCompatActivity() {
                 val fragmentManager = supportFragmentManager
 
                 if (fragmentManager.backStackEntryCount > 0) {
-                    fragmentManager.popBackStack()
+                    fragmentManager.popBackStackImmediate()
                 } else if (navControllerMain.currentDestination?.id == R.id.newsFrag) {
                     finish()
                 } else {

@@ -73,7 +73,7 @@ class ProfDisplayFragment : Fragment() {
                 binding.myJamiiTv.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfMainFragmentDirections.actionOpenJamii()
+                    val action = ProfMainFragmentDirections.actionOpenJamii(3)
                     navHostFrag.findNavController().navigate(action)
 
                 }
@@ -85,40 +85,24 @@ class ProfDisplayFragment : Fragment() {
                 binding.myAssistant.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfMainFragmentDirections.actionOpenWorkspace()
+                    val action = ProfMainFragmentDirections.actionOpenWorkspace(1)
                     navHostFrag.findNavController().navigate(action)
 
                 }
-
-                /*binding.mySettingsTv.setOnClickListener {
-                    progressBarToggle()
-                    val action =  ProfDisplayFragmentDirections.actionOpenSettings()
-                    navHostFrag.findNavController().navigate(action)
-                }*/
 
                 binding.mySettingsTv.setOnClickListener {
                     progressBarToggle()
                     nestedNavController.navigate(R.id.settingsFragment)
 
-                    /*val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                                        transaction.replace(R.id.myProfile, SettingsFragment())
-                                        transaction.addToBackStack(null)
-                                        transaction.commit()*/
                 }
 
 
                 binding.myWorkspaces.setOnClickListener {
                     progressBarToggle()
                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                    val action = ProfMainFragmentDirections.actionOpenWorkspace()
+                    val action = ProfMainFragmentDirections.actionOpenWorkspace(0)
                     navHostFrag.findNavController().navigate(action)
 
-                }
-                binding.cardPeople.setOnClickListener {
-                    progressBarToggle()
-                    val networkDialogFrag = NetworkFragment.newInstance(myNetwork)
-                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                    networkDialogFrag.show(transaction, networkDialogFrag.tag)
                 }
 
             }
@@ -188,9 +172,8 @@ class ProfDisplayFragment : Fragment() {
             if (myProf == null) {
                 val newPerson = Person()
                 newPerson.userId = getCurrentUserId()!!
-                val editProfileFragment = EditProfileFragment.newInstance(newPerson)
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                editProfileFragment.show(transaction, editProfileFragment.tag)
+                val action = ProfDisplayFragmentDirections.actionGlobalToProfileEdit(newPerson)
+                findNavController().navigate(action)
 
             } else {
 
@@ -221,6 +204,11 @@ class ProfDisplayFragment : Fragment() {
                     setRecyclerViewSocials()
                     currentPerson = myProf
 
+                    binding.cardPeople.setOnClickListener {
+                        progressBarToggle()
+                        val action = ProfDisplayFragmentDirections.actionGlobalToNetwork(myProf.network)
+                        findNavController().navigate(action)
+                    }
 
                     myNetwork = myProf.network
 

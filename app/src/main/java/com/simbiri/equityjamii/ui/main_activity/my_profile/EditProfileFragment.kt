@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -30,7 +32,7 @@ import com.simbiri.equityjamii.data.model.Social
 import com.simbiri.equityjamii.databinding.ProfilePageEditBinding
 
 
-class EditProfileFragment : BottomSheetDialogFragment() {
+class EditProfileFragment : Fragment() {
 
     companion object {
         private const val ARGS_PERSON_INFO = "person"
@@ -137,6 +139,10 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         }
 
         return view
+    }
+
+    private fun dismiss() {
+        findNavController().navigateUp()
     }
 
     private fun uploadImagesAndSaveInfo() {
@@ -344,6 +350,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
         binding!!.imageBackGround.layoutParams = layoutParamsBackG
     }
 
+/*
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.profile_page_edit)
@@ -368,6 +375,7 @@ class EditProfileFragment : BottomSheetDialogFragment() {
 
         return dialog
     }
+*/
 
     private fun showImagePicker() {
         val options = CropImageOptions(

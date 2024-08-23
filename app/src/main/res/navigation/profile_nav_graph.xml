@@ -17,5 +17,34 @@
         android:label="Settings"
         tools:layout="@layout/settings_frag"/>
 
+    <fragment
+        android:id="@+id/profileEdit"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/profile_page_edit">
+        <argument
+            android:name="person"
+            app:argType="com.simbiri.equityjamii.data.model.Person" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/profileNetwork"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.NetworkFragment"
+        android:label="Profile Network"
+        tools:layout="@layout/dialog_network">
+        <argument
+            android:name="NETWORK_INFO"
+            app:argType="com.simbiri.equityjamii.data.model.Network" />
+    </fragment>
+
+
+    <action
+        android:id="@+id/action_global_to_profileEdit"
+        app:destination="@id/profileEdit" />
+
+    <action
+        android:id="@+id/action_global_to_Network"
+        app:destination="@id/profileNetwork"/>
 
 </navigation>

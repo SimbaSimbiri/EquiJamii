@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,6 +27,7 @@ import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.objects.UserNetworkUtils
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.MainWorkspFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewWorkspFragment
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.WorkspaceViewModel
 import kotlinx.coroutines.launch
@@ -192,11 +194,8 @@ class WorkspaceAdapter(
         private fun setupClickListeners(workspace: Workspace) {
 
             signInWorkspace.setOnClickListener {
-                val frag = ViewWorkspFragment.newInstance(workspace.workspaceId!!)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                frag.show(transaction, frag.tag)
-
+                val action = MainWorkspFragmentDirections.actionGlobalOpenWorksp(workspace.workspaceId!!)
+                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container).navigate(action)
                 /*loginLayout.visibility = View.VISIBLE
                 submitCode.visibility = View.VISIBLE*/
             }
@@ -228,10 +227,8 @@ class WorkspaceAdapter(
             progressBar.visibility = View.VISIBLE
             if (code.contentEquals(loginCode)) {
                 progressBar.visibility = View.GONE
-                val frag = ViewWorkspFragment.newInstance(id)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                frag.show(transaction, frag.tag)
+                val action = MainWorkspFragmentDirections.actionGlobalOpenWorksp(id)
+                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container).navigate(action)
 
             } else {
                 progressBar.visibility = View.GONE

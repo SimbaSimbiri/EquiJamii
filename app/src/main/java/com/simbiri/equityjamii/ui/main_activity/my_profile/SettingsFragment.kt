@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.databinding.SettingsFragBinding
@@ -38,9 +40,8 @@ class SettingsFragment : Fragment() {
                 currentPerson = person
                 binding.editProfile.setOnClickListener {
                     progressBarToggle()
-                    val editProfileFragment = EditProfileFragment.newInstance(currentPerson)
-                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                    editProfileFragment.show(transaction, editProfileFragment.tag)
+                    val action = SettingsFragmentDirections.actionGlobalToProfileEdit(currentPerson)
+                    findNavController().navigate(action)
                 }
 
                 binding.manageNewsPreferences.setOnClickListener {

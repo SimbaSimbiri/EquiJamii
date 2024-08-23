@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -23,7 +24,10 @@ import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.data.objects.AuthUtils
 import com.simbiri.equityjamii.data.model.Task
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.AddTaskFragment
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.MainWorkspFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewTaskFragment
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewTaskFragmentDirections
+import com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewWorkspFragmentDirections
 
 class TaskAdapter(
     var context: Context,
@@ -41,7 +45,7 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
-        holder.bind(task, position)
+        holder.bind(task)
     }
 
     override fun getItemCount(): Int {
@@ -58,14 +62,15 @@ class TaskAdapter(
         private var taskAssignorTv: TextView = itemView.findViewById(R.id.assignorTaskTv)
 
 
-        fun bind(task: Task, position: Int) {
+        fun bind(task: Task) {
             adjustHolderSize()
             textTaskMentionView.text = task.title
             textTaskMentionView.setOnClickListener {
-                val frag = ViewTaskFragment.newInstance(task, workspaceId)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                frag.show(transaction, frag.tag)
+
+                val action = ViewWorkspFragmentDirections.actionOpenTask(task, workspaceId)
+                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container)
+                    .navigate(action)
+
             }
             progressMilestoneTv.text = if (task.milestonesTask.isNotEmpty()) {
                 "${task.milestonesTask.count { it.complete }}/ ${task.milestonesTask.size} milestones"

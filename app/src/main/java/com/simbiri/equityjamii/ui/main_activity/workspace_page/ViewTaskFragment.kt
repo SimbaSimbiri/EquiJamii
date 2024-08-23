@@ -16,7 +16,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -46,7 +49,7 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ViewTaskFragment : BottomSheetDialogFragment() {
+class ViewTaskFragment : Fragment() {
     companion object {
         private const val ARGS_TASK_ITEM = "taskItem"
         private const val ARGS_WORKSP_ID = "workspId"
@@ -72,50 +75,6 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
     private var isLinkInputVisible = false
     private var postlinksList = mutableListOf<FileTitle>()
     private val firebaseFirestore = FirebaseFirestore.getInstance()
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        val windowManager =
-            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.apply {
-
-            setContentView(R.layout.view_task_frag)
-            setCanceledOnTouchOutside(true)
-
-            val displayMetrics = DisplayMetrics()
-            val windowManager =
-                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-
-            setOnShowListener { dialogInterface ->
-                val bottomSheetDialog = dialogInterface as BottomSheetDialog
-                val bottomSheet =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                setupFullHeight(bottomSheet!!)
-                bottomSheet.let {
-                    val behavior = BottomSheetBehavior.from(bottomSheet)
-                    behavior.apply {
-                        isDraggable = false
-                        isHideable = true
-                        peekHeight = displayMetrics.heightPixels
-                        state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-
-                }
-            }
-        }
-
-        return dialog
-    }
 
     private fun displayDate(timestamp: Timestamp?): String? {
         val fullDateFormat = SimpleDateFormat("MMM dd, HHmm", Locale.getDefault())
@@ -184,11 +143,14 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
                 deleteTask.setOnClickListener {
                     val workspaceDoc =
                         workspaceId?.let { it1 ->
-                            firebaseFirestore.collection(WORKSPACE_COLLECTION).document(it1)}
+                            firebaseFirestore.collection(WORKSPACE_COLLECTION).document(it1)
+                        }
 
                     workspaceDoc?.collection(TASK_SUB_COLLECTION)?.document(task.taskId!!)?.delete()
-                    Toast.makeText(context,"${task.title} task deleted permanently",
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context, "${task.title} task deleted permanently",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
             }
@@ -472,6 +434,11 @@ class ViewTaskFragment : BottomSheetDialogFragment() {
             binding.progressBar.visibility = View.GONE
             Handler().postDelayed({ dismiss() }, 2000)
         }
+    }
+
+    private fun dismiss() {
+        val action = ViewTaskFragmentDirections.actionGlobalOpenWorksp(workspaceId!!)
+        findNavController().navigate(action)
     }
 
 

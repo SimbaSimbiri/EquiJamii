@@ -21,20 +21,23 @@ class MainWorkspFragment : Fragment() {
 
     private lateinit var binding: MainWorkspBinding
     private val viewModel: MainWorkspViewModel by viewModels()
+    private lateinit var workspacePagerAdapter: WorkspacePagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = MainWorkspBinding.inflate(inflater, container, false)
+        workspacePagerAdapter = WorkspacePagerAdapter(this)
+        checkAuthentication()
 
         return binding.root
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        checkAuthentication()
 
+        binding = MainWorkspBinding.inflate(layoutInflater)
     }
 
     private fun checkAuthentication() {
@@ -45,34 +48,28 @@ class MainWorkspFragment : Fragment() {
                     "Set up profile to access EquiJamii features",
                     Toast.LENGTH_LONG
                 ).show()
-            } else{
-                
-                setupViewPager()
+            } else {
+                val initialTabIndex = parentFragment?.arguments?.getInt("initial_tab_index") ?: 0
+                setupViewPager(initialTabIndex)
 
-                val initialTabIndex = arguments?.getInt("initial_tab_index") ?: 0
-
-                binding.apply {
-                    viewPagerWorksp.setCurrentItem(initialTabIndex, false)
-
-                    swipeRefresh.setOnRefreshListener {
-                        refreshWorkspace()
-                    }
+                binding.swipeRefresh.setOnRefreshListener {
+                    refreshWorkspace()
                 }
-
             }
         }
     }
 
-    private fun setupViewPager() {
-        val adapterPager = WorkspacePagerAdapter(this)
-        binding.viewPagerWorksp.apply{
-            adapter = adapterPager
+    private fun setupViewPager(initialTabIndex: Int) {
+        binding.viewPagerWorksp.apply {
+            adapter = workspacePagerAdapter
+            setCurrentItem(initialTabIndex, false)
             isUserInputEnabled = false
         }
 
-
-        TabLayoutMediator(binding.tabLayoutWorksp, binding.viewPagerWorksp,true,
-            false) { tab, position ->
+        TabLayoutMediator(
+            binding.tabLayoutWorksp, binding.viewPagerWorksp, false,
+            false
+        ) { tab, position ->
             when (position) {
                 0 -> tab.text = "My workspaces"
                 1 -> tab.text = "My EquiAI"
@@ -100,5 +97,9 @@ class MainWorkspFragment : Fragment() {
                 else -> Fragment()
             }
         }
+
+        override fun getItemId(position: Int): Long = position.toLong()
+
+        override fun containsItem(itemId: Long): Boolean = itemId in 0 until itemCount
     }
 }

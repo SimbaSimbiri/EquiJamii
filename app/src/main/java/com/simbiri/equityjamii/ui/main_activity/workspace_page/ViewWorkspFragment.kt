@@ -14,15 +14,13 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.app.adapters.TaskAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.LinksAdapter
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.WorkspaceMentionAdapter
@@ -37,7 +35,7 @@ import com.simbiri.equityjamii.data.model.Workspace
 import com.simbiri.equityjamii.databinding.DialogViewWorkspBinding
 import com.simbiri.equityjamii.ui.main_activity.news_page.official_coms.DialogDocumentsFragment
 
-class ViewWorkspFragment : BottomSheetDialogFragment(),
+class ViewWorkspFragment : Fragment(),
     androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
     companion object {
@@ -324,49 +322,9 @@ class ViewWorkspFragment : BottomSheetDialogFragment(),
         dismiss()
     }
 
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        val windowManager =
-            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.apply {
-
-            setContentView(R.layout.dialog_view_worksp)
-            setCanceledOnTouchOutside(true)
-
-            val displayMetrics = DisplayMetrics()
-            val windowManager =
-                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-
-            setOnShowListener { dialogInterface ->
-                val bottomSheetDialog = dialogInterface as BottomSheetDialog
-                val bottomSheet =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                setupFullHeight(bottomSheet!!)
-                bottomSheet.let {
-                    val behavior = BottomSheetBehavior.from(bottomSheet)
-                    behavior.apply {
-                        isDraggable = false
-                        isHideable = true
-                        peekHeight = displayMetrics.heightPixels
-                        state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-
-                }
-            }
-        }
-
-        return dialog
+    private fun dismiss() {
+        val action = ViewWorkspFragmentDirections.actionOpenMain()
+        findNavController().navigate(action)
     }
 
 
