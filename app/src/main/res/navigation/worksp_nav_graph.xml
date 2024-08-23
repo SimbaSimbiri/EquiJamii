@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/worksp_nav_graph.xml"
+    android:id="@+id/worksp_nav_graph"
     app:startDestination="@id/main_worksp">
 
     <fragment
@@ -21,7 +21,6 @@
             app:argType="string" />
     </fragment>
 
-
     <fragment
         android:id="@+id/view_task"
         android:name="com.simbiri.equityjamii.ui.main_activity.workspace_page.ViewTaskFragment"
@@ -37,11 +36,19 @@
 
     <action
         android:id="@+id/action_global_open_worksp"
-        app:destination="@id/view_worksp" />
+        app:destination="@id/view_worksp"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
     <action
         android:id="@+id/action_open_task"
-        app:destination="@id/view_task"/>
+        app:destination="@id/view_task"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
     <action
         android:id="@+id/action_open_main"

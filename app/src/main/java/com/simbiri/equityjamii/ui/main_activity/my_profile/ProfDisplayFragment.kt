@@ -92,7 +92,8 @@ class ProfDisplayFragment : Fragment() {
 
                 binding.mySettingsTv.setOnClickListener {
                     progressBarToggle()
-                    nestedNavController.navigate(R.id.settingsFragment)
+                    val action = ProfDisplayFragmentDirections.actionGlobalToSettings()
+                    nestedNavController.navigate(action)
 
                 }
 

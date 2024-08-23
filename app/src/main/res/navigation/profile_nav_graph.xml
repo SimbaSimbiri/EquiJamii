@@ -41,10 +41,27 @@
 
     <action
         android:id="@+id/action_global_to_profileEdit"
-        app:destination="@id/profileEdit" />
+        app:destination="@id/profileEdit"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
     <action
         android:id="@+id/action_global_to_Network"
-        app:destination="@id/profileNetwork"/>
+        app:destination="@id/profileNetwork"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
+
+
+    <action
+        android:id="@+id/action_global_to_settings"
+        app:destination="@id/settingsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
 </navigation>
