@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -83,7 +84,7 @@ class EditProfileFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
 
-        retreiveAllInfo()
+        Handler().postDelayed({retreiveAllInfo()},700)
 
         binding!!.profileEditCard.setOnClickListener {
             clickedProfile = true

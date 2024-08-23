@@ -294,6 +294,10 @@ class ViewTaskFragment : Fragment() {
         arguments?.getParcelable<Task>(ARGS_TASK_ITEM)?.let { task ->
             curTask = task
             populateUI(task)
+/*
+            Handler().postDelayed({populateUI(task)},500)
+*/
+
         }
 
         arguments?.getString(ARGS_WORKSP_ID).let {

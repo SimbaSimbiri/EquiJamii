@@ -113,7 +113,13 @@ class ViewWorkspFragment : Fragment(),
     private fun observeViewModelAdd() {
         viewModel.workspace.observe(viewLifecycleOwner) { workspace ->
             currentWorksp = workspace
-            workspace?.let { populateUI(it) }
+            workspace?.let {
+                populateHeader(it)
+            }
+            Handler().postDelayed({
+                workspace?.let { populateUI(it) }
+            }, 700)
+
         }
 
         viewModel.links.observe(viewLifecycleOwner) { links ->
@@ -124,16 +130,16 @@ class ViewWorkspFragment : Fragment(),
 
         }
         viewModel.documents.observe(viewLifecycleOwner) { docs ->
-                binding.linksTextView.visibility = View.VISIBLE
-                binding.viewAttachmentsImage.visibility = View.VISIBLE
+            binding.linksTextView.visibility = View.VISIBLE
+            binding.viewAttachmentsImage.visibility = View.VISIBLE
 
-                binding.linksTextView.setOnClickListener {
-                    showDocs(docs)
-                }
+            binding.linksTextView.setOnClickListener {
+                showDocs(docs)
+            }
 
-                binding.viewAttachmentsImage.setOnClickListener {
-                    showDocs(docs)
-                }
+            binding.viewAttachmentsImage.setOnClickListener {
+                showDocs(docs)
+            }
 
             documentsList.addAll(docs)
 
@@ -172,21 +178,8 @@ class ViewWorkspFragment : Fragment(),
 
     }
 
-    private fun showDocs(docs: MutableList<FileTitle>?) {
-        if (docs?.isEmpty() == true){
-            Toast.makeText(requireContext(), "No documents available", Toast.LENGTH_SHORT).show()
-            return
-        }
-        val frag =
-            DialogDocumentsFragment.newInstance(ArrayList(docs!!.sortedBy { it.fileTitle }))
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-
-        frag.show(transaction, frag.tag)
-    }
-
-    private fun populateUI(workspace: Workspace) {
-
-        workspace.imageQuote?.let {
+    private fun populateHeader(worksp: Workspace) {
+        worksp.imageQuote?.let {
             binding.imagePostQuote.visibility = View.VISIBLE
             binding.cardPostQuote.visibility = View.VISIBLE
 
@@ -210,6 +203,21 @@ class ViewWorkspFragment : Fragment(),
             binding.textQuote.text = it.fileTitle
 
         }
+    }
+
+    private fun showDocs(docs: MutableList<FileTitle>?) {
+        if (docs?.isEmpty() == true) {
+            Toast.makeText(requireContext(), "No documents available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val frag =
+            DialogDocumentsFragment.newInstance(ArrayList(docs!!.sortedBy { it.fileTitle }))
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        frag.show(transaction, frag.tag)
+    }
+
+    private fun populateUI(workspace: Workspace) {
 
         binding.textTitle.text = workspace.titleImage?.fileTitle
         binding.addMention.setOnClickListener {

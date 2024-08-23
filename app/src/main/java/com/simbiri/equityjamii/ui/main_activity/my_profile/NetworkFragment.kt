@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,7 +26,7 @@ class NetworkFragment : Fragment() {
 
     companion object {
         private const val ARGS_NETWORK = "NETWORK_INFO"
-        fun newInstance(myNetwork: Network?): NetworkFragment{
+        fun newInstance(myNetwork: Network?): NetworkFragment {
             val fragReturn = NetworkFragment()
             val networkBundle = Bundle()
             networkBundle.putParcelable(ARGS_NETWORK, myNetwork)
@@ -37,7 +38,7 @@ class NetworkFragment : Fragment() {
 
     private lateinit var binding: DialogNetworkBinding
     private val viewModel: NetworkViewModel by viewModels()
-    private var networkParced : Network? = Network()
+    private var networkParced: Network? = Network()
 
 
     override fun onCreateView(
@@ -47,10 +48,6 @@ class NetworkFragment : Fragment() {
         binding = DialogNetworkBinding.inflate(layoutInflater)
         val view = binding.root
         networkParced = arguments?.getParcelable<Network>(ARGS_NETWORK)
-
-        networkParced.let {
-            viewModel.setNetwork(networkParced!!)
-        }
 
         setupViewPagerAndTabs()
 
@@ -73,7 +70,15 @@ class NetworkFragment : Fragment() {
                 else -> ""
             }
         }.attach()
+
+        Handler().postDelayed({
+            networkParced.let {
+                viewModel.setNetwork(networkParced!!)
+            }
+        }, 700)
+
     }
+
     class NetworkPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int = 3
@@ -87,43 +92,5 @@ class NetworkFragment : Fragment() {
             }
         }
     }
-/*
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }*/
-
-
-/*
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.dialog_network)
-        dialog.setCanceledOnTouchOutside(true)
-        val displayMetrics = DisplayMetrics()
-        val windowManager =
-            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            setupFullHeight(bottomSheet!!)
-            bottomSheet.let {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.isDraggable = true
-                behavior.isHideable = true
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.peekHeight = displayMetrics.heightPixels
-            }
-        }
-
-        return dialog
-    }
-*/
 
 }
