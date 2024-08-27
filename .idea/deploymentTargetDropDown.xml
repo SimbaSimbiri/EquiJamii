@@ -9,13 +9,13 @@
               <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\simbi\.android\avd\Simbwa_AVD.avd" />
+                  <type value="SERIAL_NUMBER" />
+                  <value value="919ead6a0521" />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-08-23T15:39:39.497279Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-08-27T21:39:23.311936100Z" />
         </State>
       </entry>
     </value>

@@ -32,7 +32,7 @@
         android:id="@+id/myProfile"
         android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfMainFragment"
         android:label="My Profile"
-        tools:layout="@layout/prof_main"/>
+        tools:layout="@layout/prof_main" />
 
     <fragment
         android:id="@+id/myWorkspace"
@@ -44,6 +44,40 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/userNetwork"
+        android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.NetworkFragment"
+        android:label="Profile Network"
+        tools:layout="@layout/dialog_network">
+        <argument
+            android:name="NETWORK_INFO"
+            app:argType="com.simbiri.equityjamii.data.model.Network" />
+        <argument
+            android:name="destId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/personInfoFrag"
+        android:name="com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment"
+        android:label="User Information"
+        tools:layout="@layout/dialog_people_detail">
+        <argument
+            android:name="person"
+            app:argType="com.simbiri.equityjamii.data.model.Person" />
+        <argument
+            android:name="destId"
+            app:argType="integer" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_open_network"
+        app:destination="@id/userNetwork" />
+
+    <action
+        android:id="@+id/action_open_person_info"
+        app:destination="@id/personInfoFrag" />
 
     <action
         android:id="@+id/action_open_Jamii"

@@ -211,7 +211,7 @@ class ViewTaskFragment : Fragment() {
         } else {
             Toast.makeText(
                 requireContext(),
-                "No preattachments available",
+                "No attachments available",
                 Toast.LENGTH_SHORT
             ).show()
         }

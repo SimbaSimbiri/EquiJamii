@@ -39,6 +39,17 @@ class MainEquiActivity : AppCompatActivity() {
         firestore.firestoreSettings = settings
     }
 
+    private fun updateBottomNavSelection() {
+        when (navControllerMain.currentDestination?.id) {
+            R.id.newsFrag -> bottomNavigationView.menu.findItem(R.id.newsFrag).isChecked = true
+            R.id.jamiiFrag -> bottomNavigationView.menu.findItem(R.id.jamiiFrag).isChecked = true
+            R.id.peopleFrag -> bottomNavigationView.menu.findItem(R.id.peopleFrag).isChecked = true
+            R.id.myProfile -> bottomNavigationView.menu.findItem(R.id.myProfile).isChecked = true
+            R.id.myWorkspace -> bottomNavigationView.menu.findItem(R.id.myWorkspace).isChecked =
+                true
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,6 +70,37 @@ class MainEquiActivity : AppCompatActivity() {
         navControllerMain = navHostFrag.navController
 
         bottomNavigationView.setupWithNavController(navControllerMain)
+        navControllerMain.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.jamiiFrag -> {
+                    fabJamii.background = ContextCompat.getDrawable(this, R.color.logoColour)
+                    fabJamii.backgroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.logoColour)
+                    fabJamii.foregroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.logoColour)
+                }
+
+                else -> {
+                    fabJamii.background = ContextCompat.getDrawable(
+                        this,
+                        com.denzcoskun.imageslider.R.color.grey_font
+                    )
+
+                    fabJamii.backgroundTintList =
+                        ContextCompat.getColorStateList(
+                            this,
+                            com.denzcoskun.imageslider.R.color.grey_font
+                        )
+                    fabJamii.foregroundTintList =
+                        ContextCompat.getColorStateList(
+                            this,
+                            com.denzcoskun.imageslider.R.color.grey_font
+                        )
+                }
+            }
+            updateBottomNavSelection()
+        }
+
 
         if (firebaseAuth.currentUser == null) {
             val intent = Intent(this, SignInActivity::class.java)
@@ -80,52 +122,45 @@ class MainEquiActivity : AppCompatActivity() {
             }
         }
 
-
         callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val fragmentManager = supportFragmentManager
 
                 if (fragmentManager.backStackEntryCount > 0) {
                     fragmentManager.popBackStackImmediate()
+                    updateBottomNavSelection()
                 } else if (navControllerMain.currentDestination?.id == R.id.newsFrag) {
                     finish()
                 } else {
                     navControllerMain.navigateUp()
+                    updateBottomNavSelection()
+
                 }
             }
         }
         onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)
 
+/*        callBack = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (navControllerMain.currentDestination?.id == R.id.newsFrag) {
+                    finish() // Exit the app if on the news fragment
+                } else {
+                    // Handle back navigation and update bottom navigation selection
+                    if (!navControllerMain.popBackStack()) {
+                        finish() // Close the activity if there's nothing in the back stack
+                    } else {
+                        updateBottomNavSelection()
+                    }
+                }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this@MainEquiActivity, callBack!!)*/
+
         fabJamii.setOnClickListener {
             navigateJamii()
         }
 
-        navControllerMain.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.jamiiFrag -> {
-                    fabJamii.background = ContextCompat.getDrawable(this, R.color.logoColour)
-                    fabJamii.backgroundTintList =
-                        ContextCompat.getColorStateList(this, R.color.logoColour)
-                    fabJamii.foregroundTintList =
-                        ContextCompat.getColorStateList(this, R.color.logoColour)
-                }
-
-                else -> {
-                    fabJamii.background = ContextCompat.getDrawable(this, com.denzcoskun.imageslider.R.color.grey_font)
-
-                    fabJamii.backgroundTintList =
-                        ContextCompat.getColorStateList(
-                            this,
-                            com.denzcoskun.imageslider.R.color.grey_font
-                        )
-                    fabJamii.foregroundTintList =
-                        ContextCompat.getColorStateList(
-                            this,
-                            com.denzcoskun.imageslider.R.color.grey_font
-                        )
-                }
-            }
-        }
 
     }
 

@@ -58,6 +58,7 @@ class WorkspaceAdapter(
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         private val textTitle: TextView = itemView.findViewById(R.id.textKaribu)
         private val aboutTextHead: TextView = itemView.findViewById(R.id.aboutTextHead)
+        private val adminsCardInfo: CardView = itemView.findViewById(R.id.adminsCardInfo)
         private val textAbout: TextView = itemView.findViewById(R.id.aboutTextContent)
         private val notificationsImage: ImageView = itemView.findViewById(R.id.notificationsImage)
         private val signInWorkspace: TextView = itemView.findViewById(R.id.signInWorkspace)
@@ -75,6 +76,7 @@ class WorkspaceAdapter(
         val workspaceCollection = firestore.collection(
             WORKSPACE_COLLECTION
         )
+        val adminsList = mutableListOf<Person>()
 
         fun bind(workspace: Workspace) {
             AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()) { person: Person? ->
@@ -84,8 +86,15 @@ class WorkspaceAdapter(
             loadImage(workspace)
             setAboutText(workspace)
             setMembersCount(workspace)
-            setupAdminsRecyclerView(workspace)
             setupClickListeners(workspace)
+            adminsCardInfo.setOnClickListener {
+                if (adminsRecyclerView.visibility == View.GONE) {
+                    if (adminsList.isEmpty()) {
+                        setupAdminsRecyclerView(workspace)
+                    }
+                    adminsRecyclerView.visibility = View.VISIBLE
+                } else adminsRecyclerView.visibility = View.GONE
+            }
         }
 
         private fun adjustParams() {
@@ -169,7 +178,6 @@ class WorkspaceAdapter(
         private fun setupAdminsRecyclerView(workspace: Workspace) {
             adminsRecyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            val adminsList = mutableListOf<Person>()
             val adapter = OtherProfilesAdapter(context, adminsList)
             adminsRecyclerView.adapter = adapter
 
@@ -194,8 +202,10 @@ class WorkspaceAdapter(
         private fun setupClickListeners(workspace: Workspace) {
 
             signInWorkspace.setOnClickListener {
-                val action = MainWorkspFragmentDirections.actionGlobalOpenWorksp(workspace.workspaceId!!)
-                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container).navigate(action)
+                val action =
+                    MainWorkspFragmentDirections.actionGlobalOpenWorksp(workspace.workspaceId!!)
+                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container)
+                    .navigate(action)
                 /*loginLayout.visibility = View.VISIBLE
                 submitCode.visibility = View.VISIBLE*/
             }
@@ -228,7 +238,8 @@ class WorkspaceAdapter(
             if (code.contentEquals(loginCode)) {
                 progressBar.visibility = View.GONE
                 val action = MainWorkspFragmentDirections.actionGlobalOpenWorksp(id)
-                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container).navigate(action)
+                (context as AppCompatActivity).findNavController(R.id.worksp_frag_container)
+                    .navigate(action)
 
             } else {
                 progressBar.visibility = View.GONE

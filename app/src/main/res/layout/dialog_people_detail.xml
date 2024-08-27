@@ -152,7 +152,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardTubonge"
+                android:id="@+id/cardNetwork"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -162,12 +162,13 @@
 
 
                 <ImageView
-                    android:id="@+id/tubongeImageView"
+                    android:id="@+id/networkImg"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
+                    app:tint = "@color/logoColour"
                     android:layout_marginHorizontal="2dp"
-                    android:src="@drawable/tubonge_icon" />
+                    android:src="@drawable/network_icon" />
 
 
             </androidx.cardview.widget.CardView>
@@ -185,7 +186,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardTubonge" />
+                app:layout_constraintTop_toBottomOf="@id/cardNetwork" />
 
 
             <androidx.cardview.widget.CardView

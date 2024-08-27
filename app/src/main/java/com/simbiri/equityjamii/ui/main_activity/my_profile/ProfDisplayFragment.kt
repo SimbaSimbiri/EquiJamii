@@ -31,6 +31,7 @@ import com.simbiri.equityjamii.data.objects.AuthUtils.getCurrentUserId
 import com.simbiri.equityjamii.data.model.Network
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.ProfilePageDisplayBinding
+import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
 
 
 class ProfDisplayFragment : Fragment() {
@@ -207,8 +208,8 @@ class ProfDisplayFragment : Fragment() {
 
                     binding.cardPeople.setOnClickListener {
                         progressBarToggle()
-                        val action = ProfDisplayFragmentDirections.actionGlobalToNetwork(myProf.network)
-                        findNavController().navigate(action)
+                        val action = PeopleFragmentDirections.actionGlobalOpenNetwork(myProf.network, R.id.myProfile)
+                        navHostFrag.navController.navigate(action)
                     }
 
                     myNetwork = myProf.network

@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
 class LeadersAllAdapter(var context: Context, var leadersList: List<Person>) :
@@ -112,10 +114,14 @@ class LeadersAllAdapter(var context: Context, var leadersList: List<Person>) :
 
         override fun onClick(view: View?) {
 
-            val leaderDialogFrag = PersonInfoFragment.newInstance(currentLeader!!)
+            val navHostFrag =
+                (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val action = PeopleFragmentDirections.actionOpenPersonInfo(currentLeader!!, R.id.peopleFrag)
+            navHostFrag.navController.navigate(action)
+           /* val leaderDialogFrag = PersonInfoFragment.newInstance(currentLeader!!)
             val transaction =
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            leaderDialogFrag.show(transaction, leaderDialogFrag.tag)
+            leaderDialogFrag.show(transaction, leaderDialogFrag.tag)*/
 
         }
     }

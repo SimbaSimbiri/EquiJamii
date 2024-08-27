@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FieldValue
@@ -23,6 +24,7 @@ import com.simbiri.equityjamii.constants.WORKSPACE_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_ADMINS_SUB_COLLECTION
 import com.simbiri.equityjamii.constants.WORKSP_MEMBERS_SUB_COLLECTION
 import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
 class OtherProfilesAdapter(
@@ -96,11 +98,15 @@ class OtherProfilesAdapter(
                     cardAddMention.visibility = View.VISIBLE
                 }
             } else {
-                val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
+                val navHostFrag =
+                    (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val action = PeopleFragmentDirections.actionOpenPersonInfo(currentPerson!!, navHostFrag.navController.currentDestination?.id!!)
+                navHostFrag.navController.navigate(action)
+       /*         val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 personDialogFrag.show(transaction, personDialogFrag.tag)
-
+*/
             }
 
         }

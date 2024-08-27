@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
@@ -28,6 +29,7 @@ import com.simbiri.equityjamii.data.model.Event
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiDetailDialogFragment
+import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -151,10 +153,14 @@ class EventsAdapter(
         }
 
         private fun showOrganizer(person: Person) {
-            val organizerFragDetail = PersonInfoFragment.newInstance(person)
+            val navHostFrag =
+                (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val action = PeopleFragmentDirections.actionOpenPersonInfo(person, R.id.jamiiFrag)
+            navHostFrag.navController.navigate(action)
+/*            val organizerFragDetail = PersonInfoFragment.newInstance(person)
             val transaction =
                 (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            organizerFragDetail.show(transaction, organizerFragDetail.tag)
+            organizerFragDetail.show(transaction, organizerFragDetail.tag)*/
         }
 
         private fun displayParticipants(event: Event) {

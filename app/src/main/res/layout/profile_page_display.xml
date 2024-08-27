@@ -157,8 +157,9 @@
                         android:layout_width="30dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
+                        app:tint="@color/logoColour"
                         android:layout_marginHorizontal="2dp"
-                        android:src="@drawable/following_icon" />
+                        android:src="@drawable/network_icon" />
 
 
                 </androidx.cardview.widget.CardView>

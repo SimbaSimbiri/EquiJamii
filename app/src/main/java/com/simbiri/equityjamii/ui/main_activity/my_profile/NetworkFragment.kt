@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.widget.SearchView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,10 +27,12 @@ class NetworkFragment : Fragment() {
 
     companion object {
         private const val ARGS_NETWORK = "NETWORK_INFO"
-        fun newInstance(myNetwork: Network?): NetworkFragment {
+        private const val ARGS_DEST_ID = "destId"
+        fun newInstance(myNetwork: Network?, destId : Int): NetworkFragment {
             val fragReturn = NetworkFragment()
             val networkBundle = Bundle()
             networkBundle.putParcelable(ARGS_NETWORK, myNetwork)
+            networkBundle.putInt(ARGS_DEST_ID, destId)
 
             fragReturn.arguments = networkBundle
             return fragReturn
@@ -47,6 +50,11 @@ class NetworkFragment : Fragment() {
     ): View {
         binding = DialogNetworkBinding.inflate(layoutInflater)
         val view = binding.root
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+
+        val id = arguments?.getInt(ARGS_DEST_ID)
+        bottomNavigationView.menu.findItem(id!!).isChecked = true
+
         networkParced = arguments?.getParcelable<Network>(ARGS_NETWORK)
 
         setupViewPagerAndTabs()

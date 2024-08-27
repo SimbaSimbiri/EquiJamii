@@ -1,9 +1,9 @@
 package com.simbiri.equityjamii.ui.main_activity.people_page
 
-import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -15,14 +15,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.adapters.OtherProfilesAdapter
 import com.simbiri.equityjamii.adapters.SocialAdapter
@@ -34,21 +36,26 @@ import com.simbiri.equityjamii.data.objects.UserNetworkUtils
 import com.simbiri.equityjamii.databinding.DialogPeopleDetailBinding
 import kotlinx.coroutines.launch
 
-class PersonInfoFragment : BottomSheetDialogFragment() {
+class PersonInfoFragment : Fragment() {
 
     companion object {
         private const val ARGS_PERSON_INFO = "person"
+        private const val ARGS_DEST_ID = "destId"
 
-        fun newInstance(person: Person): PersonInfoFragment {
+        fun newInstance(person: Person, destId : Int): PersonInfoFragment {
             val fragment = PersonInfoFragment()
             val argumentBundle = Bundle()
             argumentBundle.putParcelable(ARGS_PERSON_INFO, person)
+            argumentBundle.putInt(ARGS_DEST_ID, destId)
+
             fragment.arguments = argumentBundle
             return fragment
 
         }
     }
 
+    private var destId: Int? = 0
+    private var listFromScope: List<Person> = mutableListOf()
     private lateinit var otherSimilarProfilesAdapter: OtherProfilesAdapter
     private var isCurrentPersonDetails: Boolean = false
     private lateinit var viewModel: PersonInfoViewModel
@@ -64,8 +71,15 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        _binding = DialogPeopleDetailBinding.inflate(layoutInflater)
 
+        destId = arguments?.getInt(ARGS_DEST_ID)
         personParceled = arguments?.getParcelable<Person>(ARGS_PERSON_INFO)!!
+        otherSimilarProfilesAdapter = OtherProfilesAdapter(context, otherPeopleProfilesList)
+        loadData()
+
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        bottomNavigationView.menu.findItem(destId!!).isChecked = true
 
         AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { person ->
             if (person != null) {
@@ -94,19 +108,22 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
             lifecycleScope.launch {
                 val followingList = currPerson.network.followingList
-                val followerList = currPerson.network.followerList
+                /*
+                                val followerList = currPerson.network.followerList
+                */
 
-                val listFromScope = UserNetworkUtils.followingFollowers(
+                listFromScope = UserNetworkUtils.followingFollowers(
                     followingList
                 ).filter { person -> !person.userId.contentEquals(personParceled.userId) }
 
+                if (otherPeopleProfilesList.isEmpty()) {
+                    otherPeopleProfilesList.clear()
+                    if (listFromScope.size > 5) {
+                        otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0, 5))
 
-                otherPeopleProfilesList.clear()
-                if (listFromScope.size > 5) {
-                    otherPeopleProfilesList.addAll(listFromScope.shuffled().subList(0, 4))
-
-                } else {
-                    otherPeopleProfilesList.addAll(listFromScope.shuffled())
+                    } else {
+                        otherPeopleProfilesList.addAll(listFromScope.shuffled())
+                    }
                 }
 
                 if (otherPeopleProfilesList.isNotEmpty()) {
@@ -121,6 +138,56 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
+
+    private fun saveData() {
+        val sharedPreferences =
+            requireContext().getSharedPreferences("PersonInfoPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            isAlreadyFollowed?.let { putBoolean("isAlreadyFollowed_${personParceled.userId}", it) }
+
+            val peopleListJson = Gson().toJson(otherPeopleProfilesList)
+            putString("otherPeopleProfilesList_${personParceled.userId}", peopleListJson)
+
+            apply()
+        }
+    }
+
+    private fun loadData() {
+        val sharedPreferences =
+            requireContext().getSharedPreferences("PersonInfoPrefs", Context.MODE_PRIVATE)
+        isAlreadyFollowed =
+            sharedPreferences.getBoolean("isAlreadyFollowed_${personParceled.userId}", false)
+
+        val peopleListJson =
+            sharedPreferences.getString("otherPeopleProfilesList_${personParceled.userId}", null)
+        if (peopleListJson != null) {
+            val type = object : TypeToken<MutableList<Person>>() {}.type
+            otherPeopleProfilesList = Gson().fromJson(peopleListJson, type)
+        }
+
+        if (isAlreadyFollowed == true) {
+            binding!!.tufuataneImageView.setImageResource(R.drawable.following_icon)
+        } else {
+            binding!!.tufuataneImageView.setImageResource(R.drawable.add_friend)
+        }
+        if (otherPeopleProfilesList.isNotEmpty()) {
+            Handler().postDelayed({
+                otherSimilarProfilesAdapter = OtherProfilesAdapter(requireContext(), otherPeopleProfilesList)
+                binding!!.similarProfTextHead.visibility = View.VISIBLE
+                binding!!.recyclerOtherProfiles.visibility = View.VISIBLE
+                binding!!.progressBar.visibility = View.GONE
+                otherSimilarProfilesAdapter.notifyDataSetChanged()},500)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveData()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -132,7 +199,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         adjustSize()
 
-        personParceled.let {it->
+        personParceled.let { it ->
 
             binding!!.apply {
 
@@ -163,6 +230,14 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
                 if (personParceled.verified) {
                     verifiedPersonelImage.visibility = View.VISIBLE
                 }
+
+                cardNetwork.setOnClickListener {
+                    val navHostFrag =
+                        requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                    val action =
+                        PeopleFragmentDirections.actionGlobalOpenNetwork(personParceled.network,destId!!)
+                    navHostFrag.navController.navigate(action)
+                }
             }
         }
 
@@ -188,6 +263,7 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
 
         return view
     }
+
 
     private fun setAboutText(aboutText: String?) {
         val spannable = SpannableStringBuilder(aboutText)
@@ -364,49 +440,5 @@ class PersonInfoFragment : BottomSheetDialogFragment() {
             detailBackImageV.layoutParams = layoutParamsBackG
         }
     }
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.apply {
-
-            setContentView(R.layout.dialog_people_detail)
-            setCanceledOnTouchOutside(true)
-
-            val displayMetrics = DisplayMetrics()
-            val windowManager =
-                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-
-            setOnShowListener { dialogInterface ->
-                val bottomSheetDialog = dialogInterface as BottomSheetDialog
-                val bottomSheet =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                setupFullHeight(bottomSheet!!)
-                bottomSheet.let {
-                    val behavior = BottomSheetBehavior.from(bottomSheet)
-                    behavior.apply {
-                        isDraggable = true
-                        isHideable = true
-                        peekHeight = (displayMetrics.heightPixels * 0.85).toInt()
-                        state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-
-                }
-            }
-        }
-
-        return dialog
-    }
-
 
 }
