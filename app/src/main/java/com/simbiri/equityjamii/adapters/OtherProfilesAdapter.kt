@@ -102,11 +102,7 @@ class OtherProfilesAdapter(
                     (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                 val action = PeopleFragmentDirections.actionOpenPersonInfo(currentPerson!!, navHostFrag.navController.currentDestination?.id!!)
                 navHostFrag.navController.navigate(action)
-       /*         val personDialogFrag = PersonInfoFragment.newInstance(currentPerson!!)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                personDialogFrag.show(transaction, personDialogFrag.tag)
-*/
+
             }
 
         }

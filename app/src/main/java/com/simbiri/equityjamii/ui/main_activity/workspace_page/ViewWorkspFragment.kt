@@ -1,6 +1,5 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -146,35 +145,42 @@ class ViewWorkspFragment : Fragment(),
 
         }
 
-        viewModel.adminsList.observe(viewLifecycleOwner) { people ->
+        if (adminsList.isEmpty()) {
+            viewModel.adminsList.observe(viewLifecycleOwner) { people ->
 
-            if (people.any { person -> person.userId.contentEquals(AuthUtils.getCurrentUserId()) }) {
-                binding.editWorkspace.visibility = View.VISIBLE
-                binding.editWorkspace.setOnClickListener {
-                    binding.progressBar.visibility = View.VISIBLE
-                    val addWorkspaceDialog = AddWorkspaceDialog.newInstance(workspaceId!!)
-                    val transaction =
-                        (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    addWorkspaceDialog.show(transaction, addWorkspaceDialog.tag)
+                if (people.any { person -> person.userId.contentEquals(AuthUtils.getCurrentUserId()) }) {
+                    binding.editWorkspace.visibility = View.VISIBLE
+                    binding.editWorkspace.setOnClickListener {
+                        binding.progressBar.visibility = View.VISIBLE
+                        val addWorkspaceDialog = AddWorkspaceDialog.newInstance(workspaceId!!)
+                        val transaction =
+                            (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                        addWorkspaceDialog.show(transaction, addWorkspaceDialog.tag)
 
-                    Handler().postDelayed({
-                        binding.progressBar.visibility = View.GONE
-                    }, 3000)
+                        Handler().postDelayed({
+                            binding.progressBar.visibility = View.GONE
+                        }, 3000)
+                    }
                 }
+
+                adminsList.addAll(people)
+                workspaceList.addAll(people)
+                binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+
             }
-
-            adminsList.addAll(people)
-            workspaceList.addAll(people)
-            binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
-
         }
 
-        viewModel.membersList.observe(viewLifecycleOwner) { people ->
-            membersList.addAll(people)
-            workspaceList.addAll(people)
-            binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
 
+
+        if (membersList.isEmpty()) {
+            viewModel.membersList.observe(viewLifecycleOwner) { people ->
+                membersList.addAll(people)
+                workspaceList.addAll(people)
+                binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
+
+            }
         }
+
 
     }
 

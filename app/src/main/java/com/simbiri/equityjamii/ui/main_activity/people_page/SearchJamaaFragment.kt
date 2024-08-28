@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -20,7 +21,7 @@ import com.simbiri.equityjamii.adapters.NetworkAdapter
 import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.databinding.DialogSearchJamaaBinding
 
-class SearchJamaaFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextListener {
+class SearchJamaaFragment : Fragment(), SearchView.OnQueryTextListener {
 
     companion object {
         fun newInstance() = SearchJamaaFragment()
@@ -40,6 +41,13 @@ class SearchJamaaFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextL
         setUpRecyclers()
         setUpObservers()
         setUpSearchView()
+
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(
+            R.id.bottom_nav_view)
+        bottomNavigationView?.let { navView ->
+            val menuItem = navView.menu.findItem(R.id.peopleFrag)
+            menuItem?.let { it.isChecked = true }
+        }
 
         return binding.root
     }
@@ -87,49 +95,6 @@ class SearchJamaaFragment : BottomSheetDialogFragment(), SearchView.OnQueryTextL
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-    }
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.apply {
-
-            setContentView(R.layout.dialog_search_jamaa)
-            setCanceledOnTouchOutside(true)
-            val bottomSheetDialog = this as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
-            val displayMetrics = DisplayMetrics()
-            val windowManager =
-                requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-            setupFullHeight(bottomSheet)
-
-            setOnShowListener { dialogInterface ->
-                val bottomSheetDialog = dialogInterface as BottomSheetDialog
-                val bottomSheet =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                bottomSheet?.let {
-                    val behavior = BottomSheetBehavior.from(bottomSheet)
-                    behavior.apply {
-                        isDraggable = true
-                        isHideable = true
-                        peekHeight = displayMetrics.heightPixels
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-
-                }
-            }
-        }
-
-        return dialog
     }
 
 }

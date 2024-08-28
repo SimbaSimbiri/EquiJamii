@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.simbiri.equityjamii.R
 import com.simbiri.equityjamii.data.model.Person
+import com.simbiri.equityjamii.ui.main_activity.my_profile.ProfMainFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
 import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 
@@ -28,33 +29,29 @@ class NetworkAdapter(
         private var positionItem = 1
 
         fun setOnClick(personInstance: Person) {
-            val navHostFrag =
-                (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            this.profileImage.setOnClickListener {
-
-                val action = PeopleFragmentDirections.actionOpenPersonInfo(personInstance, navHostFrag.navController.currentDestination?.id!!)
-                navHostFrag.navController.navigate(action)
-     /*           val personDialogFrag = PersonInfoFragment.newInstance(personInstance)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                personDialogFrag.show(transaction, personDialogFrag.tag)*/
+             this.profileImage.setOnClickListener {
+                 navigateToPeople(personInstance)
 
             }
 
             this.nameText.setOnClickListener {
-                val action = PeopleFragmentDirections.actionOpenPersonInfo(personInstance, navHostFrag.navController.currentDestination?.id!!)
-                navHostFrag.navController.navigate(action)
-                /*
-                val personDialogFrag = PersonInfoFragment.newInstance(personInstance)
-                val transaction =
-                    (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                personDialogFrag.show(transaction, personDialogFrag.tag)
-*/
+                navigateToPeople(personInstance)
             }
 
             this.messageButton.setOnClickListener {
             }
 
+        }
+
+        private fun navigateToPeople(personInstance: Person){
+            val navHostFrag =
+                (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+            val action = ProfMainFragmentDirections.actionOpenPersonInfo(
+                personInstance,
+                R.id.peopleFrag
+            )
+            navHostFrag.navController.navigate(action)
         }
 
 

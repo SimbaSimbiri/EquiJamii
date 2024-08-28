@@ -29,6 +29,12 @@
         tools:layout="@layout/people_page" />
 
     <fragment
+        android:id="@+id/searchFrag"
+        android:name="com.simbiri.equityjamii.ui.main_activity.people_page.SearchJamaaFragment"
+        android:label="Search Jamaa"
+        tools:layout="@layout/dialog_search_jamaa" />
+
+    <fragment
         android:id="@+id/myProfile"
         android:name="com.simbiri.equityjamii.ui.main_activity.my_profile.ProfMainFragment"
         android:label="My Profile"
@@ -73,11 +79,29 @@
 
     <action
         android:id="@+id/action_global_open_network"
-        app:destination="@id/userNetwork" />
+        app:destination="@id/userNetwork"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
+
+
+    <action
+        android:id="@+id/action_global_open_search"
+        app:destination="@id/searchFrag"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
     <action
         android:id="@+id/action_open_person_info"
-        app:destination="@id/personInfoFrag" />
+        app:destination="@id/personInfoFrag"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_right"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_left"
+        />
 
     <action
         android:id="@+id/action_open_Jamii"

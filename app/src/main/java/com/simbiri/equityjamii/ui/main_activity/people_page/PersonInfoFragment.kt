@@ -79,7 +79,10 @@ class PersonInfoFragment : Fragment() {
         loadData()
 
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
-        bottomNavigationView.menu.findItem(destId!!).isChecked = true
+        bottomNavigationView?.let { navView ->
+            val menuItem = navView.menu.findItem(destId ?: R.id.peopleFrag)
+            menuItem?.let { it.isChecked = true }
+        }
 
         AuthUtils.getCurrentPerson(AuthUtils.getCurrentUserId()!!) { person ->
             if (person != null) {
