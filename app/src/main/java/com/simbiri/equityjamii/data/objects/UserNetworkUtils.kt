@@ -8,8 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -68,8 +66,7 @@ object UserNetworkUtils {
     }
 
     suspend fun recommendFollowing(
-        followingList: MutableList<String>?, followerList: MutableList<String>?
-    ): List<Person> {
+        followingList: MutableList<String>?): List<Person> {
         val followingFollowers =
             followingFollowers(followingList).filter { it.userId != personalID }
         val followingSet = followingList?.toSet() ?: emptySet()

@@ -47,8 +47,7 @@ class NetworkViewModel : ViewModel() {
     private fun fetchRecommendedList() {
         viewModelScope.launch {
             val followingIds = network?.followingList
-            val followerIds = network?.followerList
-            _recommendedList.value = UserNetworkUtils.recommendFollowing(followingIds, followerIds)
+            _recommendedList.value = UserNetworkUtils.recommendFollowing(followingIds)
         }
     }
 }

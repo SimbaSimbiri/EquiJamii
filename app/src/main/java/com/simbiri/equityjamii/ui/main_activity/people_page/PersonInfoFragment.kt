@@ -15,12 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,7 +44,7 @@ class PersonInfoFragment : Fragment() {
         private const val ARGS_PERSON_INFO = "person"
         private const val ARGS_DEST_ID = "destId"
 
-        fun newInstance(person: Person, destId : Int): PersonInfoFragment {
+        fun newInstance(person: Person, destId: Int): PersonInfoFragment {
             val fragment = PersonInfoFragment()
             val argumentBundle = Bundle()
             argumentBundle.putParcelable(ARGS_PERSON_INFO, person)
@@ -78,7 +80,8 @@ class PersonInfoFragment : Fragment() {
         otherSimilarProfilesAdapter = OtherProfilesAdapter(context, otherPeopleProfilesList)
         loadData()
 
-        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         bottomNavigationView?.let { navView ->
             val menuItem = navView.menu.findItem(destId ?: R.id.peopleFrag)
             menuItem?.let { it.isChecked = true }
@@ -111,10 +114,6 @@ class PersonInfoFragment : Fragment() {
 
             lifecycleScope.launch {
                 val followingList = currPerson.network.followingList
-                /*
-                                val followerList = currPerson.network.followerList
-                */
-
                 listFromScope = UserNetworkUtils.followingFollowers(
                     followingList
                 ).filter { person -> !person.userId.contentEquals(personParceled.userId) }
@@ -179,11 +178,13 @@ class PersonInfoFragment : Fragment() {
         }
         if (otherPeopleProfilesList.isNotEmpty()) {
             Handler().postDelayed({
-                otherSimilarProfilesAdapter = OtherProfilesAdapter(requireContext(), otherPeopleProfilesList)
+                otherSimilarProfilesAdapter =
+                    OtherProfilesAdapter(requireContext(), otherPeopleProfilesList)
                 binding!!.similarProfTextHead.visibility = View.VISIBLE
                 binding!!.recyclerOtherProfiles.visibility = View.VISIBLE
                 binding!!.progressBar.visibility = View.GONE
-                otherSimilarProfilesAdapter.notifyDataSetChanged()},500)
+                otherSimilarProfilesAdapter.notifyDataSetChanged()
+            }, 500)
         }
     }
 
@@ -238,7 +239,10 @@ class PersonInfoFragment : Fragment() {
                     val navHostFrag =
                         requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                     val action =
-                        PeopleFragmentDirections.actionGlobalOpenNetwork(personParceled.network,destId!!)
+                        PeopleFragmentDirections.actionGlobalOpenNetwork(
+                            personParceled.network,
+                            destId!!
+                        )
                     navHostFrag.navController.navigate(action)
                 }
             }
