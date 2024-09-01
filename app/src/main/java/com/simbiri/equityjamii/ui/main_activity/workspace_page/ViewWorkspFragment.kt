@@ -70,13 +70,6 @@ class ViewWorkspFragment : Fragment(),
 
     }
 
-    private fun refreshFragment() {
-
-        requireActivity().supportFragmentManager.beginTransaction().detach(this).attach(this)
-            .commit()
-        binding.swipeRefresh.isRefreshing = false
-
-    }
 
     private fun observeViewModelView() {
         viewModelView.mentions.observe(viewLifecycleOwner) { mentions ->
@@ -356,9 +349,7 @@ class ViewWorkspFragment : Fragment(),
             editingWksp = false,
             addingWkspAdmins = false,
         )
-        binding.swipeRefresh.setOnRefreshListener {
-            refreshFragment()
-        }
+
         binding.linksRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.searchPeopleRecyclerView.layoutManager =

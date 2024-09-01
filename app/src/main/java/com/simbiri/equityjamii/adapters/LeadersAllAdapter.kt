@@ -118,10 +118,6 @@ class LeadersAllAdapter(var context: Context, var leadersList: List<Person>) :
                 (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val action = PeopleFragmentDirections.actionOpenPersonInfo(currentLeader!!, R.id.peopleFrag)
             navHostFrag.navController.navigate(action)
-           /* val leaderDialogFrag = PersonInfoFragment.newInstance(currentLeader!!)
-            val transaction =
-                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            leaderDialogFrag.show(transaction, leaderDialogFrag.tag)*/
 
         }
     }

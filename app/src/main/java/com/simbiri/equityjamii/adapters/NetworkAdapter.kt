@@ -49,7 +49,7 @@ class NetworkAdapter(
 
             val action = ProfMainFragmentDirections.actionOpenPersonInfo(
                 personInstance,
-                R.id.peopleFrag
+                0
             )
             navHostFrag.navController.navigate(action)
         }

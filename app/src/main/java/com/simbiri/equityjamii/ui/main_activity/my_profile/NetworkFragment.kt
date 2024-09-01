@@ -53,9 +53,22 @@ class NetworkFragment : Fragment() {
         val view = binding.root
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        val allMenu = listOf(
+            R.id.newsFrag,
+            R.id.myWorkspace,
+            R.id.jamiiFrag,
+            R.id.peopleFrag,
+            R.id.myProfile
+        )
 
         fragId = arguments?.getInt(ARGS_DEST_ID)
-        bottomNavigationView.menu.findItem(fragId!!).isChecked = true
+
+        if (fragId != null && allMenu.contains(fragId)) {
+            fragId?.let {
+                bottomNavigationView.menu.findItem(it).isChecked = true
+            }
+        }
+
 
         networkParced = arguments?.getParcelable<Network>(ARGS_NETWORK)
 
@@ -111,7 +124,6 @@ class NetworkFragment : Fragment() {
                     0 -> FollowingFragment()
                     1 -> FollowersFragment()
                     2 -> RecommendedFragment()
-
                     else -> Fragment()
                 }
             } else {
