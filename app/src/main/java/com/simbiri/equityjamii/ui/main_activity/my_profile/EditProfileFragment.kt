@@ -102,15 +102,15 @@ class EditProfileFragment : Fragment() {
         val countryEmojiSpinner = binding!!.countryEmojiSpinner
 
         flags = listOf(
-            "🇰🇪",        // Kenya
-            "🇹🇿",     // Tanzania
-            "🇺🇬",       // Uganda
-            "🇷🇼",       // Rwanda
-            "🇧🇮",      // Burundi
-            "🇸🇸",  // South Sudan
-            "🇪🇹",     // Ethiopia
-            "🇿🇦", // South Africa
-            "🇺🇸" // United States
+            " 🇰🇪 ",        // Kenya
+            " 🇹🇿 ",     // Tanzania
+            " 🇺🇬 ",       // Uganda
+            " 🇷🇼 ",       // Rwanda
+            " 🇧🇮 ",      // Burundi
+            " 🇸🇸 ",  // South Sudan
+            " 🇪🇹 ",     // Ethiopia
+            " 🇿🇦 ", // South Africa
+            " 🇺🇸 " // United States
         )
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, flags)
@@ -232,7 +232,7 @@ class EditProfileFragment : Fragment() {
         val designation = binding!!.designationProfileEdit.text!!.toString().trim()
         val branch = binding!!.branchProfileEdit.text!!.toString().trim()
         val city = binding!!.cityProfileEditText.text!!.toString().trim()
-        val country = binding!!.countryEmojiSpinner.selectedItem.toString()
+        val country = binding!!.countryEmojiSpinner.selectedItem.toString().trim()
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
         val insta = binding!!.instaEdit.text!!.toString().trim()
         val faceb = binding!!.facebookEdit.text!!.toString().trim()
@@ -332,10 +332,6 @@ class EditProfileFragment : Fragment() {
                     binding!!.countryEmojiSpinner.setSelection(position)
                 }
             }
-/*
-            binding!!.countryEmojiEditText.setText(person.country)
-*/
-
             binding!!.aboutMeEdit.setText(person.social.about)
             binding!!.linkedInEdit.setText(person.social.linkedin)
             binding!!.instaEdit.setText(person.social.insta)
