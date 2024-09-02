@@ -107,6 +107,7 @@ class EditProfileFragment : Fragment() {
             " 🇺🇬 ",       // Uganda
             " 🇷🇼 ",       // Rwanda
             " 🇧🇮 ",      // Burundi
+            " 🇨🇩 ",  // Democratic Republic of the Congo (DRC)
             " 🇸🇸 ",  // South Sudan
             " 🇪🇹 ",     // Ethiopia
             " 🇿🇦 ", // South Africa
