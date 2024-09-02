@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -57,6 +58,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var person: Person
     private var profileNotComplete = false
+    private lateinit var flags : List<String>
 
 
     private val openLastPicker = registerForActivityResult(CropImageContract()) { result ->
@@ -84,7 +86,7 @@ class EditProfileFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference
         firestore = FirebaseFirestore.getInstance()
 
-        Handler().postDelayed({retreiveAllInfo()},700)
+        Handler().postDelayed({ retreiveAllInfo() }, 700)
 
         binding!!.profileEditCard.setOnClickListener {
             clickedProfile = true
@@ -97,12 +99,30 @@ class EditProfileFragment : Fragment() {
             clickedProfile = false
             showImagePicker()
         }
+        val countryEmojiSpinner = binding!!.countryEmojiSpinner
+
+        flags = listOf(
+            "🇰🇪",        // Kenya
+            "🇹🇿",     // Tanzania
+            "🇺🇬",       // Uganda
+            "🇷🇼",       // Rwanda
+            "🇧🇮",      // Burundi
+            "🇸🇸",  // South Sudan
+            "🇪🇹",     // Ethiopia
+            "🇿🇦", // South Africa
+            "🇺🇸" // United States
+        )
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, flags)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        countryEmojiSpinner.adapter = adapter
+
 
         binding!!.saveProfileButton.setOnClickListener {
             profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
                     binding!!.designationProfileEdit.text.isNullOrEmpty() ||
                     binding!!.branchProfileEdit.text.isNullOrEmpty() ||
-                    binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
+                    binding!!.countryEmojiSpinner.selectedItem == null ||
                     binding!!.cityProfileEditText.text.isNullOrEmpty() ||
                     imageProfileUri == null ||
                     imageBackgUri == null
@@ -123,7 +143,7 @@ class EditProfileFragment : Fragment() {
             profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
                     binding!!.designationProfileEdit.text.isNullOrEmpty() ||
                     binding!!.branchProfileEdit.text.isNullOrEmpty() ||
-                    binding!!.countryEmojiEditText.text.isNullOrEmpty() ||
+                    binding!!.countryEmojiSpinner.selectedItem != null ||
                     binding!!.cityProfileEditText.text.isNullOrEmpty() ||
                     imageProfileUri == null ||
                     imageBackgUri == null
@@ -147,8 +167,10 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun uploadImagesAndSaveInfo() {
-        val imageProfileReference = storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
-        val backGReference = storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+        val imageProfileReference =
+            storageReference.child("Profile_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
+        val backGReference =
+            storageReference.child("BackG_pics").child("${AuthUtils.getCurrentUserId()!!}.jpg")
 
         val uploadProfileImage = imageProfileUri?.scheme != "https"
         val uploadBackgroundImage = imageBackgUri?.scheme != "https"
@@ -210,7 +232,7 @@ class EditProfileFragment : Fragment() {
         val designation = binding!!.designationProfileEdit.text!!.toString().trim()
         val branch = binding!!.branchProfileEdit.text!!.toString().trim()
         val city = binding!!.cityProfileEditText.text!!.toString().trim()
-        val country = binding!!.countryEmojiEditText.text.toString().trim()
+        val country = binding!!.countryEmojiSpinner.selectedItem.toString()
         val aboutMe = binding!!.aboutMeEdit.text!!.toString()
         val insta = binding!!.instaEdit.text!!.toString().trim()
         val faceb = binding!!.facebookEdit.text!!.toString().trim()
@@ -302,7 +324,17 @@ class EditProfileFragment : Fragment() {
             binding!!.designationProfileEdit.setText(person.designation)
             binding!!.branchProfileEdit.setText(person.branch)
             binding!!.cityProfileEditText.setText(person.city)
+
+            val currentEmoji = person.country
+            if (currentEmoji.isNotEmpty()) {
+                val position = flags.indexOf(currentEmoji)
+                if (position >= 0) {
+                    binding!!.countryEmojiSpinner.setSelection(position)
+                }
+            }
+/*
             binding!!.countryEmojiEditText.setText(person.country)
+*/
 
             binding!!.aboutMeEdit.setText(person.social.about)
             binding!!.linkedInEdit.setText(person.social.linkedin)
@@ -351,32 +383,6 @@ class EditProfileFragment : Fragment() {
         binding!!.imageBackGround.layoutParams = layoutParamsBackG
     }
 
-/*
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setContentView(R.layout.profile_page_edit)
-        dialog.setCanceledOnTouchOutside(true)
-        val displayMetrics = DisplayMetrics()
-        val windowManager =
-            requireActivity().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val bottomSheet =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.isDraggable = false
-                behavior.isHideable = true
-                behavior.peekHeight = displayMetrics.heightPixels
-
-            }
-        }
-
-        return dialog
-    }
-*/
 
     private fun showImagePicker() {
         val options = CropImageOptions(

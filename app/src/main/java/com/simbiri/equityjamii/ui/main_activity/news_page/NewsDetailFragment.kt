@@ -63,8 +63,8 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.isDraggable = true
                 behavior.isHideable = true
-                behavior.peekHeight = displayMetrics.heightPixels * 3/4
-
+                behavior.peekHeight = displayMetrics.heightPixels
+                setupFullHeight(it)
             }
         }
 
@@ -129,6 +129,14 @@ class NewsDetailFragment : BottomSheetDialogFragment() {
         }
 
 
+    }
+    private fun setupFullHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        bottomSheet.layoutParams = layoutParams
     }
 
     private fun displayDate(timestamp: Timestamp?): String? {
