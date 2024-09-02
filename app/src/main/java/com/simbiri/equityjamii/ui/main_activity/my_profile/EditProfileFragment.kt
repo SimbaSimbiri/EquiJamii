@@ -143,7 +143,7 @@ class EditProfileFragment : Fragment() {
             profileNotComplete = binding!!.nameProfileEdit.text.isNullOrEmpty() ||
                     binding!!.designationProfileEdit.text.isNullOrEmpty() ||
                     binding!!.branchProfileEdit.text.isNullOrEmpty() ||
-                    binding!!.countryEmojiSpinner.selectedItem != null ||
+                    binding!!.countryEmojiSpinner.selectedItem == null ||
                     binding!!.cityProfileEditText.text.isNullOrEmpty() ||
                     imageProfileUri == null ||
                     imageBackgUri == null
