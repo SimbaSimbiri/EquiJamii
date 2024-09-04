@@ -102,16 +102,16 @@ class EditProfileFragment : Fragment() {
         val countryEmojiSpinner = binding!!.countryEmojiSpinner
 
         flags = listOf(
-            " 🇰🇪 ",        // Kenya
-            " 🇹🇿 ",     // Tanzania
-            " 🇺🇬 ",       // Uganda
-            " 🇷🇼 ",       // Rwanda
-            " 🇧🇮 ",      // Burundi
-            " 🇨🇩 ",  // Democratic Republic of the Congo (DRC)
-            " 🇸🇸 ",  // South Sudan
-            " 🇪🇹 ",     // Ethiopia
-            " 🇿🇦 ", // South Africa
-            " 🇺🇸 " // United States
+            "🇰🇪",        // Kenya
+            "🇹🇿",     // Tanzania
+            "🇺🇬",       // Uganda
+            "🇷🇼",       // Rwanda
+            "🇧🇮",      // Burundi
+            "🇨🇩",  // Democratic Republic of the Congo (DRC)
+            "🇸🇸",  // South Sudan
+            "🇪🇹",     // Ethiopia
+            "🇿🇦", // South Africa
+            "🇺🇸" // United States
         )
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, flags)

@@ -64,7 +64,7 @@ class RecommendedFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         searchList.clear()
-        searchList.addAll(filteredList)
+        searchList.addAll(filteredList.sortedBy { it.name }.toMutableList())
         binding.recommendedPeopleRecyclerView.adapter!!.notifyDataSetChanged()
     }
     private fun setUpObservers() {

@@ -1,6 +1,7 @@
 package com.simbiri.equityjamii.ui.main_activity.workspace_page
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
@@ -237,29 +239,28 @@ class ViewWorkspFragment : Fragment(),
             }
         }
 
-        val gestureDetectorCompat = GestureDetectorCompat(requireContext(),
-            object : GestureDetector.SimpleOnGestureListener() {
-                override fun onDoubleTap(e: MotionEvent): Boolean {
-                    leaveWorkSpace()
-                    return true
-                }
-
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                    Toast.makeText(
-                        requireContext(), "Double tap to leave workspace", Toast.LENGTH_LONG
-                    ).show()
-                    return true
-                }
-            })
-
-        if (adminsList.map { it.userId }
-                .contains(AuthUtils.getCurrentUserId()) || membersList.map { it.userId }
-                .contains(AuthUtils.getCurrentUserId())) {
-            binding.leaveWorkspaceImg.setOnTouchListener { view, event ->
-                view.performClick()
-                gestureDetectorCompat.onTouchEvent(event)
+        binding.leaveWorkspaceImg.setOnClickListener {
+            if (adminsList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId()) || membersList.map { it.userId }
+                    .contains(AuthUtils.getCurrentUserId())) {
+                alertLeaveWorksp()
             }
         }
+
+    }
+
+    private fun alertLeaveWorksp() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Leave ${currentWorksp?.titleImage?.fileTitle}?")
+            .setMessage("If you leave, you will have to request admin to add you again")
+            .setPositiveButton(
+                "Confirm exit"
+            ) { dialog, _ ->
+                leaveWorkSpace()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun leaveWorkSpace() {
@@ -345,7 +346,7 @@ class ViewWorkspFragment : Fragment(),
 
         binding.searchPeopleRecyclerView.adapter = OtherProfilesAdapter(
             requireContext(),
-            workspaceList,
+            workspaceList.sortedBy { it.name }.toMutableList(),
             editingWksp = false,
             addingWkspAdmins = false,
         )
@@ -395,13 +396,13 @@ class ViewWorkspFragment : Fragment(),
     }
 
     fun filterWorkspacePeople(text: String) {
-        val fullList = membersList + adminsList
+        val fullList = adminsList + membersList
 
         val filteredList = if (text.isEmpty()) {
             fullList
         } else {
             fullList.filter { it.name.contains(text, ignoreCase = true) }
-                .toMutableList()
+                .toSet()
         }
 
         workspaceList.clear()

@@ -65,7 +65,7 @@ class FollowersFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         searchList.clear()
-        searchList.addAll(filteredList)
+        searchList.addAll(filteredList.sortedBy { it.name }.toMutableList())
         binding.followerPeopleRecyclerView.adapter!!.notifyDataSetChanged()
     }
     private fun setUpObservers() {

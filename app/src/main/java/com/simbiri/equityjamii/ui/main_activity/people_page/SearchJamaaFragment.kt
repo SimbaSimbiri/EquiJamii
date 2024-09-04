@@ -68,7 +68,7 @@ class SearchJamaaFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.searchViewAll.setOnQueryTextListener(this@SearchJamaaFragment)
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
+    override fun onQueryTextSubmit(newText: String?): Boolean {
         return false
     }
 
@@ -81,11 +81,11 @@ class SearchJamaaFragment : Fragment(), SearchView.OnQueryTextListener {
         val filteredList = if (text.isEmpty()) {
             emptyList()
         } else {
-            fullList.filter { it.name.contains(text, ignoreCase = true) }
+            fullList.filter { it.name.contains(text, ignoreCase = true) }.toSet()
         }
 
         searchList.clear()
-        searchList.addAll(filteredList)
+        searchList.addAll(filteredList.sortedBy { it.name }.toMutableList())
         binding.searchPeopleRecyclerView.adapter!!.notifyDataSetChanged()
     }
     private fun setUpRecyclers() {

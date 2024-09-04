@@ -231,7 +231,7 @@
                 android:layout_marginStart="13dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="County/State,Country"
+                android:text="Current residence"
                 android:textColor="@color/primaryColor"
                 android:textSize="15sp"
                 android:textStyle="bold"

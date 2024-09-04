@@ -68,7 +68,7 @@ class FollowingFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         searchList.clear()
-        searchList.addAll(filteredList)
+        searchList.addAll(filteredList.sortedBy { it.name }.toMutableList())
         binding.followingPeopleRecyclerView.adapter!!.notifyDataSetChanged()
     }
 
