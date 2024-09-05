@@ -54,7 +54,7 @@ class EventsAdapter(
         var deleteEvent: ImageView = itemView.findViewById(R.id.deleteEvent)
         var registerEvent: ImageView = itemView.findViewById(R.id.regUnregForEvent)
         var eventLink: ImageView = itemView.findViewById(R.id.eventLocationLink)
-        var progressBar : ProgressBar =  itemView.findViewById(R.id.contentLoadingProgressBar)
+        var progressBar: ProgressBar = itemView.findViewById(R.id.contentLoadingProgressBar)
 
         var numParticipants: TextView = itemView.findViewById(R.id.numParticipantsText)
         var imageParticipants: ImageView = itemView.findViewById(R.id.eventParticipantsImage)
@@ -108,7 +108,7 @@ class EventsAdapter(
                     val transaction =
                         (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                     editEventFrag.show(transaction, editEventFrag.tag)
-                    Handler().postDelayed({progressBar.visibility = View.INVISIBLE}, 4000)
+                    Handler().postDelayed({ progressBar.visibility = View.INVISIBLE }, 4000)
 
                 }
 
@@ -142,24 +142,6 @@ class EventsAdapter(
             }
         }
 
-        private fun addToGoogleCalendar(event: Event) {
-            val intent = Intent(Intent.ACTION_INSERT).apply {
-                setDataAndType(Uri.parse("content://com.android.calendar/events"), "vnd.android.cursor.item/event")
-                putExtra(CalendarContract.Events.TITLE, event.title)
-                putExtra(CalendarContract.Events.DESCRIPTION, event.description)
-                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.dateTime!!.toDate().time)
-                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.dateTime.toDate().time + 60 * 60 * 1000)
-                putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
-                putExtra(CalendarContract.Events.EVENT_LOCATION, event.location)
-
-            }
-            try {
-                context.startActivity(intent)
-            } catch (e: Exception) {
-                Toast.makeText(context, "No calendar app found to add event!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         private fun eventOrganizer(event: Event) {
             AuthUtils.getCurrentPerson(event.userId) { organizerPerson ->
                 eventOrganizerTv.text = "Event organized by: ${organizerPerson!!.name}"
@@ -189,7 +171,10 @@ class EventsAdapter(
                     listIds.add(queryDocumentSnapshot.id)
                 }
                 listIds.shuffle()
-                val eventParticiPantsFrag = JamiiDetailDialogFragment.newInstance(listIds, "${currentEvent?.title} participants")
+                val eventParticiPantsFrag = JamiiDetailDialogFragment.newInstance(
+                    listIds,
+                    "${currentEvent?.title} participants"
+                )
                 val transaction =
                     (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
                 eventParticiPantsFrag.show(transaction, eventParticiPantsFrag.tag)
@@ -295,10 +280,46 @@ class EventsAdapter(
             }
         }
 
+        private fun addToGoogleCalendar(event: Event) {
+            val intent = Intent(Intent.ACTION_INSERT).apply {
+                setDataAndType(
+                    Uri.parse("content://com.android.calendar/events"),
+                    "vnd.android.cursor.item/event"
+                )
+                putExtra(CalendarContract.Events.TITLE, event.title)
+                putExtra(CalendarContract.Events.DESCRIPTION, event.description)
+                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.dateTime!!.toDate().time)
+                putExtra(
+                    CalendarContract.EXTRA_EVENT_END_TIME,
+                    event.dateTime.toDate().time + 120 * 60 * 1000
+                )
+                putExtra(
+                    CalendarContract.Events.AVAILABILITY,
+                    CalendarContract.Events.AVAILABILITY_BUSY
+                )
+                putExtra(CalendarContract.Events.EVENT_LOCATION, event.location)
+                putExtra(CalendarContract.Reminders.MINUTES, 1440)
+                putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
+
+            }
+            try {
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(context, "No calendar app found to add event!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+
         private fun addEventCalendarDialog() {
             AlertDialog.Builder(context)
                 .setTitle("Add ${eventNameText.text} to your default calendar?")
-                .setMessage("The event's detail might be subject to change. This changes may not be reflected in your calendar")
+                .setMessage(
+                    "Make sure to customize the event's duration according to the event description, the default is set to 2 hrs." +
+                            "\n\nKindly note that the event's details might be subject to change upon which you will be notified. " +
+                            "These changes will, however, not be reflected in your calendar." +
+                            "\n\nA reminder is set 30 mins before the event begins. "
+                )
                 .setPositiveButton(
                     "Confirm"
                 ) { dialog, _ ->
