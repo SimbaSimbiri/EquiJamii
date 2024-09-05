@@ -2,8 +2,10 @@ package com.simbiri.equityjamii.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
+import android.provider.CalendarContract
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -15,6 +17,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +33,6 @@ import com.simbiri.equityjamii.data.model.Person
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.AddEventsDialog
 import com.simbiri.equityjamii.ui.main_activity.jamii_page.JamiiDetailDialogFragment
 import com.simbiri.equityjamii.ui.main_activity.people_page.PeopleFragmentDirections
-import com.simbiri.equityjamii.ui.main_activity.people_page.PersonInfoFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -140,6 +142,24 @@ class EventsAdapter(
             }
         }
 
+        private fun addToGoogleCalendar(event: Event) {
+            val intent = Intent(Intent.ACTION_INSERT).apply {
+                setDataAndType(Uri.parse("content://com.android.calendar/events"), "vnd.android.cursor.item/event")
+                putExtra(CalendarContract.Events.TITLE, event.title)
+                putExtra(CalendarContract.Events.DESCRIPTION, event.description)
+                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.dateTime!!.toDate().time)
+                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.dateTime.toDate().time + 60 * 60 * 1000)
+                putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
+                putExtra(CalendarContract.Events.EVENT_LOCATION, event.location)
+
+            }
+            try {
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(context, "No calendar app found to add event!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         private fun eventOrganizer(event: Event) {
             AuthUtils.getCurrentPerson(event.userId) { organizerPerson ->
                 eventOrganizerTv.text = "Event organized by: ${organizerPerson!!.name}"
@@ -157,10 +177,6 @@ class EventsAdapter(
                 (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val action = PeopleFragmentDirections.actionOpenPersonInfo(person, R.id.jamiiFrag)
             navHostFrag.navController.navigate(action)
-/*            val organizerFragDetail = PersonInfoFragment.newInstance(person)
-            val transaction =
-                (itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            organizerFragDetail.show(transaction, organizerFragDetail.tag)*/
         }
 
         private fun displayParticipants(event: Event) {
@@ -270,12 +286,29 @@ class EventsAdapter(
                 } else {
                     registrationRef.document(userId).set(emptyMap<String, Any>())
                     Toast.makeText(context, "Registered for event", Toast.LENGTH_SHORT).show()
+                    addEventCalendarDialog()
                     this.registerEvent.setImageResource(R.drawable.register_event)
                     currentParticipantsCount++
                     this.numParticipants.text = currentParticipantsCount.toString()
 
                 }
             }
+        }
+
+        private fun addEventCalendarDialog() {
+            AlertDialog.Builder(context)
+                .setTitle("Add ${eventNameText.text} to your default calendar?")
+                .setMessage("The event's detail might be subject to change. This changes may not be reflected in your calendar")
+                .setPositiveButton(
+                    "Confirm"
+                ) { dialog, _ ->
+                    currentEvent?.let {
+                        addToGoogleCalendar(it)
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                .show()
         }
     }
 
